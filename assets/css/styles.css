@@ -123,75 +123,84 @@ section{padding:clamp(70px,11vw,140px) 0}
 .btn-ghost{background:transparent;border:1px solid var(--line);color:var(--parchment)}
 .btn-ghost:hover{border-color:var(--gold);color:var(--gold-bright);box-shadow:var(--glow-gold)}
 
-/* ---------- The Aurora — rippling curtains of light ---------- */
+/* ---------- The Aurora — slow rippling curtains of light ---------- */
 .aurora-veil{
-  position:fixed;left:0;top:0;width:100%;height:66vh;z-index:1;overflow:hidden;
+  position:fixed;left:0;top:0;width:100%;height:100vh;z-index:1;overflow:hidden;
   pointer-events:none;opacity:0;mix-blend-mode:screen;
-  filter:blur(16px) saturate(1.25);
-  transition:opacity 3.4s ease;
+  filter:blur(20px) saturate(1.2);
+  transition:opacity 5s ease;
+  /* dissolve softly into the page rather than ending in a hard band */
+  -webkit-mask-image:linear-gradient(to bottom,#000 0,#000 52%,rgba(0,0,0,.45) 74%,transparent 96%);
+  mask-image:linear-gradient(to bottom,#000 0,#000 52%,rgba(0,0,0,.45) 74%,transparent 96%);
 }
-.aurora-veil.on{opacity:.78}
-/* each span is a tall sheet, vertical light fading upward, sliced into
-   near-vertical rays by a soft repeating mask = the curtain look */
+.aurora-veil.on{opacity:.62}
+/* each span is a tall sheet, light fading upward, feathered into
+   wispy near-vertical rays by a soft repeating mask = curtain look */
 .aurora-veil span{
-  position:absolute;left:-30%;width:160%;top:-10%;height:96%;
+  position:absolute;left:-30%;width:160%;top:-8%;height:84%;
   transform-origin:50% 0;
-  background-size:100% 230%;
+  background-size:100% 240%;
   background-repeat:no-repeat;
-  -webkit-mask:repeating-linear-gradient(93deg,
-    transparent 0 2.4%, #000 5% 8.5%, transparent 11% 13.5%);
-  mask:repeating-linear-gradient(93deg,
-    transparent 0 2.4%, #000 5% 8.5%, transparent 11% 13.5%);
-  -webkit-mask-size:320% 100%;mask-size:320% 100%;
+  -webkit-mask:repeating-linear-gradient(95deg,
+    transparent 0 3%, rgba(0,0,0,.55) 6%, #000 8% 10.5%,
+    rgba(0,0,0,.55) 13%, transparent 16% 19%);
+  mask:repeating-linear-gradient(95deg,
+    transparent 0 3%, rgba(0,0,0,.55) 6%, #000 8% 10.5%,
+    rgba(0,0,0,.55) 13%, transparent 16% 19%);
+  -webkit-mask-size:300% 100%;mask-size:300% 100%;
   will-change:transform;
 }
 .aurora-veil span:nth-child(1){
+  height:88%;
   background-image:linear-gradient(to top,
-    rgba(50,200,140,0) 4%,
-    rgba(50,200,140,.55) 26%,
-    rgba(96,224,168,.42) 48%,
-    rgba(150,120,224,.30) 70%,
-    rgba(150,120,224,0) 90%);
-  animation:auroraSway 17s ease-in-out infinite,
-            auroraRise 9s ease-in-out infinite,
-            auroraRibbon 24s linear infinite;
+    rgba(54,200,144,0) 4%,
+    rgba(54,200,144,.5) 28%,
+    rgba(104,226,172,.4) 50%,
+    rgba(140,170,226,.24) 72%,
+    rgba(140,170,226,0) 92%);
+  animation:auroraSway 38s ease-in-out infinite,
+            auroraRise 24s ease-in-out infinite,
+            auroraRibbon 70s linear infinite;
 }
 .aurora-veil span:nth-child(2){
-  top:-4%;height:90%;
+  top:-3%;height:80%;
   background-image:linear-gradient(to top,
-    rgba(140,96,224,0) 6%,
-    rgba(140,96,224,.42) 28%,
-    rgba(70,210,164,.40) 52%,
-    rgba(228,130,205,.30) 74%,
-    rgba(228,130,205,0) 92%);
-  animation:auroraSway 23s ease-in-out infinite reverse,
-            auroraRise 13s ease-in-out infinite,
-            auroraRibbon 33s linear infinite reverse;
-  opacity:.8;
+    rgba(120,108,222,0) 6%,
+    rgba(120,108,222,.34) 30%,
+    rgba(76,212,168,.38) 54%,
+    rgba(206,150,214,.22) 76%,
+    rgba(206,150,214,0) 93%);
+  animation:auroraSway 52s ease-in-out infinite reverse,
+            auroraRise 32s ease-in-out infinite,
+            auroraRibbon 92s linear infinite reverse;
+  opacity:.78;
 }
 .aurora-veil span:nth-child(3){
-  top:2%;height:80%;
+  top:3%;height:70%;
   background-image:linear-gradient(to top,
-    rgba(64,212,176,0) 8%,
-    rgba(64,212,176,.34) 32%,
-    rgba(120,150,235,.28) 56%,
-    rgba(232,140,210,.24) 76%,
-    rgba(232,140,210,0) 94%);
-  animation:auroraSway 31s ease-in-out infinite,
-            auroraRise 17s ease-in-out infinite,
-            auroraRibbon 44s linear infinite;
-  opacity:.6;
+    rgba(70,214,180,0) 8%,
+    rgba(70,214,180,.3) 34%,
+    rgba(132,160,232,.22) 58%,
+    rgba(70,214,180,0) 90%);
+  animation:auroraSway 66s ease-in-out infinite,
+            auroraRise 44s ease-in-out infinite,
+            auroraRibbon 116s linear infinite;
+  opacity:.55;
 }
+/* gentle, organic undulation — small skew, soft breathing, many
+   steps so it never snaps or repeats obviously */
 @keyframes auroraSway{
-  0%  {transform:translateX(-9%) skewX(-11deg) scaleY(.9)}
-  30% {transform:translateX(-1%) skewX(4deg)  scaleY(1.1)}
-  55% {transform:translateX(6%)  skewX(9deg)  scaleY(.97)}
-  78% {transform:translateX(2%)  skewX(-3deg) scaleY(1.14)}
-  100%{transform:translateX(-9%) skewX(-11deg) scaleY(.9)}
+  0%  {transform:translateX(-7%) skewX(-5deg)   scaleY(.97)}
+  18% {transform:translateX(-3%) skewX(-1.5deg) scaleY(1.03)}
+  37% {transform:translateX(2%)  skewX(2.5deg)  scaleY(1)}
+  54% {transform:translateX(5%)  skewX(4.5deg)  scaleY(1.06)}
+  71% {transform:translateX(2%)  skewX(1deg)    scaleY(1.01)}
+  87% {transform:translateX(-3%) skewX(-3deg)   scaleY(1.04)}
+  100%{transform:translateX(-7%) skewX(-5deg)   scaleY(.97)}
 }
-@keyframes auroraRise{           /* light shimmering up and down the rays */
-  0%,100%{background-position:50% 0%}
-  50%    {background-position:50% 60%}
+@keyframes auroraRise{           /* light breathing slowly up the rays */
+  0%,100%{background-position:50% 4%}
+  50%    {background-position:50% 52%}
 }
 @keyframes auroraRibbon{         /* the curtain folds drifting sideways */
   0%  {-webkit-mask-position:0% 0;mask-position:0% 0}

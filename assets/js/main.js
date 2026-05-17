@@ -55,10 +55,13 @@
     addEventListener('resize', resize);
 
     // ---- Seven slow celestial phenomena (you never know which you'll get) ----
-    const TYPES = ['shoot', 'comet', 'meteors', 'satellite', 'pulsar', 'constellation', 'aurora'];
+    const TYPES = ['shoot', 'comet', 'meteors', 'satellite', 'pulsar', 'constellation', 'nebula'];
     const env = k => Math.sin(Math.PI * Math.max(0, Math.min(1, k))); // fade in→hold→out
+    let lastT = '';
     function spawn() {
-      const t = TYPES[Math.floor(Math.random() * TYPES.length)];
+      let t = TYPES[Math.floor(Math.random() * TYPES.length)];
+      if (t === lastT) t = TYPES[(TYPES.indexOf(t) + 1) % TYPES.length]; // never the same twice running
+      lastT = t;
       const now = performance.now();
       const base = { t, born: now };
       if (t === 'shoot') Object.assign(base, { dur: 2800, x: W * (.1 + Math.random() * .55), y: H * (.06 + Math.random() * .28), dx: W * .22, dy: H * .14 });
@@ -71,9 +74,15 @@
         const pts = [[0, 0], [.7, .3], [1.4, .1], [1.1, .9], [.4, 1.1], [-.2, .7], [.7, .3]]
           .map(p => [cx + p[0] * s, cy + p[1] * s]);
         Object.assign(base, { dur: 6500, pts });
-      } else Object.assign(base, { dur: 7000, y: H * (.62 + Math.random() * .25) }); // aurora
+      } else Object.assign(base, { // nebula — a soft colour cloud that blooms and fades
+        dur: 13000,
+        x: W * (.2 + Math.random() * .6), y: H * (.14 + Math.random() * .42),
+        r: Math.min(W, H) * (.13 + Math.random() * .12),
+        dx: (Math.random() - .5) * W * .06, dy: (Math.random() - .5) * H * .04,
+        hue: Math.random() < .5 ? [126, 206, 150] : [150, 120, 224] // jade or violet
+      });
       events.push(base);
-      setTimeout(spawn, 11000 + Math.random() * 13000);
+      setTimeout(spawn, 8000 + Math.random() * 10000);
     }
     setTimeout(spawn, 4500);
 
@@ -122,12 +131,16 @@
           ctx.fillStyle = `rgba(255,248,225,${a})`;
           ctx.shadowBlur = 8; ctx.shadowColor = 'rgba(240,212,136,.8)'; ctx.fill(); ctx.shadowBlur = 0;
         }
-      } else { // aurora — a very soft low band
-        const g = ctx.createLinearGradient(0, e.y - 80, 0, e.y + 80);
-        g.addColorStop(0, 'rgba(63,174,122,0)');
-        g.addColorStop(.5, `rgba(63,174,122,${a * .07})`);
-        g.addColorStop(1, 'rgba(216,177,80,0)');
-        ctx.fillStyle = g; ctx.fillRect(0, e.y - 80, W, 160);
+      } else { // nebula — a soft colour cloud drifting and breathing
+        const cx = e.x + e.dx * k, cy = e.y + e.dy * k;
+        const rad = e.r * (.82 + .3 * k);
+        const [hr, hg, hb] = e.hue;
+        const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, rad);
+        g.addColorStop(0, `rgba(${hr},${hg},${hb},${a * .12})`);
+        g.addColorStop(.55, `rgba(${hr},${hg},${hb},${a * .05})`);
+        g.addColorStop(1, `rgba(${hr},${hg},${hb},0)`);
+        ctx.fillStyle = g;
+        ctx.beginPath(); ctx.arc(cx, cy, rad, 0, 6.283); ctx.fill();
       }
     };
 
