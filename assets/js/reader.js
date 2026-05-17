@@ -78,7 +78,7 @@
           <span class="eyebrow">${esc(post.tag || 'Reading')} · ${esc(post.date || '')}</span>
           <h1>${esc(post.title)}</h1>
           ${post.subtitle ? `<p class="article-sub">${esc(post.subtitle)}</p>` : ''}
-          <div class="article-actions">${substackTop}${audioBlock}</div>
+          <div class="article-actions">${audioBlock}${substackTop}</div>
           <div class="article-body">${blocks(post.free)}</div>
           ${clubClose}
           <div class="article-foot">
