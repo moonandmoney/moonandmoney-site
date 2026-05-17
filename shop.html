@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Atelier — Moon &amp; Money</title>
+<meta name="description" content="The Moon & Money Atelier — Moon Sign Money Guides, element bundles, the Lunar Money Calendar 2026, finance tools and celestial cards. Instant digital downloads.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+<canvas id="starfield"></canvas>
+<div class="nebula"></div>
+
+<header class="nav">
+  <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
+  <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="shop.html">The Atelier</a></li>
+    <li><a href="archive.html">The Archive</a></li>
+    <li><a href="sessions.html">Sessions</a></li>
+    <li><a href="courses.html">Academy</a></li>
+    <li><a href="about.html">The Ethos</a></li>
+    <li><a class="nav-cta" href="https://moonandmoney.substack.com/subscribe" target="_blank">Crescent Club</a></li>
+  </ul>
+</header>
+
+<main>
+  <section class="page-hero">
+    <div class="wrap">
+      <span class="eyebrow">The Atelier</span>
+      <h1>The <span class="gold">Collection</span></h1>
+      <p>Considered tools for building wealth in rhythm with the sky. Every piece is an instant download, in the Moon &amp; Money voice.</p>
+    </div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="wrap">
+      <div id="shopFilters" class="shop-filters"></div>
+      <div id="shopGrid" class="grid"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="news reveal">
+        <span class="eyebrow">First Access</span>
+        <h2 class="section-title" style="margin:18px 0 16px">Crescent Club gets it <em>first</em></h2>
+        <p class="lede">Members receive every new drop before the Atelier opens to the public — plus member-only pieces.</p>
+        <form data-news>
+          <input type="email" placeholder="your@email.com" required aria-label="Email">
+          <button class="btn btn-gold" type="submit">Join the Club</button>
+        </form>
+        <p class="news-note">Instant-download checkout is being woven in — Crescent Club members will be first through the gate.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
+        <p>Personal finance, read through astrology. By Luna Wilde.</p>
+      </div>
+      <div class="foot-col"><h4>Explore</h4><a href="shop.html">The Atelier</a><a href="archive.html">The Archive</a><a href="sessions.html">Sessions</a><a href="courses.html">The Academy</a><a href="about.html">The Ethos</a></div>
+      <div class="foot-col"><h4>The Club</h4><a href="https://moonandmoney.substack.com" target="_blank">Substack</a><a href="https://moonandmoney.substack.com/subscribe" target="_blank">Crescent Club</a><a href="about.html">The Circle <span class="soon">Soon</span></a><a href="about.html">The Token <span class="soon">Soon</span></a></div>
+      <div class="foot-col"><h4>Follow</h4><a href="https://moonandmoney.substack.com" target="_blank">@moonmoney</a><a href="archive.html">Notes</a><a href="index.html">Newsletter</a></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="yr"></span> Moon &amp; Money · Luna Wilde. All rights reserved.</span>
+      <span>Built in rhythm with the moon ☾</span>
+    </div>
+  </div>
+</footer>
+
+<div id="mmPlayer" data-welcome="assets/audio/invocation.mp3"></div>
+
+<script src="https://app.lemonsqueezy.com/js/lemon.js" defer></script>
+<script src="assets/js/zodiac.js"></script>
+<script src="assets/js/config.js"></script>
+<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/player.js"></script>
+<script src="assets/js/shop.js"></script>
+</body>
+</html>

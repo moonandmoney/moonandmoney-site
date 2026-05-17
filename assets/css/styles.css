@@ -1,0 +1,588 @@
+/* ============================================================
+   MOON & MONEY — Celestial Luxury × Dark Glam design system
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&family=Noto+Sans+Symbols+2&display=swap');
+
+:root{
+  /* Core palette — pulled from the Moon & Money logo */
+  --obsidian:#070608;
+  --ink:#0d0c12;
+  --ink-2:#15131c;
+  --char:#1c1924;
+  --gold:#d8b150;
+  --gold-bright:#f0d488;
+  --gold-soft:#b9923c;
+  --jade:#2f7d5b;
+  --jade-glow:#3fae7a;
+  --parchment:#efe7d4;
+  --mist:#a89fb4;
+  --line:rgba(216,177,80,.16);
+
+  --shadow-deep:0 30px 80px -20px rgba(0,0,0,.85);
+  --glow-gold:0 0 40px rgba(216,177,80,.28);
+  --glow-jade:0 0 60px rgba(63,174,122,.22);
+
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --display:'Cinzel',serif;
+  --sans:'Jost',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+
+  --maxw:1180px;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--sans);
+  background:var(--obsidian);
+  color:var(--parchment);
+  line-height:1.65;
+  overflow-x:hidden;
+  letter-spacing:.012em;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none;transition:color .35s var(--ease)}
+::selection{background:var(--gold);color:var(--obsidian)}
+
+/* ---------- Cosmic backdrop ---------- */
+#starfield{position:fixed;inset:0;z-index:0;pointer-events:none}
+.nebula{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(820px 620px at 78% 8%,rgba(63,174,122,.13),transparent 60%),
+    radial-gradient(900px 700px at 12% 92%,rgba(216,177,80,.10),transparent 62%),
+    radial-gradient(700px 700px at 50% 50%,rgba(28,25,36,.55),transparent 70%);
+}
+.cursor-glow{
+  position:fixed;width:520px;height:520px;border-radius:50%;z-index:0;pointer-events:none;
+  background:radial-gradient(circle,rgba(216,177,80,.07),transparent 65%);
+  transform:translate(-50%,-50%);transition:opacity .6s var(--ease);opacity:0;
+}
+main,header,footer{position:relative;z-index:2}
+
+/* ---------- Typography ---------- */
+h1,h2,h3,h4{font-family:var(--serif);font-weight:500;line-height:1.12;letter-spacing:.005em}
+.eyebrow{
+  font-family:var(--display);font-size:.74rem;letter-spacing:.42em;text-transform:uppercase;
+  color:var(--gold);font-weight:500;display:inline-block;
+}
+.section-title{font-size:clamp(2.1rem,5vw,3.6rem);color:var(--parchment)}
+.section-title em{font-style:italic;color:var(--gold-bright)}
+.lede{font-family:var(--serif);font-size:clamp(1.15rem,2.2vw,1.5rem);color:var(--mist);font-weight:400}
+.gold{color:var(--gold-bright)}
+
+/* ---------- Layout ---------- */
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+section{padding:clamp(70px,11vw,140px) 0}
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent);max-width:var(--maxw);margin:0 auto}
+
+/* ---------- Navigation ---------- */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px clamp(20px,4vw,46px);
+  transition:background .5s var(--ease),padding .5s var(--ease),border-color .5s var(--ease);
+  border-bottom:1px solid transparent;
+}
+.nav.scrolled{
+  background:rgba(7,6,8,.78);backdrop-filter:blur(16px);
+  padding:14px clamp(20px,4vw,46px);border-bottom:1px solid var(--line);
+}
+.brand{font-family:var(--display);font-size:1.18rem;letter-spacing:.22em;color:var(--parchment);display:flex;align-items:center;gap:.55rem}
+.brand .amp{color:var(--gold);font-family:var(--serif);font-style:italic;font-size:1.35rem}
+.brand:hover{color:#fff}
+.nav-links{display:flex;align-items:center;gap:clamp(18px,2.4vw,38px);list-style:none}
+.nav-links a{
+  font-size:.82rem;letter-spacing:.16em;text-transform:uppercase;color:var(--mist);position:relative;
+}
+.nav-links a::after{
+  content:'';position:absolute;left:0;bottom:-6px;width:0;height:1px;background:var(--gold);
+  transition:width .4s var(--ease);
+}
+.nav-links a:hover{color:var(--parchment)}
+.nav-links a:hover::after{width:100%}
+.nav-cta{
+  font-family:var(--sans);font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;
+  border:1px solid var(--gold-soft);color:var(--gold-bright);padding:10px 20px;border-radius:999px;
+  transition:all .4s var(--ease);
+}
+.nav-cta:hover{background:var(--gold);color:var(--obsidian);box-shadow:var(--glow-gold)}
+.burger{display:none;flex-direction:column;gap:5px;background:none;border:0;cursor:pointer;padding:6px}
+.burger span{width:24px;height:2px;background:var(--gold);transition:.3s var(--ease)}
+
+/* ---------- Buttons ---------- */
+.btn{
+  display:inline-flex;align-items:center;gap:.6rem;cursor:pointer;border:0;
+  font-family:var(--sans);font-size:.84rem;letter-spacing:.16em;text-transform:uppercase;
+  padding:16px 34px;border-radius:999px;transition:all .45s var(--ease);
+}
+.btn-gold{background:linear-gradient(135deg,var(--gold-bright),var(--gold-soft));color:var(--obsidian);font-weight:500}
+.btn-gold:hover{transform:translateY(-3px);box-shadow:var(--glow-gold)}
+.btn-ghost{background:transparent;border:1px solid var(--line);color:var(--parchment)}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold-bright);box-shadow:var(--glow-gold)}
+
+/* ---------- The Aurora — rippling curtains of light ---------- */
+.aurora-veil{
+  position:fixed;left:0;top:0;width:100%;height:66vh;z-index:1;overflow:hidden;
+  pointer-events:none;opacity:0;mix-blend-mode:screen;
+  filter:blur(16px) saturate(1.25);
+  transition:opacity 3.4s ease;
+}
+.aurora-veil.on{opacity:.78}
+/* each span is a tall sheet, vertical light fading upward, sliced into
+   near-vertical rays by a soft repeating mask = the curtain look */
+.aurora-veil span{
+  position:absolute;left:-30%;width:160%;top:-10%;height:96%;
+  transform-origin:50% 0;
+  background-size:100% 230%;
+  background-repeat:no-repeat;
+  -webkit-mask:repeating-linear-gradient(93deg,
+    transparent 0 2.4%, #000 5% 8.5%, transparent 11% 13.5%);
+  mask:repeating-linear-gradient(93deg,
+    transparent 0 2.4%, #000 5% 8.5%, transparent 11% 13.5%);
+  -webkit-mask-size:320% 100%;mask-size:320% 100%;
+  will-change:transform;
+}
+.aurora-veil span:nth-child(1){
+  background-image:linear-gradient(to top,
+    rgba(50,200,140,0) 4%,
+    rgba(50,200,140,.55) 26%,
+    rgba(96,224,168,.42) 48%,
+    rgba(150,120,224,.30) 70%,
+    rgba(150,120,224,0) 90%);
+  animation:auroraSway 17s ease-in-out infinite,
+            auroraRise 9s ease-in-out infinite,
+            auroraRibbon 24s linear infinite;
+}
+.aurora-veil span:nth-child(2){
+  top:-4%;height:90%;
+  background-image:linear-gradient(to top,
+    rgba(140,96,224,0) 6%,
+    rgba(140,96,224,.42) 28%,
+    rgba(70,210,164,.40) 52%,
+    rgba(228,130,205,.30) 74%,
+    rgba(228,130,205,0) 92%);
+  animation:auroraSway 23s ease-in-out infinite reverse,
+            auroraRise 13s ease-in-out infinite,
+            auroraRibbon 33s linear infinite reverse;
+  opacity:.8;
+}
+.aurora-veil span:nth-child(3){
+  top:2%;height:80%;
+  background-image:linear-gradient(to top,
+    rgba(64,212,176,0) 8%,
+    rgba(64,212,176,.34) 32%,
+    rgba(120,150,235,.28) 56%,
+    rgba(232,140,210,.24) 76%,
+    rgba(232,140,210,0) 94%);
+  animation:auroraSway 31s ease-in-out infinite,
+            auroraRise 17s ease-in-out infinite,
+            auroraRibbon 44s linear infinite;
+  opacity:.6;
+}
+@keyframes auroraSway{
+  0%  {transform:translateX(-9%) skewX(-11deg) scaleY(.9)}
+  30% {transform:translateX(-1%) skewX(4deg)  scaleY(1.1)}
+  55% {transform:translateX(6%)  skewX(9deg)  scaleY(.97)}
+  78% {transform:translateX(2%)  skewX(-3deg) scaleY(1.14)}
+  100%{transform:translateX(-9%) skewX(-11deg) scaleY(.9)}
+}
+@keyframes auroraRise{           /* light shimmering up and down the rays */
+  0%,100%{background-position:50% 0%}
+  50%    {background-position:50% 60%}
+}
+@keyframes auroraRibbon{         /* the curtain folds drifting sideways */
+  0%  {-webkit-mask-position:0% 0;mask-position:0% 0}
+  100%{-webkit-mask-position:100% 0;mask-position:100% 0}
+}
+@media (prefers-reduced-motion:reduce){
+  .aurora-veil span{animation:none}
+}
+/* ---------- Hero ---------- */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px}
+.hero-inner{max-width:880px;opacity:0;transform:translateY(30px);animation:rise 1.4s var(--ease) .3s forwards}
+.moon-stage{position:relative;width:clamp(150px,22vw,230px);height:clamp(150px,22vw,230px);margin:0 auto 30px;cursor:pointer}
+.moon{
+  width:100%;height:100%;border-radius:50%;position:relative;overflow:hidden;
+  background:radial-gradient(circle at 46% 42%,#f6edd6 0%,#dccb9f 48%,#ab9a70 80%,#8d7b56 100%);
+  /* --lune (0 new → 1 full) is set from JS; the glow fades to almost
+     nothing at a new moon and blooms gold at a full moon */
+  box-shadow:
+    inset -9px -9px 34px rgba(0,0,0,.32),
+    inset 9px 9px 28px rgba(255,248,228,calc(.04 + .14 * var(--lune,.85))),
+    0 0 calc(30px + 52px * var(--lune,.85)) rgba(240,212,136,calc(.025 + .19 * var(--lune,.85)));
+  transition:transform .8s var(--ease);
+}
+.moon::before{
+  content:'';position:absolute;inset:0;border-radius:50%;mix-blend-mode:multiply;opacity:.42;
+  background:
+    radial-gradient(ellipse 28% 22% at 60% 38%,rgba(120,104,72,.45),transparent 70%),
+    radial-gradient(ellipse 18% 16% at 34% 62%,rgba(120,104,72,.38),transparent 72%),
+    radial-gradient(ellipse 13% 12% at 70% 70%,rgba(120,104,72,.32),transparent 75%),
+    radial-gradient(ellipse 10% 9% at 46% 24%,rgba(120,104,72,.28),transparent 78%);
+}
+.moon-shadow{position:absolute;inset:0;border-radius:50%;background:var(--obsidian);transition:transform 1.2s var(--ease);box-shadow:0 0 30px 10px var(--obsidian);z-index:2}
+.moon-stage:hover .moon{transform:scale(1.04)}
+.moon-stage::after{
+  content:'';position:absolute;inset:-30px;border-radius:50%;border:1px solid var(--line);
+  animation:spin 60s linear infinite;
+}
+.glyph-svg{width:100%;height:100%;display:block}
+/* the true standard zodiac glyph (matches the guide PDFs) —
+   forced to the clean line form, never the purple Apple emoji */
+.zg{
+  font-family:'Noto Sans Symbols 2','Segoe UI Symbol','Cormorant Garamond',serif;
+  font-weight:400;line-height:1;display:flex;align-items:center;justify-content:center;
+  font-variant-emoji:text;-webkit-font-feature-settings:normal;
+  color:currentColor;text-rendering:optimizeLegibility;
+}
+
+/* The readout beneath the moon (calm text block — no overlap) */
+.moon-readout{margin:58px auto 44px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.moon-phase-label{
+  font-family:var(--display);font-size:.62rem;letter-spacing:.34em;
+  text-transform:uppercase;color:var(--mist);line-height:1;
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center;
+}
+.moon-phase-label .sep{color:var(--line);font-size:.7rem}
+.moon-phase-label .moon-in{color:var(--gold);font-weight:500}
+.hero h1{font-size:clamp(2.8rem,8vw,6rem);letter-spacing:.02em;margin-bottom:.3em}
+.hero h1 .amp{font-style:italic;color:var(--gold-bright)}
+.hero-tag{font-family:var(--serif);font-size:clamp(1.1rem,2.4vw,1.6rem);color:var(--mist);font-style:italic;margin-bottom:2.4em}
+.hero-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.scroll-cue{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);color:var(--mist);font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;animation:bob 2.6s ease-in-out infinite}
+
+/* ---------- Reveal ---------- */
+.reveal{opacity:0;transform:translateY(38px);transition:opacity 1s var(--ease),transform 1s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+.reveal[data-d="1"]{transition-delay:.12s}
+.reveal[data-d="2"]{transition-delay:.24s}
+.reveal[data-d="3"]{transition-delay:.36s}
+
+/* ---------- Section heads ---------- */
+.head{max-width:680px;margin-bottom:60px}
+.head.center{margin-left:auto;margin-right:auto;text-align:center}
+.head .eyebrow{margin-bottom:18px}
+.head p{margin-top:18px;color:var(--mist);font-family:var(--serif);font-size:1.15rem}
+
+/* ---------- Story split ---------- */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,90px);align-items:center}
+.story-card{
+  position:relative;border-radius:6px;overflow:hidden;border:1px solid var(--line);
+  background:linear-gradient(160deg,var(--ink-2),var(--obsidian));padding:48px;box-shadow:var(--shadow-deep);
+}
+.story-card .glyph{font-size:2.4rem;color:var(--gold);margin-bottom:20px}
+.story-card h3{font-size:1.9rem;margin-bottom:14px}
+.story-card p{color:var(--mist)}
+.portrait{
+  aspect-ratio:4/5;border-radius:6px;overflow:hidden;border:1px solid var(--line);position:relative;
+  background:linear-gradient(160deg,var(--char),var(--obsidian));box-shadow:var(--shadow-deep);
+}
+.portrait img{width:100%;height:100%;object-fit:cover;opacity:.92;mix-blend-mode:screen}
+.portrait::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 70% 20%,rgba(63,174,122,.16),transparent 60%)}
+
+/* ---------- Emblem (about) ---------- */
+.emblem{
+  aspect-ratio:4/5;border-radius:6px;border:1px solid var(--line);position:relative;overflow:hidden;
+  background:radial-gradient(circle at 50% 38%,var(--char),var(--obsidian) 70%);box-shadow:var(--shadow-deep);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+}
+.emblem::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 70% 18%,rgba(63,174,122,.12),transparent 60%)}
+.emblem-ring{position:absolute;width:74%;aspect-ratio:1;border:1px solid var(--line);border-radius:50%;animation:spin 80s linear infinite}
+.emblem-ring::before{content:'';position:absolute;inset:14px;border:1px solid rgba(216,177,80,.1);border-radius:50%}
+.emblem-mark{width:96px;height:96px;color:var(--gold-bright);filter:drop-shadow(0 0 16px rgba(240,212,136,.35));z-index:1}
+.emblem-mark .glyph-svg{width:100%;height:100%}
+.emblem-mark .zg{font-size:92px}
+.emblem-word{font-family:var(--serif);font-size:1.7rem;color:var(--parchment);letter-spacing:.04em;z-index:1}
+.emblem-word .amp{color:var(--gold-bright);font-style:italic}
+.emblem-sub{font-family:var(--display);font-size:.62rem;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);z-index:1}
+
+/* ---------- Pillars ---------- */
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.pillar{
+  padding:40px 32px;border:1px solid var(--line);border-radius:6px;
+  background:linear-gradient(180deg,rgba(28,25,36,.6),rgba(7,6,8,.4));
+  transition:transform .5s var(--ease),border-color .5s var(--ease),box-shadow .5s var(--ease);
+}
+.pillar:hover{transform:translateY(-8px);border-color:var(--gold-soft);box-shadow:var(--glow-gold)}
+.pillar .num{font-family:var(--display);color:var(--gold);font-size:.8rem;letter-spacing:.3em;margin-bottom:18px}
+.pillar h3{font-size:1.5rem;margin-bottom:12px}
+.pillar p{color:var(--mist);font-size:.98rem}
+
+/* ---------- Shop grid ---------- */
+.shop-filters{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:54px}
+.chip{
+  font-family:var(--sans);font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;
+  background:transparent;border:1px solid var(--line);color:var(--mist);padding:10px 20px;border-radius:999px;
+  transition:all .35s var(--ease);
+}
+.chip:hover{color:var(--parchment)}
+.chip.active{background:var(--gold);border-color:var(--gold);color:var(--obsidian)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.product{
+  display:flex;flex-direction:column;border:1px solid var(--line);border-radius:8px;overflow:hidden;
+  background:linear-gradient(180deg,var(--ink-2),var(--obsidian));
+  transition:transform .55s var(--ease),box-shadow .55s var(--ease),border-color .55s var(--ease);
+}
+.product:hover{transform:translateY(-10px);border-color:var(--gold-soft);box-shadow:var(--shadow-deep),var(--glow-gold)}
+.product .cover{
+  aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;position:relative;
+  background:radial-gradient(circle at 50% 35%,var(--char),var(--obsidian));overflow:hidden;
+}
+.product .cover .sigil{
+  width:108px;height:108px;display:flex;align-items:center;justify-content:center;
+  color:var(--gold);border:1px solid var(--line);border-radius:50%;
+  box-shadow:0 0 40px rgba(216,177,80,.16),inset 0 0 30px rgba(216,177,80,.06);
+  transition:transform .6s var(--ease),color .6s var(--ease);
+}
+.product .cover .sigil .glyph-svg{width:54px;height:54px}
+.product .cover .sigil .zg{font-size:56px}
+.product:hover .cover .sigil{transform:scale(1.06);color:var(--gold-bright)}
+.product .cover .ph{position:absolute;bottom:14px;font-family:var(--display);font-size:.62rem;letter-spacing:.28em;color:var(--mist);text-transform:uppercase}
+.product .cover::after{content:'';position:absolute;inset:0;background:linear-gradient(160deg,transparent,rgba(63,174,122,.10))}
+.product .body{padding:24px 24px 26px;display:flex;flex-direction:column;flex:1}
+.product .cat{font-family:var(--display);font-size:.62rem;letter-spacing:.28em;text-transform:uppercase;color:var(--jade-glow);margin-bottom:10px}
+.product h3{font-size:1.3rem;margin-bottom:8px}
+.product p{color:var(--mist);font-size:.9rem;flex:1;margin-bottom:18px}
+.product .foot{display:flex;align-items:center;justify-content:space-between}
+.product .price{font-family:var(--serif);font-size:1.5rem;color:var(--gold-bright)}
+.product .buy{
+  font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;border:1px solid var(--gold-soft);
+  color:var(--gold-bright);padding:10px 18px;border-radius:999px;cursor:pointer;background:none;transition:all .4s var(--ease);
+}
+.product .buy:hover{background:var(--gold);color:var(--obsidian)}
+.badge{position:absolute;top:14px;right:14px;font-family:var(--display);font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;background:var(--jade);color:#fff;padding:6px 12px;border-radius:999px}
+
+/* ---------- Archive / Substack ---------- */
+.feed{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+.post{
+  border:1px solid var(--line);border-radius:8px;padding:34px;display:flex;flex-direction:column;
+  background:linear-gradient(160deg,var(--ink-2),var(--obsidian));transition:all .5s var(--ease);
+}
+.post:hover{border-color:var(--gold-soft);transform:translateY(-6px);box-shadow:var(--glow-gold)}
+.post .meta{font-family:var(--display);font-size:.64rem;letter-spacing:.24em;text-transform:uppercase;color:var(--jade-glow);margin-bottom:16px}
+.post h3{font-size:1.55rem;margin-bottom:12px}
+.post p{color:var(--mist);font-size:.95rem;flex:1;margin-bottom:20px}
+.post .read{font-family:var(--display);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.feed-state{text-align:center;color:var(--mist);font-family:var(--serif);font-size:1.15rem;padding:40px;grid-column:1/-1}
+
+/* ---------- Membership / Crescent Club ---------- */
+.club{
+  border:1px solid var(--line);border-radius:10px;overflow:hidden;position:relative;
+  background:linear-gradient(160deg,#16131d,#070608);box-shadow:var(--shadow-deep);
+}
+.club::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 80% 15%,rgba(63,174,122,.16),transparent 55%)}
+.club-inner{position:relative;padding:clamp(44px,7vw,84px);text-align:center}
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:50px;text-align:left}
+.tier{border:1px solid var(--line);border-radius:8px;padding:34px;background:rgba(7,6,8,.5);transition:all .5s var(--ease)}
+.tier:hover{border-color:var(--gold-soft);transform:translateY(-6px)}
+.tier.feature{border-color:var(--gold);box-shadow:var(--glow-gold)}
+.tier .t-name{font-family:var(--display);font-size:.78rem;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.tier .t-price{font-family:var(--serif);font-size:2.4rem;color:var(--parchment);margin-bottom:6px}
+.tier .t-price small{font-size:.9rem;color:var(--mist)}
+.tier ul{list-style:none;margin:22px 0 26px}
+.tier li{color:var(--mist);font-size:.92rem;padding:8px 0;border-bottom:1px dashed rgba(168,159,180,.14)}
+.tier li::before{content:'☾';color:var(--gold);margin-right:10px}
+
+/* ---------- Newsletter ---------- */
+.news{text-align:center;max-width:640px;margin:0 auto}
+.news form{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap;justify-content:center}
+.news input{
+  flex:1;min-width:240px;background:rgba(7,6,8,.6);border:1px solid var(--line);color:var(--parchment);
+  padding:16px 22px;border-radius:999px;font-family:var(--sans);font-size:.95rem;
+}
+.news input:focus{outline:none;border-color:var(--gold);box-shadow:var(--glow-gold)}
+.news-note{margin-top:16px;color:var(--mist);font-size:.82rem}
+
+/* ---------- Footer ---------- */
+footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gradient(180deg,transparent,rgba(13,12,18,.7))}
+.foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:40px;margin-bottom:60px}
+.foot-brand .brand{margin-bottom:18px}
+.foot-brand p{color:var(--mist);font-family:var(--serif);font-size:1.05rem;max-width:320px}
+.foot-col h4{font-family:var(--display);font-size:.74rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:22px}
+.foot-col a{display:block;color:var(--mist);font-size:.92rem;padding:7px 0}
+.foot-col a:hover{color:var(--gold-bright)}
+.foot-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;padding-top:30px;border-top:1px solid var(--line);color:var(--mist);font-size:.82rem}
+.soon{font-size:.6rem;letter-spacing:.18em;color:var(--jade-glow);border:1px solid rgba(63,174,122,.4);padding:2px 8px;border-radius:999px;margin-left:8px;vertical-align:middle}
+
+/* ---------- Persistent voice player (compact pill) ---------- */
+.mm-player{
+  position:fixed;bottom:20px;right:20px;z-index:45;display:flex;align-items:center;gap:9px;
+  background:rgba(9,8,12,.8);backdrop-filter:blur(14px);border:1px solid var(--line);
+  padding:6px 12px 6px 6px;border-radius:999px;box-shadow:var(--shadow-deep);
+  max-width:min(90vw,300px);
+  transition:bottom .35s var(--ease),border-color .4s var(--ease),box-shadow .4s var(--ease);
+}
+.mm-player.playing{border-color:var(--gold-soft);box-shadow:var(--glow-gold)}
+.mm-player button{
+  background:none;border:0;cursor:pointer;color:var(--gold-bright);display:flex;align-items:center;
+  font-family:var(--display);font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;
+  transition:color .3s var(--ease);
+}
+.mm-player button:hover{color:#fff}
+.mm-player svg{width:13px;height:13px;fill:currentColor;display:block}
+.mm-pp{
+  width:30px;height:30px;border:1px solid var(--gold-soft)!important;border-radius:50%!important;
+  justify-content:center;flex:0 0 30px;
+}
+.mm-pp .i-pause{display:none}
+.mm-player.playing .mm-pp .i-play{display:none}
+.mm-player.playing .mm-pp .i-pause{display:block}
+.mm-meta{display:flex;flex-direction:column;gap:4px;min-width:78px;flex:1}
+.mm-title{
+  font-family:var(--display);font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--mist);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px;
+}
+.mm-bar{height:2px;background:rgba(168,159,180,.2);border-radius:2px;overflow:hidden}
+.mm-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold-soft),var(--gold-bright));transition:width .25s linear}
+.mm-rate{min-width:30px;justify-content:center;font-size:.56rem}
+/* injected "Listen in Luna's voice" pill on long passages */
+.mm-listen{
+  display:inline-flex;align-items:center;gap:9px;margin:0 0 26px;cursor:pointer;
+  background:rgba(216,177,80,.06);border:1px solid var(--gold-soft);color:var(--gold-bright);
+  padding:11px 22px;border-radius:999px;font-family:var(--display);
+  font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;transition:all .35s var(--ease);
+}
+.mm-listen:hover{background:var(--gold);color:var(--obsidian);box-shadow:var(--glow-gold)}
+.mm-listen svg{width:14px;height:14px;fill:currentColor}
+.mm-player.resume{animation:pulse 1.4s ease-in-out infinite;border-color:var(--gold)}
+/* the block currently being read aloud */
+@media(max-width:560px){
+  .mm-player{right:14px;bottom:14px}
+  .mm-title{max-width:120px}
+}
+
+/* ---------- Wish (easter egg) ---------- */
+.wish{
+  position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;
+  background:rgba(7,6,8,.92);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .7s var(--ease);
+}
+.wish.show{opacity:1;pointer-events:all}
+.wish-card{max-width:560px;text-align:center;padding:40px;transform:scale(.92);transition:transform .7s var(--ease)}
+.wish.show .wish-card{transform:scale(1)}
+.wish .eyebrow{margin-bottom:20px}
+.wish h2{font-size:clamp(1.8rem,4vw,2.8rem);font-style:italic;color:var(--gold-bright);margin-bottom:18px;line-height:1.3}
+.wish small{color:var(--mist);letter-spacing:.2em;text-transform:uppercase;font-size:.7rem;cursor:pointer}
+.shooting-star{position:fixed;width:2px;height:2px;background:#fff;border-radius:50%;box-shadow:0 0 8px 2px #fff;z-index:1;opacity:0}
+
+/* ---------- Product preview ---------- */
+.preview-card{
+  max-width:540px;max-height:88vh;overflow:auto;text-align:center;padding:48px 40px;
+  border:1px solid var(--line);border-radius:10px;
+  background:linear-gradient(165deg,var(--ink-2),var(--obsidian));box-shadow:var(--shadow-deep);
+  transform:scale(.94);transition:transform .7s var(--ease);
+}
+.preview-thumb{
+  position:relative;margin:0 auto 26px;max-width:340px;border:1px solid var(--line);
+  border-radius:6px;overflow:hidden;box-shadow:var(--shadow-deep);
+}
+.preview-thumb img{width:100%;display:block;max-height:440px;object-fit:cover;object-position:top}
+.preview-thumb::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 55%,rgba(7,6,8,.92) 100%)}
+.preview-thumb .wm{
+  position:absolute;inset:-20% -10%;display:flex;flex-direction:column;gap:46px;
+  transform:rotate(-24deg);pointer-events:none;
+}
+.preview-thumb .wm span{
+  font-family:var(--display);font-size:.74rem;letter-spacing:.34em;white-space:nowrap;
+  color:rgba(239,231,212,.20);text-align:center;
+}
+.wish.show .preview-card{transform:scale(1)}
+.preview-art{
+  width:120px;height:120px;margin:0 auto 28px;color:var(--gold-bright);
+  display:flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:50%;
+  box-shadow:0 0 50px rgba(216,177,80,.18),inset 0 0 30px rgba(216,177,80,.06);
+}
+.preview-art .glyph-svg{width:62px;height:62px}
+.preview-art .zg{font-size:64px}
+.preview-card h2{font-size:2rem;margin:14px 0 14px;color:var(--parchment);font-style:normal}
+.preview-card p{color:var(--mist);font-family:var(--serif);font-size:1.1rem;margin-bottom:18px}
+.preview-card .preview-soon{font-size:.95rem;color:var(--mist);opacity:.8;margin-bottom:28px}
+.preview-card small{display:inline-block;margin-top:20px;color:var(--mist);letter-spacing:.2em;
+  text-transform:uppercase;font-size:.68rem;cursor:pointer}
+.preview-listen{
+  display:inline-flex;align-items:center;gap:8px;margin:0 0 18px;cursor:pointer;
+  background:none;border:1px solid var(--line);color:var(--gold-bright);
+  padding:9px 18px;border-radius:999px;font-family:var(--display);
+  font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;transition:all .35s var(--ease);
+}
+.preview-listen:hover{border-color:var(--gold);box-shadow:var(--glow-gold)}
+.preview-listen svg{width:15px;height:15px;fill:currentColor}
+.preview-card small:hover{color:var(--gold)}
+
+/* ---------- Article reader ---------- */
+.article{padding:150px 0 40px}
+.article-wrap{max-width:720px}
+.article-back{display:inline-block;margin-bottom:30px;font-family:var(--display);
+  font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--mist)}
+.article-back:hover{color:var(--gold-bright)}
+.article h1{font-size:clamp(2.1rem,5vw,3.4rem);margin:16px 0 18px;line-height:1.14}
+.article-sub{font-family:var(--serif);font-size:clamp(1.2rem,2.4vw,1.6rem);
+  color:var(--mist);font-style:italic;margin-bottom:30px}
+.article-actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:0 0 32px}
+.article-actions .article-substack{margin:0}
+.article-actions [data-audio]{display:inline-flex}
+.article .article-actions .mm-listen{margin:0}
+.article-substack{display:inline-block;margin:0 0 30px;font-family:var(--display);
+  font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);
+  border:1px solid var(--line);border-radius:999px;padding:10px 22px;
+  transition:color .3s,border-color .3s,background .3s}
+.article-substack:hover{color:var(--gold-bright);border-color:var(--gold);
+  background:rgba(216,177,80,.06)}
+.article-body,.article-paid{font-family:var(--serif);font-size:1.24rem;line-height:1.85;color:#e7dfce}
+.article-body p,.article-paid p{margin:0 0 1.3em}
+.article-body h3,.article-paid h3{
+  font-family:var(--display);font-size:.84rem;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--gold);margin:2.2em 0 .9em}
+.article .mm-listen{margin:8px 0 34px}
+.article-foot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;
+  margin-top:60px;padding-top:26px;border-top:1px solid var(--line)}
+.article-foot a{font-family:var(--display);font-size:.72rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--gold)}
+.article-foot a:hover{color:var(--gold-bright)}
+
+/* the calm Crescent Club close beneath each free reading */
+.club-close{
+  margin-top:54px;text-align:center;border:1px solid var(--line);border-radius:12px;
+  padding:clamp(34px,5vw,52px);
+  background:linear-gradient(165deg,var(--ink-2),var(--obsidian));box-shadow:var(--shadow-deep);
+}
+.club-close .eyebrow{margin-bottom:14px}
+.club-close h3{font-family:var(--serif);font-size:clamp(1.5rem,3vw,2.1rem);
+  color:var(--parchment);margin-bottom:14px}
+.club-close p{color:var(--mist);max-width:480px;margin:0 auto 28px;
+  font-family:var(--serif);font-size:1.08rem}
+.club-cta{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+
+/* ---------- Page hero (interior) ---------- */
+.page-hero{padding:180px 0 70px;text-align:center}
+.page-hero h1{font-size:clamp(2.4rem,6vw,4.4rem);margin:18px 0}
+.page-hero p{max-width:600px;margin:0 auto;color:var(--mist);font-family:var(--serif);font-size:1.2rem}
+
+/* ---------- Animations ---------- */
+@keyframes rise{to{opacity:1;transform:none}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+
+/* ---------- Responsive ---------- */
+@media(max-width:900px){
+  .nav-links{
+    position:fixed;inset:0 0 0 auto;width:min(78vw,320px);background:rgba(10,9,14,.97);
+    backdrop-filter:blur(20px);flex-direction:column;justify-content:center;gap:34px;
+    transform:translateX(100%);transition:transform .5s var(--ease);border-left:1px solid var(--line);
+  }
+  .nav-links.open{transform:none}
+  .burger{display:flex;z-index:60}
+  .split,.pillars,.grid,.feed,.tiers,.foot-grid{grid-template-columns:1fr}
+  .foot-grid{gap:34px}
+}
+@media(max-width:560px){
+  .wrap{padding:0 20px}
+  .story-card{padding:32px}
+  .hero-actions{flex-direction:column;align-items:stretch}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01ms!important}}
