@@ -9,9 +9,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="assets/css/styles.css">
 <style>
-  .wheel-hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;
-    justify-content:center;padding:92px 18px 36px}
-  .lw-wrap{max-width:860px;width:100%;margin:0 auto}
+  .wheel-hero{min-height:100vh;display:flex;align-items:center;justify-content:center;
+    padding:88px 16px 28px}
+  .lw-wrap{width:100%;max-width:min(800px,calc((100vh - 150px) * 0.909));margin:0 auto}
+  .wheel-cta-sec{padding:52px 18px 0}
   .lw-stage{width:100%;aspect-ratio:1000/1100;background:#03081A;
     border:1px solid var(--gold-soft);border-radius:16px;overflow:hidden;
     box-shadow:0 0 0 1px rgba(216,177,80,.15),0 0 60px rgba(216,177,80,.18),var(--shadow-deep);
@@ -138,8 +139,12 @@
           <text x="500" y="1098" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="11" letter-spacing="3" fill="#9C7B2E" font-style="italic">the weekly reading lives in the Crescent Club</text>
         </svg>
       </div>
+    </div>
+  </section>
 
-      <!-- Subscribe CTA (per brief, below the wheel) -->
+  <!-- Subscribe CTA (per brief, below the wheel) -->
+  <section class="wheel-cta-sec">
+    <div class="wrap">
       <div class="wheel-cta">
         <p>The weekly reading. Where this week's lunar phase meets your money, through the Luna Wilde lens.</p>
         <a class="btn btn-gold" href="https://moonandmoney.substack.com/subscribe" target="_blank" rel="noopener">Enter the Crescent Club</a>
@@ -186,28 +191,28 @@
   var PHASES = [
     { name:'New Moon',        stage:'SEED',      principle:'Set Intention',
       inscription:['The sky goes dark on purpose.','Name the one thing before you spend.'],
-      money:'Open the account. Write the number down.' },
+      money:'Open the account. Name the number.' },
     { name:'Waxing Crescent', stage:'PLANT',     principle:'Begin',
       inscription:['The seed sends one root.','Watch what you feed first.'],
-      money:'Take one small action today, not Monday.' },
+      money:'One small action. Today.' },
     { name:'First Quarter',   stage:'BUILD',     principle:'Decide',
       inscription:['Tension is the work, not a warning.','Choose, then defend the choice.'],
-      money:'Make the call you keep rescheduling.' },
+      money:'Make the call you keep moving.' },
     { name:'Waxing Gibbous',  stage:'REFINE',    principle:'Edit',
       inscription:['Almost is not finished.','Cut what you are quietly tolerating.'],
-      money:'Trim one cost before the result is due.' },
+      money:'Trim one cost before it is due.' },
     { name:'Full Moon',       stage:'HARVEST',   principle:'Receive',
       inscription:['The light shows everything.','Take what is ripe without apology.'],
-      money:'Collect what is owed. Bank the gain.' },
+      money:'Collect what is owed. Bank it.' },
     { name:'Waning Gibbous',  stage:'SHARE',     principle:'Gratitude',
       inscription:['Abundance circulates or it sours.','Give from the overflow, not the fear.'],
-      money:'Pay it forward. A tip, a gift, a stake.' },
+      money:'Give from the overflow.' },
     { name:'Last Quarter',    stage:'RELEASE',   principle:'Let Go',
       inscription:['Some accounts cost more than they pay.','Close the one you keep avoiding.'],
-      money:'Cancel the drain you have been ignoring.' },
+      money:'Cancel the drain you ignore.' },
     { name:'Waning Crescent', stage:'INTEGRATE', principle:'Rest',
       inscription:['Nothing grows in a depleted field.','Rest is a position too.'],
-      money:'Touch no money for a day. Let it settle.' }
+      money:'Touch no money for a day.' }
   ];
 
   function el(n,a){var e=document.createElementNS(SVG,n);if(a)for(var k in a)e.setAttribute(k,a[k]);return e;}
@@ -343,31 +348,31 @@
     var dateStr=dateToShow.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
     function T(y,size,fill,attrs){ var o={x:500,y:y,'font-family':'Cormorant Garamond, Georgia, serif','font-size':size,fill:fill}; if(attrs)for(var k in attrs)o[k]=attrs[k]; return el('text',o); }
 
-    var header=T(394,'13','#C9A24E',{'letter-spacing':'6'});
+    var header=T(396,'12','#C9A24E',{'letter-spacing':'5'});
     txt(header,isToday?'✦ T O D A Y ✦':'✦ N E X T ✦'); center.appendChild(header);
-    var dateEl=T(420,'16','#FCF7F1',{'font-style':'italic','letter-spacing':'2'});
+    var dateEl=T(419,'15','#FCF7F1',{'font-style':'italic','letter-spacing':'2'});
     txt(dateEl,dateStr); center.appendChild(dateEl);
-    var nameEl=T(461,'33','#E5C77B',{'letter-spacing':'2'});
+    var nameEl=T(457,'30','#E5C77B',{'letter-spacing':'2'});
     txt(nameEl,ph.name); center.appendChild(nameEl);
-    center.appendChild(el('line',{x1:424,y1:483,x2:486,y2:483,stroke:'#7A5F1F','stroke-width':0.7}));
-    center.appendChild(el('line',{x1:514,y1:483,x2:576,y2:483,stroke:'#7A5F1F','stroke-width':0.7}));
-    center.appendChild(el('circle',{cx:500,cy:483,r:3,fill:'url(#lw-emerald)'}));
-    center.appendChild(el('circle',{cx:500,cy:483,r:3,fill:'none',stroke:'#7A5F1F','stroke-width':0.5}));
-    var stageEl=T(508,'13','#C9A24E',{'letter-spacing':'4'});
+    center.appendChild(el('line',{x1:426,y1:479,x2:484,y2:479,stroke:'#7A5F1F','stroke-width':0.7}));
+    center.appendChild(el('line',{x1:516,y1:479,x2:574,y2:479,stroke:'#7A5F1F','stroke-width':0.7}));
+    center.appendChild(el('circle',{cx:500,cy:479,r:3,fill:'url(#lw-emerald)'}));
+    center.appendChild(el('circle',{cx:500,cy:479,r:3,fill:'none',stroke:'#7A5F1F','stroke-width':0.5}));
+    var stageEl=T(503,'12','#C9A24E',{'letter-spacing':'4'});
     txt(stageEl,ph.stage+' · '+ph.principle.toUpperCase()); center.appendChild(stageEl);
     for(var li=0;li<ph.inscription.length;li++){
-      var tt=T(540+li*25,'19','#FCF7F1',{'font-style':'italic'});
+      var tt=T(535+li*23,'17','#FCF7F1',{'font-style':'italic'});
       txt(tt,ph.inscription[li]); center.appendChild(tt);
     }
-    var dy=540+ph.inscription.length*25+8;
-    center.appendChild(el('circle',{cx:486,cy:dy,r:1.4,fill:'#1E4D3A',opacity:'0.8'}));
+    var dy=535+ph.inscription.length*23+6;
+    center.appendChild(el('circle',{cx:487,cy:dy,r:1.4,fill:'#1E4D3A',opacity:'0.8'}));
     center.appendChild(el('circle',{cx:500,cy:dy,r:1.8,fill:'url(#lw-emerald)'}));
-    center.appendChild(el('circle',{cx:514,cy:dy,r:1.4,fill:'#1E4D3A',opacity:'0.8'}));
-    var moveLabel=T(dy+24,'12','#7DBE9C',{'letter-spacing':'5'});
+    center.appendChild(el('circle',{cx:513,cy:dy,r:1.4,fill:'#1E4D3A',opacity:'0.8'}));
+    var moveLabel=T(dy+22,'11','#7DBE9C',{'letter-spacing':'5'});
     txt(moveLabel,'T H E   M O V E'); center.appendChild(moveLabel);
-    var moveEl=T(dy+47,'16','#FCF7F1',{'font-style':'italic'});
+    var moveEl=T(dy+43,'13.5','#FCF7F1',{'font-style':'italic'});
     txt(moveEl,ph.money); center.appendChild(moveEl);
-    var illumEl=T(dy+74,'12','#7A5F1F',{'letter-spacing':'3'});
+    var illumEl=T(dy+68,'11','#7A5F1F',{'letter-spacing':'3'});
     txt(illumEl,Math.round(illum*100)+'%  I L L U M I N A T E D'); center.appendChild(illumEl);
   }
 
