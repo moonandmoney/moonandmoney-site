@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Lunar Wheel · Moon &amp; Money</title>
+<meta name="description" content="The Lunar Wheel. Today's moon phase, its inscription, and the money move it favours. A daily ritual from Moon & Money by Luna Wilde.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="assets/css/styles.css">
+<style>
+  .lw-wrap{max-width:760px;margin:0 auto;padding:130px 18px 0}
+  .lw-stage{width:100%;aspect-ratio:1000/1100;background:#03081A;border:1px solid var(--line);
+    border-radius:14px;overflow:hidden;box-shadow:var(--shadow-deep)}
+  .lw-stage svg{width:100%;height:100%;display:block}
+  @keyframes lw-twinkle{0%,100%{opacity:.25}50%{opacity:.9}}
+  @keyframes lw-glow{0%,100%{opacity:.30}50%{opacity:.95}}
+  @keyframes lw-ray{0%,100%{opacity:.20}50%{opacity:.60}}
+  @keyframes lw-shimmer{0%,100%{opacity:.55}50%{opacity:1}}
+  .lw-star{animation:lw-twinkle 5s ease-in-out infinite}
+  .lw-star-b{animation-duration:7s;animation-delay:1.5s}
+  .lw-star-c{animation-duration:4s;animation-delay:2.3s}
+  .lw-star-d{animation-duration:9s;animation-delay:.7s}
+  .lw-active-glow{animation:lw-glow 4.5s ease-in-out infinite}
+  .lw-active-ray{animation:lw-ray 4.5s ease-in-out infinite}
+  .lw-shimmer-orn{animation:lw-shimmer 6s ease-in-out infinite}
+  .lw-node{cursor:pointer}
+  .lw-node:focus{outline:none}
+  .lw-node:focus-visible circle:nth-child(2){stroke:#E5C77B}
+  .lw-control{cursor:pointer}
+  @media(prefers-reduced-motion:reduce){.lw-star,.lw-active-glow,.lw-active-ray,.lw-shimmer-orn{animation:none}}
+  .wheel-cta{max-width:620px;margin:40px auto 0;text-align:center}
+  .wheel-cta p{font-family:var(--serif);font-style:italic;font-size:1.2rem;color:var(--mist);
+    max-width:480px;margin:0 auto 24px;line-height:1.6}
+</style>
+</head>
+<body>
+<canvas id="starfield"></canvas>
+<div class="nebula"></div>
+
+<header class="nav">
+  <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
+  <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="wheel.html">The Wheel</a></li>
+    <li><a href="shop.html">The Atelier</a></li>
+    <li><a href="archive.html">The Archive</a></li>
+    <li><a href="sessions.html">Sessions</a></li>
+    <li><a href="courses.html">Academy</a></li>
+    <li><a href="about.html">The Ethos</a></li>
+    <li><a class="nav-cta" href="https://moonandmoney.substack.com/subscribe" target="_blank">Crescent Club</a></li>
+  </ul>
+</header>
+
+<main>
+  <section style="padding-bottom:60px">
+    <div class="lw-wrap">
+      <div class="lw-stage">
+        <svg viewBox="0 0 1000 1100" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The Lunar Wheel">
+          <defs>
+            <radialGradient id="lw-bg" cx="50%" cy="46%" r="68%"><stop offset="0%" stop-color="#0B2545"/><stop offset="100%" stop-color="#03081A"/></radialGradient>
+            <radialGradient id="lw-moonGold" cx="35%" cy="32%" r="72%"><stop offset="0%" stop-color="#FFEFBF"/><stop offset="60%" stop-color="#E5C77B"/><stop offset="100%" stop-color="#C9A24E"/></radialGradient>
+            <radialGradient id="lw-darkDisc" cx="50%" cy="50%" r="58%"><stop offset="0%" stop-color="#1B2C4A"/><stop offset="100%" stop-color="#0B1730"/></radialGradient>
+            <radialGradient id="lw-glowGrad" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#FFEFBF" stop-opacity="0.55"/><stop offset="100%" stop-color="#FFEFBF" stop-opacity="0"/></radialGradient>
+            <linearGradient id="lw-goldLine" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#E5C77B"/><stop offset="100%" stop-color="#9C7B2E"/></linearGradient>
+            <radialGradient id="lw-emerald" cx="35%" cy="30%" r="72%"><stop offset="0%" stop-color="#7DBE9C"/><stop offset="100%" stop-color="#1E4D3A"/></radialGradient>
+            <radialGradient id="lw-medBg" cx="50%" cy="40%" r="70%"><stop offset="0%" stop-color="#0E1E3A"/><stop offset="100%" stop-color="#070E20"/></radialGradient>
+            <path id="lw-titleArc" d="M 284 126 A 432 432 0 0 1 716 126" fill="none"/>
+            <path id="lw-subtitleArc" d="M 716 874 A 432 432 0 0 1 284 874" fill="none"/>
+          </defs>
+
+          <rect width="1000" height="1100" fill="#03081A"/>
+          <rect width="1000" height="1000" fill="url(#lw-bg)"/>
+          <g id="lw-stars" fill="#FCF7F1"></g>
+
+          <g fill="none">
+            <circle cx="500" cy="500" r="492" stroke="url(#lw-goldLine)" stroke-width="0.4" opacity="0.35"/>
+            <circle cx="500" cy="500" r="485" stroke="url(#lw-goldLine)" stroke-width="0.5" opacity="0.55"/>
+            <circle cx="500" cy="500" r="448" stroke="url(#lw-goldLine)" stroke-width="1.4" opacity="0.78"/>
+            <circle cx="500" cy="500" r="441" stroke="url(#lw-goldLine)" stroke-width="0.3" opacity="0.4"/>
+            <circle cx="500" cy="500" r="395" stroke="url(#lw-goldLine)" stroke-width="0.4" opacity="0.35"/>
+            <circle cx="500" cy="500" r="388" stroke="url(#lw-goldLine)" stroke-width="0.6" opacity="0.58"/>
+          </g>
+          <g fill="url(#lw-goldLine)">
+            <path d="M 500 38 L 512 50 L 500 62 L 488 50 Z"/>
+            <path d="M 962 500 L 950 512 L 938 500 L 950 488 Z"/>
+            <path d="M 500 962 L 512 950 L 500 938 L 488 950 Z"/>
+            <path d="M 38 500 L 50 512 L 62 500 L 50 488 Z"/>
+          </g>
+          <g fill="url(#lw-goldLine)" opacity="0.7" class="lw-shimmer-orn">
+            <circle cx="500" cy="50" r="1.6"/><circle cx="950" cy="500" r="1.6"/>
+            <circle cx="500" cy="950" r="1.6"/><circle cx="50" cy="500" r="1.6"/>
+          </g>
+          <g>
+            <circle cx="818" cy="182" r="4.5" fill="url(#lw-emerald)"/><circle cx="818" cy="182" r="4.5" fill="none" stroke="#C9A24E" stroke-width="0.7"/>
+            <circle cx="818" cy="818" r="4.5" fill="url(#lw-emerald)"/><circle cx="818" cy="818" r="4.5" fill="none" stroke="#C9A24E" stroke-width="0.7"/>
+            <circle cx="182" cy="818" r="4.5" fill="url(#lw-emerald)"/><circle cx="182" cy="818" r="4.5" fill="none" stroke="#C9A24E" stroke-width="0.7"/>
+            <circle cx="182" cy="182" r="4.5" fill="url(#lw-emerald)"/><circle cx="182" cy="182" r="4.5" fill="none" stroke="#C9A24E" stroke-width="0.7"/>
+          </g>
+
+          <text font-family="Cormorant Garamond, Georgia, serif" font-size="22" letter-spacing="10" fill="#E5C77B" font-weight="600">
+            <textPath href="#lw-titleArc" startOffset="50%" text-anchor="middle">MOON  &amp;  MONEY</textPath>
+          </text>
+          <text font-family="Cormorant Garamond, Georgia, serif" font-size="12" letter-spacing="7" fill="#C9A24E" font-style="italic">
+            <textPath href="#lw-subtitleArc" startOffset="50%" text-anchor="middle">THE LUNAR WHEEL</textPath>
+          </text>
+
+          <g id="lw-spokes" stroke="#C9A24E" stroke-width="0.4" opacity="0.18"></g>
+          <g id="lw-activeRayGroup"></g>
+          <circle cx="500" cy="500" r="345" fill="none" stroke="#C9A24E" stroke-width="0.5" opacity="0.25"/>
+          <g id="lw-phaseNodes"></g>
+
+          <g fill="none">
+            <circle cx="500" cy="500" r="218" stroke="url(#lw-goldLine)" stroke-width="0.4" opacity="0.4"/>
+            <circle cx="500" cy="500" r="211" stroke="url(#lw-goldLine)" stroke-width="1.1" opacity="0.72"/>
+            <circle cx="500" cy="500" r="204" stroke="url(#lw-goldLine)" stroke-width="0.3" opacity="0.4"/>
+            <circle cx="500" cy="500" r="197" stroke="#C9A24E" stroke-width="0.4" opacity="0.35" stroke-dasharray="2 6"/>
+          </g>
+          <g id="lw-innerOrns" fill="url(#lw-goldLine)"></g>
+
+          <circle cx="500" cy="500" r="183" fill="url(#lw-medBg)"><animate attributeName="r" values="183;187;183" dur="9s" repeatCount="indefinite"/></circle>
+          <circle cx="500" cy="500" r="183" fill="none" stroke="url(#lw-goldLine)" stroke-width="2.2"><animate attributeName="r" values="183;187;183" dur="9s" repeatCount="indefinite"/></circle>
+          <circle cx="500" cy="500" r="177" fill="none" stroke="#7A5F1F" stroke-width="0.5" opacity="0.6"/>
+          <circle cx="500" cy="500" r="171" fill="none" stroke="#7A5F1F" stroke-width="0.4" opacity="0.4"/>
+          <circle cx="500" cy="500" r="164" fill="none" stroke="#C9A24E" stroke-width="0.5" opacity="0.3" stroke-dasharray="1 7"/>
+          <g id="lw-denticles" fill="#C9A24E" opacity="0.7"></g>
+
+          <g id="lw-centerContent" text-anchor="middle" aria-live="polite"></g>
+
+          <line x1="200" y1="1020" x2="800" y2="1020" stroke="#C9A24E" stroke-width="0.4" opacity="0.5"/>
+          <g id="lw-controlStrip"></g>
+          <text x="500" y="1080" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="10" letter-spacing="6" fill="#C9A24E">M O O N &#160; &amp; &#160; M O N E Y</text>
+          <text x="500" y="1095" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="9" letter-spacing="4" fill="#7A5F1F" font-style="italic">the weekly reading lives in the Crescent Club</text>
+        </svg>
+      </div>
+
+      <!-- Subscribe CTA (per brief, below the wheel) -->
+      <div class="wheel-cta">
+        <p>The weekly reading. Where this week's lunar phase meets your money, through the Luna Wilde lens.</p>
+        <a class="btn btn-gold" href="https://moonandmoney.substack.com/subscribe" target="_blank" rel="noopener">Enter the Crescent Club</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- The depth: the Money Chart, paired beneath the Wheel -->
+  <section>
+    <div class="wrap">
+      <div class="money-pitch reveal">
+        <span class="eyebrow">Read For You Alone</span>
+        <h3>Your Money Chart, read in full</h3>
+        <p>The Wheel is the same for everyone. Your chart is not. A private, written money reading drawn from your exact birth chart: your financial temperament, the timing that favours you, the patterns worth watching. Considered, premium, yours.</p>
+        <a class="btn btn-gold" href="sessions.html">Request your Money Chart</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
+        <p>Personal finance, read through astrology. By Luna Wilde.</p>
+      </div>
+      <div class="foot-col"><h4>Explore</h4><a href="wheel.html">The Wheel</a><a href="shop.html">The Atelier</a><a href="archive.html">The Archive</a><a href="sessions.html">Sessions</a><a href="about.html">The Ethos</a></div>
+      <div class="foot-col"><h4>The Club</h4><a href="https://moonandmoney.substack.com" target="_blank">Substack</a><a href="https://moonandmoney.substack.com/subscribe" target="_blank">Crescent Club</a><a href="about.html">The Circle <span class="soon">Soon</span></a><a href="about.html">The Token <span class="soon">Soon</span></a></div>
+      <div class="foot-col"><h4>Follow</h4><a href="https://moonandmoney.substack.com" target="_blank">@moonmoney</a><a href="archive.html">Notes</a><a href="index.html">Newsletter</a></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="yr"></span> Moon &amp; Money · Luna Wilde. All rights reserved.</span>
+      <span>Built in rhythm with the moon ☾</span>
+    </div>
+  </div>
+</footer>
+
+<div id="mmPlayer" data-welcome="assets/audio/invocation.mp3"></div>
+
+<script>
+(function () {
+  var SVG = 'http://www.w3.org/2000/svg';
+  var PHASES = [
+    { name:'New Moon',        stage:'SEED',      principle:'Set Intention',
+      inscription:['The sky goes dark on purpose.','Name the one thing before you spend.'],
+      money:'Open the account. Write the number down.' },
+    { name:'Waxing Crescent', stage:'PLANT',     principle:'Begin',
+      inscription:['The seed sends one root.','Watch what you feed first.'],
+      money:'Take one small action today, not Monday.' },
+    { name:'First Quarter',   stage:'BUILD',     principle:'Decide',
+      inscription:['Tension is the work, not a warning.','Choose, then defend the choice.'],
+      money:'Make the call you keep rescheduling.' },
+    { name:'Waxing Gibbous',  stage:'REFINE',    principle:'Edit',
+      inscription:['Almost is not finished.','Cut what you are quietly tolerating.'],
+      money:'Trim one cost before the result is due.' },
+    { name:'Full Moon',       stage:'HARVEST',   principle:'Receive',
+      inscription:['The light shows everything.','Take what is ripe without apology.'],
+      money:'Collect what is owed. Bank the gain.' },
+    { name:'Waning Gibbous',  stage:'SHARE',     principle:'Gratitude',
+      inscription:['Abundance circulates or it sours.','Give from the overflow, not the fear.'],
+      money:'Pay it forward. A tip, a gift, a stake.' },
+    { name:'Last Quarter',    stage:'RELEASE',   principle:'Let Go',
+      inscription:['Some accounts cost more than they pay.','Close the one you keep avoiding.'],
+      money:'Cancel the drain you have been ignoring.' },
+    { name:'Waning Crescent', stage:'INTEGRATE', principle:'Rest',
+      inscription:['Nothing grows in a depleted field.','Rest is a position too.'],
+      money:'Touch no money for a day. Let it settle.' }
+  ];
+
+  function el(n,a){var e=document.createElementNS(SVG,n);if(a)for(var k in a)e.setAttribute(k,a[k]);return e;}
+  function txt(node,c){node.appendChild(document.createTextNode(c));return node;}
+  function clear(n){while(n.firstChild)n.removeChild(n.firstChild);}
+
+  function moonPhase(date){
+    var refJD=2451550.1, syn=29.530588853;
+    var jd=(date.getTime()/86400000)+2440587.5;
+    var age=(((jd-refJD)%syn)+syn)%syn;
+    var frac=age/syn;
+    return { age:age, frac:frac, illum:(1-Math.cos(2*Math.PI*frac))/2,
+             idx:Math.round(frac*8)%8 };
+  }
+  function nextOccurrenceOf(date,targetIdx){
+    var refJD=2451550.1, syn=29.530588853;
+    var jd=(date.getTime()/86400000)+2440587.5;
+    var age=(((jd-refJD)%syn)+syn)%syn;
+    var targetAge=(targetIdx/8)*syn;
+    var daysUntil=targetAge-age;
+    if(daysUntil<=0)daysUntil+=syn;
+    return { date:new Date(date.getTime()+daysUntil*86400000), days:daysUntil };
+  }
+  function litPath(idx,R){
+    var r6=R*0.6, n=-R;
+    switch(idx){
+      case 0: return null;
+      case 1: return 'M 0 '+n+' A '+R+' '+R+' 0 0 1 0 '+R+' A '+r6+' '+R+' 0 0 1 0 '+n+' Z';
+      case 2: return 'M 0 '+n+' A '+R+' '+R+' 0 0 1 0 '+R+' Z';
+      case 3: return 'M 0 '+n+' A '+R+' '+R+' 0 0 1 0 '+R+' A '+r6+' '+R+' 0 0 0 0 '+n+' Z';
+      case 4: return 'M '+n+' 0 A '+R+' '+R+' 0 1 0 '+R+' 0 A '+R+' '+R+' 0 1 0 '+n+' 0 Z';
+      case 5: return 'M 0 '+n+' A '+R+' '+R+' 0 0 0 0 '+R+' A '+r6+' '+R+' 0 0 1 0 '+n+' Z';
+      case 6: return 'M 0 '+n+' A '+R+' '+R+' 0 0 0 0 '+R+' Z';
+      case 7: return 'M 0 '+n+' A '+R+' '+R+' 0 0 0 0 '+R+' A '+r6+' '+R+' 0 0 0 0 '+n+' Z';
+    }
+    return null;
+  }
+
+  function buildStatic(){
+    var stars=document.getElementById('lw-stars');
+    function rnd(i){return Math.abs(Math.sin(i*13.7)*10000)%1;}
+    var placed=0, seed=0;
+    while(placed<70 && seed<1500){
+      seed++;
+      var cx=rnd(seed)*1000, cy=rnd(seed+500)*1000;
+      var dx=cx-500, dy=cy-500, d=Math.sqrt(dx*dx+dy*dy);
+      if(d<460||d>498)continue;
+      var s=el('circle',{cx:cx,cy:cy,r:0.4+rnd(seed+700)*1.2,opacity:0.3+rnd(seed+900)*0.6});
+      var v=seed%4;
+      s.setAttribute('class','lw-star'+(v===1?' lw-star-b':v===2?' lw-star-c':v===3?' lw-star-d':''));
+      stars.appendChild(s); placed++;
+    }
+    for(var i=0;i<40;i++){
+      var cx2=rnd(i*3.1+7)*1000, cy2=rnd(i*3.1+113)*1000;
+      var dx2=cx2-500, dy2=cy2-500;
+      if(Math.sqrt(dx2*dx2+dy2*dy2)<500)continue;
+      var s2=el('circle',{cx:cx2,cy:cy2,r:0.3+rnd(i+444)*1.2,opacity:0.3+rnd(i+222)*0.5});
+      var v2=i%4;
+      s2.setAttribute('class','lw-star'+(v2===1?' lw-star-b':v2===2?' lw-star-c':v2===3?' lw-star-d':''));
+      stars.appendChild(s2);
+    }
+    var spokes=document.getElementById('lw-spokes');
+    for(var j=0;j<8;j++){
+      var a=-Math.PI/2+j*Math.PI/4;
+      spokes.appendChild(el('line',{x1:500+218*Math.cos(a),y1:500+218*Math.sin(a),
+        x2:500+388*Math.cos(a),y2:500+388*Math.sin(a)}));
+    }
+    var inner=document.getElementById('lw-innerOrns');
+    for(var k=0;k<8;k++){
+      var ka=-Math.PI/2+k*Math.PI/4+Math.PI/8;
+      inner.appendChild(el('circle',{cx:500+211*Math.cos(ka),cy:500+211*Math.sin(ka),r:2}));
+    }
+    var dent=document.getElementById('lw-denticles');
+    for(var m=0;m<32;m++){
+      var ma=m*Math.PI/16;
+      dent.appendChild(el('circle',{cx:500+155*Math.cos(ma),cy:500+155*Math.sin(ma),r:1.1}));
+    }
+  }
+
+  var todayMP, selectedIdx, viewMode;
+
+  function renderPhaseNodes(){
+    var nodes=document.getElementById('lw-phaseNodes');
+    clear(nodes);
+    var R=34;
+    for(var i=0;i<PHASES.length;i++){
+      var ang=-Math.PI/2+i*Math.PI/4;
+      var cx=500+345*Math.cos(ang), cy=500+345*Math.sin(ang);
+      var isActive=i===selectedIdx, isToday=i===todayMP.idx;
+      var g=el('g',{transform:'translate('+cx+' '+cy+')'});
+      g.setAttribute('class','lw-node');
+      g.setAttribute('role','button');
+      g.setAttribute('tabindex','0');
+      g.setAttribute('aria-label','View the '+PHASES[i].name+' phase');
+      if(isActive)g.appendChild(el('circle',{cx:0,cy:0,r:68,fill:'url(#lw-glowGrad)','class':'lw-active-glow'}));
+      g.appendChild(el('circle',{cx:0,cy:0,r:R+8,fill:'none',stroke:isActive?'#E5C77B':'#7A5F1F','stroke-width':isActive?1.4:0.6,opacity:isActive?0.9:0.5}));
+      g.appendChild(el('circle',{cx:0,cy:0,r:R+4,fill:'none',stroke:'#C9A24E','stroke-width':0.4,opacity:0.5}));
+      g.appendChild(el('circle',{cx:0,cy:0,r:R,fill:'url(#lw-darkDisc)'}));
+      g.appendChild(el('circle',{cx:0,cy:0,r:R,fill:'none',stroke:'#3A2F12','stroke-width':0.6}));
+      if(isToday&&!isActive)g.appendChild(el('circle',{cx:0,cy:-45,r:2.5,fill:'url(#lw-emerald)'}));
+      if(isToday&&isActive)g.appendChild(el('circle',{cx:0,cy:-52,r:2.5,fill:'url(#lw-emerald)'}));
+      var p=litPath(i,R);
+      if(p)g.appendChild(el('path',{d:p,fill:'url(#lw-moonGold)'}));
+      g.appendChild(el('circle',{cx:0,cy:0,r:50,fill:'transparent'}));
+      (function(idx){
+        function go(){ selectedIdx=idx; viewMode=(idx===todayMP.idx)?'today':'next'; renderAll(); }
+        g.addEventListener('click',go);
+        g.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); go(); }});
+      })(i);
+      nodes.appendChild(g);
+    }
+  }
+
+  function renderActiveRay(){
+    var rayG=document.getElementById('lw-activeRayGroup');
+    clear(rayG);
+    var ang=-Math.PI/2+selectedIdx*Math.PI/4;
+    var line=el('line',{x1:500+220*Math.cos(ang),y1:500+220*Math.sin(ang),
+      x2:500+300*Math.cos(ang),y2:500+300*Math.sin(ang),
+      stroke:'#E5C77B','stroke-width':1.2});
+    line.setAttribute('class','lw-active-ray');
+    rayG.appendChild(line);
+  }
+
+  function renderCenter(){
+    var center=document.getElementById('lw-centerContent');
+    clear(center);
+    var ph=PHASES[selectedIdx];
+    var isToday=viewMode==='today';
+    var dateToShow, illum;
+    if(isToday){ dateToShow=new Date(); illum=todayMP.illum; }
+    else { var occ=nextOccurrenceOf(new Date(),selectedIdx); dateToShow=occ.date; illum=(1-Math.cos(2*Math.PI*(selectedIdx/8)))/2; }
+    var dateStr=dateToShow.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+    function T(y,size,fill,attrs){ var o={x:500,y:y,'font-family':'Cormorant Garamond, Georgia, serif','font-size':size,fill:fill}; if(attrs)for(var k in attrs)o[k]=attrs[k]; return el('text',o); }
+
+    var header=T(400,'10','#C9A24E',{'letter-spacing':'6'});
+    txt(header,isToday?'✦ T O D A Y ✦':'✦ N E X T ✦'); center.appendChild(header);
+    var dateEl=T(422,'12','#FCF7F1',{'font-style':'italic','letter-spacing':'2'});
+    txt(dateEl,dateStr); center.appendChild(dateEl);
+    var nameEl=T(463,'26','#E5C77B',{'letter-spacing':'2'});
+    txt(nameEl,ph.name); center.appendChild(nameEl);
+    center.appendChild(el('line',{x1:432,y1:480,x2:488,y2:480,stroke:'#7A5F1F','stroke-width':0.6}));
+    center.appendChild(el('line',{x1:512,y1:480,x2:568,y2:480,stroke:'#7A5F1F','stroke-width':0.6}));
+    center.appendChild(el('circle',{cx:500,cy:480,r:2.8,fill:'url(#lw-emerald)'}));
+    center.appendChild(el('circle',{cx:500,cy:480,r:2.8,fill:'none',stroke:'#7A5F1F','stroke-width':0.5}));
+    var stageEl=T(500,'10','#C9A24E',{'letter-spacing':'4'});
+    txt(stageEl,ph.stage+' · '+ph.principle.toUpperCase()); center.appendChild(stageEl);
+    for(var li=0;li<ph.inscription.length;li++){
+      var tt=T(524+li*19,'15','#FCF7F1',{'font-style':'italic'});
+      txt(tt,ph.inscription[li]); center.appendChild(tt);
+    }
+    center.appendChild(el('circle',{cx:488,cy:580,r:1.2,fill:'#1E4D3A',opacity:'0.8'}));
+    center.appendChild(el('circle',{cx:500,cy:580,r:1.5,fill:'url(#lw-emerald)'}));
+    center.appendChild(el('circle',{cx:512,cy:580,r:1.2,fill:'#1E4D3A',opacity:'0.8'}));
+    var moveLabel=T(600,'9','#7DBE9C',{'letter-spacing':'5'});
+    txt(moveLabel,'T H E   M O V E'); center.appendChild(moveLabel);
+    var moveEl=T(618,'12.5','#FCF7F1',{'font-style':'italic'});
+    txt(moveEl,ph.money); center.appendChild(moveEl);
+    var illumEl=T(648,'9','#7A5F1F',{'letter-spacing':'3'});
+    txt(illumEl,Math.round(illum*100)+'%  I L L U M I N A T E D'); center.appendChild(illumEl);
+  }
+
+  function renderControlStrip(){
+    var strip=document.getElementById('lw-controlStrip');
+    clear(strip);
+    if(viewMode==='today'){
+      var hint=el('text',{x:500,y:1048,'text-anchor':'middle','font-family':'Cormorant Garamond, Georgia, serif','font-size':'10',fill:'#7A5F1F','font-style':'italic','letter-spacing':'2'});
+      txt(hint,'tap any phase to see when it next arrives'); strip.appendChild(hint);
+    } else {
+      var btn=el('g'); btn.setAttribute('class','lw-control');
+      btn.setAttribute('role','button'); btn.setAttribute('tabindex','0');
+      btn.setAttribute('aria-label','Return to today');
+      btn.appendChild(el('rect',{x:380,y:1030,width:240,height:32,rx:16,fill:'rgba(201,162,78,0.10)',stroke:'#C9A24E','stroke-width':0.6}));
+      var btxt=el('text',{x:500,y:1051,'text-anchor':'middle','font-family':'Cormorant Garamond, Georgia, serif','font-size':'10',fill:'#E5C77B','letter-spacing':'4'});
+      txt(btxt,'✦ R E T U R N   T O   N O W ✦'); btn.appendChild(btxt);
+      function back(){ selectedIdx=todayMP.idx; viewMode='today'; renderAll(); }
+      btn.addEventListener('click',back);
+      btn.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); back(); }});
+      strip.appendChild(btn);
+    }
+  }
+
+  function renderAll(){ renderActiveRay(); renderPhaseNodes(); renderCenter(); renderControlStrip(); }
+
+  function init(){
+    buildStatic();
+    todayMP=moonPhase(new Date()); selectedIdx=todayMP.idx; viewMode='today';
+    renderAll();
+    setInterval(function(){
+      var fresh=moonPhase(new Date());
+      if(fresh.idx!==todayMP.idx){ todayMP=fresh; if(viewMode==='today'){ selectedIdx=fresh.idx; renderAll(); } }
+      else { todayMP=fresh; if(viewMode==='today') renderCenter(); }
+    },10*60*1000);
+  }
+  init();
+})();
+</script>
+
+<script src="assets/js/zodiac.js"></script>
+<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/player.js"></script>
+</body>
+</html>

@@ -39,7 +39,7 @@ window.MM_POSTS = [
       { h: 'This Week’s Money Move' },
       { p: 'TFSA contribution room for 2026 is $7,000. If you haven’t maxed it yet or haven’t started one, this New Moon in Taurus is your cosmic nudge. Every dollar inside a TFSA grows tax-free. Taurus, the sign that rules money and long-term value, would absolutely approve.' },
       { h: 'Your reflection question' },
-      { p: 'Write down three things you want to build financially in the next six months. Not vague wishes — actual structures. A savings account. A debt cleared. An investment started. The New Moon plants seeds. Give it something specific to grow.' },
+      { p: 'Write down three things you want to build financially in the next six months. Not vague wishes. Actual structures. A savings account. A debt cleared. An investment started. The New Moon plants seeds. Give it something specific to grow.' },
       { p: 'New Moon. New money era. Let’s build.' }
     ]
   }

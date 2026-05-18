@@ -226,7 +226,7 @@
     Cancer: 'a week to shore up the reserve before anything else',
     Leo: 'a week to invest in what raises your standing, not only your balance',
     Virgo: 'a week to refine the system until it runs without you',
-    Libra: 'a week to rebalance — in the portfolio and in the spending',
+    Libra: 'a week to rebalance, in the portfolio and in the spending',
     Scorpio: 'a week to turn a liability into leverage',
     Sagittarius: 'a week to widen the horizon without overextending it',
     Capricorn: 'a week for the long, unglamorous, durable decision',
@@ -236,7 +236,7 @@
   const PHASE_MOVE = {
     'New Moon': 'open the position you keep deferring',
     'Waxing Crescent': 'let the small commitment gather momentum',
-    'First Quarter': 'meet the resistance and adjust — do not abandon',
+    'First Quarter': 'meet the resistance and adjust, do not abandon',
     'Waxing Gibbous': 'refine it before the result is due',
     'Full Moon': 'read the position with clear eyes and take what is ripe',
     'Waning Gibbous': 'distribute the gain with intention',
@@ -259,7 +259,7 @@
     const seed = Math.floor(now.getTime() / 86400000);
     const close = CLOSERS[seed % CLOSERS.length];
     const kicker = 'Luna · ' + now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
-    const text = 'The Moon is in ' + sign + ' — ' + SIGN_MONEY[sign] + '. With the ' +
+    const text = 'The Moon is in ' + sign + ': ' + SIGN_MONEY[sign] + '. With the ' +
       ph + ', ' + PHASE_MOVE[ph] + '. ' + close;
     return { kicker, text };
   }
@@ -328,7 +328,7 @@
       document.body.appendChild(a);
       a.click();
       a.remove();
-      if (note) note.innerHTML = 'Your free Moon Sign Money Blueprint is downloading ✦ and the Crescent Club is open in a new tab — confirm your subscription there.';
+      if (note) note.innerHTML = 'Your free Moon Sign Money Blueprint is downloading ✦ and the Crescent Club is open in a new tab. Confirm your subscription there.';
       f.reset();
     });
   });

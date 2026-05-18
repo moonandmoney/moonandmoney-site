@@ -35,7 +35,7 @@
         <span class="meta">${esc(p.tag || 'Reading')} · ${esc(p.date || '')}</span>
         <h2>${esc(p.title)}</h2>
         <p>${esc(p.subtitle || (p.free && p.free.find(b => b.p) ? p.free.find(b => b.p).p : ''))}</p>
-        <span class="btn btn-gold">Read this week’s reading — free</span>
+        <span class="btn btn-gold">Read this week’s reading, free</span>
       </a>` : `<div class="feed-state">The first reading lands Friday. ✦</div>`;
     feat.querySelectorAll('.reveal').forEach(el => setTimeout(() => el.classList.add('in'), 80));
   }
@@ -66,7 +66,7 @@
       art.innerHTML = '<div class="wrap"><p class="feed-state">This reading isn’t here yet.</p></div>';
       return;
     }
-    document.title = post.title + ' — Moon & Money';
+    document.title = post.title + ' · Moon & Money';
 
     const audioSrc = post.audio
       ? (post.audio.indexOf('/') >= 0 ? post.audio : 'assets/audio/' + post.audio) : '';
@@ -81,7 +81,7 @@
       <div class="club-close">
         <span class="eyebrow">The Crescent Club</span>
         <h3>The deeper reading continues for members</h3>
-        <p>The Canadian &amp; global economy through the astrological lens, plus the Cosmic Asset Watch — the extended weekly reading lives with the Crescent Club on Substack.</p>
+        <p>The Canadian &amp; global economy through the astrological lens, plus the Cosmic Asset Watch. The extended weekly reading lives with the Crescent Club on Substack.</p>
         <a class="btn btn-ghost" href="https://moonandmoney.substack.com/subscribe" target="_blank" rel="noopener">Join the Crescent Club</a>
       </div>`;
 
@@ -90,7 +90,7 @@
       <div class="money-pitch">
         <span class="eyebrow">Read For You Alone</span>
         <h3>Your Money Chart, read in full</h3>
-        <p>The weekly reading is for everyone. Your chart is not. A private, written money reading drawn from your exact birth chart — your financial temperament, the timing that favours you, the patterns worth watching. Considered, premium, yours.</p>
+        <p>The weekly reading is for everyone. Your chart is not. A private, written money reading drawn from your exact birth chart: your financial temperament, the timing that favours you, the patterns worth watching. Considered, premium, yours.</p>
         <a class="btn btn-gold" href="sessions.html">Request your Money Chart</a>
       </div>`;
 
