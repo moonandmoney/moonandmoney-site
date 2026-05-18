@@ -26,6 +26,20 @@
       setTimeout(() => el.classList.add('in'), 90 * i));
   }
 
+  /* ---------------- Homepage hero feature (this week) ---------------- */
+  const feat = document.getElementById('featuredReading');
+  if (feat) {
+    const p = (window.MM_POSTS || [])[0];
+    feat.innerHTML = p ? `
+      <a class="feature-card reveal" href="article.html?slug=${encodeURIComponent(p.slug)}">
+        <span class="meta">${esc(p.tag || 'Reading')} · ${esc(p.date || '')}</span>
+        <h2>${esc(p.title)}</h2>
+        <p>${esc(p.subtitle || (p.free && p.free.find(b => b.p) ? p.free.find(b => b.p).p : ''))}</p>
+        <span class="btn btn-gold">Read this week’s reading — free</span>
+      </a>` : `<div class="feed-state">The first reading lands Friday. ✦</div>`;
+    feat.querySelectorAll('.reveal').forEach(el => setTimeout(() => el.classList.add('in'), 80));
+  }
+
   /* ---------------- Archive listing ---------------- */
   const list = document.getElementById('readingList');
   if (list) {
@@ -68,7 +82,16 @@
         <span class="eyebrow">The Crescent Club</span>
         <h3>The deeper reading continues for members</h3>
         <p>The Canadian &amp; global economy through the astrological lens, plus the Cosmic Asset Watch — the extended weekly reading lives with the Crescent Club on Substack.</p>
-        <a class="btn btn-gold" href="https://moonandmoney.substack.com/subscribe" target="_blank" rel="noopener">Join the Crescent Club</a>
+        <a class="btn btn-ghost" href="https://moonandmoney.substack.com/subscribe" target="_blank" rel="noopener">Join the Crescent Club</a>
+      </div>`;
+
+    // The main offer — a private, personalised Money Chart reading.
+    const moneyPitch = `
+      <div class="money-pitch">
+        <span class="eyebrow">Read For You Alone</span>
+        <h3>Your Money Chart, read in full</h3>
+        <p>The weekly reading is for everyone. Your chart is not. A private, written money reading drawn from your exact birth chart — your financial temperament, the timing that favours you, the patterns worth watching. Considered, premium, yours.</p>
+        <a class="btn btn-gold" href="sessions.html">Request your Money Chart</a>
       </div>`;
 
     art.innerHTML = `
@@ -80,6 +103,7 @@
           ${post.subtitle ? `<p class="article-sub">${esc(post.subtitle)}</p>` : ''}
           <div class="article-actions">${audioBlock}${substackTop}</div>
           <div class="article-body">${blocks(post.free)}</div>
+          ${moneyPitch}
           ${clubClose}
           <div class="article-foot">
             <a href="${esc(subUrl)}" target="_blank" rel="noopener">Also on Substack ↗</a>

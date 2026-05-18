@@ -199,7 +199,7 @@
     const p = moonPhase(now);
     // illuminated fraction 0 (new) → 1 (full) → 0 (new)
     const illum = (1 - Math.cos(2 * Math.PI * p)) / 2; // 0 = new (dark) → 1 = full (bright)
-    const dir = p < .5 ? 1 : -1;          // waxing: light grows from the right; waning: from the left
+    const dir = p < .5 ? -1 : 1;          // waxing: lit on the RIGHT (shadow exits left); waning: lit on the LEFT
     // New moon: the obsidian disc sits fully over the moon (black).
     // Full moon: it slides entirely off (bright). Crescent in between.
     shadowEl.style.transform = `translateX(${dir * illum * 100}%)`;
