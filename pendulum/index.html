@@ -277,6 +277,20 @@
   }
   .email-confirm.active { display: block; }
 
+  .back-home {
+    position: absolute; top: 30px; left: 38px; z-index: 6;
+    width: 30px; height: 30px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--cream); opacity: 0.5; text-decoration: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  .back-home:hover, .back-home:focus-visible {
+    opacity: 1; transform: translateX(-3px); outline: none;
+  }
+  .back-home svg {
+    width: 20px; height: 20px; fill: none; stroke: currentColor;
+    stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+  }
   .footer {
     text-align: center; padding-top: 14px;
     font-family: 'Cormorant Garamond', serif; font-style: italic;
@@ -313,6 +327,7 @@
     .corner.br { bottom: 12px; right: 12px; }
     .reveal-text { font-size: 19px; }
     .title { font-size: 14px; }
+    .back-home { top: 20px; left: 22px; }
   }
 </style>
 </head>
@@ -324,6 +339,10 @@
   <div class="gold-border"></div>
   <span class="corner tl"></span><span class="corner tr"></span>
   <span class="corner bl"></span><span class="corner br"></span>
+
+  <a class="back-home" href="../index.html" aria-label="Back to Moon &amp; Money home">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5 L7.5 12 L14.5 19"/></svg>
+  </a>
 
   <div class="brand-strip">MOON &nbsp;&amp;&nbsp; MONEY</div>
   <div class="divider"><span class="line"></span><span class="dot"></span><span class="line"></span></div>
