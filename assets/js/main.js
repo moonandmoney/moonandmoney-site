@@ -211,9 +211,10 @@
     if (labelEl) {
       const dstr = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
       labelEl.innerHTML =
-        '<span class="mp-phase">' + phaseName(p) + '</span>' +
-        (sign ? '<span class="mp-sign">in ' + sign + '</span>' : '') +
-        '<span class="mp-date">' + dstr + '</span>';
+        '<span>' + phaseName(p) + '</span>' +
+        '<span class="sep">✦</span>' +
+        (sign ? '<span class="moon-in">in ' + sign + '</span><span class="sep">✦</span>' : '') +
+        '<span>' + dstr + '</span>';
     }
   }
 
