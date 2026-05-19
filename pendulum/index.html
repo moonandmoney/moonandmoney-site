@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pendulum · Moon &amp; Money</title>
+<meta name="description" content="A breath and coherence practice. Pair with any standard Bluetooth HRV sensor. By Luna Wilde at moonandmoney.ca." />
+<meta property="og:title" content="Pendulum · Moon &amp; Money" />
+<meta property="og:description" content="A breath and coherence practice. Pair with any standard Bluetooth HRV sensor. By Luna Wilde at moonandmoney.ca." />
+<meta property="og:url" content="https://moonandmoney.ca/pendulum" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy-deep:   #03081A;
+    --navy:        #0B2545;
+    --navy-mid:    #06122B;
+    --navy-dark:   #020611;
+    --gold-light:  #FFEFBF;
+    --gold:        #C9A24E;
+    --gold-deep:   #8B6F2A;
+    --gold-warm:   #D9B764;
+    --gold-stroke: #E5C77B;
+    --cream:       #FCF7F1;
+    --forest:      #1E4D3A;
+    --forest-light:#7DBE9C;
+    --grey:        #8E9AAE;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    min-height: 100vh; background: var(--navy-deep);
+    color: var(--cream); font-family: 'Cormorant Garamond', Georgia, serif;
+    overflow-x: hidden;
+  }
+  body {
+    background: radial-gradient(ellipse 80% 60% at 50% 42%,
+      var(--navy) 0%, var(--navy-mid) 55%, var(--navy-dark) 100%);
+    background-attachment: fixed;
+  }
+  .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+  .stars svg { width: 100%; height: 100%; }
+
+  .frame {
+    position: relative; z-index: 2; max-width: 760px; margin: 0 auto;
+    min-height: 100vh; padding: 40px 28px 36px;
+    display: flex; flex-direction: column;
+  }
+  .gold-border {
+    position: absolute; top: 24px; left: 24px; right: 24px; bottom: 24px;
+    border: 1px solid rgba(201, 162, 78, 0.45); pointer-events: none;
+  }
+  .corner {
+    position: absolute; width: 14px; height: 14px;
+    border: 1px solid var(--gold-stroke); pointer-events: none;
+  }
+  .corner.tl { top: 20px;  left: 20px;  border-right: none; border-bottom: none; }
+  .corner.tr { top: 20px;  right: 20px; border-left: none;  border-bottom: none; }
+  .corner.bl { bottom: 20px; left: 20px;  border-right: none; border-top: none; }
+  .corner.br { bottom: 20px; right: 20px; border-left: none;  border-top: none; }
+
+  .brand-strip {
+    text-align: center; font-family: 'Arimo', 'Liberation Sans', Arial, sans-serif; font-weight: 500;
+    font-size: 11px; letter-spacing: 4px; color: var(--gold);
+    text-shadow: 0 0 12px rgba(201, 162, 78, 0.35);
+    padding-top: 16px;
+  }
+  .divider {
+    display: flex; align-items: center; justify-content: center;
+    gap: 10px; margin: 12px 0;
+  }
+  .divider .line {
+    width: 56px; height: 1px;
+    background: linear-gradient(90deg,
+      transparent 0%, var(--gold-stroke) 30%, var(--gold) 50%,
+      var(--gold-stroke) 70%, transparent 100%);
+  }
+  .divider .dot {
+    width: 4px; height: 4px; background: var(--gold-light); border-radius: 50%;
+    box-shadow: 0 0 8px var(--gold-warm);
+  }
+  .title {
+    text-align: center; font-style: italic; font-weight: 300;
+    font-size: 16px; color: var(--gold-warm); letter-spacing: 1px;
+    margin-bottom: 6px;
+    text-shadow: 0 0 18px rgba(217, 183, 100, 0.25);
+  }
+
+  .breath-cue {
+    text-align: center;
+    font-style: italic; font-size: 13px; font-weight: 300;
+    color: var(--gold-warm); letter-spacing: 4px;
+    opacity: 0; transition: opacity 1.2s ease;
+    text-shadow: 0 0 12px rgba(217, 183, 100, 0.4);
+    min-height: 18px;
+    margin: 0 auto 14px;
+    pointer-events: none;
+  }
+  .breath-cue.show { opacity: 0.9; }
+
+  .stage {
+    position: relative; flex: 1;
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: flex-start; min-height: 540px;
+  }
+  .idle-state, .session-state, .reveal {
+    width: 100%; display: flex; flex-direction: column; align-items: center;
+  }
+  .session-state, .reveal { display: none; }
+  .session-state.active, .reveal.active { display: flex; }
+
+  .pendulum-wrap {
+    position: relative; width: 100%; max-width: 380px;
+    margin: 0 auto; aspect-ratio: 380 / 460;
+  }
+  .pendulum-svg { width: 100%; height: 100%; display: block; }
+
+  .controls {
+    margin-top: 18px;
+    display: flex; flex-direction: column; align-items: center; gap: 18px;
+  }
+  .duration-row {
+    display: flex; gap: 8px; align-items: center;
+    font-family: 'Arimo', 'Liberation Sans', Arial, sans-serif; font-size: 9px;
+    letter-spacing: 2px; text-transform: uppercase; color: var(--grey);
+  }
+  .duration-row .label { color: var(--gold); margin-right: 6px; }
+  .dur-btn {
+    background: transparent; border: 1px solid rgba(229, 199, 123, 0.4);
+    color: var(--cream); padding: 7px 14px; cursor: pointer;
+    font-family: 'Arimo', 'Liberation Sans', Arial, sans-serif; font-size: 9px;
+    letter-spacing: 1.6px; text-transform: uppercase;
+    transition: all 0.3s ease;
+  }
+  .dur-btn:hover {
+    border-color: var(--gold-warm); background: rgba(217, 183, 100, 0.08);
+  }
+  .dur-btn.active {
+    background: linear-gradient(135deg, var(--gold-warm), var(--gold-deep));
+    color: var(--navy-deep); border-color: var(--gold-warm);
+    box-shadow: 0 0 14px rgba(217, 183, 100, 0.35);
+  }
+
+  .begin-btn {
+    background: transparent; color: var(--gold-light);
+    padding: 16px 44px; border: 1px solid var(--gold-warm);
+    cursor: pointer; font-family: 'Arimo', 'Liberation Sans', Arial, sans-serif;
+    font-size: 11px; letter-spacing: 5px; text-transform: uppercase;
+    transition: all 0.4s ease;
+    text-shadow: 0 0 8px rgba(255, 239, 191, 0.4);
+    position: relative; overflow: hidden;
+  }
+  .begin-btn:hover {
+    border-color: var(--gold-light);
+    box-shadow: 0 0 24px rgba(217, 183, 100, 0.4);
+  }
+
+  .sensor-row {
+    font-family: 'Arimo', 'Liberation Sans', Arial, sans-serif; font-size: 10px;
+    color: var(--grey); letter-spacing: 0.5px; margin-top: 4px;
+  }
+  .sensor-row button {
+    background: none; border: none; color: var(--forest-light); cursor: pointer;
+    font-family: inherit; font-size: inherit;
+    text-decoration: underline; text-underline-offset: 3px;
+    text-decoration-color: rgba(125, 190, 156, 0.45);
+  }
+  .sensor-row button:hover { color: var(--gold-warm); }
+  .sensor-row .status { color: var(--forest-light); font-weight: 500; }
+  .sensor-row .status::before {
+    content: "● "; color: var(--forest-light);
+    text-shadow: 0 0 8px rgba(125, 190, 156, 0.6);
+  }
+  .sensor-tip {
+    margin-top: 4px; font-size: 9px; color: var(--grey); opacity: 0.6;
+    max-width: 280px; text-align: center; line-height: 1.5;
+    font-family: 'Arimo', 'Liberation Sans', Arial, sans-serif; letter-spacing: 0.4px;
+  }
+
+  .session-timer {
+    font-family: 'Arimo', 'Liberation Sans', Arial, sans-serif; font-size: 10px;
+    color: var(--gold-warm); letter-spacing: 4px;
+    margin-top: 14px; text-shadow: 0 0 8px rgba(217, 183, 100, 0.3);
+  }
+  .coherence-readout {
+    margin-top: 10px; font-family: 'Arimo', 'Liberation Sans', Arial, sans-serif;
+    font-size: 10px; letter-spacing: 2px; color: var(--forest-light);
+    opacity: 0; transition: opacity 0.8s ease;
+    min-height: 14px; text-transform: uppercase;
+  }
+  .coherence-readout.show { opacity: 0.9; }
+
+  .hrv-graph-wrap {
+    width: 100%; max-width: 380px;
+    margin: 18px auto 0; height: 80px; display: none; position: relative;
+  }
+  .hrv-graph-wrap.active { display: block; }
+  .hrv-graph { width: 100%; height: 100%; display: block; }
+  .hrv-label {
+    position: absolute; top: -16px; left: 0;
+    font-family: 'Arimo', 'Liberation Sans', Arial, sans-serif; font-size: 8px;
+    color: var(--grey); letter-spacing: 2px; text-transform: uppercase;
+  }
+  .stop-hint {
+    margin-top: 18px; font-style: italic; font-size: 11px;
+    color: var(--grey); letter-spacing: 0.6px; opacity: 0.7;
+  }
+
+  .reveal { text-align: center; padding: 12px 20px 0; max-width: 520px; }
+  .reveal-eyebrow {
+    font-family: 'Arimo', 'Liberation Sans', Arial, sans-serif; font-size: 9px;
+    letter-spacing: 4px; color: var(--gold); text-transform: uppercase;
+    margin-bottom: 24px; opacity: 0.85;
+  }
+  .reveal-quote-mark {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 60px; line-height: 0.6;
+    color: var(--gold-warm); opacity: 0.4; margin-bottom: -4px;
+  }
+  .reveal-text {
+    font-size: 22px; line-height: 1.55; font-style: italic; font-weight: 300;
+    color: var(--cream); margin-bottom: 28px; letter-spacing: 0.3px;
+  }
+  .reveal-meta {
+    font-family: 'Arimo', 'Liberation Sans', Arial, sans-serif; font-size: 9px;
+    color: var(--grey); letter-spacing: 3px; text-transform: uppercase;
+    margin-bottom: 32px; display: flex; gap: 16px; flex-wrap: wrap;
+    justify-content: center;
+  }
+  .reveal-meta .stat { color: var(--gold-warm); }
+  .reveal-actions {
+    display: flex; gap: 12px; margin-bottom: 18px; flex-wrap: wrap;
+    justify-content: center;
+  }
+  .ghost-btn {
+    background: transparent; border: 1px solid rgba(229, 199, 123, 0.4);
+    color: var(--cream); padding: 11px 22px; cursor: pointer;
+    font-family: 'Arimo', 'Liberation Sans', Arial, sans-serif; font-size: 10px;
+    letter-spacing: 2.2px; text-transform: uppercase;
+    transition: all 0.3s ease;
+  }
+  .ghost-btn:hover {
+    border-color: var(--gold-warm); color: var(--gold-warm);
+    box-shadow: 0 0 14px rgba(217, 183, 100, 0.18);
+  }
+  .ghost-btn.primary {
+    background: linear-gradient(135deg, rgba(217, 183, 100, 0.18), rgba(125, 190, 156, 0.1));
+    border-color: var(--gold-warm); color: var(--gold-light);
+  }
+  .email-row {
+    margin-top: 16px; display: none; flex-direction: column;
+    align-items: center; gap: 12px; width: 100%;
+  }
+  .email-row.active { display: flex; }
+  .email-row input {
+    padding: 12px 18px; border: 1px solid rgba(229, 199, 123, 0.4);
+    background: rgba(11, 37, 69, 0.6); color: var(--cream);
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 15px; width: 260px; text-align: center; letter-spacing: 0.5px;
+  }
+  .email-row input::placeholder { color: var(--grey); opacity: 0.7; }
+  .email-row input:focus {
+    outline: none; border-color: var(--gold-warm);
+    box-shadow: 0 0 14px rgba(217, 183, 100, 0.2);
+  }
+  .email-row .send {
+    background: linear-gradient(135deg, var(--forest), var(--forest-light));
+    color: var(--cream); padding: 10px 22px; border: none; cursor: pointer;
+    font-family: 'Arimo', 'Liberation Sans', Arial, sans-serif; font-size: 10px;
+    letter-spacing: 2px; text-transform: uppercase;
+  }
+  .email-confirm {
+    font-style: italic; font-size: 13px; color: var(--forest-light);
+    display: none; margin-top: 8px;
+  }
+  .email-confirm.active { display: block; }
+
+  .footer {
+    text-align: center; padding-top: 28px;
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 12px; color: var(--gold); opacity: 0.7;
+  }
+  .footer a { color: var(--gold); text-decoration: none; }
+
+  .share-modal {
+    position: fixed; inset: 0; z-index: 1000;
+    background: rgba(3, 8, 26, 0.92);
+    backdrop-filter: blur(8px);
+    display: none; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .share-modal.active { display: flex; }
+  .share-modal-inner {
+    background: var(--navy-deep); border: 1px solid var(--gold-warm);
+    padding: 24px; max-width: 420px; width: 100%;
+    text-align: center;
+    box-shadow: 0 0 60px rgba(217, 183, 100, 0.2);
+  }
+  .share-preview {
+    width: 100%; max-width: 280px; margin: 0 auto 18px;
+    display: block; border: 1px solid rgba(229, 199, 123, 0.3);
+  }
+  .share-actions { display: flex; gap: 10px; justify-content: center; }
+
+  @media (max-width: 540px) {
+    .frame { padding: 32px 18px 28px; }
+    .gold-border { top: 16px; left: 16px; right: 16px; bottom: 16px; }
+    .corner.tl { top: 12px; left: 12px; }
+    .corner.tr { top: 12px; right: 12px; }
+    .corner.bl { bottom: 12px; left: 12px; }
+    .corner.br { bottom: 12px; right: 12px; }
+    .reveal-text { font-size: 19px; }
+    .title { font-size: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<div class="frame">
+  <div class="gold-border"></div>
+  <span class="corner tl"></span><span class="corner tr"></span>
+  <span class="corner bl"></span><span class="corner br"></span>
+
+  <div class="brand-strip">MOON &nbsp;&amp;&nbsp; MONEY</div>
+  <div class="divider"><span class="line"></span><span class="dot"></span><span class="line"></span></div>
+  <div class="title">— pendulum —</div>
+  <div class="breath-cue" id="breathCue"></div>
+
+  <div class="stage">
+    <div class="idle-state" id="idleState">
+      <div class="pendulum-wrap" id="pendulumWrap">
+        <svg viewBox="0 0 380 460" class="pendulum-svg" id="pendulumSvg">
+          <defs>
+            <radialGradient id="moonGold" cx="35%" cy="32%" r="72%">
+              <stop offset="0%" stop-color="#FFEFBF"/>
+              <stop offset="48%" stop-color="#D9B764"/>
+              <stop offset="100%" stop-color="#7A5F1F"/>
+            </radialGradient>
+            <radialGradient id="bobGold" cx="32%" cy="30%" r="78%">
+              <stop offset="0%" stop-color="#FFEFBF"/>
+              <stop offset="40%" stop-color="#D9B764"/>
+              <stop offset="100%" stop-color="#6E5418"/>
+            </radialGradient>
+            <radialGradient id="bobGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#FFEFBF" stop-opacity="0.7"/>
+              <stop offset="40%" stop-color="#C9A24E" stop-opacity="0.32"/>
+              <stop offset="100%" stop-color="#7A5F1F" stop-opacity="0"/>
+            </radialGradient>
+            <linearGradient id="goldRod" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#E5C77B" stop-opacity="0.4"/>
+              <stop offset="50%" stop-color="#D9B764" stop-opacity="0.85"/>
+              <stop offset="100%" stop-color="#E5C77B" stop-opacity="0.95"/>
+            </linearGradient>
+            <radialGradient id="anchorGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#FFEFBF" stop-opacity="0.55"/>
+              <stop offset="100%" stop-color="#7A5F1F" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+
+          <path id="trail" d="M 90 340 Q 190 460 290 340"
+                stroke="url(#goldRod)" stroke-width="0.8" fill="none"
+                opacity="0" stroke-linecap="round"/>
+
+          <g id="anchorGroup">
+            <circle cx="190" cy="50" r="34" fill="url(#anchorGlow)" opacity="0.7"/>
+            <circle cx="190" cy="50" r="16" fill="url(#moonGold)"/>
+            <circle cx="196" cy="47" r="13" fill="#0B2545"/>
+          </g>
+
+          <g id="pendulum" transform="rotate(0 190 50)">
+            <line x1="190" y1="70" x2="190" y2="334"
+                  stroke="url(#goldRod)" stroke-width="1.6"
+                  stroke-linecap="round" opacity="0.85"/>
+            <circle id="bobHalo" cx="190" cy="358" r="48"
+                    fill="url(#bobGlow)" opacity="0.85"/>
+            <circle id="bob" cx="190" cy="358" r="24" fill="url(#bobGold)"/>
+            <ellipse cx="183" cy="350" rx="8" ry="5" fill="#FFEFBF" opacity="0.55"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="controls">
+        <div class="duration-row">
+          <button class="dur-btn" data-min="1">1 min</button>
+          <button class="dur-btn active" data-min="3">3 min</button>
+          <button class="dur-btn" data-min="5">5 min</button>
+          <button class="dur-btn" data-min="10">10 min</button>
+        </div>
+        <button class="begin-btn" id="beginBtn">Begin</button>
+        <div class="sensor-row" id="sensorRow">
+          <button id="connectBtn">Connect HRV sensor</button>
+        </div>
+        <div class="sensor-tip">
+          Compatible with HeartMath Coherence Plus, Polar H10,<br>
+          and other standard Bluetooth HRV sensors.
+        </div>
+      </div>
+    </div>
+
+    <div class="session-state" id="sessionState">
+      <div class="session-timer" id="sessionTimer">00:00</div>
+      <div class="coherence-readout" id="coherenceReadout"></div>
+      <div class="hrv-graph-wrap" id="hrvGraphWrap">
+        <div class="hrv-label">your coherence</div>
+        <canvas class="hrv-graph" id="hrvGraph" width="760" height="160"></canvas>
+      </div>
+      <div class="stop-hint">tap the pendulum to stop</div>
+    </div>
+
+    <div class="reveal" id="revealState">
+      <div class="reveal-eyebrow">your reading</div>
+      <div class="reveal-quote-mark">"</div>
+      <div class="reveal-text" id="revealText"></div>
+      <div class="reveal-meta" id="revealMeta"></div>
+      <div class="reveal-actions">
+        <button class="ghost-btn" id="againBtn">Begin again</button>
+        <button class="ghost-btn primary" id="shareBtn">Save as image</button>
+        <button class="ghost-btn" id="saveBtn">Email me this</button>
+      </div>
+      <div class="email-row" id="emailRow">
+        <input type="email" placeholder="your email" id="emailInput" />
+        <button class="send" id="sendBtn">Send + subscribe</button>
+      </div>
+      <div class="email-confirm" id="emailConfirm">
+        Subscribed. Watch your inbox for the next reading.
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Moon &amp; Money
+  </div>
+</div>
+
+<div class="share-modal" id="shareModal">
+  <div class="share-modal-inner">
+    <div class="brand-strip" style="padding: 0; margin-bottom: 14px;">YOUR PENDULUM READING</div>
+    <canvas class="share-preview" id="sharePreview" width="540" height="675"></canvas>
+    <div class="share-actions">
+      <button class="ghost-btn" id="closeShareBtn">Close</button>
+      <button class="ghost-btn primary" id="downloadBtn">Download</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function buildStars() {
+  const w = window.innerWidth, h = window.innerHeight;
+  const count = Math.min(120, Math.floor((w * h) / 9000));
+  let svg = '<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" preserveAspectRatio="none">';
+  for (let i = 0; i < count; i++) {
+    const x = Math.random() * 100, y = Math.random() * 100;
+    const r = 0.4 + Math.random() * 1.4;
+    const base = 0.15 + Math.random() * 0.5;
+    const peak = Math.min(base + 0.3 + Math.random() * 0.3, 0.95);
+    const dur = 3 + Math.random() * 5;
+    const begin = -Math.random() * dur;
+    svg += '<circle cx="' + x + '%" cy="' + y + '%" r="' + r + '" fill="#FCF7F1">' +
+      '<animate attributeName="opacity" values="' + base.toFixed(2) + ';' + peak.toFixed(2) + ';' + base.toFixed(2) + '" dur="' + dur.toFixed(2) + 's" begin="' + begin.toFixed(2) + 's" repeatCount="indefinite"/>' +
+      '</circle>';
+  }
+  svg += '</svg>';
+  document.getElementById("stars").innerHTML = svg;
+})();
+
+const READINGS = [
+  "'I'll figure out the details later.' You won't. The follow-through is half the asset.",
+  "'I'll feel safe once I have enough.' You won't. Enough was never a number. Safety is something you generate, not something the account gives you.",
+  "'If I don't look, it isn't real.' It is already real. Looking lets you respond. Not looking lets it grow.",
+  "'I deserve this, I worked hard.' Maybe you did. The question is whether you want this. Deserve and want are different transactions.",
+  "'Future me will pay for it.' Future you is the same you, with more debt. Pay now or pay later. Pay.",
+  "'I just want it to be fair' can quietly become 'I will overgive to keep the peace.' Fair includes you.",
+  "'I'll be ready once I know enough.' You already know enough. The next move is execution, not more research.",
+  "'If I tell anyone what I have, I lose it.' If you tell the right one person, you grow it. Trust is leverage.",
+  "'I shouldn't spend on something just because it feels good.' You should. Pleasure is a real category, not a luxury.",
+  "'I'll pick this up, it's easier than asking.' The asking is the price. Pay it once, save a thousand small drains.",
+  "Open the account you've been circling. Not the perfect one. The one you can open today.",
+  "Look at the balance. Just look. Don't judge it, don't fix it. Looking is the work this week.",
+  "Name one thing you've been carrying that isn't yours to pay for. Set it down before the next moon.",
+  "Have the money conversation you've been avoiding. The asking is the price of being met.",
+  "Move one dollar toward what you say you value. Symbolic counts. Small is the practice.",
+  "I am not behind. I am not too late. The next New Moon is always coming.",
+  "I am safe in myself. My security is internal.",
+  "Fair includes me. I receive what I am worth.",
+  "My focus is my fortune. One path, fully walked, is enough.",
+  "I am allowed to receive. My wealth serves the whole.",
+  "My freedom rests on a strong foundation. Both can exist.",
+  "I am not my net worth. I am the one who built it.",
+];
+
+const state = {
+  duration: 180, running: false, startTime: 0, elapsed: 0, rafId: null,
+  pendulumSvg: document.getElementById("pendulumSvg"),
+  pendulum: document.getElementById("pendulum"),
+  anchorGroup: document.getElementById("anchorGroup"),
+  bob: document.getElementById("bob"),
+  bobHalo: document.getElementById("bobHalo"),
+  trail: document.getElementById("trail"),
+  breathCue: document.getElementById("breathCue"),
+  coherenceReadout: document.getElementById("coherenceReadout"),
+  sessionTimer: document.getElementById("sessionTimer"),
+  hrvGraph: document.getElementById("hrvGraph"),
+  hrvGraphWrap: document.getElementById("hrvGraphWrap"),
+  bleDevice: null, bleChar: null, sensorConnected: false,
+  rrIntervals: [], rrSamplesForGraph: [], coherenceHistory: [],
+  lastHr: null, coherenceScore: 0,
+  finalReading: "", finalAvgCoherence: null, finalDurationSec: 0,
+};
+
+const PERIOD = 10, THETA_MAX = 28;
+
+function tick(ts) {
+  if (!state.running) return;
+  state.elapsed = (ts - state.startTime) / 1000;
+  const remaining = state.duration - state.elapsed;
+  if (remaining <= 0) { completeSession(false); return; }
+
+  const phase = (state.elapsed % PERIOD) / PERIOD;
+  const angle = -THETA_MAX * Math.cos(2 * Math.PI * phase);
+  state.pendulum.setAttribute("transform", "rotate(" + angle + " 190 50)");
+
+  const breathScale = 1.0 + 0.35 * Math.sin(Math.PI * phase);
+  state.anchorGroup.setAttribute("transform",
+    "translate(190 50) scale(" + breathScale + ") translate(-190 -50)");
+
+  state.breathCue.textContent = (phase < 0.5) ? "inhale" : "exhale";
+  state.breathCue.classList.add("show");
+
+  const c = state.coherenceScore;
+  state.bobHalo.setAttribute("opacity", String(0.45 + c * 0.5));
+  state.bobHalo.setAttribute("r", String(48 + c * 22));
+  state.trail.setAttribute("opacity", String(0.05 + c * 0.55));
+
+  const m = Math.floor(remaining / 60), s = Math.floor(remaining % 60);
+  state.sessionTimer.textContent = String(m).padStart(2,"0") + ":" + String(s).padStart(2,"0");
+
+  if (state.sensorConnected && state.rrSamplesForGraph.length > 4) {
+    drawHrvGraph(state.hrvGraph, state.rrSamplesForGraph);
+    const cPct = Math.round(state.coherenceScore * 100);
+    state.coherenceReadout.textContent = "coherence " + cPct + "%   ·   " + (state.lastHr || "—") + " bpm";
+    state.coherenceReadout.classList.add("show");
+  }
+  if (Math.floor(state.elapsed * 2) % 2 === 0) {
+    state.coherenceHistory.push({ t: state.elapsed, c: state.coherenceScore });
+  }
+
+  state.rafId = requestAnimationFrame(tick);
+}
+
+function drawHrvGraph(canvas, samples) {
+  const ctx = canvas.getContext("2d");
+  const w = canvas.width, h = canvas.height;
+  ctx.clearRect(0, 0, w, h);
+  if (samples.length < 2) return;
+  const cutoffT = samples[samples.length - 1].t - 60;
+  const recent = samples.filter(s => s.t >= cutoffT);
+  if (recent.length < 2) return;
+  const rrs = recent.map(s => s.rr);
+  let minRR = Math.min.apply(null, rrs), maxRR = Math.max.apply(null, rrs);
+  const range = Math.max(maxRR - minRR, 50);
+  minRR -= range * 0.15; maxRR += range * 0.15;
+  const tMin = recent[0].t, tMax = recent[recent.length - 1].t;
+  const tRange = Math.max(tMax - tMin, 1);
+
+  const grad = ctx.createLinearGradient(0, 0, w, 0);
+  grad.addColorStop(0, "rgba(229, 199, 123, 0.0)");
+  grad.addColorStop(0.1, "rgba(229, 199, 123, 0.6)");
+  grad.addColorStop(0.9, "rgba(229, 199, 123, 0.95)");
+  grad.addColorStop(1, "rgba(217, 183, 100, 1)");
+  ctx.strokeStyle = grad;
+  ctx.lineWidth = 2.5; ctx.lineJoin = "round"; ctx.lineCap = "round";
+  ctx.shadowColor = "rgba(217, 183, 100, 0.5)"; ctx.shadowBlur = 8;
+
+  ctx.beginPath();
+  recent.forEach((s, i) => {
+    const x = ((s.t - tMin) / tRange) * w;
+    const y = h - ((s.rr - minRR) / (maxRR - minRR)) * h;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+  ctx.strokeStyle = "rgba(229, 199, 123, 0.12)";
+  ctx.lineWidth = 0.5; ctx.setLineDash([3, 3]);
+  ctx.beginPath(); ctx.moveTo(0, h/2); ctx.lineTo(w, h/2); ctx.stroke();
+  ctx.setLineDash([]);
+}
+
+function beginSession() {
+  state.running = true;
+  state.startTime = performance.now();
+  state.rrIntervals = []; state.rrSamplesForGraph = [];
+  state.coherenceHistory = []; state.coherenceScore = 0;
+
+  document.getElementById("idleState").style.display = "none";
+  document.getElementById("sessionState").classList.add("active");
+
+  const sess = document.getElementById("sessionState");
+  const wrap = document.getElementById("pendulumWrap");
+  sess.insertBefore(wrap, sess.firstChild);
+
+  if (state.sensorConnected) state.hrvGraphWrap.classList.add("active");
+
+  const svg = document.getElementById("pendulumSvg");
+  svg.style.cursor = "pointer";
+  svg.onclick = function() { if (state.running) completeSession(true); };
+
+  state.rafId = requestAnimationFrame(tick);
+}
+
+function completeSession(early) {
+  state.running = false;
+  if (state.rafId) cancelAnimationFrame(state.rafId);
+  state.finalDurationSec = state.elapsed;
+
+  if (state.coherenceHistory.length > 0) {
+    const total = state.coherenceHistory.reduce(function(a,b) { return a + b.c; }, 0);
+    state.finalAvgCoherence = total / state.coherenceHistory.length;
+  } else {
+    state.finalAvgCoherence = null;
+  }
+
+  state.finalReading = READINGS[Math.floor(Math.random() * READINGS.length)];
+  document.getElementById("revealText").textContent = state.finalReading;
+
+  const m = Math.floor(state.finalDurationSec / 60);
+  const s = Math.floor(state.finalDurationSec % 60);
+  const parts = ["<span>" + m + ":" + String(s).padStart(2,"0") + " with the moon</span>"];
+  if (state.finalAvgCoherence !== null) {
+    parts.push('<span class="stat">avg coherence ' + Math.round(state.finalAvgCoherence * 100) + '%</span>');
+  }
+  parts.push("<span>" + new Date().toLocaleDateString("en-CA", { month: "long", day: "numeric", year: "numeric" }) + "</span>");
+  document.getElementById("revealMeta").innerHTML = parts.join("");
+
+  state.pendulum.setAttribute("transform", "rotate(0 190 50)");
+  state.anchorGroup.removeAttribute("transform");
+  document.getElementById("breathCue").classList.remove("show");
+  document.getElementById("sessionState").classList.remove("active");
+  state.hrvGraphWrap.classList.remove("active");
+  document.getElementById("revealState").classList.add("active");
+  document.getElementById("pendulumWrap").style.display = "none";
+}
+
+function reset() {
+  document.getElementById("revealState").classList.remove("active");
+  document.getElementById("idleState").style.display = "flex";
+  const idle = document.getElementById("idleState");
+  const wrap = document.getElementById("pendulumWrap");
+  idle.insertBefore(wrap, idle.firstChild);
+  wrap.style.display = "block";
+  document.getElementById("breathCue").classList.remove("show");
+  document.getElementById("emailRow").classList.remove("active");
+  document.getElementById("emailConfirm").classList.remove("active");
+  document.getElementById("emailInput").value = "";
+}
+
+const HR_SERVICE = 0x180D, HR_CHAR = 0x2A37;
+
+async function connectSensor() {
+  if (!navigator.bluetooth) {
+    alert("Web Bluetooth isn't available in this browser. Try Chrome on Mac, Windows, or Android. iPhone Safari doesn't support it yet. The breath pacer works without a sensor.");
+    return;
+  }
+  try {
+    state.bleDevice = await navigator.bluetooth.requestDevice({
+      filters: [{ services: [HR_SERVICE] }],
+    });
+    const server = await state.bleDevice.gatt.connect();
+    const service = await server.getPrimaryService(HR_SERVICE);
+    state.bleChar = await service.getCharacteristic(HR_CHAR);
+    await state.bleChar.startNotifications();
+    state.bleChar.addEventListener("characteristicvaluechanged", onHrData);
+    state.sensorConnected = true;
+    document.getElementById("sensorRow").innerHTML =
+      '<span class="status">' + (state.bleDevice.name || "Sensor") + ' connected</span>' +
+      ' &middot; <button id="disconnectBtn">disconnect</button>';
+    document.getElementById("disconnectBtn").addEventListener("click", disconnectSensor);
+    state.bleDevice.addEventListener("gattserverdisconnected", function() {
+      state.sensorConnected = false;
+      document.getElementById("sensorRow").innerHTML =
+        '<button id="connectBtn">Connect HRV sensor</button>';
+      document.getElementById("connectBtn").addEventListener("click", connectSensor);
+    });
+  } catch (err) {
+    console.warn("Sensor connect cancelled or failed:", err);
+  }
+}
+function disconnectSensor() {
+  if (state.bleDevice && state.bleDevice.gatt.connected) state.bleDevice.gatt.disconnect();
+}
+function onHrData(event) {
+  const v = event.target.value;
+  const flags = v.getUint8(0);
+  const hrIsU16 = flags & 0x01;
+  const rrPresent = flags & 0x10;
+  let offset = 1, hr;
+  if (hrIsU16) { hr = v.getUint16(offset, true); offset += 2; }
+  else { hr = v.getUint8(offset); offset += 1; }
+  if (flags & 0x02) offset += 1;
+  if (flags & 0x04) offset += 1;
+  if (flags & 0x08) offset += 2;
+  state.lastHr = hr;
+  if (rrPresent) {
+    while (offset + 1 < v.byteLength) {
+      const rr1024 = v.getUint16(offset, true);
+      const rrMs = (rr1024 / 1024) * 1000;
+      state.rrIntervals.push(rrMs);
+      if (state.rrIntervals.length > 80) state.rrIntervals.shift();
+      state.rrSamplesForGraph.push({ t: state.elapsed, rr: rrMs });
+      if (state.rrSamplesForGraph.length > 200) state.rrSamplesForGraph.shift();
+      offset += 2;
+    }
+    updateCoherence();
+  }
+}
+function updateCoherence() {
+  const rr = state.rrIntervals;
+  if (rr.length < 8) return;
+  const mean = rr.reduce(function(a,b) { return a + b; }, 0) / rr.length;
+  const max = Math.max.apply(null, rr), min = Math.min.apply(null, rr);
+  const swing = (max - min) / mean;
+  let c = (swing - 0.05) / 0.20;
+  if (c < 0) c = 0; if (c > 1) c = 1;
+  state.coherenceScore = state.coherenceScore * 0.75 + c * 0.25;
+}
+
+function mulberry32(a) {
+  return function() {
+    let t = a += 0x6D2B79F5;
+    t = Math.imul(t ^ t >>> 15, t | 1);
+    t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+function drawCornerBracket(ctx, x, y, sx, sy) {
+  const arm = 9;
+  ctx.beginPath();
+  ctx.moveTo(x, y); ctx.lineTo(x + sx*arm, y);
+  ctx.moveTo(x, y); ctx.lineTo(x, y + sy*arm);
+  ctx.stroke();
+}
+function drawSpacedText(ctx, text, cx, y, spacing) {
+  const chars = text.split("");
+  const widths = chars.map(function(ch) { return ctx.measureText(ch).width; });
+  const total = widths.reduce(function(a,b) { return a+b; }, 0) + spacing * (chars.length - 1);
+  let x = cx - total / 2;
+  ctx.textAlign = "left";
+  for (let i = 0; i < chars.length; i++) {
+    ctx.fillText(chars[i], x, y);
+    x += widths[i] + spacing;
+  }
+  ctx.textAlign = "center";
+}
+function drawDivider(ctx, cx, y, halfW) {
+  const g = ctx.createLinearGradient(cx - halfW, y, cx + halfW, y);
+  g.addColorStop(0, "rgba(229, 199, 123, 0)");
+  g.addColorStop(0.5, "#C9A24E");
+  g.addColorStop(1, "rgba(229, 199, 123, 0)");
+  ctx.strokeStyle = g; ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(cx - halfW, y); ctx.lineTo(cx - 6, y);
+  ctx.moveTo(cx + 6, y); ctx.lineTo(cx + halfW, y);
+  ctx.stroke();
+  ctx.fillStyle = "#FFEFBF";
+  ctx.beginPath(); ctx.arc(cx, y, 1.8, 0, 2*Math.PI); ctx.fill();
+}
+function drawMoonGlyph(ctx, cx, cy, r) {
+  const halo = ctx.createRadialGradient(cx, cy, r * 0.4, cx, cy, r * 2.2);
+  halo.addColorStop(0, "rgba(255, 239, 191, 0.45)");
+  halo.addColorStop(0.5, "rgba(201, 162, 78, 0.2)");
+  halo.addColorStop(1, "rgba(122, 95, 31, 0)");
+  ctx.fillStyle = halo;
+  ctx.beginPath(); ctx.arc(cx, cy, r * 2.2, 0, 2*Math.PI); ctx.fill();
+  const moon = ctx.createRadialGradient(cx - r*0.3, cy - r*0.4, r*0.1, cx, cy, r);
+  moon.addColorStop(0, "#FFEFBF");
+  moon.addColorStop(0.48, "#D9B764");
+  moon.addColorStop(1, "#7A5F1F");
+  ctx.fillStyle = moon;
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2*Math.PI); ctx.fill();
+  ctx.fillStyle = "#0B2545";
+  ctx.beginPath(); ctx.arc(cx + r*0.35, cy - r*0.05, r * 0.88, 0, 2*Math.PI); ctx.fill();
+}
+function drawCoherenceSparkline(ctx, samples, x, y, w, h) {
+  if (samples.length < 2) return;
+  const tMax = samples[samples.length - 1].t, tMin = samples[0].t;
+  const tRange = Math.max(tMax - tMin, 1);
+  ctx.fillStyle = "rgba(11, 37, 69, 0.5)";
+  ctx.fillRect(x, y, w, h);
+  ctx.strokeStyle = "rgba(229, 199, 123, 0.12)";
+  ctx.lineWidth = 0.5; ctx.setLineDash([3, 3]);
+  ctx.beginPath(); ctx.moveTo(x, y + h/2); ctx.lineTo(x + w, y + h/2); ctx.stroke();
+  ctx.setLineDash([]);
+  const grad = ctx.createLinearGradient(x, 0, x + w, 0);
+  grad.addColorStop(0, "rgba(229, 199, 123, 0.3)");
+  grad.addColorStop(0.5, "rgba(217, 183, 100, 0.95)");
+  grad.addColorStop(1, "rgba(255, 239, 191, 1)");
+  ctx.strokeStyle = grad;
+  ctx.lineWidth = 2; ctx.lineJoin = "round"; ctx.lineCap = "round";
+  ctx.shadowColor = "rgba(217, 183, 100, 0.6)"; ctx.shadowBlur = 6;
+  ctx.beginPath();
+  samples.forEach(function(s, i) {
+    const px = x + ((s.t - tMin) / tRange) * w;
+    const py = y + h - s.c * h;
+    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+  });
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+}
+function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+  const words = text.split(" ");
+  let line = "", cy = y;
+  for (let i = 0; i < words.length; i++) {
+    const test = line + (line ? " " : "") + words[i];
+    if (ctx.measureText(test).width > maxWidth && line) {
+      ctx.fillText(line, x, cy);
+      line = words[i]; cy += lineHeight;
+    } else {
+      line = test;
+    }
+  }
+  if (line) ctx.fillText(line, x, cy);
+}
+function generateShareImage() {
+  const SCALE = 2;
+  const W = 540 * SCALE, H = 675 * SCALE;
+  const canvas = document.createElement("canvas");
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext("2d");
+  ctx.scale(SCALE, SCALE);
+
+  const bg = ctx.createRadialGradient(270, 270, 60, 270, 270, 380);
+  bg.addColorStop(0, "#0B2545");
+  bg.addColorStop(0.6, "#06122B");
+  bg.addColorStop(1, "#020611");
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, 540, 675);
+
+  ctx.fillStyle = "#FCF7F1";
+  const r = mulberry32(7);
+  for (let i = 0; i < 80; i++) {
+    const x = r() * 540, y = r() * 675;
+    const rad = 0.4 + r() * 1.2;
+    ctx.globalAlpha = 0.2 + r() * 0.6;
+    ctx.beginPath(); ctx.arc(x, y, rad, 0, 2*Math.PI); ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+
+  ctx.strokeStyle = "rgba(229, 199, 123, 0.5)";
+  ctx.lineWidth = 1;
+  ctx.strokeRect(24, 24, 492, 627);
+
+  ctx.strokeStyle = "#E5C77B";
+  ctx.lineWidth = 1.2;
+  drawCornerBracket(ctx, 32, 32, 1, 1);
+  drawCornerBracket(ctx, 508, 32, -1, 1);
+  drawCornerBracket(ctx, 32, 643, 1, -1);
+  drawCornerBracket(ctx, 508, 643, -1, -1);
+
+  ctx.fillStyle = "#C9A24E";
+  ctx.font = '500 11px "Arimo", "Liberation Sans", Arial, sans-serif';
+  ctx.textAlign = "center";
+  drawSpacedText(ctx, "MOON  &  MONEY", 270, 64, 4);
+
+  drawDivider(ctx, 270, 84, 70);
+
+  ctx.fillStyle = "#D9B764";
+  ctx.font = 'italic 300 16px "Cormorant Garamond", serif';
+  ctx.fillText("— pendulum —", 270, 112);
+
+  drawMoonGlyph(ctx, 270, 178, 36);
+
+  if (state.coherenceHistory && state.coherenceHistory.length > 4) {
+    drawCoherenceSparkline(ctx, state.coherenceHistory, 80, 260, 380, 80);
+    ctx.fillStyle = "#8E9AAE";
+    ctx.font = '8px "Arimo", "Liberation Sans", Arial, sans-serif';
+    drawSpacedText(ctx, "YOUR COHERENCE", 270, 252, 2);
+  }
+
+  ctx.fillStyle = "rgba(217, 183, 100, 0.45)";
+  ctx.font = 'italic 56px "Cormorant Garamond", serif';
+  ctx.fillText("“", 270, 388);
+
+  ctx.fillStyle = "#FCF7F1";
+  ctx.font = 'italic 300 17px "Cormorant Garamond", serif';
+  wrapText(ctx, state.finalReading || "", 270, 412, 420, 24);
+
+  const m = Math.floor(state.finalDurationSec / 60);
+  const s = Math.floor(state.finalDurationSec % 60);
+  const dateStr = new Date().toLocaleDateString("en-CA", {month:"long", day:"numeric", year:"numeric"});
+  let meta = m + ":" + String(s).padStart(2,"0") + " WITH THE MOON";
+  if (state.finalAvgCoherence !== null) {
+    meta += "   ·   AVG COHERENCE " + Math.round(state.finalAvgCoherence * 100) + "%";
+  }
+  ctx.fillStyle = "#D9B764";
+  ctx.font = '500 9px "Arimo", "Liberation Sans", Arial, sans-serif';
+  drawSpacedText(ctx, meta, 270, 580, 2);
+  ctx.fillStyle = "#8E9AAE";
+  drawSpacedText(ctx, dateStr.toUpperCase(), 270, 600, 2);
+
+  drawDivider(ctx, 270, 624, 80);
+  ctx.fillStyle = "#C9A24E";
+  ctx.font = 'italic 300 12px "Cormorant Garamond", serif';
+  ctx.fillText("Moon & Money  ·  moonandmoney.ca", 270, 648);
+
+  return canvas;
+}
+
+document.querySelectorAll(".dur-btn").forEach(function(btn) {
+  btn.addEventListener("click", function() {
+    document.querySelectorAll(".dur-btn").forEach(function(b) { b.classList.remove("active"); });
+    btn.classList.add("active");
+    state.duration = parseInt(btn.dataset.min, 10) * 60;
+  });
+});
+document.getElementById("beginBtn").addEventListener("click", beginSession);
+document.getElementById("connectBtn").addEventListener("click", connectSensor);
+document.getElementById("againBtn").addEventListener("click", reset);
+document.getElementById("saveBtn").addEventListener("click", function() {
+  document.getElementById("emailRow").classList.add("active");
+  document.getElementById("emailInput").focus();
+});
+document.getElementById("sendBtn").addEventListener("click", function() {
+  const email = document.getElementById("emailInput").value.trim();
+  if (!email.includes("@")) { alert("Please enter a valid email."); return; }
+  const url = "https://moonandmoney.substack.com/subscribe?email=" + encodeURIComponent(email);
+  window.open(url, "_blank");
+  document.getElementById("emailRow").classList.remove("active");
+  document.getElementById("emailConfirm").classList.add("active");
+});
+document.getElementById("shareBtn").addEventListener("click", function() {
+  const c = generateShareImage();
+  const preview = document.getElementById("sharePreview");
+  const pctx = preview.getContext("2d");
+  pctx.clearRect(0, 0, preview.width, preview.height);
+  pctx.drawImage(c, 0, 0, preview.width, preview.height);
+  document.getElementById("shareModal").classList.add("active");
+});
+document.getElementById("closeShareBtn").addEventListener("click", function() {
+  document.getElementById("shareModal").classList.remove("active");
+});
+document.getElementById("downloadBtn").addEventListener("click", function() {
+  const c = generateShareImage();
+  const url = c.toDataURL("image/png");
+  const a = document.createElement("a");
+  a.download = "MoonAndMoney_Pendulum_" + new Date().toISOString().slice(0,10) + ".png";
+  a.href = url; a.click();
+});
+</script>
+</body>
+</html>
