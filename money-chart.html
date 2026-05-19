@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Money Chart · Moon &amp; Money</title>
+<meta name="description" content="The Money Chart. Read for you alone. Eight pages, prepared by hand by Luna Wilde. Your money temperament, timing and patterns, drawn from your birth chart.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+<canvas id="starfield"></canvas>
+<div class="nebula"></div>
+
+<header class="nav">
+  <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
+  <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="wheel.html">The Wheel</a></li>
+    <li><a href="shop.html">The Atelier</a></li>
+    <li><a href="archive.html">The Archive</a></li>
+    <li><a href="sessions.html">Sessions</a></li>
+    <li><a href="courses.html">Academy</a></li>
+    <li><a href="about.html">The Ethos</a></li>
+    <li><a class="nav-cta" href="https://moonandmoney.substack.com/subscribe" target="_blank">Crescent Club</a></li>
+  </ul>
+</header>
+
+<main>
+  <!-- Section 1 — The Hero -->
+  <section class="page-hero mc-hero">
+    <div class="wrap">
+      <span class="eyebrow">A Private Reading</span>
+      <h1>The <span class="gold">Money Chart</span></h1>
+      <p class="mc-sub">Read for you alone. Eight pages. Prepared by hand.</p>
+      <div class="mc-cover" aria-hidden="true">
+        <div class="mc-cover-inner">
+          <span class="mc-cover-mark">☾</span>
+          <span class="mc-cover-name">Your name</span>
+          <span class="mc-cover-line">The Money Chart</span>
+        </div>
+      </div>
+      <p class="mc-oneline">It is not a horoscope. It is a written reading of how money actually moves through your chart, and the one pattern it keeps returning to.</p>
+      <div class="mc-tiers" id="mcTiers" role="group" aria-label="Choose a chart">
+        <button class="mc-tier" data-tier="individual" aria-pressed="true">
+          <span class="mc-tier-name">Individual</span><span class="mc-tier-price">$36</span>
+          <span class="mc-tier-note">One chart, one person</span>
+        </button>
+        <button class="mc-tier" data-tier="couples" aria-pressed="false">
+          <span class="mc-tier-name">Couples</span><span class="mc-tier-price">$55</span>
+          <span class="mc-tier-note">Two charts, read together</span>
+        </button>
+        <button class="mc-tier" data-tier="family" aria-pressed="false">
+          <span class="mc-tier-name">Family</span><span class="mc-tier-price">$77</span>
+          <span class="mc-tier-note">Up to four charts</span>
+        </button>
+      </div>
+      <a class="btn btn-gold mc-jump" href="#mcRequest">Request your chart</a>
+    </div>
+  </section>
+
+  <!-- Section 2 — What you'll receive -->
+  <section class="mc-receive">
+    <div class="wrap">
+      <div class="head center reveal">
+        <span class="eyebrow">What You Will Receive</span>
+        <h2 class="section-title">Eight <em>pages</em></h2>
+        <p>The depth is meant to land the first time it arrives, so nothing here is shown in full.</p>
+      </div>
+      <ol class="mc-pages">
+        <li class="reveal"><span class="mc-pn">I</span><h3>The Cover</h3><p>Your first name, your sky, and the date the reading was drawn.</p></li>
+        <li class="reveal" data-d="1"><span class="mc-pn">II</span><h3>The Three Currents</h3><p>How money actually moves through you, named as three forces.</p></li>
+        <li class="reveal" data-d="2"><span class="mc-pn">III</span><h3>Your Sun</h3><p>What you are built to earn, and the quiet cost of ignoring it.</p></li>
+        <li class="reveal"><span class="mc-pn">IV</span><h3>Your Moon</h3><p>What you need to feel safe with money, beneath the logic.</p></li>
+        <li class="reveal" data-d="1"><span class="mc-pn">V</span><h3>Your Venus</h3><p>What you value, what you indulge, and where it quietly leaks.</p></li>
+        <li class="reveal" data-d="2"><span class="mc-pn">VI</span><h3>The Knot</h3><p>The single money pattern your chart keeps returning to.</p></li>
+        <li class="reveal"><span class="mc-pn">VII</span><h3>What Your Chart Holds</h3><p>The work, named plainly, with the move that meets it.</p></li>
+        <li class="reveal" data-d="1"><span class="mc-pn">VIII</span><h3>The Disclaimer</h3><p>Plain words on what this is and is not. Said with respect.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Section 3 — The intake -->
+  <section class="mc-intake" id="mcRequest">
+    <div class="wrap">
+      <div class="head center reveal">
+        <span class="eyebrow">The Request</span>
+        <h2 class="section-title">An <em>invitation</em>, not a checkout</h2>
+        <p>Tell Luna where to look. The reading is prepared by hand and arrives within seven days.</p>
+      </div>
+
+      <form class="mc-form" id="mcForm" name="money-chart" method="POST"
+            data-netlify="true" netlify-honeypot="bot-field">
+        <input type="hidden" name="form-name" value="money-chart">
+        <input type="hidden" name="tier" id="mcTierField" value="individual">
+        <p hidden><label>Do not fill this in: <input name="bot-field"></label></p>
+
+        <div class="mc-people" id="mcPeople">
+          <fieldset class="mc-person" data-person="1">
+            <legend>The reading</legend>
+            <div class="mc-grid">
+              <label>First name<input type="text" name="p1_first" required autocomplete="given-name"></label>
+              <label>Birth date<input type="date" name="p1_birthdate" required></label>
+              <label class="mc-time">Birth time
+                <input type="time" name="p1_birthtime">
+                <span class="mc-check"><input type="checkbox" class="mc-unknown" name="p1_time_unknown" value="yes"> I don’t know my birth time</span>
+              </label>
+              <label>Birth location (city, country)<input type="text" name="p1_location" required placeholder="e.g. Calgary, Canada"></label>
+            </div>
+          </fieldset>
+          <fieldset class="mc-person" data-person="2" hidden>
+            <legend>Second person</legend>
+            <div class="mc-grid">
+              <label>First name<input type="text" name="p2_first" autocomplete="off"></label>
+              <label>Birth date<input type="date" name="p2_birthdate"></label>
+              <label class="mc-time">Birth time
+                <input type="time" name="p2_birthtime">
+                <span class="mc-check"><input type="checkbox" class="mc-unknown" name="p2_time_unknown" value="yes"> I don’t know the birth time</span>
+              </label>
+              <label>Birth location (city, country)<input type="text" name="p2_location" placeholder="City, Country"></label>
+            </div>
+          </fieldset>
+          <fieldset class="mc-person" data-person="3" hidden>
+            <legend>Third person</legend>
+            <div class="mc-grid">
+              <label>First name<input type="text" name="p3_first"></label>
+              <label>Birth date<input type="date" name="p3_birthdate"></label>
+              <label class="mc-time">Birth time
+                <input type="time" name="p3_birthtime">
+                <span class="mc-check"><input type="checkbox" class="mc-unknown" name="p3_time_unknown" value="yes"> I don’t know the birth time</span>
+              </label>
+              <label>Birth location (city, country)<input type="text" name="p3_location" placeholder="City, Country"></label>
+            </div>
+          </fieldset>
+          <fieldset class="mc-person" data-person="4" hidden>
+            <legend>Fourth person</legend>
+            <div class="mc-grid">
+              <label>First name<input type="text" name="p4_first"></label>
+              <label>Birth date<input type="date" name="p4_birthdate"></label>
+              <label class="mc-time">Birth time
+                <input type="time" name="p4_birthtime">
+                <span class="mc-check"><input type="checkbox" class="mc-unknown" name="p4_time_unknown" value="yes"> I don’t know the birth time</span>
+              </label>
+              <label>Birth location (city, country)<input type="text" name="p4_location" placeholder="City, Country"></label>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="mc-grid mc-deliver">
+          <label>Email (where the chart is delivered)<input type="email" name="email" required autocomplete="email"></label>
+        </div>
+
+        <p class="mc-time-note" id="mcTimeNote" hidden>Noted. Without a birth time we use noon and the reading will flag where exact-time accuracy matters.</p>
+
+        <div class="mc-submit">
+          <button class="btn btn-gold" type="submit">Request your chart</button>
+          <span class="mc-priceline" id="mcPriceLine">Individual chart · $36 · delivered within 7 days</span>
+        </div>
+        <p class="mc-fine">Prepared by Luna’s hand. No automated reports. First names only, always.</p>
+      </form>
+
+      <div class="mc-done" id="mcDone" hidden>
+        <div class="mc-done-mark">☾</div>
+        <h2>The chart is being prepared.</h2>
+        <p>It will arrive within seven days, by hand, by Luna. Watch your inbox for the secure payment link and your confirmation.</p>
+        <p class="mc-done-soft">And the sky goes quiet again.</p>
+        <a class="btn btn-ghost" href="index.html">Return home</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
+        <p>Personal finance, read through astrology. By Luna Wilde.</p>
+      </div>
+      <div class="foot-col"><h4>Explore</h4><a href="wheel.html">The Wheel</a><a href="money-chart.html">The Money Chart</a><a href="shop.html">The Atelier</a><a href="archive.html">The Archive</a><a href="about.html">The Ethos</a></div>
+      <div class="foot-col"><h4>The Club</h4><a href="https://moonandmoney.substack.com" target="_blank">Substack</a><a href="https://moonandmoney.substack.com/subscribe" target="_blank">Crescent Club</a><a href="about.html">The Circle <span class="soon">Soon</span></a><a href="about.html">The Token <span class="soon">Soon</span></a></div>
+      <div class="foot-col"><h4>Follow</h4><a href="https://moonandmoney.substack.com" target="_blank">@moonmoney</a><a href="archive.html">Notes</a><a href="index.html">Newsletter</a></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="yr"></span> Moon &amp; Money · Luna Wilde. All rights reserved.</span>
+      <span>Built in rhythm with the moon ☾</span>
+    </div>
+  </div>
+</footer>
+
+<div id="mmPlayer" data-welcome="assets/audio/invocation.mp3"></div>
+
+<script src="assets/js/zodiac.js"></script>
+<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/player.js"></script>
+<script src="assets/js/money-chart.js"></script>
+</body>
+</html>
