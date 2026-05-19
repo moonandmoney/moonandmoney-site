@@ -797,7 +797,7 @@ async function connectSensor() {
     });
   } catch (err) {
     console.warn("Sensor connect failed:", err);
-    sensorMsg("That device is not sending a standard heart signal this page can read. HeartMath's own sensor speaks a private language only its app understands, so it cannot connect here. A standard Bluetooth heart sensor (Polar H10 and similar) will. The breath on its own works without any sensor.");
+    sensorMsg("That device is not sending a standard heart signal this page can read. A standard Bluetooth heart sensor, like a Polar H10, will connect here. The breath on its own works beautifully without any sensor.");
   }
 }
 function disconnectSensor() {
