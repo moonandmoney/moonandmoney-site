@@ -110,8 +110,8 @@
   .cue-w {
     position: absolute; left: 50%; top: 50%;
     transform: translate(-50%, -50%); white-space: nowrap;
-    opacity: 0; will-change: opacity;
-    transition: none;
+    opacity: 0; will-change: opacity, transform;
+    transition: opacity .22s ease, transform .22s ease, text-shadow .22s ease;
   }
 
   .stage {
@@ -599,20 +599,25 @@ function tick(ts) {
   state.anchorGroup.setAttribute("transform",
     "translate(190 50) scale(" + breathScale + ") translate(-190 -50)");
 
-  // One full swing = one full breath. Each word holds STEADY and
-  // full for its entire swing; the only change is a brief, smooth
-  // cross-dissolve right at the turning point (the far edge). It
-  // never tells you the opposite thing mid-swing.
+  // One full swing = one full breath. The word itself breathes:
+  // it rises from nothing as the breath begins, swells through
+  // the middle, then recedes to nothing at the turn. The other
+  // word is hidden until then, so the hand-over is a soft, living
+  // fade — never a flip — and it changes only at the turn.
   state.breathCue.classList.add("show");
-  var e = 0.03; // ~0.3s each side at PERIOD 10 -> a ~0.6s dissolve, only at the turn
-  var winIn = sstep(0, e, phase) * (1 - sstep(0.5 - e, 0.5, phase));
-  var winEx = sstep(0.5, 0.5 + e, phase) * (1 - sstep(1 - e, 1, phase));
-  var lvl = 0.94; // calm, constant presence — no mid-swing pulsing
-  state.cueIn.style.opacity = (lvl * winIn).toFixed(3);
-  state.cueEx.style.opacity = (lvl * winEx).toFixed(3);
-  state.cueIn.style.transform = state.cueEx.style.transform = "translate(-50%,-50%)";
-  state.cueIn.style.textShadow = state.cueEx.style.textShadow =
-    "0 0 22px rgba(255,239,191,0.42)";
+  var inhaling = phase < 0.5;
+  var h = inhaling ? phase / 0.5 : (phase - 0.5) / 0.5;   // 0..1 within this breath
+  var env = Math.sin(Math.PI * h);
+  env = env * env * (3 - 2 * env);                        // smoother rise and fall
+  var onW = inhaling ? state.cueIn : state.cueEx;
+  var offW = inhaling ? state.cueEx : state.cueIn;
+  onW.style.opacity = env.toFixed(3);
+  onW.style.transform =
+    "translate(-50%,-50%) scale(" + (0.84 + 0.30 * env).toFixed(3) + ")";
+  onW.style.textShadow =
+    "0 0 " + (3 + 32 * env).toFixed(1) +
+    "px rgba(255,239,191," + (0.08 + 0.5 * env).toFixed(3) + ")";
+  offW.style.opacity = "0";
 
   const c = state.coherenceScore;
   state.bobHalo.setAttribute("opacity", String(0.45 + c * 0.5));
