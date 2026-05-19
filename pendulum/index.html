@@ -765,7 +765,7 @@ function tick(ts) {
   // it empties. No words. (Breath fullness: 0 at one far side,
   // 1 at the other — a smooth cosine, peaking at the turn.)
   var B = 0.5 - 0.5 * Math.cos(2 * Math.PI * phase);
-  var bobS = 0.66 + 0.94 * B;            // dramatic: ~0.66 empty -> ~1.6 full
+  var bobS = 0.90 + 0.20 * B;            // gentle: ~0.9 empty -> ~1.1 full (the swing leads, not the swell)
   state.bobGroup.setAttribute("transform",
     "translate(190 356) scale(" + bobS.toFixed(4) + ") translate(-190 -356)");
 
