@@ -441,8 +441,9 @@
           <button id="connectBtn">Connect HRV sensor</button>
         </div>
         <div class="sensor-tip">
-          Compatible with HeartMath Coherence Plus, Polar H10,<br>
-          and other standard Bluetooth HRV sensors.
+          Optional. Pairs with a standard Bluetooth heart sensor,
+          like a Polar H10, in Chrome or Edge.<br>
+          The breath on its own works anywhere, no sensor needed.
         </div>
       </div>
     </div>
@@ -748,22 +749,42 @@ function reset() {
 }
 
 const HR_SERVICE = 0x180D, HR_CHAR = 0x2A37;
+const IS_IOS = /iPhone|iPad|iPod/i.test(navigator.userAgent || "");
+
+function sensorMsg(html) {
+  var row = document.getElementById("sensorRow");
+  var note = document.getElementById("sensorNote");
+  if (!note) {
+    note = document.createElement("div");
+    note.id = "sensorNote"; note.className = "sensor-tip";
+    row.parentNode.insertBefore(note, row.nextSibling);
+  }
+  note.innerHTML = html;
+}
 
 async function connectSensor() {
   if (!navigator.bluetooth) {
-    alert("Web Bluetooth isn't available in this browser. Try Chrome on Mac, Windows, or Android. iPhone Safari doesn't support it yet. The breath pacer works without a sensor.");
+    sensorMsg(IS_IOS
+      ? "iPhone and iPad browsers cannot reach Bluetooth (Apple does not allow it). To use a sensor on iPhone, open this page in the free <b>Bluefy</b> browser app with a standard heart sensor such as a Polar H10. The breath on its own works here, no sensor needed."
+      : "This browser cannot use Bluetooth. Try <b>Chrome or Edge</b> on a computer or Android. The breath on its own works anywhere, no sensor needed.");
     return;
   }
   try {
     state.bleDevice = await navigator.bluetooth.requestDevice({
-      filters: [{ services: [HR_SERVICE] }],
+      acceptAllDevices: true,
+      optionalServices: [HR_SERVICE]
     });
+  } catch (err) {
+    return; // chooser dismissed — stay quiet
+  }
+  try {
     const server = await state.bleDevice.gatt.connect();
     const service = await server.getPrimaryService(HR_SERVICE);
     state.bleChar = await service.getCharacteristic(HR_CHAR);
     await state.bleChar.startNotifications();
     state.bleChar.addEventListener("characteristicvaluechanged", onHrData);
     state.sensorConnected = true;
+    var n = document.getElementById("sensorNote"); if (n) n.remove();
     document.getElementById("sensorRow").innerHTML =
       '<span class="status">' + (state.bleDevice.name || "Sensor") + ' connected</span>' +
       ' &middot; <button id="disconnectBtn">disconnect</button>';
@@ -775,7 +796,8 @@ async function connectSensor() {
       document.getElementById("connectBtn").addEventListener("click", connectSensor);
     });
   } catch (err) {
-    console.warn("Sensor connect cancelled or failed:", err);
+    console.warn("Sensor connect failed:", err);
+    sensorMsg("That device is not sending a standard heart signal this page can read. HeartMath's own sensor speaks a private language only its app understands, so it cannot connect here. A standard Bluetooth heart sensor (Polar H10 and similar) will. The breath on its own works without any sensor.");
   }
 }
 function disconnectSensor() {
