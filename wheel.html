@@ -153,17 +153,7 @@
     </div>
   </section>
 
-  <!-- Subscribe CTA (per brief, below the wheel) -->
-  <section class="wheel-cta-sec">
-    <div class="wrap">
-      <div class="wheel-cta">
-        <p>The weekly reading. Where this week's lunar phase meets your money, through the Luna Wilde lens.</p>
-        <a class="btn btn-gold" href="https://moonandmoney.substack.com/subscribe" target="_blank" rel="noopener">Enter the Crescent Club</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- The depth: the Money Chart, paired beneath the Wheel -->
+  <!-- The depth: the Money Chart, the paid reading, right under the card -->
   <section>
     <div class="wrap">
       <div class="money-pitch reveal">
@@ -171,6 +161,16 @@
         <h3>Your Money Chart, read in full</h3>
         <p>The Wheel is the same for everyone. Your chart is not. A private, written money reading drawn from your exact birth chart: your financial temperament, the timing that favours you, the patterns worth watching. Considered, premium, yours.</p>
         <a class="btn btn-gold" href="money-chart.html">Request your Money Chart</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- A quiet invitation, kept to the very bottom -->
+  <section class="wheel-cta-sec">
+    <div class="wrap">
+      <div class="wheel-cta">
+        <p>And when you would like the weekly reading, the Crescent Club is always open. No rush. It will be there.</p>
+        <a class="btn btn-ghost" href="https://moonandmoney.substack.com/subscribe" target="_blank" rel="noopener">Visit the Crescent Club</a>
       </div>
     </div>
   </section>
@@ -247,19 +247,26 @@
     if(daysUntil<=0)daysUntil+=syn;
     return { date:new Date(date.getTime()+daysUntil*86400000), days:daysUntil };
   }
+  // Astronomically correct lit region for phase index 0..7.
+  // Outer edge = a full semicircle on the lit side (waxing =
+  // lit on the right, waning = lit on the left). Inner edge =
+  // the terminator, a half-ellipse whose width is R*|cos|: it
+  // bows away from the lit side for a crescent (carving the
+  // disc down to a sliver) and toward it for a gibbous (filling
+  // it). New = dark, Full = whole disc.
   function litPath(idx,R){
-    var r6=R*0.6, n=-R;
-    switch(idx){
-      case 0: return null;
-      case 1: return 'M 0 '+n+' A '+R+' '+R+' 0 0 1 0 '+R+' A '+r6+' '+R+' 0 0 1 0 '+n+' Z';
-      case 2: return 'M 0 '+n+' A '+R+' '+R+' 0 0 1 0 '+R+' Z';
-      case 3: return 'M 0 '+n+' A '+R+' '+R+' 0 0 1 0 '+R+' A '+r6+' '+R+' 0 0 0 0 '+n+' Z';
-      case 4: return 'M '+n+' 0 A '+R+' '+R+' 0 1 0 '+R+' 0 A '+R+' '+R+' 0 1 0 '+n+' 0 Z';
-      case 5: return 'M 0 '+n+' A '+R+' '+R+' 0 0 0 0 '+R+' A '+r6+' '+R+' 0 0 1 0 '+n+' Z';
-      case 6: return 'M 0 '+n+' A '+R+' '+R+' 0 0 0 0 '+R+' Z';
-      case 7: return 'M 0 '+n+' A '+R+' '+R+' 0 0 0 0 '+R+' A '+r6+' '+R+' 0 0 0 0 '+n+' Z';
-    }
-    return null;
+    if(idx===0) return null;
+    var n=-R;
+    if(idx===4) return 'M '+n+' 0 A '+R+' '+R+' 0 1 0 '+R+' 0 A '+R+' '+R+' 0 1 0 '+n+' 0 Z';
+    var f=idx/8;
+    var c=Math.cos(2*Math.PI*f);          // >0 near new (crescent), <0 near full (gibbous)
+    var rx=Math.abs(c)*R;
+    var waxing=idx<4;                      // lit on the right
+    var outS=waxing?1:0;                   // outer semicircle on the lit side
+    var termS=waxing?(c>0?0:1):(c>0?1:0);  // terminator bow direction
+    if(rx<0.5) return 'M 0 '+n+' A '+R+' '+R+' 0 0 '+outS+' 0 '+R+' Z'; // quarter
+    return 'M 0 '+n+' A '+R+' '+R+' 0 0 '+outS+' 0 '+R+
+           ' A '+rx+' '+R+' 0 0 '+termS+' 0 '+n+' Z';
   }
 
   function buildStatic(){
@@ -323,12 +330,7 @@
       g.appendChild(el('circle',{cx:0,cy:0,r:R+4,fill:'none',stroke:'#C9A24E','stroke-width':0.4,opacity:0.5}));
       g.appendChild(el('circle',{cx:0,cy:0,r:R,fill:'url(#lw-darkDisc)'}));
       g.appendChild(el('circle',{cx:0,cy:0,r:R,fill:'none',stroke:'#3A2F12','stroke-width':0.6}));
-      // Lit side runs new → waxing → full → waning → new. The
-      // nodes on either side of New and either side of Full are
-      // mirror twins; map each to its twin's lit shape so the
-      // illumination grows the right way around the ring.
-      var LITMAP=[0,7,6,5,4,3,2,1];
-      var p=litPath(LITMAP[i],R);
+      var p=litPath(i,R);
       if(p)g.appendChild(el('path',{d:p,fill:'url(#lw-moonGold)'}));
       // Permanent "you are here" marker on the actual current
       // phase: a calm emerald ring + gem, shown even while you

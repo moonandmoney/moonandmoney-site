@@ -582,7 +582,7 @@ footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gr
 .club-cta{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
 
 /* ---------- This week's reading (homepage draw) ---------- */
-.featured-read{padding:clamp(48px,7vw,80px) 0 0}
+.featured-read{padding:clamp(48px,7vw,80px) 0 clamp(34px,6vw,64px)}
 .feature-card{
   display:block;text-align:center;border:1px solid var(--line);border-radius:12px;
   padding:clamp(40px,6vw,72px);background:linear-gradient(160deg,#16131d,#070608);
@@ -716,7 +716,7 @@ footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gr
 .qz-retake:hover{color:var(--gold-bright)}
 
 /* ---------- Homepage quiz entry ---------- */
-.quiz-entry{padding:0 0 clamp(50px,9vw,110px)}
+.quiz-entry{padding:clamp(34px,6vw,64px) 0}
 .quiz-entry-link{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;
   max-width:760px;margin:0 auto;padding:clamp(34px,5vw,56px);border:1px solid var(--line);
   border-radius:12px;background:linear-gradient(160deg,var(--ink-2),var(--obsidian));
@@ -829,11 +829,11 @@ footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gr
 .dc-label-move{color:#7DBE9C}
 .dc-read{font-family:var(--serif);font-size:clamp(1.12rem,2.4vw,1.42rem);
   color:var(--parchment);line-height:1.62;margin:0 0 28px}
-.dc-whisper{background:linear-gradient(180deg,#FBF3DF,#F3E7C9);
+.dc-whisper{background:linear-gradient(180deg,#CCC0A0,#BCAE86);
   border-radius:12px;padding:24px clamp(20px,4vw,34px);margin:0 auto 4px;
-  box-shadow:inset 0 0 0 1px rgba(124,95,31,.25),0 8px 26px rgba(0,0,0,.35)}
+  box-shadow:inset 0 0 0 1px rgba(90,70,28,.30),0 6px 18px rgba(0,0,0,.30)}
 .dc-lie{font-family:var(--serif);font-style:italic;font-size:1.18rem;
-  color:#C9A24E;margin:0 0 10px;line-height:1.5}
+  color:#6B521C;margin:0 0 10px;line-height:1.5}
 .dc-answer{font-family:var(--serif);font-style:italic;font-size:1.18rem;
   color:#1E4D3A;margin:0;line-height:1.5}
 .dc-rule{height:1px;width:60px;margin:30px auto 26px;

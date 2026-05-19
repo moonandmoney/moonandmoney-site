@@ -54,6 +54,25 @@
     resize();
     addEventListener('resize', resize);
 
+    // The 12 zodiac constellations, stylised as ordered star
+    // polylines in a ~0..1.4 box. The sky draws the one the
+    // Moon is currently transiting, so it changes sign with
+    // the Moon (~2.3 days).
+    const ZODIAC_STARS = {
+      Aries:       [[0,.55],[.45,.25],[.95,.4],[1.3,.72]],
+      Taurus:      [[0,.95],[.5,.5],[.7,.5],[1.0,.12],[.7,.5],[.62,1.05]],
+      Gemini:      [[.05,0],[.2,1.05],[.5,1.0],[.42,-.02],[.2,1.05],[.5,1.0]],
+      Cancer:      [[.6,0],[.6,.5],[.18,.95],[.6,.5],[1.05,.95]],
+      Leo:         [[0,.32],[.12,.08],[.34,.05],[.42,.38],[.78,.62],[1.3,.5],[1.0,1.05],[.42,.38]],
+      Virgo:       [[0,.2],[.4,.45],[.82,.4],[1.28,.62],[.82,.4],[.72,1.0]],
+      Libra:       [[.08,.72],[.5,.18],[.98,.5],[.6,1.05],[.08,.72]],
+      Scorpio:     [[0,.08],[.24,.28],[.5,.34],[.72,.5],[.82,.8],[.66,1.06],[.4,1.12]],
+      Sagittarius: [[.05,.7],[.32,.3],[.62,.36],[.72,.66],[.36,.82],[.05,.7],[.72,.66],[.98,.5]],
+      Capricorn:   [[0,.3],[1.25,.1],[.78,1.05],[0,.3]],
+      Aquarius:    [[0,.42],[.3,.2],[.56,.46],[.82,.24],[1.12,.5],[.86,.82],[1.18,.98]],
+      Pisces:      [[0,.2],[.42,.36],[.84,.3],[1.26,.5],[.84,.3],[.72,.72],[.98,1.06]]
+    };
+
     // ---- Seven slow celestial phenomena (you never know which you'll get) ----
     const TYPES = ['shoot', 'comet', 'meteors', 'satellite', 'pulsar', 'constellation', 'nebula'];
     const env = k => Math.sin(Math.PI * Math.max(0, Math.min(1, k))); // fade in→hold→out
@@ -70,10 +89,12 @@
       else if (t === 'satellite') Object.assign(base, { dur: 6500, x: W * (.1 + Math.random() * .2), y: H * (.1 + Math.random() * .5), dx: W * .7, dy: H * (Math.random() * .1 - .05) });
       else if (t === 'pulsar') Object.assign(base, { dur: 3600, x: W * (.15 + Math.random() * .7), y: H * (.1 + Math.random() * .5) });
       else if (t === 'constellation') {
-        const cx = W * (.15 + Math.random() * .6), cy = H * (.12 + Math.random() * .4), s = Math.min(W, H) * .12;
-        const pts = [[0, 0], [.7, .3], [1.4, .1], [1.1, .9], [.4, 1.1], [-.2, .7], [.7, .3]]
-          .map(p => [cx + p[0] * s, cy + p[1] * s]);
-        Object.assign(base, { dur: 6500, pts });
+        const sign = (window.ZODIAC && window.ZODIAC.moonSign)
+          ? window.ZODIAC.moonSign(new Date()) : 'Cancer';
+        const shape = ZODIAC_STARS[sign] || ZODIAC_STARS.Cancer;
+        const cx = W * (.15 + Math.random() * .55), cy = H * (.12 + Math.random() * .38), s = Math.min(W, H) * .17;
+        const pts = shape.map(p => [cx + p[0] * s, cy + p[1] * s]);
+        Object.assign(base, { dur: 7000, pts, sign });
       } else Object.assign(base, { // nebula — a soft colour cloud that blooms and fades
         dur: 13000,
         x: W * (.2 + Math.random() * .6), y: H * (.14 + Math.random() * .42),
