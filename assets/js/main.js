@@ -190,6 +190,45 @@
     if (p < .78) return 'Last Quarter';
     return 'Waning Crescent';
   }
+  /* ---- Live moon-phase favicon (every page, the browser tab
+     icon mirrors tonight's actual phase) ---- */
+  (function () {
+    function frac(date) {
+      var syn = 29.530588853, known = Date.UTC(2000, 0, 6, 18, 14);
+      var d = (date.getTime() - known) / 86400000, a = d % syn;
+      if (a < 0) a += syn; return a / syn;
+    }
+    function paint() {
+      try {
+        var p = frac(new Date());
+        var illum = (1 - Math.cos(2 * Math.PI * p)) / 2;
+        var waxing = p < 0.5;
+        var c = document.createElement('canvas');
+        c.width = c.height = 64;
+        var x = c.getContext('2d'), R = 27, cx = 32, cy = 32;
+        function ring() {
+          x.beginPath(); x.arc(cx, cy, R, 0, 2 * Math.PI);
+          x.strokeStyle = 'rgba(201,162,78,0.6)'; x.lineWidth = 2; x.stroke();
+        }
+        ring();
+        x.beginPath(); x.arc(cx, cy, R, 0, 2 * Math.PI);
+        x.fillStyle = '#E5C77B'; x.fill();
+        var off = 2 * R * illum * (waxing ? -1 : 1);
+        x.save();
+        x.globalCompositeOperation = 'destination-out';
+        x.beginPath(); x.arc(cx + off, cy, R, 0, 2 * Math.PI); x.fill();
+        x.restore();
+        ring();
+        var href = c.toDataURL('image/png');
+        var l = document.querySelector('link[rel~="icon"]');
+        if (!l) { l = document.createElement('link'); l.rel = 'icon'; document.head.appendChild(l); }
+        l.type = 'image/png'; l.href = href;
+      } catch (e) {}
+    }
+    paint();
+    setInterval(paint, 60 * 60 * 1000);
+  })();
+
   const moonEl = document.querySelector('.moon');
   const shadowEl = document.querySelector('.moon-shadow');
   const labelEl = document.querySelector('.moon-phase-label');
