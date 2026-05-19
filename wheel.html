@@ -347,31 +347,31 @@
     var dateStr=dateToShow.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
     function T(y,size,fill,attrs){ var o={x:500,y:y,'font-family':'Cormorant Garamond, Georgia, serif','font-size':size,fill:fill}; if(attrs)for(var k in attrs)o[k]=attrs[k]; return el('text',o); }
 
-    var header=T(334,'16','#C9A24E',{'letter-spacing':'6'});
+    var header=T(372,'16','#C9A24E',{'letter-spacing':'6'});
     txt(header,isToday?'✦ T O D A Y ✦':'✦ N E X T ✦'); center.appendChild(header);
-    var dateEl=T(364,'21','#FCF7F1',{'font-style':'italic','letter-spacing':'2'});
+    var dateEl=T(400,'20','#FCF7F1',{'font-style':'italic','letter-spacing':'2'});
     txt(dateEl,dateStr); center.appendChild(dateEl);
-    var nameEl=T(413,'42','#E5C77B',{'letter-spacing':'2'});
+    var nameEl=T(444,'40','#E5C77B',{'letter-spacing':'2'});
     txt(nameEl,ph.name); center.appendChild(nameEl);
-    center.appendChild(el('line',{x1:404,y1:437,x2:476,y2:437,stroke:'#7A5F1F','stroke-width':0.8}));
-    center.appendChild(el('line',{x1:524,y1:437,x2:596,y2:437,stroke:'#7A5F1F','stroke-width':0.8}));
-    center.appendChild(el('circle',{cx:500,cy:437,r:3.6,fill:'url(#lw-emerald)'}));
-    center.appendChild(el('circle',{cx:500,cy:437,r:3.6,fill:'none',stroke:'#7A5F1F','stroke-width':0.5}));
-    var stageEl=T(466,'16','#C9A24E',{'letter-spacing':'4'});
+    center.appendChild(el('line',{x1:408,y1:470,x2:478,y2:470,stroke:'#7A5F1F','stroke-width':0.8}));
+    center.appendChild(el('line',{x1:522,y1:470,x2:592,y2:470,stroke:'#7A5F1F','stroke-width':0.8}));
+    center.appendChild(el('circle',{cx:500,cy:470,r:3.4,fill:'url(#lw-emerald)'}));
+    center.appendChild(el('circle',{cx:500,cy:470,r:3.4,fill:'none',stroke:'#7A5F1F','stroke-width':0.5}));
+    var stageEl=T(494,'15','#C9A24E',{'letter-spacing':'4'});
     txt(stageEl,ph.stage+' · '+ph.principle.toUpperCase()); center.appendChild(stageEl);
     for(var li=0;li<ph.inscription.length;li++){
-      var tt=T(506+li*32,'24','#FCF7F1',{'font-style':'italic'});
+      var tt=T(524+li*28,'22','#FCF7F1',{'font-style':'italic'});
       txt(tt,ph.inscription[li]); center.appendChild(tt);
     }
-    var dy=506+ph.inscription.length*32+10;
-    center.appendChild(el('circle',{cx:484,cy:dy,r:1.7,fill:'#1E4D3A',opacity:'0.8'}));
+    var dy=524+ph.inscription.length*28+4;
+    center.appendChild(el('circle',{cx:485,cy:dy,r:1.7,fill:'#1E4D3A',opacity:'0.8'}));
     center.appendChild(el('circle',{cx:500,cy:dy,r:2.2,fill:'url(#lw-emerald)'}));
-    center.appendChild(el('circle',{cx:516,cy:dy,r:1.7,fill:'#1E4D3A',opacity:'0.8'}));
-    var moveLabel=T(dy+28,'14','#7DBE9C',{'letter-spacing':'5'});
+    center.appendChild(el('circle',{cx:515,cy:dy,r:1.7,fill:'#1E4D3A',opacity:'0.8'}));
+    var moveLabel=T(dy+24,'13','#7DBE9C',{'letter-spacing':'5'});
     txt(moveLabel,'T H E   M O V E'); center.appendChild(moveLabel);
-    var moveEl=T(dy+52,'19','#FCF7F1',{'font-style':'italic'});
+    var moveEl=T(dy+46,'18','#FCF7F1',{'font-style':'italic'});
     txt(moveEl,ph.money); center.appendChild(moveEl);
-    var illumEl=T(dy+76,'13','#B98F3C',{'letter-spacing':'3'});
+    var illumEl=T(dy+70,'13','#B98F3C',{'letter-spacing':'3'});
     txt(illumEl,Math.round(illum*100)+'%  I L L U M I N A T E D'); center.appendChild(illumEl);
   }
 

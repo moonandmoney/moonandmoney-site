@@ -40,15 +40,30 @@ window.ZODIAC = (function () {
     return wrap(X.moon);
   }
 
+  // High-accuracy lunar longitude (Meeus, abridged series ≈0.05°).
   function moonSign(date) {
     const d = (date.getTime() - Date.UTC(2000, 0, 1, 12)) / 86400000;
-    const rad = Math.PI / 180;
-    let L = 218.316 + 13.176396 * d;
-    const M = (134.963 + 13.064993 * d) * rad;
-    L += 6.289 * Math.sin(M)
-       + 1.274 * Math.sin(2 * (L * rad) - M)
-       - 0.186 * Math.sin((357.529 + 0.98560 * d) * rad);
-    L = ((L % 360) + 360) % 360;
+    const T = d / 36525;
+    const r = Math.PI / 180;
+    const Lp = 218.3164477 + 481267.88123421 * T - 0.0015786 * T * T;
+    const D  = (297.8501921 + 445267.1114034 * T - 0.0018819 * T * T) * r;
+    const M  = (357.5291092 + 35999.0502909 * T) * r;
+    const Mp = (134.9633964 + 477198.8675055 * T + 0.0087414 * T * T) * r;
+    const F  = (93.2720950 + 483202.0175233 * T) * r;
+    const t = [
+      [6288774, Mp], [1274027, 2*D - Mp], [658314, 2*D], [213618, 2*Mp],
+      [-185116, M], [-114332, 2*F], [58793, 2*D - 2*Mp], [57066, 2*D - M - Mp],
+      [53322, 2*D + Mp], [45758, 2*D - M], [-40923, M - Mp], [-34720, D],
+      [-30383, M + Mp], [15327, 2*D - 2*F], [-12528, Mp + 2*F], [10980, Mp - 2*F],
+      [10675, 4*D - Mp], [10034, 3*Mp], [8548, 4*D - 2*Mp], [-7888, 2*D + M - Mp],
+      [-6766, 2*D + M], [-5163, D - Mp], [4987, D + M], [4036, 2*D - M + Mp],
+      [3994, 2*D + 2*Mp], [3861, 4*D], [3665, 2*D - 3*Mp], [-2689, M - 2*Mp],
+      [-2602, 2*D - Mp + 2*F], [2390, 2*D - M - 2*Mp]
+    ];
+    let s = 0;
+    for (let i = 0; i < t.length; i++) s += t[i][0] * Math.sin(t[i][1]);
+    let L = (Lp + s / 1e6) % 360;
+    if (L < 0) L += 360;
     return SIGNS[Math.floor(L / 30) % 12];
   }
 
