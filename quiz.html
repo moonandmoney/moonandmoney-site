@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Reading · Moon &amp; Money</title>
-<meta name="description" content="A Moon & Money reading. Personal finance through the astrological lens, by Luna Wilde. Free to read on the website.">
+<title>Your Moon Money Sign · Moon &amp; Money</title>
+<meta name="description" content="Find your Moon Money Sign in seven questions. The Moon sign that drives how you earn, hold and spend. No birth time needed.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="assets/css/styles.css">
@@ -23,14 +23,17 @@
     <li><a href="shop.html">The Atelier</a></li>
     <li><a href="archive.html">The Archive</a></li>
     <li><a href="sessions.html">Sessions</a></li>
-    <li><a href="courses.html">Academy</a></li>
     <li><a href="about.html">The Ethos</a></li>
     <li><a class="nav-cta" href="https://moonandmoney.substack.com/subscribe" target="_blank">Crescent Club</a></li>
   </ul>
 </header>
 
-<main id="article">
-  <div class="wrap" style="padding-top:180px"><p class="feed-state">Opening the reading…</p></div>
+<main>
+  <section class="qz-wrap">
+    <div class="wrap">
+      <div class="qz-card" id="quizScreen" aria-live="polite"></div>
+    </div>
+  </section>
 </main>
 
 <footer>
@@ -40,7 +43,7 @@
         <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
         <p>Personal finance, read through astrology. By Luna Wilde.</p>
       </div>
-      <div class="foot-col"><h4>Explore</h4><a href="wheel.html">The Wheel</a><a href="quiz.html">The Quiz</a><a href="shop.html">The Atelier</a><a href="archive.html">The Archive</a><a href="sessions.html">Sessions</a><a href="courses.html">The Academy</a><a href="about.html">The Ethos</a></div>
+      <div class="foot-col"><h4>Explore</h4><a href="wheel.html">The Wheel</a><a href="quiz.html">The Quiz</a><a href="money-chart.html">The Money Chart</a><a href="shop.html">The Atelier</a><a href="about.html">The Ethos</a></div>
       <div class="foot-col"><h4>The Club</h4><a href="https://moonandmoney.substack.com" target="_blank">Substack</a><a href="https://moonandmoney.substack.com/subscribe" target="_blank">Crescent Club</a><a href="about.html">The Circle <span class="soon">Soon</span></a><a href="about.html">The Token <span class="soon">Soon</span></a></div>
       <div class="foot-col"><h4>Follow</h4><a href="https://moonandmoney.substack.com" target="_blank">@moonmoney</a><a href="archive.html">Notes</a><a href="index.html">Newsletter</a></div>
     </div>
@@ -54,10 +57,9 @@
 <div id="mmPlayer" data-welcome="assets/audio/invocation.mp3"></div>
 
 <script src="assets/js/zodiac.js"></script>
-<script src="assets/js/content.js"></script>
 <script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
 <script src="assets/js/main.js"></script>
 <script src="assets/js/player.js"></script>
-<script src="assets/js/reader.js"></script>
+<script src="assets/js/quiz.js"></script>
 </body>
 </html>

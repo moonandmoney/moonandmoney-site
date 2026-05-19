@@ -1,0 +1,185 @@
+/* ============================================================
+   MOON & MONEY — Moon Money Sign Quiz
+   QUIZ + RESULTS verbatim from the handoff brief. The
+   strength / watch / move lines are drafted in the Luna voice
+   (the brief's PDF truncated them) — refine any line freely.
+   "Get my full guide" routes to that sign's guide in the shop
+   (never to the free Substack).
+   ============================================================ */
+(function () {
+  'use strict';
+  const root = document.getElementById('quizScreen');
+  if (!root) return;
+
+  const QUIZ = [
+    { q: "When you check your bank account, the first feeling is...", a: [
+      { t: "A wave", s: { Cancer:2, Scorpio:2, Pisces:2 } },
+      { t: "A grip", s: { Taurus:2, Virgo:2, Capricorn:2 } },
+      { t: "A spark", s: { Aries:2, Leo:2, Sagittarius:2 } },
+      { t: "A thought", s: { Gemini:2, Libra:2, Aquarius:2 } }
+    ]},
+    { q: "Your money decisions are usually...", a: [
+      { t: "Fast, initiating, starting fresh", s: { Aries:2, Cancer:2, Libra:2, Capricorn:2 } },
+      { t: "Slow, committed, holding long", s: { Taurus:2, Leo:2, Scorpio:2, Aquarius:2 } },
+      { t: "Variable, evolving, course-correcting", s: { Gemini:2, Virgo:2, Sagittarius:2, Pisces:2 } },
+      { t: "Thought about more than acted on", s: { Gemini:1, Libra:1, Aquarius:1, Virgo:1 } }
+    ]},
+    { q: "Money is mostly for...", a: [
+      { t: "Safety and comfort", s: { Cancer:2, Scorpio:2, Pisces:2 } },
+      { t: "Building and lasting", s: { Taurus:2, Virgo:2, Capricorn:2 } },
+      { t: "Movement and adventure", s: { Aries:2, Leo:2, Sagittarius:2 } },
+      { t: "Connection and ideas", s: { Gemini:2, Libra:2, Aquarius:2 } }
+    ]},
+    { q: "Your worst money habit is...", a: [
+      { t: "Avoiding the numbers when they scare me", s: { Gemini:1, Virgo:1, Sagittarius:1, Pisces:1 } },
+      { t: "Spending to feel something", s: { Cancer:1, Leo:1, Sagittarius:1, Pisces:1 } },
+      { t: "Holding strategies past their use date", s: { Taurus:2, Leo:2, Scorpio:2, Aquarius:2 } },
+      { t: "Acting before I have slept on it", s: { Aries:2, Cancer:1, Libra:1, Capricorn:1 } }
+    ]},
+    { q: "Your deepest money fear is...", a: [
+      { t: "Being left without security", s: { Taurus:2, Cancer:2, Capricorn:2 } },
+      { t: "Being left behind by others", s: { Aries:2, Leo:2, Libra:1 } },
+      { t: "Being controlled or trapped", s: { Sagittarius:2, Aquarius:2, Scorpio:2 } },
+      { t: "Being seen as failing", s: { Virgo:2, Capricorn:1, Leo:1 } }
+    ]},
+    { q: "Money is most joyful when...", a: [
+      { t: "It is saved and quietly growing", s: { Taurus:2, Virgo:2, Capricorn:2 } },
+      { t: "It is spent on a moment that matters", s: { Aries:1, Leo:2, Sagittarius:2, Cancer:1 } },
+      { t: "It is flowing into something beautiful", s: { Taurus:1, Libra:2, Pisces:2 } },
+      { t: "It is funding what most people do not get", s: { Scorpio:2, Sagittarius:1, Aquarius:2 } }
+    ]},
+    { q: "When you want to feel better, you spend on...", a: [
+      { t: "Home, food, the people you love", s: { Cancer:3, Taurus:2 } },
+      { t: "Adventure, the next big thing", s: { Aries:2, Sagittarius:3 } },
+      { t: "Beauty, art, design", s: { Libra:3, Leo:2, Pisces:2 } },
+      { t: "Tools, books, ideas", s: { Gemini:3, Virgo:2, Aquarius:2 } }
+    ]}
+  ];
+
+  const G = { Aries:'♈',Taurus:'♉',Gemini:'♊',Cancer:'♋',Leo:'♌',
+    Virgo:'♍',Libra:'♎',Scorpio:'♏',Sagittarius:'♐',Capricorn:'♑',
+    Aquarius:'♒',Pisces:'♓' };
+
+  const RESULTS = {
+    Aries:{ archetype:'You earn by going first.',
+      strength:'You move before the room does. First in is often best paid.',
+      watch:'The start is not the finish. Unfinished bets quietly drain you.',
+      move:'Close one open thing before you open the next.' },
+    Taurus:{ archetype:'You build wealth the way oak trees grow.',
+      strength:'You hold. Patience is your highest-yield asset.',
+      watch:'Comfort can become a cage. Not every cost is worth keeping.',
+      move:'Audit one comfort you have stopped questioning.' },
+    Gemini:{ archetype:'You earn through language and connections.',
+      strength:'You turn ideas and people into income faster than most.',
+      watch:'Too many streams, none deep. Scatter costs you.',
+      move:'Pick the one stream worth doubling. Park the rest.' },
+    Cancer:{ archetype:'Money is safety to you. Not luxury.',
+      strength:'You protect the base. Your reserve is real, not theoretical.',
+      watch:'Fear can over-save the present into a smaller life.',
+      move:'Move a fixed amount toward growth, then stop watching it.' },
+    Leo:{ archetype:'You earn by being seen.',
+      strength:'You invest in your standing and it pays you back.',
+      watch:'Spending for the look outlives the moment it bought.',
+      move:'Fund one thing that compounds, not one that photographs.' },
+    Virgo:{ archetype:'You earn through precision.',
+      strength:'Your systems do the earning while you sleep.',
+      watch:'Refining forever is a way of not deciding.',
+      move:'Ship the money decision at 90 percent. Today.' },
+    Libra:{ archetype:'You earn in partnership.',
+      strength:'You make the fair deal that keeps paying both sides.',
+      watch:'The comfortable number and the fair number are not the same.',
+      move:'Name your real number out loud before you negotiate.' },
+    Scorpio:{ archetype:'You earn in the depths.',
+      strength:'You convert pressure and debt into leverage.',
+      watch:'Control held too tightly strangles the return.',
+      move:'Turn one quiet liability into an open plan this week.' },
+    Sagittarius:{ archetype:'Money is freedom to you.',
+      strength:'You aim far and the horizon usually pays.',
+      watch:'Expansion past the cash is just a faster way down.',
+      move:'Fund the next leap only to where the money actually reaches.' },
+    Capricorn:{ archetype:'You were born with a retirement plan.',
+      strength:'You play the long, durable game and it works.',
+      watch:'The unglamorous grind can quietly skip the living.',
+      move:'Schedule one expense that is purely for now.' },
+    Aquarius:{ archetype:'You earn at the edge.',
+      strength:'You price what everyone else is ignoring.',
+      watch:'Different for its own sake is still a cost.',
+      move:'Test the unconventional bet small before you scale it.' },
+    Pisces:{ archetype:'You earn between worlds.',
+      strength:'Your instinct sees the opening before the numbers do.',
+      watch:'The figure you will not look at is the one that grows.',
+      move:'Open the account you have been avoiding. Just look.' }
+  };
+
+  const SIGNS = Object.keys(G);
+  const GUIDE = s => 'shop.html?p=' + encodeURIComponent(s + ' Moon Money Guide');
+  let state = { screen: 'welcome', q: 0, scores: {} };
+  SIGNS.forEach(s => state.scores[s] = 0);
+
+  function track(n, d) { try { if (window.gtag) window.gtag('event', n, d || {}); } catch (e) {} }
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]));
+  const dots = a => '<div class="qz-dots" aria-hidden="true">' +
+    QUIZ.map((_, i) => '<span class="qz-dot' + (i === a ? ' on' : '') +
+      '"' + (i === a ? ' aria-current="step"' : '') + '></span>').join('') + '</div>';
+
+  function renderWelcome() {
+    root.innerHTML =
+      '<span class="eyebrow">The Quiz</span>' +
+      '<h1>Your <em>Moon Money</em> Sign</h1>' +
+      '<p class="qz-sub">Seven questions. The Moon sign that drives how you earn, hold and spend. No birth time needed.</p>' +
+      '<button class="btn btn-gold" id="qzBegin">Begin</button>';
+    document.getElementById('qzBegin').onclick = () => {
+      state.screen = 'question'; state.q = 0; track('quiz_started'); render();
+    };
+  }
+  function renderQuestion() {
+    const Q = QUIZ[state.q];
+    root.innerHTML = dots(state.q) +
+      '<p class="qz-qlabel">Question ' + (state.q + 1) + ' / ' + QUIZ.length + '</p>' +
+      '<h2 class="qz-q">' + esc(Q.q) + '</h2>' +
+      '<div class="qz-opts">' + Q.a.map((o, i) =>
+        '<button class="qz-opt" data-i="' + i + '" aria-label="' + esc(o.t) + '">' + esc(o.t) + '</button>'
+      ).join('') + '</div>';
+    root.querySelectorAll('.qz-opt').forEach(b => {
+      b.onclick = () => {
+        const sm = Q.a[+b.dataset.i].s;
+        for (const s in sm) state.scores[s] += sm[s];
+        track('quiz_question_answered', { question_number: state.q + 1, selected_option: Q.a[+b.dataset.i].t });
+        if (state.q < QUIZ.length - 1) { state.q++; } else { state.screen = 'result'; }
+        render();
+      };
+    });
+  }
+  function renderResult() {
+    let win = SIGNS[0], max = state.scores[win];
+    SIGNS.forEach(s => { if (state.scores[s] > max) { max = state.scores[s]; win = s; } });
+    const r = RESULTS[win];
+    track('quiz_completed', { result_sign: win });
+    root.innerHTML =
+      '<div role="status">' +
+      '<span class="eyebrow">Your Moon Money Sign</span>' +
+      '<div class="qz-glyph">' + G[win] + '</div>' +
+      '<h2 class="qz-result">' + win + '</h2>' +
+      '<p class="qz-arch">' + esc(r.archetype) + '</p>' +
+      '<div class="qz-box"><span class="qz-bl">Your strength</span><p>' + esc(r.strength) + '</p></div>' +
+      '<div class="qz-box"><span class="qz-bl">Watch for</span><p>' + esc(r.watch) + '</p></div>' +
+      '<div class="qz-box move"><span class="qz-bl">The move</span><p>' + esc(r.move) + '</p></div>' +
+      '<div class="qz-cta">' +
+        '<a class="btn btn-gold" id="qzGuide" href="' + GUIDE(win) + '">Get my full ' + win + ' guide</a>' +
+        '<a class="btn btn-ghost" id="qzSub" href="https://moonandmoney.substack.com/subscribe" target="_blank" rel="noopener">Join the Crescent Club</a>' +
+        '<button class="qz-retake" id="qzRetake">Take it again</button>' +
+      '</div></div>';
+    document.getElementById('qzGuide').addEventListener('click', () => track('quiz_guide_cta_clicked', { result_sign: win }));
+    document.getElementById('qzSub').addEventListener('click', () => track('quiz_substack_cta_clicked', { result_sign: win }));
+    document.getElementById('qzRetake').onclick = () => {
+      state = { screen: 'welcome', q: 0, scores: {} }; SIGNS.forEach(s => state.scores[s] = 0); render();
+    };
+  }
+  function render() {
+    if (state.screen === 'welcome') renderWelcome();
+    else if (state.screen === 'question') renderQuestion();
+    else renderResult();
+    root.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  render();
+})();
