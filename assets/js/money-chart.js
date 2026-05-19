@@ -7,7 +7,7 @@
    ============================================================ */
 window.MM_CHART_CHECKOUT = {
   individual: '',   // e.g. 'https://buy.stripe.com/xxxx'  ($36)
-  couples:    '',   // ($55)
+  pairs:      '',   // ($55)
   family:     ''    // ($77)
 };
 
@@ -15,7 +15,7 @@ window.MM_CHART_CHECKOUT = {
   'use strict';
   const TIERS = {
     individual: { label: 'Individual chart', price: '$36', people: 1 },
-    couples:    { label: 'Couples reading',  price: '$55', people: 2 },
+    pairs:      { label: 'Pairs reading',    price: '$55', people: 2 },
     family:     { label: 'Family reading',   price: '$77', people: 4 }
   };
   const form = document.getElementById('mcForm');
@@ -51,7 +51,7 @@ window.MM_CHART_CHECKOUT = {
         inp.required = show && (inp.name.indexOf('_first') > -1 || inp.name.indexOf('_birthdate') > -1 || inp.name.indexOf('_location') > -1);
       });
     });
-    priceLine.textContent = cfg.label + ' · ' + cfg.price + ' · delivered within 7 days';
+    priceLine.textContent = cfg.label + ' · ' + cfg.price + ' · sent to your inbox';
   }
 
   tiersWrap.addEventListener('click', e => {
