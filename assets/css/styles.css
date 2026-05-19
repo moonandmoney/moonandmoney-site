@@ -866,3 +866,19 @@ footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gr
 .dc-intro{max-width:560px;margin:0 auto 38px;text-align:center}
 .dc-intro p{font-family:var(--serif);font-style:italic;font-size:1.15rem;
   color:var(--mist);line-height:1.6}
+
+/* ============================================================
+   SMOOTH PAGE NAVIGATION
+   Cross-document View Transitions: moving between pages becomes
+   a gentle cross-dissolve instead of a hard reload flash.
+   Pure CSS, no JS. Browsers without support simply navigate as
+   before (no regression). Disabled under reduced-motion.
+   ============================================================ */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: .52s;
+    animation-timing-function: cubic-bezier(.4, 0, .2, 1);
+  }
+}

@@ -332,6 +332,16 @@
     .back-home { top: 20px; left: 22px; }
     .frame { padding-bottom: 38px; }
   }
+
+  /* Smooth cross-page transition (pure CSS, degrades silently) */
+  @media (prefers-reduced-motion: no-preference) {
+    @view-transition { navigation: auto; }
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation-duration: .52s;
+      animation-timing-function: cubic-bezier(.4, 0, .2, 1);
+    }
+  }
 </style>
 </head>
 <body>
