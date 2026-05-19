@@ -43,12 +43,12 @@
     let stars = [], W, H, events = [];
     const resize = () => {
       W = cv.width = innerWidth; H = cv.height = innerHeight;
-      const n = Math.min(220, Math.floor(W * H / 9000));
+      const n = Math.min(150, Math.floor(W * H / 12000));
       stars = Array.from({ length: n }, () => ({
         x: Math.random() * W, y: Math.random() * H,
         r: Math.random() * 1.7 + .4, a: Math.random(),
         s: Math.random() * .035 + .008, d: Math.random() < .5 ? 1 : -1,
-        g: Math.random() < .16, b: Math.random() < .22
+        g: Math.random() < .16, b: Math.random() < .10
       }));
     };
     resize();
@@ -175,7 +175,7 @@
           if (st.a <= .12 || st.a >= 1) st.d *= -1;
           ctx.beginPath();
           ctx.arc(st.x, st.y, st.r, 0, 6.283);
-          if (st.b) { ctx.shadowBlur = 8; ctx.shadowColor = st.g ? 'rgba(240,212,136,.9)' : 'rgba(255,255,255,.8)'; }
+          if (st.b) { ctx.shadowBlur = 4; ctx.shadowColor = st.g ? 'rgba(240,212,136,.9)' : 'rgba(255,255,255,.8)'; }
           else ctx.shadowBlur = 0;
           ctx.fillStyle = st.g
             ? `rgba(240,212,136,${Math.min(1, st.a * 1.15)})`
@@ -226,15 +226,21 @@
         var waxing = p < 0.5;
         var c = document.createElement('canvas');
         c.width = c.height = 64;
-        var x = c.getContext('2d'), R = 27, cx = 32, cy = 32;
+        var x = c.getContext('2d'), R = 25, cx = 32, cy = 32;
         function ring() {
           x.beginPath(); x.arc(cx, cy, R, 0, 2 * Math.PI);
-          x.strokeStyle = 'rgba(201,162,78,0.6)'; x.lineWidth = 2; x.stroke();
+          x.strokeStyle = 'rgba(240,212,136,0.95)'; x.lineWidth = 5;
+          x.lineJoin = 'round'; x.stroke();
         }
         ring();
         x.beginPath(); x.arc(cx, cy, R, 0, 2 * Math.PI);
-        x.fillStyle = '#E5C77B'; x.fill();
-        var off = 2 * R * illum * (waxing ? -1 : 1);
+        x.fillStyle = '#F0D488'; x.fill();
+        // Keep a readable sliver: never let a non-new moon erase
+        // down to nothing at favicon size.
+        var di = illum < 0.5 ? Math.max(illum, 0.10) : Math.min(illum, 0.90);
+        if (illum < 0.015) di = 0;          // true new = ring only
+        if (illum > 0.985) di = 1;          // true full = solid disc
+        var off = 2 * R * di * (waxing ? -1 : 1);
         x.save();
         x.globalCompositeOperation = 'destination-out';
         x.beginPath(); x.arc(cx + off, cy, R, 0, 2 * Math.PI); x.fill();
@@ -247,7 +253,7 @@
       } catch (e) {}
     }
     paint();
-    setInterval(paint, 60 * 60 * 1000);
+    setInterval(paint, 30 * 60 * 1000);
   })();
 
   const moonEl = document.querySelector('.moon');
