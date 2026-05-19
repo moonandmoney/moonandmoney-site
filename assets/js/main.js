@@ -85,8 +85,11 @@
       Pisces:      [[0,.2],[.42,.36],[.84,.3],[1.26,.5],[.84,.3],[.72,.72],[.98,1.06]]
     };
 
-    // ---- Seven slow celestial phenomena (you never know which you'll get) ----
-    const TYPES = ['shoot', 'comet', 'meteors', 'satellite', 'pulsar', 'constellation', 'nebula'];
+    // ---- Rare celestial phenomena: an occasional sighting, never
+    // the same twice running. Spaced minutes apart, so a long
+    // visit is rewarded with many; a short one feels lucky. ----
+    const TYPES = ['shoot', 'comet', 'meteors', 'satellite', 'pulsar',
+      'constellation', 'nebula', 'twinkle', 'fallingstar', 'planet'];
     const env = k => Math.sin(Math.PI * Math.max(0, Math.min(1, k))); // fade in→hold→out
     let lastT = '';
     function spawn() {
@@ -107,6 +110,26 @@
         const cx = W * (.15 + Math.random() * .55), cy = H * (.12 + Math.random() * .38), s = Math.min(W, H) * .17;
         const pts = shape.map(p => [cx + p[0] * s, cy + p[1] * s]);
         Object.assign(base, { dur: 7000, pts, sign });
+      } else if (t === 'twinkle') { // a little cluster that flares and settles
+        const cx = W * (.12 + Math.random() * .66), cy = H * (.1 + Math.random() * .5);
+        const sp = Math.min(W, H) * .11, n = 5 + Math.floor(Math.random() * 4);
+        const pts = Array.from({ length: n }, () => [
+          cx + (Math.random() - .5) * sp, cy + (Math.random() - .5) * sp,
+          Math.random() * 6.283, .7 + Math.random() * 1.5
+        ]);
+        Object.assign(base, { dur: 5200, pts });
+      } else if (t === 'fallingstar') { // a slow, graceful descent
+        Object.assign(base, {
+          dur: 5400, x: W * (.2 + Math.random() * .6), y: -20,
+          dx: W * (Math.random() * .12 - .06), dy: H * (.55 + Math.random() * .2)
+        });
+      } else if (t === 'planet') { // a serene wandering light
+        const pal = [[240, 212, 136], [226, 178, 198], [150, 200, 172]];
+        Object.assign(base, {
+          dur: 17000, x: W * (.12 + Math.random() * .2), y: H * (.12 + Math.random() * .5),
+          dx: W * (.55 + Math.random() * .25), dy: H * (Math.random() * .12 - .06),
+          col: pal[Math.floor(Math.random() * pal.length)], rs: 2 + Math.random() * 1.4
+        });
       } else Object.assign(base, { // nebula — a soft colour cloud that blooms and fades
         dur: 13000,
         x: W * (.2 + Math.random() * .6), y: H * (.14 + Math.random() * .42),
@@ -115,9 +138,10 @@
         hue: Math.random() < .5 ? [126, 206, 150] : [150, 120, 224] // jade or violet
       });
       events.push(base);
-      setTimeout(spawn, 8000 + Math.random() * 10000);
+      // Occasional: ~1.5 to ~4.5 minutes between sightings.
+      setTimeout(spawn, 95000 + Math.random() * 175000);
     }
-    setTimeout(spawn, 4500);
+    setTimeout(spawn, 12000 + Math.random() * 12000);
 
     const drawEvent = (e, now) => {
       const k = (now - e.born) / e.dur, a = env(k);
@@ -164,6 +188,38 @@
           ctx.fillStyle = `rgba(255,248,225,${a})`;
           ctx.shadowBlur = 8; ctx.shadowColor = 'rgba(240,212,136,.8)'; ctx.fill(); ctx.shadowBlur = 0;
         }
+      } else if (e.t === 'twinkle') {
+        for (const p of e.pts) {
+          const tw = .35 + .65 * (.5 + .5 * Math.sin(k * 6.283 * 2.4 + p[2]));
+          const aa = a * tw;
+          ctx.beginPath(); ctx.arc(p[0], p[1], p[3] * (.6 + .5 * tw), 0, 6.283);
+          ctx.fillStyle = `rgba(255,244,212,${aa})`;
+          ctx.shadowBlur = 6; ctx.shadowColor = 'rgba(240,212,136,.8)';
+          ctx.fill(); ctx.shadowBlur = 0;
+        }
+      } else if (e.t === 'fallingstar') {
+        const hx = e.x + e.dx * k, hy = e.y + e.dy * k;
+        const m = Math.hypot(e.dx, e.dy) || 1, L = 58;
+        const tx = hx - (e.dx / m) * L, ty = hy - (e.dy / m) * L;
+        const g = ctx.createLinearGradient(hx, hy, tx, ty);
+        g.addColorStop(0, `rgba(255,246,222,${a})`); g.addColorStop(1, 'rgba(255,246,222,0)');
+        ctx.strokeStyle = g; ctx.lineWidth = 1.7; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(tx, ty); ctx.stroke();
+        ctx.beginPath(); ctx.arc(hx, hy, 1.7, 0, 6.283);
+        ctx.fillStyle = `rgba(255,250,235,${a})`;
+        ctx.shadowBlur = 9; ctx.shadowColor = 'rgba(240,212,136,.75)';
+        ctx.fill(); ctx.shadowBlur = 0;
+      } else if (e.t === 'planet') {
+        const x = e.x + e.dx * k, y = e.y + e.dy * k, c = e.col;
+        const gl = ctx.createRadialGradient(x, y, 0, x, y, e.rs * 6);
+        gl.addColorStop(0, `rgba(${c[0]},${c[1]},${c[2]},${a * .5})`);
+        gl.addColorStop(1, `rgba(${c[0]},${c[1]},${c[2]},0)`);
+        ctx.fillStyle = gl;
+        ctx.beginPath(); ctx.arc(x, y, e.rs * 6, 0, 6.283); ctx.fill();
+        ctx.beginPath(); ctx.arc(x, y, e.rs, 0, 6.283);
+        ctx.fillStyle = `rgba(${c[0]},${c[1]},${c[2]},${a})`;
+        ctx.shadowBlur = 8; ctx.shadowColor = `rgba(${c[0]},${c[1]},${c[2]},.8)`;
+        ctx.fill(); ctx.shadowBlur = 0;
       } else { // nebula — a soft colour cloud drifting and breathing
         const cx = e.x + e.dx * k, cy = e.y + e.dy * k;
         const rad = e.r * (.82 + .3 * k);
@@ -284,6 +340,7 @@
     shadowEl.style.opacity = illum > .985 ? '0' : '1';
     // The moon's glow tracks how lit it is — a new moon barely glows.
     moonEl.style.setProperty('--lune', illum.toFixed(3));
+    if (stageEl) stageEl.style.setProperty('--lune', illum.toFixed(3));
 
     const sign = window.ZODIAC ? window.ZODIAC.moonSign(now) : null;
     if (labelEl) {

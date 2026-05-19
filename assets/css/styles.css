@@ -217,28 +217,46 @@ section{padding:clamp(70px,11vw,140px) 0}
 .moon-stage{position:relative;width:clamp(190px,17vw,236px);height:clamp(190px,17vw,236px);margin:0 auto 52px;cursor:pointer}
 .moon{
   width:100%;height:100%;border-radius:50%;position:relative;overflow:hidden;
-  background:radial-gradient(circle at 46% 42%,#f6edd6 0%,#dccb9f 48%,#ab9a70 80%,#8d7b56 100%);
+  /* Warm, luminous gold — the same family as the Lunar Wheel
+     (#FFEFBF → #E5C77B → #C9A24E), not the old pale silver */
+  background:radial-gradient(circle at 38% 34%,
+    #FFF4D6 0%,#FBE3A6 25%,#EAC979 49%,#D3AA55 71%,#AC823B 88%,#6F531F 100%);
   /* --lune (0 new → 1 full) is set from JS; the glow fades to almost
      nothing at a new moon and blooms gold at a full moon */
   box-shadow:
-    inset -9px -9px 34px rgba(0,0,0,.32),
-    inset 9px 9px 28px rgba(255,248,228,calc(.04 + .14 * var(--lune,.85))),
-    0 0 calc(30px + 52px * var(--lune,.85)) rgba(240,212,136,calc(.025 + .19 * var(--lune,.85)));
+    inset -10px -12px 40px rgba(40,26,6,.46),
+    inset 12px 12px 34px rgba(255,240,200,calc(.05 + .20 * var(--lune,.85))),
+    0 0 0 1px rgba(229,199,123,.45),
+    0 0 calc(34px + 74px * var(--lune,.85)) rgba(240,212,136,calc(.05 + .30 * var(--lune,.85)));
   transition:transform .8s var(--ease);
 }
 .moon::before{
-  content:'';position:absolute;inset:0;border-radius:50%;mix-blend-mode:multiply;opacity:.42;
+  /* a whisper of lunar texture + a gentle limb-darkening so it
+     reads as a luminous sphere, never a flat grade-school disc */
+  content:'';position:absolute;inset:0;border-radius:50%;mix-blend-mode:soft-light;opacity:.55;
   background:
-    radial-gradient(ellipse 28% 22% at 60% 38%,rgba(120,104,72,.45),transparent 70%),
-    radial-gradient(ellipse 18% 16% at 34% 62%,rgba(120,104,72,.38),transparent 72%),
-    radial-gradient(ellipse 13% 12% at 70% 70%,rgba(120,104,72,.32),transparent 75%),
-    radial-gradient(ellipse 10% 9% at 46% 24%,rgba(120,104,72,.28),transparent 78%);
+    radial-gradient(ellipse 34% 26% at 62% 40%,rgba(150,116,52,.30),transparent 72%),
+    radial-gradient(ellipse 20% 18% at 33% 63%,rgba(150,116,52,.22),transparent 75%),
+    radial-gradient(circle at 50% 50%,transparent 58%,rgba(58,40,12,.30) 100%);
 }
 .moon-shadow{position:absolute;inset:0;border-radius:50%;background:var(--obsidian);transition:transform 1.2s var(--ease);box-shadow:0 0 30px 10px var(--obsidian);z-index:2}
-.moon-stage:hover .moon{transform:scale(1.04)}
+.moon-stage:hover .moon{transform:scale(1.045)}
+/* Outer corona that softly breathes and blooms with the phase */
+.moon-stage::before{
+  content:'';position:absolute;inset:-16%;border-radius:50%;z-index:-1;pointer-events:none;
+  background:radial-gradient(circle,
+    rgba(240,212,136,calc(.10 + .24 * var(--lune,.85))) 0%,
+    rgba(240,212,136,.05) 40%,transparent 70%);
+  filter:blur(7px);
+  animation:moonBreath 7.5s ease-in-out infinite;
+}
+@keyframes moonBreath{0%,100%{transform:scale(1);opacity:.82}50%{transform:scale(1.05);opacity:1}}
+/* Slow gilded ring, echoing the Wheel's framed feel */
 .moon-stage::after{
-  content:'';position:absolute;inset:-30px;border-radius:50%;border:1px solid var(--line);
-  animation:spin 60s linear infinite;
+  content:'';position:absolute;inset:-24px;border-radius:50%;
+  border:1px solid rgba(216,177,80,.26);
+  box-shadow:inset 0 0 0 1px rgba(216,177,80,.05),0 0 24px rgba(216,177,80,.07);
+  animation:spin 90s linear infinite;
 }
 .glyph-svg{width:100%;height:100%;display:block}
 /* the true standard zodiac glyph (matches the guide PDFs) —
