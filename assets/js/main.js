@@ -7,13 +7,19 @@
 
   /* ---- Nav: mark the current page (gold underline stays lit) ---- */
   (function () {
-    let here = (location.pathname.split('/').pop() || 'index.html');
-    if (!here) here = 'index.html';
+    function norm(p) {
+      try { p = decodeURIComponent(p); } catch (e) {}
+      p = p.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
+      if (p.length > 1) p = p.replace(/\/$/, '');
+      return p || '/';
+    }
+    const here = norm(location.pathname);
     document.querySelectorAll('.nav-links a').forEach(a => {
       const href = a.getAttribute('href') || '';
-      if (/^(https?:|mailto:|#)/.test(href)) return;
-      const file = (href.split('/').pop().split(/[#?]/)[0]) || 'index.html';
-      if (file === here) a.setAttribute('aria-current', 'page');
+      if (/^(https?:|mailto:|tel:|#)/.test(href)) return;
+      let target;
+      try { target = norm(new URL(href, location.href).pathname); } catch (e) { return; }
+      if (target === here) a.setAttribute('aria-current', 'page');
     });
   })();
 
