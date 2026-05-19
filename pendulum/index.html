@@ -40,7 +40,10 @@
      frame lays a translucent navy over it, so inside reads as the
      blue cosmic stage and outside is the site's night sky. */
   .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
-  .stars svg { width: 100%; height: 100%; }
+  .frame-stars {
+    position: absolute; inset: 0; pointer-events: none; z-index: -1;
+  }
+  .stars svg, .frame-stars svg { width: 100%; height: 100%; }
   .nebula {
     position: fixed; inset: 0; pointer-events: none; z-index: 0;
     background:
@@ -54,7 +57,7 @@
     min-height: 100vh; min-height: 100svh; padding: 22px 28px 46px;
     display: flex; flex-direction: column;
     background: radial-gradient(ellipse 94% 64% at 50% 40%,
-      rgba(11,37,69,.86) 0%, rgba(6,18,43,.90) 55%, rgba(2,6,17,.92) 100%);
+      var(--navy) 0%, var(--navy-mid) 55%, var(--navy-dark) 100%);
   }
   .gold-border {
     position: absolute; top: 24px; left: 24px; right: 24px; bottom: 24px;
@@ -71,9 +74,9 @@
 
   .brand-strip {
     text-align: center; font-family: 'Arimo', 'Liberation Sans', Arial, sans-serif; font-weight: 500;
-    font-size: 11px; letter-spacing: 4px; color: var(--gold);
+    font-size: 14px; letter-spacing: 5px; color: var(--gold);
     text-shadow: 0 0 12px rgba(201, 162, 78, 0.35);
-    padding-top: 16px;
+    padding-top: 34px;
   }
   .divider {
     display: flex; align-items: center; justify-content: center;
@@ -92,7 +95,7 @@
   .title {
     text-align: center; font-style: italic; font-weight: 300;
     font-size: 16px; color: var(--gold-warm); letter-spacing: 1px;
-    margin-bottom: 6px;
+    margin-top: 12px; margin-bottom: 6px;
     text-shadow: 0 0 18px rgba(217, 183, 100, 0.25);
   }
 
@@ -356,10 +359,11 @@
 </head>
 <body>
 
-<div class="stars" id="stars"></div>
+<div class="stars" id="skyStars"></div>
 <div class="nebula"></div>
 
 <div class="frame">
+  <div class="frame-stars" id="frameStars"></div>
   <div class="gold-border"></div>
   <span class="corner tl"></span><span class="corner tr"></span>
   <span class="corner bl"></span><span class="corner br"></span>
@@ -369,7 +373,6 @@
   </a>
 
   <div class="brand-strip">MOON &nbsp;&amp;&nbsp; MONEY</div>
-  <div class="divider"><span class="line"></span><span class="dot"></span><span class="line"></span></div>
   <div class="title">— pendulum —</div>
   <div class="breath-cue" id="breathCue"></div>
 
@@ -508,22 +511,27 @@
 
 <script>
 (function buildStars() {
-  const w = window.innerWidth, h = window.innerHeight;
-  const count = Math.min(120, Math.floor((w * h) / 9000));
-  let svg = '<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" preserveAspectRatio="none">';
-  for (let i = 0; i < count; i++) {
-    const x = Math.random() * 100, y = Math.random() * 100;
-    const r = 0.4 + Math.random() * 1.4;
-    const base = 0.15 + Math.random() * 0.5;
-    const peak = Math.min(base + 0.3 + Math.random() * 0.3, 0.95);
-    const dur = 3 + Math.random() * 5;
-    const begin = -Math.random() * dur;
-    svg += '<circle cx="' + x + '%" cy="' + y + '%" r="' + r + '" fill="#FCF7F1">' +
-      '<animate attributeName="opacity" values="' + base.toFixed(2) + ';' + peak.toFixed(2) + ';' + base.toFixed(2) + '" dur="' + dur.toFixed(2) + 's" begin="' + begin.toFixed(2) + 's" repeatCount="indefinite"/>' +
-      '</circle>';
+  function make(id, count) {
+    let svg = '<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" preserveAspectRatio="none">';
+    for (let i = 0; i < count; i++) {
+      const x = Math.random() * 100, y = Math.random() * 100;
+      const r = 0.4 + Math.random() * 1.4;
+      const base = 0.15 + Math.random() * 0.5;
+      const peak = Math.min(base + 0.3 + Math.random() * 0.3, 0.95);
+      const dur = 3 + Math.random() * 5;
+      const begin = -Math.random() * dur;
+      svg += '<circle cx="' + x + '%" cy="' + y + '%" r="' + r + '" fill="#FCF7F1">' +
+        '<animate attributeName="opacity" values="' + base.toFixed(2) + ';' + peak.toFixed(2) + ';' + base.toFixed(2) + '" dur="' + dur.toFixed(2) + 's" begin="' + begin.toFixed(2) + 's" repeatCount="indefinite"/>' +
+        '</circle>';
+    }
+    svg += '</svg>';
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = svg;
   }
-  svg += '</svg>';
-  document.getElementById("stars").innerHTML = svg;
+  const w = window.innerWidth, h = window.innerHeight;
+  const base = Math.floor((w * h) / 9000);
+  make("skyStars", Math.min(120, base));         // outside: the site night sky
+  make("frameStars", Math.min(180, base + 70));  // inside the frame: a rich starfield
 })();
 
 const READINGS = [
