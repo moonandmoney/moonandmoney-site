@@ -304,6 +304,25 @@
     width: 20px; height: 20px; fill: none; stroke: currentColor;
     stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
   }
+  .sound-toggle {
+    position: absolute; top: 30px; right: 38px; z-index: 6;
+    width: 32px; height: 32px; padding: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: none; border: 0; cursor: pointer;
+    color: var(--cream); opacity: 0.45;
+    transition: opacity 0.35s ease;
+  }
+  .sound-toggle:hover, .sound-toggle:focus-visible { opacity: 0.95; outline: none; }
+  .sound-toggle.on { opacity: 0.9; color: var(--gold-warm); }
+  .sound-toggle svg {
+    width: 22px; height: 22px; fill: none; stroke: currentColor;
+    stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+  }
+  .sound-toggle .wave-2, .sound-toggle .wave-1 { opacity: 0; transition: opacity .3s ease; }
+  .sound-toggle.on .wave-1 { opacity: 1; }
+  .sound-toggle.on .wave-2 { opacity: 1; transition-delay: .05s; }
+  .sound-toggle .slash { opacity: 0.85; transition: opacity .3s ease; }
+  .sound-toggle.on .slash { opacity: 0; }
   .footer {
     text-align: center; padding-top: 14px;
     font-family: 'Cormorant Garamond', serif; font-style: italic;
@@ -338,6 +357,7 @@
     .frame-stars { border-radius: 13px; }
     .reveal-text { font-size: 19px; }
     .back-home { top: 18px; left: 20px; }
+    .sound-toggle { top: 16px; right: 18px; }
   }
 
   /* Smooth cross-page transition (pure CSS, degrades silently) */
@@ -362,6 +382,16 @@
   <a class="back-home" href="../index.html" aria-label="Return home">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5 L7.5 12 L14.5 19"/></svg>
   </a>
+
+  <button class="sound-toggle" id="soundToggle" type="button"
+          aria-label="Sound on or off" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M4 9 H7 L12 5 V19 L7 15 H4 Z"/>
+      <path class="wave-1" d="M15.5 9.5 A4 4 0 0 1 15.5 14.5"/>
+      <path class="wave-2" d="M18 7 A8 8 0 0 1 18 17"/>
+      <line class="slash" x1="4.5" y1="19.5" x2="20" y2="4"/>
+    </svg>
+  </button>
 
   <div class="title">— pendulum —</div>
   <div class="breath-hint" id="breathHint">Breathe in as the light swells, out as it settles.</div>
@@ -599,9 +629,81 @@ const state = {
   rrIntervals: [], rrSamplesForGraph: [], coherenceHistory: [],
   lastHr: null, coherenceScore: 0,
   finalReading: "", finalAvgCoherence: null, finalDurationSec: 0,
+  prevPhase: 0,
 };
 
 const PERIOD = 10, THETA_MAX = 28;
+
+/* ---- Optional meditative audio, fully synthesised (no files):
+   a soft ambient chord, a breath-voice that swells with the
+   light, and a gentle bell at each turn. Off until asked for. */
+var audio = { ctx: null, master: null, swell: null, on: false };
+
+function audioEnsure() {
+  if (audio.ctx) return;
+  var AC = window.AudioContext || window.webkitAudioContext;
+  if (!AC) return;
+  audio.ctx = new AC();
+  audio.master = audio.ctx.createGain();
+  audio.master.gain.value = 0;
+  audio.master.connect(audio.ctx.destination);
+
+  // ambient pad — a calm open chord under a soft, drifting filter
+  var pad = audio.ctx.createGain(); pad.gain.value = 0.13;
+  var lp = audio.ctx.createBiquadFilter();
+  lp.type = "lowpass"; lp.frequency.value = 820; lp.Q.value = 0.5;
+  pad.connect(lp); lp.connect(audio.master);
+  [146.83, 220.0, 293.66].forEach(function (f, i) {
+    var o = audio.ctx.createOscillator(); o.type = "sine"; o.frequency.value = f;
+    var g = audio.ctx.createGain();
+    g.gain.value = i === 0 ? 0.6 : (i === 1 ? 0.30 : 0.16);
+    o.connect(g); g.connect(pad); o.start();
+  });
+  var lfo = audio.ctx.createOscillator(); lfo.frequency.value = 0.05;
+  var lfg = audio.ctx.createGain(); lfg.gain.value = 240;
+  lfo.connect(lfg); lfg.connect(lp.frequency); lfo.start();
+
+  // breath voice — a soft sine we open and close with the breath
+  audio.swell = audio.ctx.createGain(); audio.swell.gain.value = 0;
+  var sf = audio.ctx.createBiquadFilter();
+  sf.type = "lowpass"; sf.frequency.value = 1300;
+  audio.swell.connect(sf); sf.connect(audio.master);
+  var so = audio.ctx.createOscillator();
+  so.type = "sine"; so.frequency.value = 329.63; // E4, gentle
+  so.connect(audio.swell); so.start();
+}
+
+function audioSet(on) {
+  audio.on = on;
+  var t = document.getElementById("soundToggle");
+  if (t) { t.classList.toggle("on", on); t.setAttribute("aria-pressed", on ? "true" : "false"); }
+  if (on) {
+    audioEnsure();
+    if (!audio.ctx) return;
+    if (audio.ctx.state === "suspended") audio.ctx.resume();
+    var n = audio.ctx.currentTime;
+    audio.master.gain.cancelScheduledValues(n);
+    audio.master.gain.setValueAtTime(audio.master.gain.value, n);
+    audio.master.gain.linearRampToValueAtTime(0.5, n + 1.4);
+  } else if (audio.ctx) {
+    var m = audio.ctx.currentTime;
+    audio.master.gain.cancelScheduledValues(m);
+    audio.master.gain.setValueAtTime(audio.master.gain.value, m);
+    audio.master.gain.linearRampToValueAtTime(0.0, m + 0.8);
+  }
+}
+
+function audioChime(freq) {
+  if (!audio.ctx || !audio.on) return;
+  var t = audio.ctx.currentTime;
+  var o = audio.ctx.createOscillator(); o.type = "sine"; o.frequency.value = freq;
+  var g = audio.ctx.createGain();
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.linearRampToValueAtTime(0.20, t + 0.05);
+  g.gain.exponentialRampToValueAtTime(0.0008, t + 1.7);
+  o.connect(g); g.connect(audio.master);
+  o.start(t); o.stop(t + 1.8);
+}
 
 // smootherstep ramp between a and b
 function sstep(a, b, x) {
@@ -628,6 +730,15 @@ function tick(ts) {
   var bobS = 0.66 + 0.94 * B;            // dramatic: ~0.66 empty -> ~1.6 full
   state.bobGroup.setAttribute("transform",
     "translate(190 356) scale(" + bobS.toFixed(4) + ") translate(-190 -356)");
+
+  // Optional audio follows the very same breath: the voice
+  // swells with the light, and a soft bell marks each turn.
+  if (audio.on && audio.ctx) {
+    audio.swell.gain.setTargetAtTime(0.085 * B, audio.ctx.currentTime, 0.09);
+    if (state.prevPhase < 0.5 && phase >= 0.5) audioChime(528.0); // full turn
+    if (phase < state.prevPhase) audioChime(396.0);               // empty turn (wrap)
+  }
+  state.prevPhase = phase;
 
   const c = state.coherenceScore;
   state.bobHalo.setAttribute("opacity", String(0.45 + c * 0.5));
@@ -714,6 +825,7 @@ function beginSession() {
     setTimeout(function () { state.breathHint.classList.remove("show"); }, 11000);
   }
 
+  state.prevPhase = 0;
   state.rafId = requestAnimationFrame(tick);
 }
 
@@ -743,6 +855,7 @@ function completeSession(early) {
 
   state.pendulum.setAttribute("transform", "rotate(0 190 50)");
   state.bobGroup.removeAttribute("transform");
+  if (audio.ctx) audio.swell.gain.setTargetAtTime(0, audio.ctx.currentTime, 0.4);
   state.breathHint.classList.remove("show");
   document.getElementById("sessionState").classList.remove("active");
   state.hrvGraphWrap.classList.remove("active");
@@ -1039,6 +1152,9 @@ document.querySelectorAll(".dur-btn").forEach(function(btn) {
   });
 });
 document.getElementById("beginBtn").addEventListener("click", beginSession);
+document.getElementById("soundToggle").addEventListener("click", function () {
+  audioSet(!audio.on);
+});
 document.getElementById("connectBtn").addEventListener("click", connectSensor);
 document.getElementById("againBtn").addEventListener("click", reset);
 document.getElementById("saveBtn").addEventListener("click", function() {
