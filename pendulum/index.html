@@ -92,7 +92,9 @@
     text-align: center;
     font-style: normal; font-size: clamp(24px, 5.6vw, 38px); font-weight: 400;
     color: var(--gold-light); letter-spacing: 7px;
-    opacity: 0; transition: opacity 1.2s ease;
+    opacity: 0;
+    transition: opacity .45s ease, transform .45s ease, text-shadow .45s ease;
+    will-change: opacity, transform;
     text-shadow: 0 0 26px rgba(255, 239, 191, 0.55);
     min-height: 1.1em;
     margin: clamp(26px, 6.5vh, 60px) auto clamp(22px, 5.5vh, 50px);
@@ -216,11 +218,11 @@
     letter-spacing: 4px; color: var(--gold); text-transform: uppercase;
     margin-bottom: 24px; opacity: 0.85;
   }
-  .reveal-quote-mark {
-    font-family: 'Cormorant Garamond', serif; font-style: italic;
-    font-size: 60px; line-height: 0.6;
-    color: var(--gold-warm); opacity: 0.4; margin-bottom: -4px;
+  .reveal-moon {
+    width: 46px; height: 46px; margin: 0 auto 16px; opacity: 0.95;
+    filter: drop-shadow(0 0 14px rgba(229, 199, 123, 0.45));
   }
+  .reveal-moon svg { width: 100%; height: 100%; display: block; }
   .reveal-text {
     font-size: 22px; line-height: 1.55; font-style: italic; font-weight: 300;
     color: var(--cream); margin-bottom: 28px; letter-spacing: 0.3px;
@@ -445,7 +447,19 @@
 
     <div class="reveal" id="revealState">
       <div class="reveal-eyebrow">your reading</div>
-      <div class="reveal-quote-mark">"</div>
+      <div class="reveal-moon" aria-hidden="true">
+        <svg viewBox="0 0 64 64">
+          <defs>
+            <radialGradient id="rmGold" cx="35%" cy="32%" r="72%">
+              <stop offset="0%" stop-color="#FFEFBF"/>
+              <stop offset="48%" stop-color="#D9B764"/>
+              <stop offset="100%" stop-color="#7A5F1F"/>
+            </radialGradient>
+          </defs>
+          <circle cx="30" cy="32" r="17" fill="url(#rmGold)"/>
+          <circle cx="38" cy="28" r="14" fill="#03081A"/>
+        </svg>
+      </div>
       <div class="reveal-text" id="revealText"></div>
       <div class="reveal-meta" id="revealMeta"></div>
       <div class="reveal-actions">
@@ -561,6 +575,13 @@ function tick(ts) {
 
   state.breathCue.textContent = (phase < 0.5) ? "inhale" : "exhale";
   state.breathCue.classList.add("show");
+  // the words breathe with you: luminous at the turn, soft at the pause
+  var bEnv = Math.sin(Math.PI * phase);
+  state.breathCue.style.opacity = (0.20 + 0.80 * bEnv).toFixed(3);
+  state.breathCue.style.transform = "scale(" + (0.96 + 0.09 * bEnv).toFixed(3) + ")";
+  state.breathCue.style.textShadow =
+    "0 0 " + (8 + 38 * bEnv).toFixed(1) + "px rgba(255,239,191," +
+    (0.22 + 0.55 * bEnv).toFixed(3) + ")";
 
   const c = state.coherenceScore;
   state.bobHalo.setAttribute("opacity", String(0.45 + c * 0.5));
@@ -669,7 +690,9 @@ function completeSession(early) {
 
   state.pendulum.setAttribute("transform", "rotate(0 190 50)");
   state.anchorGroup.removeAttribute("transform");
-  document.getElementById("breathCue").classList.remove("show");
+  var bc = document.getElementById("breathCue");
+  bc.classList.remove("show");
+  bc.style.opacity = ""; bc.style.transform = ""; bc.style.textShadow = "";
   document.getElementById("sessionState").classList.remove("active");
   state.hrvGraphWrap.classList.remove("active");
   document.getElementById("revealState").classList.add("active");
@@ -678,6 +701,9 @@ function completeSession(early) {
 
 function reset() {
   document.getElementById("revealState").classList.remove("active");
+  var bcR = document.getElementById("breathCue");
+  bcR.classList.remove("show");
+  bcR.style.opacity = ""; bcR.style.transform = ""; bcR.style.textShadow = "";
   document.getElementById("idleState").style.display = "flex";
   const idle = document.getElementById("idleState");
   const wrap = document.getElementById("pendulumWrap");
@@ -911,13 +937,9 @@ function generateShareImage() {
     drawSpacedText(ctx, "YOUR COHERENCE", 270, 252, 2);
   }
 
-  ctx.fillStyle = "rgba(217, 183, 100, 0.45)";
-  ctx.font = 'italic 56px "Cormorant Garamond", serif';
-  ctx.fillText("“", 270, 388);
-
   ctx.fillStyle = "#FCF7F1";
   ctx.font = 'italic 300 17px "Cormorant Garamond", serif';
-  wrapText(ctx, state.finalReading || "", 270, 412, 420, 24);
+  wrapText(ctx, state.finalReading || "", 270, 404, 420, 24);
 
   const m = Math.floor(state.finalDurationSec / 60);
   const s = Math.floor(state.finalDurationSec % 60);
