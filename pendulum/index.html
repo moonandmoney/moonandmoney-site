@@ -110,8 +110,8 @@
   .cue-w {
     position: absolute; left: 50%; top: 50%;
     transform: translate(-50%, -50%); white-space: nowrap;
-    opacity: 0; will-change: opacity, transform;
-    transition: opacity .28s ease;
+    opacity: 0; will-change: opacity;
+    transition: none;
   }
 
   .stage {
@@ -309,14 +309,11 @@
   }
   .footer {
     text-align: center; padding-top: 14px;
-    display: flex; justify-content: center;
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 12px; color: var(--gold); opacity: 0.7;
   }
-  .foot-moon {
-    display: inline-flex; width: 22px; height: 22px;
-    opacity: 0.55; transition: opacity 0.4s ease;
-  }
-  .foot-moon:hover, .foot-moon:focus-visible { opacity: 1; outline: none; }
-  .foot-moon svg { width: 100%; height: 100%; display: block; }
+  .footer a { color: var(--gold); text-decoration: none; }
+  .footer a:hover { color: var(--gold-light); }
 
   .share-modal {
     position: fixed; inset: 0; z-index: 1000;
@@ -493,12 +490,7 @@
   </div>
 
   <div class="footer">
-    <a class="foot-moon" href="../index.html" aria-label="Return home">
-      <svg viewBox="0 0 64 64" aria-hidden="true">
-        <circle cx="30" cy="32" r="13" fill="#D9B764"/>
-        <circle cx="37" cy="29" r="10.5" fill="#03081A"/>
-      </svg>
-    </a>
+    <a href="../index.html">Moon &amp; Money</a>
   </div>
 </div>
 
@@ -606,23 +598,20 @@ function tick(ts) {
   state.anchorGroup.setAttribute("transform",
     "translate(190 50) scale(" + breathScale + ") translate(-190 -50)");
 
-  // Two fixed word-layers cross-dissolve into each other — the
-  // text never changes, so there is no mechanical flip. The
-  // hand-over is centred on the pendulum's turn (phase 0, .5, 1),
-  // and the glow swells through the swing so it stays in rhythm.
+  // One full swing = one full breath. Each word holds STEADY and
+  // full for its entire swing; the only change is a brief, smooth
+  // cross-dissolve right at the turning point (the far edge). It
+  // never tells you the opposite thing mid-swing.
   state.breathCue.classList.add("show");
-  var e = 0.075; // soft cross-dissolve band around each turn
+  var e = 0.03; // ~0.3s each side at PERIOD 10 -> a ~0.6s dissolve, only at the turn
   var winIn = sstep(0, e, phase) * (1 - sstep(0.5 - e, 0.5, phase));
   var winEx = sstep(0.5, 0.5 + e, phase) * (1 - sstep(1 - e, 1, phase));
-  var swing = Math.abs(Math.sin(2 * Math.PI * phase)); // 0 at the turn, 1 mid-swing
-  var breath = 0.42 + 0.58 * swing;
-  var tf = "translate(-50%,-50%) scale(" + (0.96 + 0.08 * swing).toFixed(3) + ")";
-  var sh = "0 0 " + (8 + 34 * swing).toFixed(1) +
-    "px rgba(255,239,191," + (0.20 + 0.5 * swing).toFixed(3) + ")";
-  state.cueIn.style.opacity = (breath * winIn).toFixed(3);
-  state.cueEx.style.opacity = (breath * winEx).toFixed(3);
-  state.cueIn.style.transform = state.cueEx.style.transform = tf;
-  state.cueIn.style.textShadow = state.cueEx.style.textShadow = sh;
+  var lvl = 0.94; // calm, constant presence — no mid-swing pulsing
+  state.cueIn.style.opacity = (lvl * winIn).toFixed(3);
+  state.cueEx.style.opacity = (lvl * winEx).toFixed(3);
+  state.cueIn.style.transform = state.cueEx.style.transform = "translate(-50%,-50%)";
+  state.cueIn.style.textShadow = state.cueEx.style.textShadow =
+    "0 0 22px rgba(255,239,191,0.42)";
 
   const c = state.coherenceScore;
   state.bobHalo.setAttribute("opacity", String(0.45 + c * 0.5));
