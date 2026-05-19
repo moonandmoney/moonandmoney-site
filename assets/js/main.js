@@ -220,37 +220,38 @@
   /* ---- A note from Luna: a daily lunar money reading ---- */
   const stage = document.querySelector('.moon-stage');
   const SIGN_MONEY = {
-    Aries: 'a week that rewards the decisive move over the deliberated one',
-    Taurus: 'a week to build something that compounds quietly',
-    Gemini: 'a week to diversify rather than concentrate',
-    Cancer: 'a week to shore up the reserve before anything else',
-    Leo: 'a week to invest in what raises your standing, not only your balance',
-    Virgo: 'a week to refine the system until it runs without you',
-    Libra: 'a week to rebalance, in the portfolio and in the spending',
-    Scorpio: 'a week to turn a liability into leverage',
-    Sagittarius: 'a week to widen the horizon without overextending it',
-    Capricorn: 'a week for the long, unglamorous, durable decision',
-    Aquarius: 'a week to question the default and price the alternative',
-    Pisces: 'a week to act on the instinct you have been quietly ignoring'
+    Aries: 'the bold move outperforms the perfect one this week',
+    Taurus: 'build the thing that pays you while you sleep',
+    Gemini: 'choose one stream and stop hedging every bet',
+    Cancer: 'make the reserve untouchable before anything else',
+    Leo: 'spend on what compounds your name, not your mood',
+    Virgo: 'fix the leak no one else can see',
+    Libra: 'the fair number and the comfortable number are not the same',
+    Scorpio: 'turn a quiet debt into open leverage',
+    Sagittarius: 'expand only as far as the cash actually reaches',
+    Capricorn: 'the boring decision is the rich one',
+    Aquarius: 'price the option everyone else is ignoring',
+    Pisces: 'act on the figure you keep pretending you did not see'
   };
   const PHASE_MOVE = {
-    'New Moon': 'open the position you keep deferring',
-    'Waxing Crescent': 'let the small commitment gather momentum',
-    'First Quarter': 'meet the resistance and adjust, do not abandon',
-    'Waxing Gibbous': 'refine it before the result is due',
-    'Full Moon': 'read the position with clear eyes and take what is ripe',
-    'Waning Gibbous': 'distribute the gain with intention',
-    'Last Quarter': 'close what no longer earns its place',
-    'Waning Crescent': 'clear the ledger and make room'
+    'New Moon': 'name the number out loud and open the account today',
+    'Waxing Crescent': 'protect the small habit before it gets talked out of you',
+    'First Quarter': 'meet the friction and adjust the plan, do not drop it',
+    'Waxing Gibbous': 'tighten one thing before the result is counted',
+    'Full Moon': 'look without flinching and collect what is already yours',
+    'Waning Gibbous': 'move the surplus on purpose, not by accident',
+    'Last Quarter': 'end the arrangement that stopped paying you back',
+    'Waning Crescent': 'settle the ledger and let the next cycle find you ready'
   };
   const CLOSERS = [
-    'Decide before you feel certain.',
-    'Quiet capital outlasts loud capital.',
-    'Timing is a strategy, not a superstition.',
-    'Clarity compounds.',
+    'Money rewards the decided, not the busy.',
+    'Quiet money outlives loud money.',
+    'Timing is a discipline, not a feeling.',
+    'Clarity is the highest yield you own.',
     'The unglamorous choice is usually the wealthy one.',
-    'Patience is a position.',
-    'What you tend on schedule, you keep.'
+    'Patience is a position. Hold it.',
+    'What you tend on schedule, you keep.',
+    'Wealth is built in the boring middle.'
   ];
   function dailyReading() {
     const now = new Date();
