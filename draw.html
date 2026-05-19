@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Daily Card · Moon &amp; Money</title>
+<meta name="description" content="One card a day, drawn by the Moon's sign. A recognition, a whisper, and one money move. From Moon & Money by Luna Wilde.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="assets/css/styles.css">
+<style>
+  .draw-wrap{min-height:100vh;display:flex;align-items:center;padding:104px 16px 64px}
+  .draw-wrap .wrap{width:100%}
+</style>
+</head>
+<body>
+<canvas id="starfield"></canvas>
+<div class="nebula"></div>
+
+<header class="nav">
+  <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
+  <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="wheel.html">The Wheel</a></li>
+    <li><a href="draw.html">The Card</a></li>
+    <li><a href="quiz.html">The Quiz</a></li>
+    <li><a href="shop.html">The Atelier</a></li>
+    <li><a href="archive.html">The Archive</a></li>
+    <li><a href="sessions.html">Sessions</a></li>
+    <li><a href="about.html">The Ethos</a></li>
+    <li><a class="nav-cta" href="https://moonandmoney.substack.com/subscribe" target="_blank">Crescent Club</a></li>
+  </ul>
+</header>
+
+<main>
+  <section class="draw-wrap">
+    <div class="wrap">
+      <div class="dc-intro reveal">
+        <span class="eyebrow">The Daily Card</span>
+        <p>The Moon moves through one sign for roughly two and a half days. While it does, it draws one card. Yours is set for today.</p>
+      </div>
+      <div class="dc-card reveal" data-daily-card></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
+        <p>Personal finance, read through astrology. By Luna Wilde.</p>
+      </div>
+      <div class="foot-col"><h4>Explore</h4><a href="wheel.html">The Wheel</a><a href="draw.html">The Card</a><a href="quiz.html">The Quiz</a><a href="money-chart.html">The Money Chart</a><a href="shop.html">The Atelier</a><a href="about.html">The Ethos</a></div>
+      <div class="foot-col"><h4>The Club</h4><a href="https://moonandmoney.substack.com" target="_blank">Substack</a><a href="https://moonandmoney.substack.com/subscribe" target="_blank">Crescent Club</a><a href="about.html">The Circle <span class="soon">Soon</span></a><a href="about.html">The Token <span class="soon">Soon</span></a></div>
+      <div class="foot-col"><h4>Follow</h4><a href="https://moonandmoney.substack.com" target="_blank">@moonmoney</a><a href="archive.html">Notes</a><a href="index.html">Newsletter</a></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="yr"></span> Moon &amp; Money · Luna Wilde. All rights reserved.</span>
+      <span>Built in rhythm with the moon ☾</span>
+    </div>
+  </div>
+</footer>
+
+<div id="mmPlayer" data-welcome="assets/audio/invocation.mp3"></div>
+
+<script src="assets/js/zodiac.js"></script>
+<script src="assets/js/cards.js"></script>
+<script src="assets/js/daily-card.js"></script>
+<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/player.js"></script>
+</body>
+</html>
