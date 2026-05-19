@@ -5,6 +5,18 @@
   'use strict';
   const reduced = matchMedia('(prefers-reduced-motion:reduce)').matches;
 
+  /* ---- Nav: mark the current page (gold underline stays lit) ---- */
+  (function () {
+    let here = (location.pathname.split('/').pop() || 'index.html');
+    if (!here) here = 'index.html';
+    document.querySelectorAll('.nav-links a').forEach(a => {
+      const href = a.getAttribute('href') || '';
+      if (/^(https?:|mailto:|#)/.test(href)) return;
+      const file = (href.split('/').pop().split(/[#?]/)[0]) || 'index.html';
+      if (file === here) a.setAttribute('aria-current', 'page');
+    });
+  })();
+
   /* ---- Nav: scroll state + mobile ---- */
   const nav = document.querySelector('.nav');
   const onScroll = () => nav && nav.classList.toggle('scrolled', window.scrollY > 40);

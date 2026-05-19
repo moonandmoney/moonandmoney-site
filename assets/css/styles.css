@@ -103,6 +103,8 @@ section{padding:clamp(70px,11vw,140px) 0}
 }
 .nav-links a:hover{color:var(--parchment)}
 .nav-links a:hover::after{width:100%}
+.nav-links a[aria-current="page"]{color:var(--gold-bright)}
+.nav-links a[aria-current="page"]::after{width:100%}
 .nav-cta{
   font-family:var(--sans);font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;
   border:1px solid var(--gold-soft);color:var(--gold-bright);padding:10px 20px;border-radius:999px;
