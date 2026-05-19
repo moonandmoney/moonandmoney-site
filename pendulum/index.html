@@ -100,16 +100,18 @@
   }
 
   .breath-cue {
-    text-align: center;
+    position: relative; display: block; text-align: center;
     font-style: normal; font-size: clamp(24px, 5.6vw, 38px); font-weight: 400;
     color: var(--gold-light); letter-spacing: 7px;
-    opacity: 0;
-    transition: opacity .45s ease, transform .45s ease, text-shadow .45s ease;
-    will-change: opacity, transform;
-    text-shadow: 0 0 26px rgba(255, 239, 191, 0.55);
-    min-height: 1.1em;
+    min-height: 1.2em;
     margin: clamp(26px, 6.5vh, 60px) auto clamp(22px, 5.5vh, 50px);
     pointer-events: none;
+  }
+  .cue-w {
+    position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%, -50%); white-space: nowrap;
+    opacity: 0; will-change: opacity, transform;
+    transition: opacity .28s ease;
   }
   .breath-cue.show { opacity: 0.9; }
 
@@ -374,7 +376,10 @@
 
   <div class="brand-strip">MOON &nbsp;&amp;&nbsp; MONEY</div>
   <div class="title">— pendulum —</div>
-  <div class="breath-cue" id="breathCue"></div>
+  <div class="breath-cue" id="breathCue">
+    <span class="cue-w" id="cueIn">inhale</span>
+    <span class="cue-w" id="cueEx">exhale</span>
+  </div>
 
   <div class="stage">
     <div class="idle-state" id="idleState">
@@ -568,6 +573,8 @@ const state = {
   bobHalo: document.getElementById("bobHalo"),
   trail: document.getElementById("trail"),
   breathCue: document.getElementById("breathCue"),
+  cueIn: document.getElementById("cueIn"),
+  cueEx: document.getElementById("cueEx"),
   coherenceReadout: document.getElementById("coherenceReadout"),
   sessionTimer: document.getElementById("sessionTimer"),
   hrvGraph: document.getElementById("hrvGraph"),
@@ -579,6 +586,12 @@ const state = {
 };
 
 const PERIOD = 10, THETA_MAX = 28;
+
+// smootherstep ramp between a and b
+function sstep(a, b, x) {
+  x = Math.max(0, Math.min(1, (x - a) / (b - a)));
+  return x * x * x * (x * (x * 6 - 15) + 10);
+}
 
 function tick(ts) {
   if (!state.running) return;
@@ -594,19 +607,23 @@ function tick(ts) {
   state.anchorGroup.setAttribute("transform",
     "translate(190 50) scale(" + breathScale + ") translate(-190 -50)");
 
-  state.breathCue.textContent = (phase < 0.5) ? "inhale" : "exhale";
+  // Two fixed word-layers cross-dissolve into each other — the
+  // text never changes, so there is no mechanical flip. The
+  // hand-over is centred on the pendulum's turn (phase 0, .5, 1),
+  // and the glow swells through the swing so it stays in rhythm.
   state.breathCue.classList.add("show");
-  // Each word lives within its own half of the breath: it rises
-  // from nothing, glows at mid-breath, and fades back to nothing
-  // before the word changes — so the swap is never seen.
-  var half = (phase < 0.5) ? phase / 0.5 : (phase - 0.5) / 0.5;
-  var bEnv = Math.sin(Math.PI * half);
-  bEnv = bEnv * bEnv * (3 - 2 * bEnv); // smootherstep for a softer rise/fall
-  state.breathCue.style.opacity = (0.04 + 0.96 * bEnv).toFixed(3);
-  state.breathCue.style.transform = "scale(" + (0.95 + 0.10 * bEnv).toFixed(3) + ")";
-  state.breathCue.style.textShadow =
-    "0 0 " + (6 + 40 * bEnv).toFixed(1) + "px rgba(255,239,191," +
-    (0.18 + 0.58 * bEnv).toFixed(3) + ")";
+  var e = 0.075; // soft cross-dissolve band around each turn
+  var winIn = sstep(0, e, phase) * (1 - sstep(0.5 - e, 0.5, phase));
+  var winEx = sstep(0.5, 0.5 + e, phase) * (1 - sstep(1 - e, 1, phase));
+  var swing = Math.abs(Math.sin(2 * Math.PI * phase)); // 0 at the turn, 1 mid-swing
+  var breath = 0.42 + 0.58 * swing;
+  var tf = "translate(-50%,-50%) scale(" + (0.96 + 0.08 * swing).toFixed(3) + ")";
+  var sh = "0 0 " + (8 + 34 * swing).toFixed(1) +
+    "px rgba(255,239,191," + (0.20 + 0.5 * swing).toFixed(3) + ")";
+  state.cueIn.style.opacity = (breath * winIn).toFixed(3);
+  state.cueEx.style.opacity = (breath * winEx).toFixed(3);
+  state.cueIn.style.transform = state.cueEx.style.transform = tf;
+  state.cueIn.style.textShadow = state.cueEx.style.textShadow = sh;
 
   const c = state.coherenceScore;
   state.bobHalo.setAttribute("opacity", String(0.45 + c * 0.5));
@@ -715,9 +732,10 @@ function completeSession(early) {
 
   state.pendulum.setAttribute("transform", "rotate(0 190 50)");
   state.anchorGroup.removeAttribute("transform");
-  var bc = document.getElementById("breathCue");
-  bc.classList.remove("show");
-  bc.style.opacity = ""; bc.style.transform = ""; bc.style.textShadow = "";
+  document.getElementById("breathCue").classList.remove("show");
+  [state.cueIn, state.cueEx].forEach(function (w) {
+    w.style.opacity = ""; w.style.transform = ""; w.style.textShadow = "";
+  });
   document.getElementById("sessionState").classList.remove("active");
   state.hrvGraphWrap.classList.remove("active");
   document.getElementById("revealState").classList.add("active");
@@ -726,9 +744,10 @@ function completeSession(early) {
 
 function reset() {
   document.getElementById("revealState").classList.remove("active");
-  var bcR = document.getElementById("breathCue");
-  bcR.classList.remove("show");
-  bcR.style.opacity = ""; bcR.style.transform = ""; bcR.style.textShadow = "";
+  document.getElementById("breathCue").classList.remove("show");
+  [state.cueIn, state.cueEx].forEach(function (w) {
+    w.style.opacity = ""; w.style.transform = ""; w.style.textShadow = "";
+  });
   document.getElementById("idleState").style.display = "flex";
   const idle = document.getElementById("idleState");
   const wrap = document.getElementById("pendulumWrap");
