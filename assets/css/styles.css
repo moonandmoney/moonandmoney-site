@@ -659,8 +659,8 @@ footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gr
 
 /* ---------- The Money Chart page ---------- */
 .mc-hero{padding:110px 0 32px}
-.mc-sub{font-family:var(--serif);font-style:italic;font-size:clamp(1.05rem,2.2vw,1.4rem);color:var(--mist);margin:12px 0 26px}
-.mc-cover{width:clamp(120px,16vw,170px);aspect-ratio:3/4;margin:0 auto 22px;
+.mc-sub{font-family:var(--serif);font-style:italic;font-size:clamp(1.05rem,2.2vw,1.4rem);color:var(--mist);margin:14px 0 42px}
+.mc-cover{width:clamp(120px,16vw,170px);aspect-ratio:3/4;margin:0 auto 36px;
   border:1px solid var(--gold-soft);border-radius:8px;
   background:linear-gradient(160deg,#16131d,#070608);
   box-shadow:0 0 40px rgba(216,177,80,.16),var(--shadow-deep);
@@ -670,8 +670,8 @@ footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gr
 .mc-cover-mark{font-size:2.4rem;color:var(--gold-bright)}
 .mc-cover-name{font-family:var(--serif);font-style:italic;color:var(--mist);font-size:.9rem}
 .mc-cover-line{font-family:var(--display);font-size:.56rem;letter-spacing:.26em;text-transform:uppercase;color:var(--gold)}
-.mc-oneline{max-width:600px;margin:0 auto 32px;font-family:var(--serif);font-size:1.04rem;color:var(--mist)}
-.mc-tiers{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:0 auto 26px;max-width:680px}
+.mc-oneline{max-width:600px;margin:0 auto 48px;font-family:var(--serif);font-size:1.04rem;color:var(--mist)}
+.mc-tiers{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:0 auto 30px;max-width:680px}
 .mc-tier{flex:1 1 180px;cursor:pointer;background:linear-gradient(180deg,var(--ink-2),var(--obsidian));
   border:1px solid var(--line);border-radius:10px;padding:22px 18px;display:flex;flex-direction:column;
   gap:6px;align-items:center;transition:all .4s var(--ease)}
