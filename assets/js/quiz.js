@@ -168,7 +168,7 @@
         '<a class="btn btn-gold" id="qzGuide" href="' + GUIDE(win) + '">Get my full ' + win + ' guide</a>' +
         '<a class="btn btn-ghost" id="qzSub" href="https://moonandmoney.substack.com/subscribe" target="_blank" rel="noopener">Join the Crescent Club</a>' +
         '<button class="qz-retake" id="qzRetake">Take it again</button>' +
-        '<button class="qz-share" id="qzShare">Save my sign as an image</button>' +
+        '<button class="qz-share" id="qzShare">Save to Photos</button>' +
       '</div></div>';
     document.getElementById('qzGuide').addEventListener('click', () => track('quiz_guide_cta_clicked', { result_sign: win }));
     document.getElementById('qzSub').addEventListener('click', () => track('quiz_substack_cta_clicked', { result_sign: win }));
@@ -178,13 +178,37 @@
     document.getElementById('qzShare').onclick = () => {
       try {
         const canvas = drawQuizShare(win, r);
-        const url = canvas.toDataURL('image/png');
-        const a = document.createElement('a');
-        a.download = 'MoonAndMoney_MoonMoneySign_' + win + '.png';
-        a.href = url; a.click();
+        shareOrDownload(canvas,
+          'MoonAndMoney_MoonMoneySign_' + win + '.png',
+          { title: 'My Moon Money Sign', text: 'I\'m a ' + win + ' Moon Money Sign.' });
         track('quiz_shared', { result_sign: win });
       } catch (e) {}
     };
+  }
+  // iOS: opens the share sheet (with Save Image → Photos). Desktop: download.
+  function shareOrDownload(canvas, filename, meta) {
+    canvas.toBlob((blob) => {
+      if (!blob) return;
+      let file = null;
+      try { file = new File([blob], filename, { type: 'image/png' }); }
+      catch (e) { file = null; }
+      if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+        navigator.share({
+          files: [file],
+          title: (meta && meta.title) || 'Moon & Money',
+          text: (meta && meta.text) || '',
+        }).catch(() => downloadBlob(blob, filename));
+      } else {
+        downloadBlob(blob, filename);
+      }
+    }, 'image/png');
+  }
+  function downloadBlob(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.download = filename; a.href = url;
+    document.body.appendChild(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 0);
   }
   function wrapTextQ(ctx, text, x, y, maxWidth, lineHeight) {
     const words = text.split(' '); let line = '', cy = y;
@@ -198,88 +222,103 @@
     return cy + lineHeight;
   }
   function drawQuizShare(sign, r) {
-    const W = 1080, H = 1350;
+    // 1080×1920 — 9:16, iPhone-perfect. Same aspect as IG Story / TikTok /
+    // iPhone wallpaper. Sits comfortably on the phone with no letterbox.
+    const W = 1080, H = 1920;
     const c = document.createElement('canvas');
     c.width = W; c.height = H;
     const x = c.getContext('2d');
 
-    // bg
-    const bg = x.createRadialGradient(W/2, H*0.35, 80, W/2, H*0.35, W*0.85);
+    // background
+    const bg = x.createRadialGradient(W/2, H*0.32, 100, W/2, H*0.32, W*1.0);
     bg.addColorStop(0, '#0B2545'); bg.addColorStop(1, '#03081A');
     x.fillStyle = '#070608'; x.fillRect(0, 0, W, H);
-    x.globalAlpha = 0.85; x.fillStyle = bg; x.fillRect(0, 0, W, H); x.globalAlpha = 1;
+    x.globalAlpha = 0.88; x.fillStyle = bg; x.fillRect(0, 0, W, H); x.globalAlpha = 1;
 
-    // stars
+    // stars — deterministic for identical re-renders
     x.fillStyle = '#FCF7F1';
-    for (let i = 0; i < 70; i++) {
+    for (let i = 0; i < 95; i++) {
       const sx = Math.abs(Math.sin(i * 13.7) * 10000) % 1 * W;
       const sy = Math.abs(Math.sin(i * 7.3 + 1.1) * 10000) % 1 * H;
       const sr = 0.5 + Math.abs(Math.sin(i * 4.2)) * 1.2;
-      x.globalAlpha = 0.25 + Math.abs(Math.sin(i * 2.1)) * 0.5;
+      x.globalAlpha = 0.22 + Math.abs(Math.sin(i * 2.1)) * 0.5;
       x.beginPath(); x.arc(sx, sy, sr, 0, 6.283); x.fill();
     }
     x.globalAlpha = 1;
 
     // frame
-    x.strokeStyle = 'rgba(229,199,123,0.55)'; x.lineWidth = 1.2;
-    x.strokeRect(40, 40, W - 80, H - 80);
+    const FR = 56;
+    x.strokeStyle = 'rgba(229,199,123,0.55)'; x.lineWidth = 1.4;
+    x.strokeRect(FR, FR, W - 2*FR, H - 2*FR);
     x.fillStyle = '#E5C77B';
-    [[40,40],[W-40,40],[40,H-40],[W-40,H-40]].forEach(p => {
+    [[FR,FR],[W-FR,FR],[FR,H-FR],[W-FR,H-FR]].forEach(p => {
       x.beginPath(); x.arc(p[0], p[1], 4, 0, 6.283); x.fill();
     });
 
-    // brand strip
+    // brand mark
     x.fillStyle = '#E5C77B';
-    x.font = '600 24px "Arimo", "Helvetica Neue", Arial, sans-serif';
+    x.font = '600 26px "Arimo", "Helvetica Neue", Arial, sans-serif';
     x.textAlign = 'center';
-    x.fillText('M O O N   ·   &   ·   M O N E Y', W/2, 130);
+    x.fillText('M O O N   ·   &   ·   M O N E Y', W/2, 180);
 
     // eyebrow
     x.fillStyle = '#A89FB4';
     x.font = '500 22px "Arimo", sans-serif';
-    x.fillText('YOUR  MOON  MONEY  SIGN', W/2, 195);
+    x.fillText('Y O U R   M O O N   M O N E Y   S I G N', W/2, 235);
 
-    // big sign
+    // big sign — focal piece
     x.fillStyle = '#F0D488';
-    x.font = 'italic 300 140px "Cormorant Garamond", Georgia, serif';
-    x.fillText(sign, W/2, 350);
+    x.font = 'italic 300 168px "Cormorant Garamond", Georgia, serif';
+    x.fillText(sign, W/2, 460);
+
+    // glyph above the divider (small, gold)
+    x.fillStyle = '#E5C77B';
+    x.font = '300 64px "Apple Symbols", "Noto Sans Symbols 2", serif';
+    x.fillText(G[sign], W/2, 565);
+
+    // divider
+    x.strokeStyle = 'rgba(201,162,78,0.45)'; x.lineWidth = 0.7;
+    x.beginPath(); x.moveTo(W/2 - 110, 615); x.lineTo(W/2 - 12, 615); x.stroke();
+    x.beginPath(); x.moveTo(W/2 + 12, 615); x.lineTo(W/2 + 110, 615); x.stroke();
+    x.fillStyle = '#E5C77B';
+    x.beginPath(); x.arc(W/2, 615, 2.5, 0, 6.283); x.fill();
 
     // archetype
     x.fillStyle = '#FCF7F1';
-    x.font = 'italic 300 38px "Cormorant Garamond", Georgia, serif';
-    let cy = wrapTextQ(x, r.archetype, W/2, 430, W - 220, 50);
+    x.font = 'italic 300 42px "Cormorant Garamond", Georgia, serif';
+    let cy = wrapTextQ(x, r.archetype, W/2, 700, W - 240, 56);
 
     // strength
-    cy += 30;
+    cy += 50;
     x.fillStyle = '#B9923C';
-    x.font = '600 16px "Arimo", sans-serif';
+    x.font = '600 17px "Arimo", sans-serif';
     x.fillText('Y O U R   S T R E N G T H', W/2, cy);
     x.fillStyle = '#FCF7F1';
-    x.font = 'italic 300 26px "Cormorant Garamond", Georgia, serif';
-    cy = wrapTextQ(x, r.strength, W/2, cy + 44, W - 220, 36);
+    x.font = 'italic 300 28px "Cormorant Garamond", Georgia, serif';
+    cy = wrapTextQ(x, r.strength, W/2, cy + 50, W - 240, 40);
 
     // watch for
-    cy += 24;
+    cy += 36;
     x.fillStyle = '#B9923C';
-    x.font = '600 16px "Arimo", sans-serif';
+    x.font = '600 17px "Arimo", sans-serif';
     x.fillText('W A T C H   F O R', W/2, cy);
     x.fillStyle = '#FCF7F1';
-    x.font = 'italic 300 26px "Cormorant Garamond", Georgia, serif';
-    cy = wrapTextQ(x, r.watch, W/2, cy + 44, W - 220, 36);
+    x.font = 'italic 300 28px "Cormorant Garamond", Georgia, serif';
+    cy = wrapTextQ(x, r.watch, W/2, cy + 50, W - 240, 40);
 
     // move
-    cy += 24;
+    cy += 36;
     x.fillStyle = '#7DBE9C';
-    x.font = '600 16px "Arimo", sans-serif';
+    x.font = '600 17px "Arimo", sans-serif';
     x.fillText('T H E   M O V E', W/2, cy);
     x.fillStyle = '#FCF7F1';
-    x.font = 'italic 300 26px "Cormorant Garamond", Georgia, serif';
-    wrapTextQ(x, r.move, W/2, cy + 44, W - 220, 36);
+    x.font = 'italic 300 28px "Cormorant Garamond", Georgia, serif';
+    wrapTextQ(x, r.move, W/2, cy + 50, W - 240, 40);
 
     // url
     x.fillStyle = '#C9A24E';
-    x.font = 'italic 300 22px "Cormorant Garamond", Georgia, serif';
-    x.fillText('Moon & Money  ·  moonandmoney.ca', W/2, H - 80);
+    x.font = 'italic 300 24px "Cormorant Garamond", Georgia, serif';
+    x.fillText('Moon & Money  ·  moonandmoney.ca', W/2, H - 130);
 
     return c;
   }

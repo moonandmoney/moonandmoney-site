@@ -108,19 +108,19 @@
     face.appendChild(elc('div', 'dc-label dc-label-move', 'The Move'));
     face.appendChild(elc('p', 'dc-move', card.move));
 
-    // share action — generate a beautiful card image to download
+    // share action — generate a beautiful card image, save to Photos
     var actions = elc('div', 'dc-actions');
-    var btn = elc('button', 'dc-share-btn', 'Save your card');
+    var btn = elc('button', 'dc-share-btn', 'Save to Photos');
     btn.type = 'button';
     btn.addEventListener('click', function () {
+      var filename = 'MoonAndMoney_Card_' +
+        new Date().toISOString().slice(0,10) + '_' + sign + '.png';
       try {
         var canvas = drawShareImage(sign, card);
-        var url = canvas.toDataURL('image/png');
-        var a = document.createElement('a');
-        a.download = 'MoonAndMoney_Card_' +
-          new Date().toISOString().slice(0,10) + '_' + sign + '.png';
-        a.href = url;
-        a.click();
+        shareOrDownload(canvas, filename, {
+          title: 'Moon & Money',
+          text: 'Moon in ' + sign + ' — ' + card.title,
+        });
         track('daily_card_share', { sign: sign, card: card.title });
       } catch (e) {}
     });
@@ -129,7 +129,41 @@
     return face;
   }
 
-  // ---- Share image: 1080x1350 portrait card ----
+  // ---- Save / share helper ------------------------------------------------
+  // iOS Safari + Android Chrome: tries the Web Share API first, which opens
+  // the system share sheet. The sheet includes "Save Image" → Photos, plus
+  // every social/messaging app the user has installed. One tap, one save.
+  // Everywhere else: falls back to a plain download. The button label says
+  // "Save to Photos" because that's what most people do with it.
+  function shareOrDownload(canvas, filename, meta) {
+    canvas.toBlob(function (blob) {
+      if (!blob) return;
+      var file = null;
+      try { file = new File([blob], filename, { type: 'image/png' }); }
+      catch (e) { file = null; }
+
+      if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+        navigator.share({
+          files: [file],
+          title: (meta && meta.title) || 'Moon & Money',
+          text:  (meta && meta.text)  || '',
+        }).catch(function () { downloadBlob(blob, filename); });
+      } else {
+        downloadBlob(blob, filename);
+      }
+    }, 'image/png');
+  }
+  function downloadBlob(blob, filename) {
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.download = filename; a.href = url;
+    document.body.appendChild(a); a.click();
+    setTimeout(function () { URL.revokeObjectURL(url); a.remove(); }, 0);
+  }
+
+  // ---- Share image: 1080x1920 (9:16, iPhone-perfect) ----------------------
+  // Same aspect as Instagram Stories, TikTok, iPhone wallpaper. The whole
+  // image lives comfortably on a phone screen without crop or letterbox.
   function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
     var words = text.split(' '), line = '', cy = y;
     for (var i = 0; i < words.length; i++) {
@@ -142,113 +176,142 @@
     return cy + lineHeight;
   }
   function drawShareImage(sign, card) {
-    var W = 1080, H = 1350;
+    var W = 1080, H = 1920;
     var c = document.createElement('canvas');
     c.width = W; c.height = H;
     var x = c.getContext('2d');
 
-    // background
-    var bg = x.createRadialGradient(W/2, H*0.35, 80, W/2, H*0.35, W*0.85);
+    // background — cosmic navy on obsidian, brighter at the focal point
+    var bg = x.createRadialGradient(W/2, H*0.32, 100, W/2, H*0.32, W*1.0);
     bg.addColorStop(0, '#0B2545');
     bg.addColorStop(1, '#03081A');
     x.fillStyle = '#070608'; x.fillRect(0, 0, W, H);
-    x.fillStyle = bg; x.globalAlpha = 0.85; x.fillRect(0, 0, W, H); x.globalAlpha = 1;
+    x.fillStyle = bg; x.globalAlpha = 0.88; x.fillRect(0, 0, W, H); x.globalAlpha = 1;
 
-    // soft stars
+    // soft stars — deterministic from i so it's identical every render
     x.fillStyle = '#FCF7F1';
-    for (var i = 0; i < 70; i++) {
-      var sx = (Math.sin(i * 13.7) * 10000) % 1; sx = Math.abs(sx) * W;
-      var sy = (Math.sin(i * 7.3 + 1.1) * 10000) % 1; sy = Math.abs(sy) * H;
+    for (var i = 0; i < 95; i++) {
+      var sx = Math.abs(Math.sin(i * 13.7) * 10000) % 1 * W;
+      var sy = Math.abs(Math.sin(i * 7.3 + 1.1) * 10000) % 1 * H;
       var sr = 0.5 + Math.abs(Math.sin(i * 4.2)) * 1.2;
-      x.globalAlpha = 0.25 + Math.abs(Math.sin(i * 2.1)) * 0.5;
+      x.globalAlpha = 0.22 + Math.abs(Math.sin(i * 2.1)) * 0.5;
       x.beginPath(); x.arc(sx, sy, sr, 0, 6.283); x.fill();
     }
     x.globalAlpha = 1;
 
-    // gold frame
-    x.strokeStyle = 'rgba(229,199,123,0.55)'; x.lineWidth = 1.2;
-    x.strokeRect(40, 40, W - 80, H - 80);
+    // gold frame — thin rectangle with dot corners
+    var FR = 56;  // frame inset
+    x.strokeStyle = 'rgba(229,199,123,0.55)'; x.lineWidth = 1.4;
+    x.strokeRect(FR, FR, W - 2*FR, H - 2*FR);
     x.fillStyle = '#E5C77B';
-    [[40,40],[W-40,40],[40,H-40],[W-40,H-40]].forEach(function (p) {
+    [[FR,FR],[W-FR,FR],[FR,H-FR],[W-FR,H-FR]].forEach(function (p) {
       x.beginPath(); x.arc(p[0], p[1], 4, 0, 6.283); x.fill();
     });
 
-    // brand mark
+    // brand mark — top
     x.fillStyle = '#E5C77B';
-    x.font = '600 24px "Arimo", "Helvetica Neue", Arial, sans-serif';
+    x.font = '600 26px "Arimo", "Helvetica Neue", Arial, sans-serif';
     x.textAlign = 'center';
-    var brand = 'M O O N   ·   &   ·   M O N E Y';
-    x.fillText(brand, W/2, 130);
+    x.fillText('M O O N   ·   &   ·   M O N E Y', W/2, 180);
 
-    // moon-in-sign and date
+    // moon-in-sign + date — eyebrow
     var now = new Date();
     var dateStr = now.toLocaleDateString('en-US',
       { month: 'long', day: 'numeric', year: 'numeric' });
     x.fillStyle = '#A89FB4';
     x.font = '500 22px "Arimo", sans-serif';
-    x.fillText('Moon in ' + sign + '  ·  ' + dateStr.toUpperCase(), W/2, 175);
+    x.fillText('Moon in ' + sign + '  ·  ' + dateStr.toUpperCase(), W/2, 230);
 
-    // crescent moon
-    var moonY = 290, moonR = 70;
-    var mg = x.createRadialGradient(W/2 - moonR*0.3, moonY - moonR*0.3, 5, W/2, moonY, moonR);
-    mg.addColorStop(0, '#FFF6E0'); mg.addColorStop(0.5, '#EAC979'); mg.addColorStop(1, '#7A5F1F');
+    // crescent moon — focal point, generous breathing room
+    var moonY = 380, moonR = 86;
+    var mg = x.createRadialGradient(
+      W/2 - moonR*0.3, moonY - moonR*0.3, 6, W/2, moonY, moonR);
+    mg.addColorStop(0, '#FFF6E0');
+    mg.addColorStop(0.5, '#EAC979');
+    mg.addColorStop(1, '#7A5F1F');
     x.fillStyle = mg;
     x.beginPath(); x.arc(W/2, moonY, moonR, 0, 6.283); x.fill();
     x.strokeStyle = 'rgba(229,199,123,0.55)'; x.lineWidth = 0.8;
     x.beginPath(); x.arc(W/2, moonY, moonR, 0, 6.283); x.stroke();
 
-    // divider
+    // divider with gold dot
     x.strokeStyle = 'rgba(201,162,78,0.45)'; x.lineWidth = 0.7;
-    x.beginPath(); x.moveTo(W/2 - 100, 400); x.lineTo(W/2 - 10, 400); x.stroke();
-    x.beginPath(); x.moveTo(W/2 + 10, 400); x.lineTo(W/2 + 100, 400); x.stroke();
+    x.beginPath(); x.moveTo(W/2 - 110, 530); x.lineTo(W/2 - 12, 530); x.stroke();
+    x.beginPath(); x.moveTo(W/2 + 12, 530); x.lineTo(W/2 + 110, 530); x.stroke();
     x.fillStyle = '#E5C77B';
-    x.beginPath(); x.arc(W/2, 400, 2.5, 0, 6.283); x.fill();
+    x.beginPath(); x.arc(W/2, 530, 2.5, 0, 6.283); x.fill();
 
     // title
     x.fillStyle = '#F0D488';
-    x.font = 'italic 300 64px "Cormorant Garamond", Georgia, serif';
-    x.fillText(card.title, W/2, 470);
+    x.font = 'italic 300 68px "Cormorant Garamond", Georgia, serif';
+    x.fillText(card.title, W/2, 620);
 
-    // THE READ label + body
+    // THE READ
     x.fillStyle = '#B9923C';
-    x.font = '600 16px "Arimo", sans-serif';
-    x.fillText('T H E   R E A D', W/2, 540);
+    x.font = '600 17px "Arimo", sans-serif';
+    x.fillText('T H E   R E A D', W/2, 710);
     x.fillStyle = '#FCF7F1';
-    x.font = 'italic 300 30px "Cormorant Garamond", Georgia, serif';
-    var afterRead = wrapText(x, card.read, W/2, 590, W - 220, 42);
+    x.font = 'italic 300 32px "Cormorant Garamond", Georgia, serif';
+    var afterRead = wrapText(x, card.read, W/2, 770, W - 240, 46);
 
-    // whisper panel (light parchment)
-    var wpY = afterRead + 24, wpH = 220;
+    // whisper panel — light parchment, dynamically sized
+    var wpY = afterRead + 36;
+    // measure the wrapped whisper so we can size the panel
+    x.font = 'italic 300 28px "Cormorant Garamond", Georgia, serif';
+    var lieLines = measureLines(x, '"' + card.lie + '"', W - 260);
+    var ansLines = measureLines(x, card.answer, W - 260);
+    var wpH = 60 + lineCount(lieLines) * 40 + 16 + lineCount(ansLines) * 40 + 60;
+
     var grad = x.createLinearGradient(0, wpY, 0, wpY + wpH);
     grad.addColorStop(0, '#CCC0A0'); grad.addColorStop(1, '#BCAE86');
     x.fillStyle = grad;
     x.beginPath();
-    x.roundRect ? x.roundRect(90, wpY, W - 180, wpH, 12) : x.rect(90, wpY, W - 180, wpH);
+    if (x.roundRect) x.roundRect(80, wpY, W - 160, wpH, 14);
+    else x.rect(80, wpY, W - 160, wpH);
     x.fill();
-    // lie (gold)
-    x.fillStyle = '#6B521C';
-    x.font = 'italic 300 26px "Cormorant Garamond", Georgia, serif';
-    var afterLie = wrapText(x, '"' + card.lie + '"', W/2, wpY + 50, W - 220, 36);
-    // answer (forest)
-    x.fillStyle = '#1E4D3A';
-    afterLie = wrapText(x, card.answer, W/2, afterLie + 12, W - 220, 36);
+    x.strokeStyle = 'rgba(90,70,28,0.30)'; x.lineWidth = 1;
+    x.beginPath();
+    if (x.roundRect) x.roundRect(80, wpY, W - 160, wpH, 14);
+    else x.rect(80, wpY, W - 160, wpH);
+    x.stroke();
 
-    // move
-    var moveY = wpY + wpH + 60;
+    // lie (warm gold-bronze) + answer (forest)
+    x.fillStyle = '#6B521C';
+    x.font = 'italic 300 28px "Cormorant Garamond", Georgia, serif';
+    var afterLie = wrapText(x, '"' + card.lie + '"', W/2, wpY + 60, W - 260, 40);
+    x.fillStyle = '#1E4D3A';
+    var afterAns = wrapText(x, card.answer, W/2, afterLie + 12, W - 260, 40);
+
+    // THE MOVE — block placed below the panel
+    var moveY = wpY + wpH + 90;
     x.fillStyle = '#7DBE9C';
-    x.font = '600 16px "Arimo", sans-serif';
+    x.font = '600 17px "Arimo", sans-serif';
     x.fillText('T H E   M O V E', W/2, moveY);
     x.fillStyle = '#FCF7F1';
-    x.font = 'italic 300 28px "Cormorant Garamond", Georgia, serif';
-    wrapText(x, card.move, W/2, moveY + 44, W - 220, 38);
+    x.font = 'italic 300 30px "Cormorant Garamond", Georgia, serif';
+    wrapText(x, card.move, W/2, moveY + 56, W - 240, 42);
 
-    // url
+    // url — anchored to bottom
     x.fillStyle = '#C9A24E';
-    x.font = 'italic 300 22px "Cormorant Garamond", Georgia, serif';
-    x.fillText('Moon & Money  ·  moonandmoney.ca', W/2, H - 80);
+    x.font = 'italic 300 24px "Cormorant Garamond", Georgia, serif';
+    x.fillText('Moon & Money  ·  moonandmoney.ca', W/2, H - 130);
 
     return c;
   }
+
+  // Helpers for whisper-panel auto-sizing
+  function measureLines(ctx, text, maxWidth) {
+    var words = text.split(' '), line = '', lines = [];
+    for (var i = 0; i < words.length; i++) {
+      var test = line + (line ? ' ' : '') + words[i];
+      if (ctx.measureText(test).width > maxWidth && line) {
+        lines.push(line); line = words[i];
+      } else line = test;
+    }
+    if (line) lines.push(line);
+    return lines;
+  }
+  function lineCount(lines) { return lines.length || 1; }
 
   function buildBack(sign) {
     var face = elc('div', 'dc-face dc-face-back');
