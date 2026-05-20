@@ -638,6 +638,16 @@ footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gr
 .page-hero{padding:180px 0 70px;text-align:center}
 .page-hero h1{font-size:clamp(2.4rem,6vw,4.4rem);margin:18px 0}
 .page-hero p{max-width:600px;margin:0 auto;color:var(--mist);font-family:var(--serif);font-size:1.2rem}
+/* When the page-hero is followed by a featured block (Atelier),
+   compress it so the featured block fits above the fold on a
+   typical laptop screen. :has() lets us scope this without
+   touching the other pages that share .page-hero. */
+.page-hero:has(+ .featured-section){padding:115px 0 28px}
+.page-hero:has(+ .featured-section) h1{font-size:clamp(2.1rem,5vw,3.4rem);margin:12px 0}
+.page-hero:has(+ .featured-section) p{font-size:1.05rem}
+@media(max-width:640px){
+  .page-hero:has(+ .featured-section){padding:100px 0 20px}
+}
 
 /* ---------- Animations ---------- */
 @keyframes rise{to{opacity:1;transform:none}}
@@ -955,9 +965,9 @@ footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gr
    ============================================================ */
 .featured-section{padding-top:0}
 .chart-feature{
-  display:grid;grid-template-columns:1fr 1.4fr;gap:clamp(20px,4vw,52px);
-  align-items:center;padding:clamp(28px,4vw,48px);
-  max-width:920px;margin:-30px auto 24px;        /* hugs the page-hero text */
+  display:grid;grid-template-columns:1fr 1.4fr;gap:clamp(20px,3vw,40px);
+  align-items:center;padding:clamp(22px,3vw,36px);
+  max-width:920px;margin:8px auto 24px;          /* slim gap to the hero above */
   background:linear-gradient(160deg,rgba(216,177,80,.07) 0%,rgba(11,37,69,.22) 60%,rgba(7,6,8,.85) 100%);
   border:1px solid var(--gold-soft);border-radius:18px;
   box-shadow:0 0 0 1px rgba(216,177,80,.10),0 0 80px rgba(216,177,80,.10),var(--shadow-deep);
@@ -990,11 +1000,11 @@ footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gr
   opacity:.55
 }
 .chart-feature-text .eyebrow{color:var(--gold)}
-.chart-feature-text h2{font-family:var(--serif);font-size:clamp(1.8rem,4vw,2.6rem);
-  margin:14px 0 18px;line-height:1.15;color:var(--parchment)}
+.chart-feature-text h2{font-family:var(--serif);font-size:clamp(1.6rem,3.4vw,2.2rem);
+  margin:10px 0 14px;line-height:1.15;color:var(--parchment)}
 .chart-feature-text h2 em{font-style:italic;color:var(--gold-bright);font-weight:400}
 .chart-feature-text p{font-family:var(--serif);font-style:italic;color:var(--mist);
-  font-size:1.04rem;line-height:1.6;margin:0 0 22px}
+  font-size:1rem;line-height:1.55;margin:0 0 18px}
 .chart-tiers{display:flex;align-items:center;gap:14px;margin-bottom:24px;flex-wrap:wrap}
 .chart-tiers .tier{font-family:var(--display);font-size:.7rem;letter-spacing:.24em;
   text-transform:uppercase;color:var(--gold-bright)}
