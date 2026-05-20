@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
   <defs>
-    <radialGradient id="bg" cx="50%" cy="48%" r="62%">
+    <radialGradient id="bg" cx="50%" cy="50%" r="62%">
       <stop offset="0%" stop-color="#0B2545"/>
       <stop offset="100%" stop-color="#03081A"/>
     </radialGradient>
@@ -10,9 +10,14 @@
       <stop offset="42%" stop-color="#EAC979"/>
       <stop offset="100%" stop-color="#7A5F1F"/>
     </radialGradient>
-    <radialGradient id="halo" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#FFEFBF" stop-opacity="0.45"/>
-      <stop offset="50%" stop-color="#C9A24E" stop-opacity="0.15"/>
+    <radialGradient id="haloInner" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFEFBF" stop-opacity="0.55"/>
+      <stop offset="55%" stop-color="#C9A24E" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#7A5F1F" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="haloOuter" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFEFBF" stop-opacity="0.22"/>
+      <stop offset="60%" stop-color="#C9A24E" stop-opacity="0.06"/>
       <stop offset="100%" stop-color="#7A5F1F" stop-opacity="0"/>
     </radialGradient>
     <linearGradient id="goldLine" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -21,80 +26,57 @@
     </linearGradient>
   </defs>
 
-  <!-- obsidian base -->
+  <!-- obsidian base + cosmic radial -->
   <rect width="1200" height="630" fill="#070608"/>
   <rect width="1200" height="630" fill="url(#bg)" opacity="0.78"/>
 
-  <!-- whisper of jade and gold nebula, balanced -->
-  <ellipse cx="930"  cy="100" rx="380" ry="220" fill="#3FAE7A" opacity="0.05"/>
-  <ellipse cx="270"  cy="530" rx="380" ry="220" fill="#C9A24E" opacity="0.04"/>
+  <!-- whisper of nebula colour -->
+  <ellipse cx="930" cy="120" rx="380" ry="220" fill="#3FAE7A" opacity="0.05"/>
+  <ellipse cx="270" cy="520" rx="380" ry="220" fill="#C9A24E" opacity="0.04"/>
 
-  <!-- starfield: small and quiet -->
+  <!-- quiet starfield -->
   <g fill="#FCF7F1">
-    <circle cx="120"  cy="80"  r="0.7" opacity="0.5"/>
-    <circle cx="220"  cy="140" r="0.5" opacity="0.4"/>
-    <circle cx="340"  cy="70"  r="0.8" opacity="0.6"/>
-    <circle cx="480"  cy="110" r="0.5" opacity="0.4"/>
-    <circle cx="620"  cy="75"  r="0.7" opacity="0.5"/>
-    <circle cx="760"  cy="120" r="0.6" opacity="0.45"/>
-    <circle cx="900"  cy="60"  r="0.5" opacity="0.4"/>
-    <circle cx="1040" cy="100" r="0.8" opacity="0.55"/>
-    <circle cx="1130" cy="50"  r="0.5" opacity="0.4"/>
-    <circle cx="80"   cy="510" r="0.6" opacity="0.45"/>
-    <circle cx="180"  cy="560" r="0.7" opacity="0.5"/>
-    <circle cx="350"  cy="540" r="0.5" opacity="0.4"/>
-    <circle cx="510"  cy="580" r="0.6" opacity="0.45"/>
-    <circle cx="690"  cy="555" r="0.7" opacity="0.5"/>
-    <circle cx="870"  cy="520" r="0.5" opacity="0.4"/>
-    <circle cx="1020" cy="570" r="0.6" opacity="0.45"/>
-    <circle cx="1130" cy="540" r="0.7" opacity="0.5"/>
-    <circle cx="60"   cy="280" r="0.5" opacity="0.4"/>
-    <circle cx="1140" cy="280" r="0.6" opacity="0.45"/>
-    <circle cx="100"  cy="380" r="0.5" opacity="0.4"/>
-    <circle cx="1100" cy="380" r="0.7" opacity="0.5"/>
+    <circle cx="120"  cy="90"  r="0.7" opacity="0.5"/>
+    <circle cx="240"  cy="140" r="0.6" opacity="0.4"/>
+    <circle cx="360"  cy="80"  r="0.8" opacity="0.6"/>
+    <circle cx="500"  cy="120" r="0.5" opacity="0.4"/>
+    <circle cx="720"  cy="80"  r="0.7" opacity="0.5"/>
+    <circle cx="850"  cy="125" r="0.6" opacity="0.45"/>
+    <circle cx="990"  cy="70"  r="0.5" opacity="0.4"/>
+    <circle cx="1100" cy="115" r="0.8" opacity="0.55"/>
+    <circle cx="80"   cy="540" r="0.6" opacity="0.45"/>
+    <circle cx="200"  cy="570" r="0.7" opacity="0.5"/>
+    <circle cx="340"  cy="530" r="0.5" opacity="0.4"/>
+    <circle cx="500"  cy="565" r="0.6" opacity="0.45"/>
+    <circle cx="700"  cy="540" r="0.7" opacity="0.5"/>
+    <circle cx="870"  cy="570" r="0.5" opacity="0.4"/>
+    <circle cx="1020" cy="555" r="0.6" opacity="0.45"/>
+    <circle cx="1140" cy="535" r="0.7" opacity="0.5"/>
+    <circle cx="60"   cy="290" r="0.5" opacity="0.4"/>
+    <circle cx="1150" cy="305" r="0.6" opacity="0.45"/>
+    <circle cx="80"   cy="400" r="0.5" opacity="0.4"/>
+    <circle cx="1130" cy="400" r="0.7" opacity="0.5"/>
   </g>
 
-  <!-- centered composition: small moon up top, words below, all calm -->
-
-  <!-- elegant gold frame with rounded corners -->
+  <!-- elegant gold frame -->
   <rect x="40" y="40" width="1120" height="550" fill="none"
-        stroke="url(#goldLine)" stroke-width="1.2" opacity="0.55" rx="20"/>
-  <!-- four tiny corner accents -->
+        stroke="url(#goldLine)" stroke-width="1.4" opacity="0.55" rx="20"/>
   <g fill="url(#goldLine)" opacity="0.85">
-    <circle cx="40"   cy="40"  r="2.5"/>
-    <circle cx="1160" cy="40"  r="2.5"/>
-    <circle cx="40"   cy="590" r="2.5"/>
-    <circle cx="1160" cy="590" r="2.5"/>
+    <circle cx="40"   cy="40"  r="3"/>
+    <circle cx="1160" cy="40"  r="3"/>
+    <circle cx="40"   cy="590" r="3"/>
+    <circle cx="1160" cy="590" r="3"/>
   </g>
 
-  <!-- moon — centered, modest, glowing -->
-  <circle cx="600" cy="225" r="160" fill="url(#halo)"/>
-  <circle cx="600" cy="225" r="86"  fill="url(#moonGold)"/>
-  <circle cx="600" cy="225" r="86"  fill="none" stroke="#E5C77B" stroke-opacity="0.55" stroke-width="0.8"/>
+  <!-- the moon, centred and prominent — the whole image -->
+  <circle cx="600" cy="305" r="280" fill="url(#haloOuter)"/>
+  <circle cx="600" cy="305" r="200" fill="url(#haloInner)"/>
+  <circle cx="600" cy="305" r="135" fill="url(#moonGold)"/>
+  <circle cx="600" cy="305" r="135" fill="none"
+          stroke="#E5C77B" stroke-opacity="0.55" stroke-width="1"/>
 
-  <!-- thin divider rule -->
-  <g stroke="#C9A24E" stroke-width="0.7" opacity="0.45">
-    <line x1="430" y1="380" x2="570" y2="380"/>
-    <line x1="630" y1="380" x2="770" y2="380"/>
-  </g>
-  <circle cx="600" cy="380" r="2.4" fill="#E5C77B"/>
-
-  <!-- typography: all centered -->
-  <g text-anchor="middle">
-    <!-- eyebrow brand wordmark -->
-    <text x="600" y="430"
-          font-family="'Arimo','Liberation Sans','Helvetica Neue',Arial,sans-serif"
-          font-weight="600" font-size="22" letter-spacing="10" fill="#E5C77B">M O O N   &amp;   M O N E Y</text>
-
-    <!-- tagline -->
-    <text x="600" y="490"
-          font-family="'Cormorant Garamond',Georgia,serif"
-          font-style="italic" font-weight="300"
-          font-size="34" fill="#FCF7F1">Where the moon meets your money.</text>
-
-    <!-- url at the very bottom -->
-    <text x="600" y="555"
-          font-family="'Arimo','Liberation Sans','Helvetica Neue',Arial,sans-serif"
-          font-weight="500" font-size="13" letter-spacing="5" fill="#C9A24E">moonandmoney.ca</text>
-  </g>
+  <!-- tiny URL anchor at the bottom, the only word on the card -->
+  <text x="600" y="555" text-anchor="middle"
+        font-family="'Arimo','Liberation Sans','Helvetica Neue',Arial,sans-serif"
+        font-weight="500" font-size="14" letter-spacing="6" fill="#C9A24E">m o o n a n d m o n e y . c a</text>
 </svg>

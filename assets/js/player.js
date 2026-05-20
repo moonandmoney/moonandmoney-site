@@ -62,7 +62,7 @@
   });
 
   const audio = new Audio();
-  audio.preload = 'auto'; // load eagerly so resume after a page change is near-instant
+  audio.preload = 'metadata'; // only fetch a few KB until the visitor taps play
   audio.src = WELCOME;
 
   /* Never let the player cover the footer ("Built in rhythm with
