@@ -13,8 +13,8 @@ window.MM_CHART_CHECKOUT = {
 (function () {
   'use strict';
   const TIERS = {
-    individual: { label: 'Individual chart', price: '$36', people: 1 },
-    pairs:      { label: 'Pairs reading',    price: '$55', people: 2 }
+    individual: { label: 'Individual chart', price: '$55', people: 1 },
+    pairs:      { label: 'Pairs reading',    price: '$77', people: 2 }
   };
   const form = document.getElementById('mcForm');
   if (!form) return;

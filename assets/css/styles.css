@@ -637,6 +637,7 @@ footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gr
 /* ---------- Page hero (interior) ---------- */
 .page-hero{padding:180px 0 70px;text-align:center}
 .page-hero h1{font-size:clamp(2.4rem,6vw,4.4rem);margin:18px 0}
+.mc-hero h1{font-size:clamp(2rem,4.6vw,3.2rem);margin:10px 0}
 .page-hero p{max-width:600px;margin:0 auto;color:var(--mist);font-family:var(--serif);font-size:1.2rem}
 /* When the page-hero is followed by a featured block (Atelier),
    compress it so the featured block fits above the fold on a
@@ -657,9 +658,9 @@ footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gr
 @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
 
 /* ---------- The Money Chart page ---------- */
-.mc-hero{padding:150px 0 50px}
-.mc-sub{font-family:var(--serif);font-style:italic;font-size:clamp(1.15rem,2.4vw,1.55rem);color:var(--mist);margin:14px 0 30px}
-.mc-cover{width:clamp(150px,20vw,210px);aspect-ratio:3/4;margin:0 auto 26px;
+.mc-hero{padding:110px 0 32px}
+.mc-sub{font-family:var(--serif);font-style:italic;font-size:clamp(1.05rem,2.2vw,1.4rem);color:var(--mist);margin:10px 0 20px}
+.mc-cover{width:clamp(120px,16vw,170px);aspect-ratio:3/4;margin:0 auto 18px;
   border:1px solid var(--gold-soft);border-radius:8px;
   background:linear-gradient(160deg,#16131d,#070608);
   box-shadow:0 0 40px rgba(216,177,80,.16),var(--shadow-deep);
@@ -669,8 +670,8 @@ footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gr
 .mc-cover-mark{font-size:2.4rem;color:var(--gold-bright)}
 .mc-cover-name{font-family:var(--serif);font-style:italic;color:var(--mist);font-size:.9rem}
 .mc-cover-line{font-family:var(--display);font-size:.56rem;letter-spacing:.26em;text-transform:uppercase;color:var(--gold)}
-.mc-oneline{max-width:600px;margin:0 auto 34px;font-family:var(--serif);font-size:1.12rem;color:var(--mist)}
-.mc-tiers{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:0 auto 28px;max-width:680px}
+.mc-oneline{max-width:600px;margin:0 auto 22px;font-family:var(--serif);font-size:1.04rem;color:var(--mist)}
+.mc-tiers{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:0 auto 20px;max-width:680px}
 .mc-tier{flex:1 1 180px;cursor:pointer;background:linear-gradient(180deg,var(--ink-2),var(--obsidian));
   border:1px solid var(--line);border-radius:10px;padding:22px 18px;display:flex;flex-direction:column;
   gap:6px;align-items:center;transition:all .4s var(--ease)}
