@@ -956,7 +956,8 @@ footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gr
 .featured-section{padding-top:18px}
 .chart-feature{
   display:grid;grid-template-columns:1fr 1.4fr;gap:clamp(20px,4vw,52px);
-  align-items:center;padding:clamp(28px,4vw,52px);
+  align-items:center;padding:clamp(28px,4vw,48px);
+  max-width:920px;margin:32px auto 16px;
   background:linear-gradient(160deg,rgba(216,177,80,.07) 0%,rgba(11,37,69,.22) 60%,rgba(7,6,8,.85) 100%);
   border:1px solid var(--gold-soft);border-radius:18px;
   box-shadow:0 0 0 1px rgba(216,177,80,.10),0 0 80px rgba(216,177,80,.10),var(--shadow-deep);
@@ -968,7 +969,7 @@ footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gr
   box-shadow:0 0 0 1px rgba(216,177,80,.18),0 0 100px rgba(216,177,80,.16),var(--shadow-deep)
 }
 .chart-feature-art{
-  position:relative;aspect-ratio:1;max-width:260px;justify-self:center;width:100%;
+  position:relative;aspect-ratio:1;max-width:230px;justify-self:center;width:100%;
 }
 .chart-moon{
   position:absolute;inset:18%;border-radius:50%;

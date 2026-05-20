@@ -6,17 +6,15 @@
    request will route there after the details are captured.
    ============================================================ */
 window.MM_CHART_CHECKOUT = {
-  individual: '',   // e.g. 'https://buy.stripe.com/xxxx'  ($36)
-  pairs:      '',   // ($55)
-  family:     ''    // ($77)
+  individual: '',   // e.g. 'https://moonandmoney.lemonsqueezy.com/buy/xxx'
+  pairs:      ''    // Lemon Squeezy checkout for the Pairs tier
 };
 
 (function () {
   'use strict';
   const TIERS = {
     individual: { label: 'Individual chart', price: '$36', people: 1 },
-    pairs:      { label: 'Pairs reading',    price: '$55', people: 2 },
-    family:     { label: 'Family reading',   price: '$77', people: 4 }
+    pairs:      { label: 'Pairs reading',    price: '$55', people: 2 }
   };
   const form = document.getElementById('mcForm');
   if (!form) return;
