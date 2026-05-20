@@ -1,0 +1,45 @@
+name: OG moon phase
+
+# Once a day, regenerate the link-preview card so the moon on it
+# matches tonight's actual phase. Same data the hero, favicon, and
+# pendulum use, just baked into a PNG (because link previews are
+# static files, not live HTML).
+#
+# Idempotent. Safe to run by hand from the Actions tab.
+
+on:
+  schedule:
+    # 04:17 UTC daily ≈ 22:17 MDT the previous evening / 21:17 MST.
+    # The minute offset is intentional — avoids GitHub's busy on-the-hour
+    # cron windows where scheduled jobs can be delayed by minutes.
+    - cron: '17 4 * * *'
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out the site
+        uses: actions/checkout@v4
+
+      - name: Install rsvg-convert
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y librsvg2-bin
+
+      - name: Regenerate OG image with today's phase
+        run: python3 scripts/og-moon-phase.py
+
+      - name: Commit and push if anything changed
+        run: |
+          git config user.name  "moonandmoney"
+          git config user.email "moonandmoney@proton.me"
+          if [[ -n "$(git status --porcelain)" ]]; then
+            git add assets/og/social.png *.html pendulum/index.html
+            git commit -m "OG moon: daily phase update ($(date -u +%Y-%m-%d))"
+            git push
+          else
+            echo "No change today — moon phase already current."
+          fi
