@@ -54,20 +54,17 @@
     }, { passive: true });
   }
 
-  /* ---- Starfield (deferred so it doesn't compete with the
-     first paint; PageSpeed measures LCP before this kicks in) ---- */
+  /* ---- Starfield (kicks in one frame after first paint so
+     LCP lands first, but the sky lights up effectively immediately) ---- */
   const cv = document.getElementById('starfield');
   function startStarfield() {
     if (!cv || reduced) return;
     runStarfield();
   }
-  // wait until the browser is idle (or ~1.2s as a fallback) so the
-  // initial layout/paint lands first
-  if ('requestIdleCallback' in window) {
-    requestIdleCallback(startStarfield, { timeout: 1500 });
-  } else {
-    setTimeout(startStarfield, 1200);
-  }
+  // Two rAFs = the browser paints once, then we light the sky on
+  // the very next frame (~16–33ms — imperceptible). On iOS Safari
+  // (no requestIdleCallback) this replaces the old 1.2s blank-sky gap.
+  requestAnimationFrame(() => requestAnimationFrame(startStarfield));
   function runStarfield() {
     const ctx = cv.getContext('2d');
     let stars = [], W, H, events = [];
