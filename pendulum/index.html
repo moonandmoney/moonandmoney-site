@@ -16,7 +16,7 @@
 <meta name="twitter:image" content="https://moonandmoney.ca/assets/og/social.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/assets/og/apple-touch-icon.png"><meta name="theme-color" content="#070608"><meta name="apple-mobile-web-app-title" content="Moon & Money"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
 <style>
   :root {
     --navy-deep:   #03081A;
@@ -125,12 +125,16 @@
   }
   .session-state, .reveal { display: none; }
   .session-state.active, .reveal.active { display: flex; }
-  /* session: bob hangs free up top, timer + stop hint drop to the bottom */
-  .session-state.active { flex: 1; align-self: stretch; justify-content: space-between; }
+  /* session: the bob hangs free in the centre; the timer + stop
+     hint dock at the very bottom, just above the footer */
+  .session-state.active {
+    flex: 1; align-self: stretch;
+    justify-content: center; position: relative;
+  }
   .session-bottom {
-    width: 100%;
+    position: absolute; left: 0; right: 0; bottom: 0;
     display: flex; flex-direction: column; align-items: center;
-    gap: 8px;
+    gap: 4px;
   }
   /* idle: pendulum sits high, controls drop to meet the footer */
   .idle-state { flex: 1; align-self: stretch; justify-content: space-between; }
@@ -204,9 +208,9 @@
   }
 
   .session-timer {
-    font-family: 'Arimo', 'Liberation Sans', Arial, sans-serif; font-size: 10px;
-    color: var(--gold-warm); letter-spacing: 4px;
-    margin-top: 14px; text-shadow: 0 0 8px rgba(217, 183, 100, 0.3);
+    font-family: 'Arimo', 'Liberation Sans', Arial, sans-serif; font-size: 18px;
+    color: var(--gold-warm); letter-spacing: 5px; font-weight: 500;
+    margin-top: 0; text-shadow: 0 0 12px rgba(217, 183, 100, 0.35);
   }
   .coherence-readout {
     margin-top: 10px; font-family: 'Arimo', 'Liberation Sans', Arial, sans-serif;
@@ -526,12 +530,12 @@
       <!-- the pendulum-wrap is inserted here as first child at session start -->
       <div class="session-bottom">
         <div class="session-timer" id="sessionTimer">00:00</div>
+        <div class="stop-hint">tap the pendulum to stop</div>
         <div class="coherence-readout" id="coherenceReadout"></div>
         <div class="hrv-graph-wrap" id="hrvGraphWrap">
           <div class="hrv-label">your coherence</div>
           <canvas class="hrv-graph" id="hrvGraph" width="760" height="160"></canvas>
         </div>
-        <div class="stop-hint">tap the pendulum to stop</div>
       </div>
     </div>
 

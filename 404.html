@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The moon is dark tonight · Moon &amp; Money</title>
+<meta name="description" content="Not every path leads to the light. Return to Moon & Money.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="assets/css/styles.css">
+<style>
+  .nf-wrap{
+    min-height: 100vh; min-height: 100svh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 120px 24px 80px; text-align: center; position: relative; z-index: 2;
+  }
+  .nf-moon{
+    width: clamp(120px, 22vw, 200px); height: clamp(120px, 22vw, 200px);
+    border-radius: 50%; margin: 0 auto 38px;
+    background: radial-gradient(circle at 38% 36%, #1a1a22 0%, #0a0a10 70%, #050508 100%);
+    box-shadow:
+      inset -6px -8px 28px rgba(0,0,0,.6),
+      inset 8px 8px 22px rgba(120,90,30,.10),
+      0 0 0 1px rgba(229,199,123,.18),
+      0 0 80px rgba(120,90,30,.10);
+    position: relative;
+  }
+  .nf-moon::after{
+    content: ''; position: absolute; inset: -28%; border-radius: 50%;
+    border: 1px solid rgba(216,177,80,.14); pointer-events: none;
+    animation: spin 80s linear infinite;
+  }
+  .nf-eyebrow{
+    font-family: var(--display); font-size: .78rem; letter-spacing: .32em;
+    text-transform: uppercase; color: var(--gold-soft); margin-bottom: 18px;
+  }
+  .nf-title{
+    font-family: var(--serif); font-style: italic; font-weight: 300;
+    font-size: clamp(2.2rem, 5.6vw, 3.8rem); color: var(--gold-bright);
+    margin: 0 0 22px; line-height: 1.2;
+  }
+  .nf-tag{
+    font-family: var(--serif); font-style: italic; font-size: clamp(1.05rem, 2vw, 1.3rem);
+    color: var(--mist); max-width: 520px; margin: 0 auto 42px; line-height: 1.6;
+  }
+  .nf-actions{ display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+</style>
+</head>
+<body>
+<canvas id="starfield"></canvas>
+<div class="nebula"></div>
+
+<header class="nav">
+  <a href="/index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
+  <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  <ul class="nav-links">
+    <li><a href="/index.html">Home</a></li>
+    <li><a href="/wheel.html">Wheel</a></li><li><a href="/draw.html">Card</a></li>
+    <li><a href="/quiz.html">Quiz</a></li>
+    <li><a href="/shop.html">Atelier</a></li><li><a href="/pendulum/">Pendulum</a></li>
+    <li><a href="/archive.html">Archive</a></li>
+    <li><a href="/sessions.html">Sessions</a></li>
+    <li><a href="/about.html">Ethos</a></li>
+    <li><a class="nav-cta" href="https://moonandmoney.substack.com/subscribe" target="_blank">Crescent Club</a></li>
+  </ul>
+</header>
+
+<main>
+  <div class="nf-wrap">
+    <div class="nf-moon" aria-hidden="true"></div>
+    <div class="nf-eyebrow">404 · Lost in the sky</div>
+    <h1 class="nf-title">The moon is dark tonight.</h1>
+    <p class="nf-tag">The page you reached for has set, or never rose. The sky will be lit again — come back when the light returns.</p>
+    <div class="nf-actions">
+      <a class="btn btn-gold" href="/index.html">Return home</a>
+      <a class="btn btn-ghost" href="/archive.html">Read the Archive</a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-bottom" style="border-top:none;padding-top:0">
+      <span>© <span id="yr"></span> Moon &amp; Money · Luna Wilde. All rights reserved.</span>
+      <span>Built in rhythm with the moon ☾</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/js/zodiac.js"></script>
+<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+<script src="/assets/js/main.js"></script>
+</body>
+</html>

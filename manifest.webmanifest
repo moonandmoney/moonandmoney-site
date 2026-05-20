@@ -1,0 +1,31 @@
+{
+  "name": "Moon & Money",
+  "short_name": "Moon & Money",
+  "description": "Where the moon meets your money. Personal finance, read through astrology. By Luna Wilde.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#070608",
+  "theme_color": "#070608",
+  "icons": [
+    {
+      "src": "/assets/og/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/og/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/og/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
