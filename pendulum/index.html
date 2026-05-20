@@ -125,6 +125,13 @@
   }
   .session-state, .reveal { display: none; }
   .session-state.active, .reveal.active { display: flex; }
+  /* session: bob hangs free up top, timer + stop hint drop to the bottom */
+  .session-state.active { flex: 1; align-self: stretch; justify-content: space-between; }
+  .session-bottom {
+    width: 100%;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 8px;
+  }
   /* idle: pendulum sits high, controls drop to meet the footer */
   .idle-state { flex: 1; align-self: stretch; justify-content: space-between; }
 
@@ -516,13 +523,16 @@
     </div>
 
     <div class="session-state" id="sessionState">
-      <div class="session-timer" id="sessionTimer">00:00</div>
-      <div class="coherence-readout" id="coherenceReadout"></div>
-      <div class="hrv-graph-wrap" id="hrvGraphWrap">
-        <div class="hrv-label">your coherence</div>
-        <canvas class="hrv-graph" id="hrvGraph" width="760" height="160"></canvas>
+      <!-- the pendulum-wrap is inserted here as first child at session start -->
+      <div class="session-bottom">
+        <div class="session-timer" id="sessionTimer">00:00</div>
+        <div class="coherence-readout" id="coherenceReadout"></div>
+        <div class="hrv-graph-wrap" id="hrvGraphWrap">
+          <div class="hrv-label">your coherence</div>
+          <canvas class="hrv-graph" id="hrvGraph" width="760" height="160"></canvas>
+        </div>
+        <div class="stop-hint">tap the pendulum to stop</div>
       </div>
-      <div class="stop-hint">tap the pendulum to stop</div>
     </div>
 
     <div class="reveal" id="revealState">
