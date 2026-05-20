@@ -413,6 +413,18 @@
 <div class="stars" id="skyStars"></div>
 <div class="nebula"></div>
 
+<!-- iOS silent-switch bypass. iPhone's hardware silent toggle mutes
+     Web Audio by default — the only way around it from a webpage is to
+     start an HTMLAudio element with playsinline in the same gesture,
+     which promotes iOS's audio session category to "playback" and
+     stops respecting the silent switch. The silence.wav is 1s of pure
+     zero samples that loops invisibly; it never adds audible sound,
+     it just keeps the session alive so the synthesised pad and bells
+     reach the speaker. Without this, the Web Audio toggle technically
+     succeeds but nothing comes out the speaker on iPhone. -->
+<audio id="silenceTrack" loop playsinline webkit-playsinline
+       preload="auto" src="../assets/audio/silence.wav"></audio>
+
 <div class="frame">
   <div class="frame-stars" id="frameStars"></div>
 
@@ -436,7 +448,7 @@
   <div class="stage">
     <div class="idle-state" id="idleState">
       <div class="pendulum-wrap" id="pendulumWrap">
-        <svg viewBox="0 -20 380 480" class="pendulum-svg" id="pendulumSvg">
+        <svg viewBox="0 -30 380 490" class="pendulum-svg" id="pendulumSvg">
           <defs>
             <radialGradient id="moonGold" cx="35%" cy="32%" r="72%">
               <stop offset="0%" stop-color="#FFEFBF"/>
@@ -476,14 +488,14 @@
                phase (a quiet reminder of where we are in the
                cycle). The shadow circle is positioned from JS. -->
           <g id="anchorGroup">
-            <circle cx="190" cy="13" r="48" fill="url(#anchorGlow)" opacity="0.6"/>
-            <circle cx="190" cy="13" r="25" fill="url(#moonGold)"/>
-            <circle id="anchorShadow" cx="190" cy="13" r="25" fill="#0B1A33"/>
-            <circle cx="190" cy="13" r="25" fill="none"
+            <circle cx="190" cy="2" r="48" fill="url(#anchorGlow)" opacity="0.6"/>
+            <circle cx="190" cy="2" r="25" fill="url(#moonGold)"/>
+            <circle id="anchorShadow" cx="190" cy="2" r="25" fill="#0B1A33"/>
+            <circle cx="190" cy="2" r="25" fill="none"
                     stroke="#C9A24E" stroke-width="0.8" opacity="0.45"/>
           </g>
 
-          <g id="pendulum" transform="rotate(0 190 13)">
+          <g id="pendulum" transform="rotate(0 190 2)">
             <line x1="190" y1="43" x2="190" y2="348"
                   stroke="url(#goldRod)" stroke-width="1"
                   stroke-linecap="round" opacity="0.5"/>
@@ -774,8 +786,18 @@ function audioSet(on) {
   if (on) {
     audioEnsure();
     if (!audio.ctx) return;
-    // 1) Always run the iOS unlock — even on subsequent toggles, since
-    //    iOS may have suspended the context while we were paused.
+    // 1) iOS silent-switch bypass: play the silent looping audio
+    //    element in the same gesture as the toggle. This promotes
+    //    iOS's audio session category to "playback" so the synthesised
+    //    Web Audio actually reaches the speaker even with the silent
+    //    switch on. Has to be inside the click handler — Safari won't
+    //    let .play() succeed from anywhere else.
+    var sil = document.getElementById("silenceTrack");
+    if (sil && sil.paused) {
+      try { sil.play().catch(function(){}); } catch (e) {}
+    }
+    // 2) Then run the standard Web Audio unlock — silent buffer source
+    //    inside the gesture — and resume the context as before.
     unlockIOSAudio(audio.ctx);
     // 2) Resume, then schedule the ramp AFTER the context is actually
     //    running. Scheduling against currentTime while the context is
@@ -839,7 +861,7 @@ function tick(ts) {
 
   const phase = (state.elapsed % PERIOD) / PERIOD;
   const angle = -THETA_MAX * Math.cos(2 * Math.PI * phase);
-  state.pendulum.setAttribute("transform", "rotate(" + angle + " 190 13)");
+  state.pendulum.setAttribute("transform", "rotate(" + angle + " 190 2)");
 
   // One full swing one way = one full inhale; the swing back =
   // the exhale. The light itself is the instruction: the bob
@@ -973,7 +995,7 @@ function completeSession(early) {
   parts.push("<span>" + new Date().toLocaleDateString("en-CA", { month: "long", day: "numeric", year: "numeric" }) + "</span>");
   document.getElementById("revealMeta").innerHTML = parts.join("");
 
-  state.pendulum.setAttribute("transform", "rotate(0 190 13)");
+  state.pendulum.setAttribute("transform", "rotate(0 190 2)");
   state.bobGroup.removeAttribute("transform");
   if (audio.ctx) audio.swell.gain.setTargetAtTime(0, audio.ctx.currentTime, 0.4);
   state.breathHint.classList.remove("show");
