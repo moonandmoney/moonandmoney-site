@@ -147,6 +147,21 @@
     max-width: 100%; margin: 0 auto; aspect-ratio: 380 / 545;
   }
   .pendulum-svg { width: 100%; height: 100%; display: block; overflow: visible; }
+  /* Smooth the geometry change when entering / leaving session.
+     SVG geometry attributes (cy, y2) are transitionable in modern
+     browsers — this turns the bob's drop into a slow descent rather
+     than a snap, matching the breath pace. */
+  .pendulum-svg #bob,
+  .pendulum-svg #bobHalo,
+  .pendulum-svg #bobGroup ellipse,
+  .pendulum-svg .chain-spark { transition: cy 0.7s cubic-bezier(0.4, 0, 0.2, 1); }
+  .pendulum-svg #pendulum > line { transition: y2 0.7s cubic-bezier(0.4, 0, 0.2, 1); }
+  @media (prefers-reduced-motion: reduce) {
+    .pendulum-svg #bob, .pendulum-svg #bobHalo,
+    .pendulum-svg #bobGroup ellipse,
+    .pendulum-svg .chain-spark,
+    .pendulum-svg #pendulum > line { transition: none; }
+  }
 
   .controls {
     margin-top: 0;
@@ -719,9 +734,42 @@ const state = {
   lastHr: null, coherenceScore: 0,
   finalReading: "", finalAvgCoherence: null, finalDurationSec: 0,
   prevPhase: 0,
+  bobY: 435,            // the live bob position in SVG coords. Swapped
+                        // between IDLE_GEOM and SESSION_GEOM at session
+                        // start/end. tick() reads this for the breath
+                        // scale transform.
 };
 
 const PERIOD = 10, THETA_MAX = 28;
+
+// Two geometries — the idle screen stays exactly as the user OKed it,
+// and the session screen drops the bob and lengthens the thread to
+// fill the space that opens up when the begin-controls disappear.
+// applyPendulumGeom() swaps every cy / y2 atomically; CSS transitions
+// on those attributes (declared in the stylesheet block above) animate
+// the change instead of snapping.
+const IDLE_GEOM = {
+  bobY: 435, bobHighlightY: 421, threadY2: 411,
+  sparks: [70, 125, 180, 235, 290, 345, 400],
+};
+const SESSION_GEOM = {
+  bobY: 540, bobHighlightY: 526, threadY2: 516,
+  sparks: [70, 140, 210, 280, 350, 420, 490],
+};
+
+function applyPendulumGeom(g) {
+  state.bobY = g.bobY;
+  state.bob.setAttribute("cy", g.bobY);
+  state.bobHalo.setAttribute("cy", g.bobY);
+  var highlight = state.bobGroup.querySelector("ellipse");
+  if (highlight) highlight.setAttribute("cy", g.bobHighlightY);
+  var thread = state.pendulum.querySelector("line");
+  if (thread) thread.setAttribute("y2", g.threadY2);
+  var sparks = state.pendulum.querySelectorAll(".chain-spark");
+  sparks.forEach(function (s, i) {
+    if (g.sparks[i] != null) s.setAttribute("cy", g.sparks[i]);
+  });
+}
 
 /* ---- Optional meditative audio, fully synthesised (no files):
    a soft ambient chord, a breath-voice that swells with the
@@ -874,7 +922,8 @@ function tick(ts) {
   var B = 0.5 - 0.5 * Math.cos(2 * Math.PI * phase);
   var bobS = 0.90 + 0.20 * B;            // gentle: ~0.9 empty -> ~1.1 full (the swing leads, not the swell)
   state.bobGroup.setAttribute("transform",
-    "translate(190 435) scale(" + bobS.toFixed(4) + ") translate(-190 -435)");
+    "translate(190 " + state.bobY + ") scale(" + bobS.toFixed(4) +
+    ") translate(-190 -" + state.bobY + ")");
 
   // Optional audio follows the very same breath: the voice
   // swells with the light, and a soft bell marks each turn.
@@ -957,6 +1006,12 @@ function beginSession() {
   const wrap = document.getElementById("pendulumWrap");
   sess.insertBefore(wrap, sess.firstChild);
 
+  // Drop the bob and lengthen the thread — the begin-controls have
+  // disappeared and the bob should fill that opened space. CSS
+  // transitions on cy/y2 carry the bob down smoothly over ~0.7s
+  // rather than snapping.
+  applyPendulumGeom(SESSION_GEOM);
+
   if (state.sensorConnected) state.hrvGraphWrap.classList.add("active");
 
   const svg = document.getElementById("pendulumSvg");
@@ -1016,6 +1071,9 @@ function reset() {
   const wrap = document.getElementById("pendulumWrap");
   idle.insertBefore(wrap, idle.firstChild);
   wrap.style.display = "block";
+  // Snap (well, transition) the pendulum back to its idle geometry so
+  // the next visitor sees the proportions she signed off on.
+  applyPendulumGeom(IDLE_GEOM);
   document.getElementById("emailRow").classList.remove("active");
   document.getElementById("emailConfirm").classList.remove("active");
   document.getElementById("emailInput").value = "";
