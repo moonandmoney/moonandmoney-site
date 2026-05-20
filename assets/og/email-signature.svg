@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 200" width="600" height="200">
+  <defs>
+    <radialGradient id="bg2" cx="50%" cy="50%" r="62%">
+      <stop offset="0%" stop-color="#0B2545"/>
+      <stop offset="100%" stop-color="#03081A"/>
+    </radialGradient>
+    <radialGradient id="mg2" cx="36%" cy="32%" r="72%">
+      <stop offset="0%" stop-color="#FFF6E0"/>
+      <stop offset="42%" stop-color="#EAC979"/>
+      <stop offset="100%" stop-color="#7A5F1F"/>
+    </radialGradient>
+    <radialGradient id="hg2" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFEFBF" stop-opacity="0.45"/>
+      <stop offset="60%" stop-color="#C9A24E" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#7A5F1F" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="goldLine2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E5C77B"/>
+      <stop offset="100%" stop-color="#9C7B2E"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="200" fill="#070608"/>
+  <rect width="600" height="200" fill="url(#bg2)" opacity="0.86"/>
+  <rect x="16" y="16" width="568" height="168" fill="none" stroke="url(#goldLine2)" stroke-width="1" opacity="0.55" rx="12"/>
+  <!-- moon left -->
+  <circle cx="120" cy="100" r="80" fill="url(#hg2)"/>
+  <circle cx="120" cy="100" r="42" fill="url(#mg2)"/>
+  <circle cx="120" cy="100" r="42" fill="none" stroke="#E5C77B" stroke-opacity="0.55" stroke-width="0.8"/>
+  <!-- text right -->
+  <g text-anchor="start">
+    <text x="230" y="85"
+          font-family="'Arimo','Helvetica Neue',Arial,sans-serif"
+          font-weight="600" font-size="14" letter-spacing="6" fill="#E5C77B">M O O N   &amp;   M O N E Y</text>
+    <text x="230" y="125"
+          font-family="'Cormorant Garamond',Georgia,serif"
+          font-style="italic" font-weight="300" font-size="22" fill="#FCF7F1">by Luna Wilde</text>
+    <text x="230" y="158"
+          font-family="'Arimo','Helvetica Neue',Arial,sans-serif"
+          font-weight="500" font-size="11" letter-spacing="3.5" fill="#C9A24E">moonandmoney.ca</text>
+  </g>
+</svg>

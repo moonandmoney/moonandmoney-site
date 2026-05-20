@@ -168,12 +168,120 @@
         '<a class="btn btn-gold" id="qzGuide" href="' + GUIDE(win) + '">Get my full ' + win + ' guide</a>' +
         '<a class="btn btn-ghost" id="qzSub" href="https://moonandmoney.substack.com/subscribe" target="_blank" rel="noopener">Join the Crescent Club</a>' +
         '<button class="qz-retake" id="qzRetake">Take it again</button>' +
+        '<button class="qz-share" id="qzShare">Save my sign as an image</button>' +
       '</div></div>';
     document.getElementById('qzGuide').addEventListener('click', () => track('quiz_guide_cta_clicked', { result_sign: win }));
     document.getElementById('qzSub').addEventListener('click', () => track('quiz_substack_cta_clicked', { result_sign: win }));
     document.getElementById('qzRetake').onclick = () => {
       state = { screen: 'welcome', q: 0, scores: {} }; SIGNS.forEach(s => state.scores[s] = 0); render();
     };
+    document.getElementById('qzShare').onclick = () => {
+      try {
+        const canvas = drawQuizShare(win, r);
+        const url = canvas.toDataURL('image/png');
+        const a = document.createElement('a');
+        a.download = 'MoonAndMoney_MoonMoneySign_' + win + '.png';
+        a.href = url; a.click();
+        track('quiz_shared', { result_sign: win });
+      } catch (e) {}
+    };
+  }
+  function wrapTextQ(ctx, text, x, y, maxWidth, lineHeight) {
+    const words = text.split(' '); let line = '', cy = y;
+    for (let i = 0; i < words.length; i++) {
+      const test = line + (line ? ' ' : '') + words[i];
+      if (ctx.measureText(test).width > maxWidth && line) {
+        ctx.fillText(line, x, cy); line = words[i]; cy += lineHeight;
+      } else line = test;
+    }
+    if (line) ctx.fillText(line, x, cy);
+    return cy + lineHeight;
+  }
+  function drawQuizShare(sign, r) {
+    const W = 1080, H = 1350;
+    const c = document.createElement('canvas');
+    c.width = W; c.height = H;
+    const x = c.getContext('2d');
+
+    // bg
+    const bg = x.createRadialGradient(W/2, H*0.35, 80, W/2, H*0.35, W*0.85);
+    bg.addColorStop(0, '#0B2545'); bg.addColorStop(1, '#03081A');
+    x.fillStyle = '#070608'; x.fillRect(0, 0, W, H);
+    x.globalAlpha = 0.85; x.fillStyle = bg; x.fillRect(0, 0, W, H); x.globalAlpha = 1;
+
+    // stars
+    x.fillStyle = '#FCF7F1';
+    for (let i = 0; i < 70; i++) {
+      const sx = Math.abs(Math.sin(i * 13.7) * 10000) % 1 * W;
+      const sy = Math.abs(Math.sin(i * 7.3 + 1.1) * 10000) % 1 * H;
+      const sr = 0.5 + Math.abs(Math.sin(i * 4.2)) * 1.2;
+      x.globalAlpha = 0.25 + Math.abs(Math.sin(i * 2.1)) * 0.5;
+      x.beginPath(); x.arc(sx, sy, sr, 0, 6.283); x.fill();
+    }
+    x.globalAlpha = 1;
+
+    // frame
+    x.strokeStyle = 'rgba(229,199,123,0.55)'; x.lineWidth = 1.2;
+    x.strokeRect(40, 40, W - 80, H - 80);
+    x.fillStyle = '#E5C77B';
+    [[40,40],[W-40,40],[40,H-40],[W-40,H-40]].forEach(p => {
+      x.beginPath(); x.arc(p[0], p[1], 4, 0, 6.283); x.fill();
+    });
+
+    // brand strip
+    x.fillStyle = '#E5C77B';
+    x.font = '600 24px "Arimo", "Helvetica Neue", Arial, sans-serif';
+    x.textAlign = 'center';
+    x.fillText('M O O N   ·   &   ·   M O N E Y', W/2, 130);
+
+    // eyebrow
+    x.fillStyle = '#A89FB4';
+    x.font = '500 22px "Arimo", sans-serif';
+    x.fillText('YOUR  MOON  MONEY  SIGN', W/2, 195);
+
+    // big sign
+    x.fillStyle = '#F0D488';
+    x.font = 'italic 300 140px "Cormorant Garamond", Georgia, serif';
+    x.fillText(sign, W/2, 350);
+
+    // archetype
+    x.fillStyle = '#FCF7F1';
+    x.font = 'italic 300 38px "Cormorant Garamond", Georgia, serif';
+    let cy = wrapTextQ(x, r.archetype, W/2, 430, W - 220, 50);
+
+    // strength
+    cy += 30;
+    x.fillStyle = '#B9923C';
+    x.font = '600 16px "Arimo", sans-serif';
+    x.fillText('Y O U R   S T R E N G T H', W/2, cy);
+    x.fillStyle = '#FCF7F1';
+    x.font = 'italic 300 26px "Cormorant Garamond", Georgia, serif';
+    cy = wrapTextQ(x, r.strength, W/2, cy + 44, W - 220, 36);
+
+    // watch for
+    cy += 24;
+    x.fillStyle = '#B9923C';
+    x.font = '600 16px "Arimo", sans-serif';
+    x.fillText('W A T C H   F O R', W/2, cy);
+    x.fillStyle = '#FCF7F1';
+    x.font = 'italic 300 26px "Cormorant Garamond", Georgia, serif';
+    cy = wrapTextQ(x, r.watch, W/2, cy + 44, W - 220, 36);
+
+    // move
+    cy += 24;
+    x.fillStyle = '#7DBE9C';
+    x.font = '600 16px "Arimo", sans-serif';
+    x.fillText('T H E   M O V E', W/2, cy);
+    x.fillStyle = '#FCF7F1';
+    x.font = 'italic 300 26px "Cormorant Garamond", Georgia, serif';
+    wrapTextQ(x, r.move, W/2, cy + 44, W - 220, 36);
+
+    // url
+    x.fillStyle = '#C9A24E';
+    x.font = 'italic 300 22px "Cormorant Garamond", Georgia, serif';
+    x.fillText('Moon & Money  ·  moonandmoney.ca', W/2, H - 80);
+
+    return c;
   }
   function render() {
     if (state.screen === 'welcome') renderWelcome();

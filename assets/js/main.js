@@ -285,6 +285,51 @@
     if (p < .78) return 'Last Quarter';
     return 'Waning Crescent';
   }
+  /* ---- Rare celestial events: subtle, automatic site whispers
+     when something actually special is happening in the sky. ---- */
+  (function celestialEvents() {
+    try {
+      var now = new Date();
+      var syn = 29.530588853, known = Date.UTC(2000, 0, 6, 18, 14);
+      var d = (now.getTime() - known) / 86400000;
+      var a = d % syn; if (a < 0) a += syn;
+      var f = a / syn;
+      var WIN = 0.022;             // ~ within a half day either side
+      var classes = [];
+      var whisper = '';
+      if (f < WIN || f > 1 - WIN) {
+        classes.push('mm-newmoon');
+        whisper = 'the sky is resetting tonight.';
+      } else if (Math.abs(f - 0.5) < WIN) {
+        classes.push('mm-fullmoon');
+        whisper = 'the moon is full tonight.';
+      }
+      var m = now.getMonth() + 1, dd = now.getDate();
+      // Solstices and Equinoxes: ±1 day window
+      var key = m + '-' + dd;
+      var spring = ['3-19','3-20','3-21'].indexOf(key) >= 0;
+      var summer = ['6-20','6-21','6-22'].indexOf(key) >= 0;
+      var autumn = ['9-21','9-22','9-23'].indexOf(key) >= 0;
+      var winter = ['12-20','12-21','12-22'].indexOf(key) >= 0;
+      if (spring) { classes.push('mm-equinox','mm-spring');  whisper = whisper || 'the spring equinox: the light returns.'; }
+      if (autumn) { classes.push('mm-equinox','mm-autumn');  whisper = whisper || 'the autumn equinox: the light turns inward.'; }
+      if (summer) { classes.push('mm-solstice','mm-summer'); whisper = whisper || 'the summer solstice: the longest day.'; }
+      if (winter) { classes.push('mm-solstice','mm-winter'); whisper = whisper || 'the winter solstice: the longest night.'; }
+
+      if (classes.length) document.body.classList.add.apply(document.body.classList, classes);
+
+      // If we're on the homepage, drop the whisper softly under the moon-readout.
+      if (whisper) {
+        var spot = document.querySelector('.moon-readout');
+        if (spot && !spot.querySelector('.sky-whisper')) {
+          var w = document.createElement('div');
+          w.className = 'sky-whisper'; w.textContent = whisper;
+          spot.appendChild(w);
+        }
+      }
+    } catch (e) {}
+  })();
+
   /* ---- Live moon-phase favicon (every page, the browser tab
      icon mirrors tonight's actual phase) ---- */
   (function () {
