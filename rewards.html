@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Luna Rewards · Moon &amp; Money</title>
+<meta name="description" content="When you share Moon & Money, the moon remembers. Earn Luna Rewards by inviting friends into the Crescent Club.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Moon &amp; Money">
+<meta property="og:title" content="Luna Rewards · Moon &amp; Money">
+<meta property="og:description" content="When you share the moon, the moon shares back.">
+<meta property="og:url" content="https://moonandmoney.ca/rewards">
+<meta property="og:image" content="https://moonandmoney.ca/assets/og/social.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://moonandmoney.ca/assets/og/social.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/assets/og/apple-touch-icon.png">
+<meta name="theme-color" content="#070608">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="assets/css/styles.css">
+<style>
+  .lr-hero{padding:160px 24px 50px;text-align:center;max-width:760px;margin:0 auto}
+  .lr-hero h1{font-size:clamp(2.4rem,5.6vw,3.8rem);margin:14px 0 18px}
+  .lr-hero .lede{font-family:var(--serif);font-style:italic;font-size:clamp(1.1rem,2.2vw,1.4rem);
+    color:var(--mist);max-width:560px;margin:0 auto;line-height:1.6}
+  .lr-tiers{max-width:1080px;margin:48px auto 0;padding:0 24px;
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+  .lr-tier{background:linear-gradient(180deg,var(--ink-2),var(--ink));
+    border:1px solid var(--gold-soft);border-radius:14px;
+    padding:28px 22px;text-align:center;position:relative;
+    box-shadow:0 0 0 1px rgba(216,177,80,.08),0 0 36px rgba(216,177,80,.08),var(--shadow-deep)}
+  .lr-tier .lr-moon{width:64px;height:64px;border-radius:50%;margin:0 auto 16px;position:relative}
+  .lr-tier .lr-moon::after{content:'';position:absolute;inset:-6px;border-radius:50%;
+    border:1px solid rgba(216,177,80,.2);pointer-events:none}
+  .lr-m-crescent{background:radial-gradient(circle at 38% 36%,#FFF6E0 0%,#EAC979 42%,#7A5F1F 100%)}
+  .lr-m-crescent::before{content:'';position:absolute;inset:0;border-radius:50%;
+    background:radial-gradient(circle at 70% 40%,#0B1A33 28%,transparent 28%)}
+  .lr-m-half{background:radial-gradient(circle at 38% 36%,#FFF6E0 0%,#EAC979 42%,#7A5F1F 100%)}
+  .lr-m-half::before{content:'';position:absolute;inset:0;border-radius:50%;
+    background:linear-gradient(90deg,#0B1A33 50%,transparent 50%)}
+  .lr-m-gibbous{background:radial-gradient(circle at 38% 36%,#FFF6E0 0%,#EAC979 42%,#7A5F1F 100%)}
+  .lr-m-gibbous::before{content:'';position:absolute;inset:0;border-radius:50%;
+    background:radial-gradient(circle at 12% 50%,#0B1A33 20%,transparent 20%)}
+  .lr-m-full{background:radial-gradient(circle at 38% 36%,#FFF6E0 0%,#EAC979 42%,#7A5F1F 100%);
+    box-shadow:0 0 24px rgba(240,212,136,.45)}
+  .lr-tier-name{font-family:var(--serif);font-style:italic;font-size:1.4rem;
+    color:var(--gold-bright);margin:0 0 6px}
+  .lr-tier-n{font-family:var(--display);font-size:.7rem;letter-spacing:.24em;text-transform:uppercase;
+    color:var(--gold-soft);margin-bottom:14px}
+  .lr-tier p{font-family:var(--serif);color:var(--mist);font-size:.96rem;line-height:1.55;margin:0}
+  .lr-how{max-width:760px;margin:60px auto 0;padding:0 24px;text-align:center}
+  .lr-how h2{font-size:clamp(1.6rem,3.4vw,2.4rem);margin:0 0 20px}
+  .lr-how p{font-family:var(--serif);font-style:italic;color:var(--mist);font-size:1.1rem;
+    line-height:1.75;max-width:600px;margin:0 auto 14px}
+  .lr-cta{text-align:center;padding:54px 24px 60px}
+  .lr-note{max-width:560px;margin:42px auto 0;padding:18px 22px;border-top:1px solid var(--line);
+    font-family:var(--serif);font-style:italic;color:var(--gold-soft);text-align:center;
+    font-size:.92rem;line-height:1.65;opacity:.8}
+</style>
+</head>
+<body>
+<canvas id="starfield"></canvas>
+<div class="nebula"></div>
+
+<header class="nav">
+  <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
+  <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="wheel.html">Wheel</a></li><li><a href="draw.html">Card</a></li>
+    <li><a href="quiz.html">Quiz</a></li>
+    <li><a href="shop.html">Atelier</a></li><li><a href="pendulum/">Pendulum</a></li>
+    <li><a href="archive.html">Archive</a></li>
+    <li><a href="sessions.html">Sessions</a></li>
+    <li><a href="about.html">Ethos</a></li>
+    <li><a class="nav-cta" href="https://moonandmoney.substack.com/subscribe" target="_blank">Crescent Club</a></li>
+  </ul>
+</header>
+
+<main>
+  <section class="lr-hero">
+    <span class="eyebrow">Luna Rewards</span>
+    <h1>When you share the moon,<br>the moon shares back.</h1>
+    <p class="lede">Some things compound. Light. Wealth. Word of mouth. When you bring a friend into the Crescent Club, you both rise. Here is what unfolds.</p>
+  </section>
+
+  <section class="lr-tiers reveal">
+    <div class="lr-tier">
+      <div class="lr-moon lr-m-crescent" aria-hidden="true"></div>
+      <div class="lr-tier-n">Tier I</div>
+      <h3 class="lr-tier-name">The Crescent</h3>
+      <p>For your first three. The sky notices when a new light is lit.</p>
+    </div>
+    <div class="lr-tier">
+      <div class="lr-moon lr-m-half" aria-hidden="true"></div>
+      <div class="lr-tier-n">Tier II</div>
+      <h3 class="lr-tier-name">The Half Moon</h3>
+      <p>Ten friends in. Half-light, fully named. A deeper thanks waits.</p>
+    </div>
+    <div class="lr-tier">
+      <div class="lr-moon lr-m-gibbous" aria-hidden="true"></div>
+      <div class="lr-tier-n">Tier III</div>
+      <h3 class="lr-tier-name">The Gibbous</h3>
+      <p>Twenty-five. The room is almost full. A premium piece becomes yours.</p>
+    </div>
+    <div class="lr-tier">
+      <div class="lr-moon lr-m-full" aria-hidden="true"></div>
+      <div class="lr-tier-n">Tier IV</div>
+      <h3 class="lr-tier-name">The Full Moon</h3>
+      <p>Fifty. The brightest mark. A private moment with Luna and a gift from the archive.</p>
+    </div>
+  </section>
+
+  <section class="lr-how">
+    <span class="eyebrow">How it works</span>
+    <h2 style="font-family:var(--serif);font-weight:500;letter-spacing:.005em;line-height:1.15"><em>Three steps.</em></h2>
+    <p><strong style="color:var(--gold-bright);font-weight:500">One.</strong> Join the Crescent Club. (Free counts.)</p>
+    <p><strong style="color:var(--gold-bright);font-weight:500">Two.</strong> You receive your own referral link inside your Substack welcome email and member dashboard.</p>
+    <p><strong style="color:var(--gold-bright);font-weight:500">Three.</strong> Share it. As friends join, the moon counts. At each tier above, your reward unlocks.</p>
+  </section>
+
+  <section class="lr-cta">
+    <a class="btn btn-gold" href="https://moonandmoney.substack.com/subscribe" target="_blank" rel="noopener">Join the Crescent Club to begin</a>
+    <div class="lr-note">
+      A fuller rewards experience is coming, in time. For now, every share is counted in the Crescent Club, and the rewards above are real. Some are gifts, some are months on the house, some are a personal note from Luna. The exact mix evolves with the room.
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
+        <p>Personal finance, read through astrology. By Luna Wilde.</p>
+      </div>
+      <div class="foot-col"><h4>Explore</h4><a href="wheel.html">Wheel</a><a href="draw.html">Card</a><a href="quiz.html">Quiz</a><a href="shop.html">Atelier</a><a href="pendulum/">Pendulum</a><a href="archive.html">Archive</a><a href="sessions.html">Sessions</a><a href="about.html">Ethos</a></div>
+      <div class="foot-col"><h4>Club</h4><a href="https://moonandmoney.substack.com" target="_blank">Substack</a><a href="https://moonandmoney.substack.com/subscribe" target="_blank">Crescent Club</a><a href="rewards.html">Luna Rewards</a><a href="about.html">Circle <span class="soon">Soon</span></a><a href="about.html">Token <span class="soon">Soon</span></a></div>
+      <div class="foot-col"><h4>Follow</h4><a href="https://moonandmoney.substack.com" target="_blank">@moonmoney</a><a href="archive.html">Notes</a><a href="index.html">Newsletter</a></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="yr"></span> Moon &amp; Money · Luna Wilde. All rights reserved.</span>
+      <span>Built in rhythm with the moon ☾</span>
+    </div>
+  </div>
+</footer>
+
+<div id="mmPlayer" data-welcome="assets/audio/invocation.mp3"></div>
+
+<script src="assets/js/zodiac.js"></script>
+<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/player.js"></script>
+</body>
+</html>
