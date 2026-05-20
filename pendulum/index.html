@@ -723,6 +723,20 @@ function audioEnsure() {
   so.connect(audio.swell); so.start();
 }
 
+// iOS Safari audio unlock. resume() alone is unreliable on iPhone/iPad;
+// the trustworthy unlock is to start a single-sample silent buffer
+// inside the original user gesture. This nudges iOS to actually run
+// the AudioContext instead of leaving it in a "running-but-mute" state.
+function unlockIOSAudio(ctx) {
+  try {
+    var b = ctx.createBuffer(1, 1, 22050);
+    var s = ctx.createBufferSource();
+    s.buffer = b;
+    s.connect(ctx.destination);
+    s.start(0);
+  } catch (e) {}
+}
+
 function audioSet(on) {
   audio.on = on;
   var t = document.getElementById("soundToggle");
@@ -736,13 +750,27 @@ function audioSet(on) {
   if (on) {
     audioEnsure();
     if (!audio.ctx) return;
-    if (audio.ctx.state !== "running") {
-      try { audio.ctx.resume().catch(function () {}); } catch (e) {}
+    // 1) Always run the iOS unlock — even on subsequent toggles, since
+    //    iOS may have suspended the context while we were paused.
+    unlockIOSAudio(audio.ctx);
+    // 2) Resume, then schedule the ramp AFTER the context is actually
+    //    running. Scheduling against currentTime while the context is
+    //    still suspended can place events in the past on iOS, making
+    //    the gain never ramp.
+    var ramp = function () {
+      if (!audio.on || !audio.master) return;
+      var n = audio.ctx.currentTime;
+      audio.master.gain.cancelScheduledValues(n);
+      audio.master.gain.setValueAtTime(audio.master.gain.value, n);
+      audio.master.gain.linearRampToValueAtTime(0.5, n + 1.4);
+    };
+    if (audio.ctx.state === "running") {
+      ramp();
+    } else {
+      try {
+        audio.ctx.resume().then(ramp).catch(ramp);
+      } catch (e) { ramp(); }
     }
-    var n = audio.ctx.currentTime;
-    audio.master.gain.cancelScheduledValues(n);
-    audio.master.gain.setValueAtTime(audio.master.gain.value, n);
-    audio.master.gain.linearRampToValueAtTime(0.5, n + 1.4);
   } else if (audio.ctx) {
     var m = audio.ctx.currentTime;
     audio.master.gain.cancelScheduledValues(m);
@@ -750,6 +778,16 @@ function audioSet(on) {
     audio.master.gain.linearRampToValueAtTime(0.0, m + 0.8);
   }
 }
+
+// If the user backgrounds the tab and returns, iOS often suspends the
+// audio context silently. Resume on visibility-change so the sound
+// picks back up where it was instead of going quiet.
+document.addEventListener("visibilitychange", function () {
+  if (document.visibilityState === "visible" && audio.on && audio.ctx &&
+      audio.ctx.state !== "running") {
+    try { audio.ctx.resume().catch(function(){}); } catch (e) {}
+  }
+});
 
 function audioChime(freq) {
   if (!audio.ctx || !audio.on) return;
