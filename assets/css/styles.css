@@ -953,11 +953,11 @@ footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gr
    left echoes the hero moon; the text reads as Luna addressing
    you directly. Click-anywhere-on-the-card → money-chart.html.
    ============================================================ */
-.featured-section{padding-top:18px}
+.featured-section{padding-top:0}
 .chart-feature{
   display:grid;grid-template-columns:1fr 1.4fr;gap:clamp(20px,4vw,52px);
   align-items:center;padding:clamp(28px,4vw,48px);
-  max-width:920px;margin:32px auto 16px;
+  max-width:920px;margin:-30px auto 24px;        /* hugs the page-hero text */
   background:linear-gradient(160deg,rgba(216,177,80,.07) 0%,rgba(11,37,69,.22) 60%,rgba(7,6,8,.85) 100%);
   border:1px solid var(--gold-soft);border-radius:18px;
   box-shadow:0 0 0 1px rgba(216,177,80,.10),0 0 80px rgba(216,177,80,.10),var(--shadow-deep);
