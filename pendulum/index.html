@@ -144,7 +144,7 @@
 
   .pendulum-wrap {
     position: relative; width: auto; height: clamp(170px, 33vh, 360px);
-    max-width: 100%; margin: 0 auto; aspect-ratio: 380 / 520;
+    max-width: 100%; margin: 0 auto; aspect-ratio: 380 / 545;
   }
   .pendulum-svg { width: 100%; height: 100%; display: block; overflow: visible; }
 
@@ -451,7 +451,7 @@
   <div class="stage">
     <div class="idle-state" id="idleState">
       <div class="pendulum-wrap" id="pendulumWrap">
-        <svg viewBox="0 -30 380 520" class="pendulum-svg" id="pendulumSvg">
+        <svg viewBox="0 -30 380 545" class="pendulum-svg" id="pendulumSvg">
           <defs>
             <radialGradient id="moonGold" cx="35%" cy="32%" r="72%">
               <stop offset="0%" stop-color="#FFEFBF"/>
@@ -499,23 +499,23 @@
           </g>
 
           <g id="pendulum" transform="rotate(0 190 2)">
-            <line x1="190" y1="43" x2="190" y2="386"
+            <line x1="190" y1="43" x2="190" y2="411"
                   stroke="url(#goldRod)" stroke-width="1"
                   stroke-linecap="round" opacity="0.5"/>
             <g fill="#FFEFBF">
               <circle class="chain-spark" cx="190" cy="70"  r="1.5" style="animation-delay:-.4s;animation-duration:3.1s"/>
-              <circle class="chain-spark" cx="190" cy="120" r="1.3" style="animation-delay:-1.7s;animation-duration:3.9s"/>
-              <circle class="chain-spark" cx="190" cy="170" r="1.6" style="animation-delay:-.9s;animation-duration:2.8s"/>
-              <circle class="chain-spark" cx="190" cy="220" r="1.3" style="animation-delay:-2.4s;animation-duration:4.2s"/>
-              <circle class="chain-spark" cx="190" cy="270" r="1.5" style="animation-delay:-1.2s;animation-duration:3.4s"/>
-              <circle class="chain-spark" cx="190" cy="320" r="1.3" style="animation-delay:-3.0s;animation-duration:3.7s"/>
-              <circle class="chain-spark" cx="190" cy="370" r="1.6" style="animation-delay:-.6s;animation-duration:4.0s"/>
+              <circle class="chain-spark" cx="190" cy="125" r="1.3" style="animation-delay:-1.7s;animation-duration:3.9s"/>
+              <circle class="chain-spark" cx="190" cy="180" r="1.6" style="animation-delay:-.9s;animation-duration:2.8s"/>
+              <circle class="chain-spark" cx="190" cy="235" r="1.3" style="animation-delay:-2.4s;animation-duration:4.2s"/>
+              <circle class="chain-spark" cx="190" cy="290" r="1.5" style="animation-delay:-1.2s;animation-duration:3.4s"/>
+              <circle class="chain-spark" cx="190" cy="345" r="1.3" style="animation-delay:-3.0s;animation-duration:3.7s"/>
+              <circle class="chain-spark" cx="190" cy="400" r="1.6" style="animation-delay:-.6s;animation-duration:4.0s"/>
             </g>
             <g id="bobGroup">
-              <circle id="bobHalo" cx="190" cy="410" r="80"
+              <circle id="bobHalo" cx="190" cy="435" r="80"
                       fill="url(#bobGlow)" opacity="0.85"/>
-              <circle id="bob" cx="190" cy="410" r="42" fill="url(#bobGold)"/>
-              <ellipse cx="177" cy="396" rx="14" ry="8" fill="#FFEFBF" opacity="0.5"/>
+              <circle id="bob" cx="190" cy="435" r="42" fill="url(#bobGold)"/>
+              <ellipse cx="177" cy="421" rx="14" ry="8" fill="#FFEFBF" opacity="0.5"/>
             </g>
           </g>
         </svg>
@@ -874,7 +874,7 @@ function tick(ts) {
   var B = 0.5 - 0.5 * Math.cos(2 * Math.PI * phase);
   var bobS = 0.90 + 0.20 * B;            // gentle: ~0.9 empty -> ~1.1 full (the swing leads, not the swell)
   state.bobGroup.setAttribute("transform",
-    "translate(190 410) scale(" + bobS.toFixed(4) + ") translate(-190 -410)");
+    "translate(190 435) scale(" + bobS.toFixed(4) + ") translate(-190 -435)");
 
   // Optional audio follows the very same breath: the voice
   // swells with the light, and a soft bell marks each turn.
