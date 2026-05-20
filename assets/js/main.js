@@ -54,9 +54,21 @@
     }, { passive: true });
   }
 
-  /* ---- Starfield ---- */
+  /* ---- Starfield (deferred so it doesn't compete with the
+     first paint; PageSpeed measures LCP before this kicks in) ---- */
   const cv = document.getElementById('starfield');
-  if (cv && !reduced) {
+  function startStarfield() {
+    if (!cv || reduced) return;
+    runStarfield();
+  }
+  // wait until the browser is idle (or ~1.2s as a fallback) so the
+  // initial layout/paint lands first
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(startStarfield, { timeout: 1500 });
+  } else {
+    setTimeout(startStarfield, 1200);
+  }
+  function runStarfield() {
     const ctx = cv.getContext('2d');
     let stars = [], W, H, events = [];
     const resize = () => {
