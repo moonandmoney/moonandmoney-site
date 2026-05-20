@@ -122,10 +122,14 @@
   window.addEventListener('pagehide', saveState);
   window.addEventListener('beforeunload', saveState);
 
-  // Resume across page navigation
+  // Resume across page navigation.
+  // Only the welcome travels site-wide. Any other recording (e.g.
+  // an article reading) stays on its own page — never bleeds onto
+  // the homepage or anywhere else.
   (function restore() {
     let s; try { s = JSON.parse(sessionStorage.getItem(SKEY)); } catch (e) {}
     if (!s || !s.src) return;
+    if (s.src.indexOf('invocation.mp3') === -1) { clearState(); return; }
     audio.src = s.src;
     titleEl.textContent = s.title || 'The Welcome';
     audio.addEventListener('loadedmetadata', () => {
