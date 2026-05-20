@@ -736,7 +736,9 @@ function audioSet(on) {
   if (on) {
     audioEnsure();
     if (!audio.ctx) return;
-    if (audio.ctx.state === "suspended") audio.ctx.resume();
+    if (audio.ctx.state !== "running") {
+      try { audio.ctx.resume().catch(function () {}); } catch (e) {}
+    }
     var n = audio.ctx.currentTime;
     audio.master.gain.cancelScheduledValues(n);
     audio.master.gain.setValueAtTime(audio.master.gain.value, n);
