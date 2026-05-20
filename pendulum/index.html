@@ -135,7 +135,12 @@
     padding-top: clamp(6px, 1.5vh, 22px);
   }
   .session-bottom {
-    position: absolute; left: 0; right: 0; bottom: 0;
+    /* Lifted off the bottom so the timer + stop hint sit higher on the
+       page, closer to the bob. The "Moon & Money" gold link below
+       stays exactly where it was — that's the page footer, outside
+       this block. */
+    position: absolute; left: 0; right: 0;
+    bottom: clamp(60px, 11vh, 130px);
     display: flex; flex-direction: column; align-items: center;
     gap: 4px;
   }
@@ -226,9 +231,10 @@
   }
 
   .session-timer {
-    font-family: 'Arimo', 'Liberation Sans', Arial, sans-serif; font-size: 18px;
-    color: var(--gold-warm); letter-spacing: 5px; font-weight: 500;
-    margin-top: 0; text-shadow: 0 0 12px rgba(217, 183, 100, 0.35);
+    font-family: 'Arimo', 'Liberation Sans', Arial, sans-serif;
+    font-size: clamp(24px, 4.4vw, 30px); font-weight: 500;
+    color: var(--gold-warm); letter-spacing: 7px;
+    margin-top: 0; text-shadow: 0 0 14px rgba(217, 183, 100, 0.42);
   }
   .coherence-readout {
     margin-top: 10px; font-family: 'Arimo', 'Liberation Sans', Arial, sans-serif;
@@ -250,8 +256,8 @@
     color: var(--grey); letter-spacing: 2px; text-transform: uppercase;
   }
   .stop-hint {
-    margin-top: 18px; font-style: italic; font-size: 11px;
-    color: var(--grey); letter-spacing: 0.6px; opacity: 0.7;
+    margin-top: 14px; font-style: italic; font-size: 12.5px;
+    color: var(--grey); letter-spacing: 0.6px; opacity: 0.78;
   }
 
   .reveal { text-align: center; padding: 12px 20px 0; max-width: 520px; }
@@ -1012,6 +1018,17 @@ function beginSession() {
   // rather than snapping.
   applyPendulumGeom(SESSION_GEOM);
 
+  // Keep the screen awake for the full session. On Android/Chrome and
+  // most desktop browsers this prevents Auto-Lock so the user can
+  // close their eyes for a 10-min session and the audio keeps cueing
+  // the breath. iOS Safari doesn't expose Wake Lock so on iPhone the
+  // user has to set Auto-Lock to Never in iOS Settings. The audio
+  // session and silence.wav loop still help iOS keep playing audio
+  // when the screen sleeps, but holding the screen on is the most
+  // reliable path. Released in completeSession / reset.
+  acquireWakeLock();
+  setupMediaSession();
+
   if (state.sensorConnected) state.hrvGraphWrap.classList.add("active");
 
   const svg = document.getElementById("pendulumSvg");
@@ -1033,6 +1050,7 @@ function completeSession(early) {
   state.running = false;
   if (state.rafId) cancelAnimationFrame(state.rafId);
   state.finalDurationSec = state.elapsed;
+  releaseWakeLock();
 
   if (state.coherenceHistory.length > 0) {
     const total = state.coherenceHistory.reduce(function(a,b) { return a + b.c; }, 0);
@@ -1074,9 +1092,59 @@ function reset() {
   // Snap (well, transition) the pendulum back to its idle geometry so
   // the next visitor sees the proportions she signed off on.
   applyPendulumGeom(IDLE_GEOM);
+  releaseWakeLock();
   document.getElementById("emailRow").classList.remove("active");
   document.getElementById("emailConfirm").classList.remove("active");
   document.getElementById("emailInput").value = "";
+}
+
+// ── Screen-awake during a session ────────────────────────────────────────
+// Wake Lock API on Chrome/Edge desktop, Chrome Android, and modern PWAs
+// keeps the screen on so audio cues keep landing through a full 10-min
+// session. iOS Safari does NOT support Wake Lock — on iPhone/iPad Safari,
+// the screen will sleep per the device's Auto-Lock setting and audio MAY
+// continue (thanks to the silence.wav loop holding the audio session
+// open) or MAY pause depending on iOS version. If iOS Safari support
+// for Wake Lock ever lands this code starts working there automatically.
+var wakeLock = null;
+
+async function acquireWakeLock() {
+  if (!('wakeLock' in navigator)) return;
+  try {
+    wakeLock = await navigator.wakeLock.request('screen');
+    wakeLock.addEventListener('release', function () { wakeLock = null; });
+  } catch (e) { /* user gesture missing or denied — ignore */ }
+}
+async function releaseWakeLock() {
+  if (!wakeLock) return;
+  try { await wakeLock.release(); } catch (e) {}
+  wakeLock = null;
+}
+// If the page is hidden then re-shown mid-session, the wake lock is
+// auto-released. Re-acquire so a 10-min session that briefly backgrounds
+// and returns still holds the screen open the rest of the way.
+document.addEventListener('visibilitychange', function () {
+  if (document.visibilityState === 'visible' && state.running && !wakeLock) {
+    acquireWakeLock();
+  }
+});
+
+// MediaSession metadata so iOS lock-screen / Android notification show
+// "Moon & Money — Pendulum" as the playing audio. Helps iOS keep the
+// audio session alive when the screen sleeps, and gives the user a
+// recognisable lock-screen marker.
+function setupMediaSession() {
+  if (!('mediaSession' in navigator)) return;
+  try {
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title:  'Pendulum',
+      artist: 'Moon & Money',
+      album:  'A breath practice',
+    });
+    navigator.mediaSession.setActionHandler('stop', function () {
+      if (state.running) completeSession(true);
+    });
+  } catch (e) {}
 }
 
 const HR_SERVICE = 0x180D, HR_CHAR = 0x2A37;
