@@ -589,27 +589,51 @@
 
 <script>
 (function buildStars() {
-  function make(id, count) {
+  // The pendulum is the focal point. Stars elsewhere in the frame
+  // are welcome; stars inside the swing path compete with it. The
+  // `quietZone` flag tells `make` to push placement toward the edges
+  // and to dim/shrink any star that does land near the bob's arc, so
+  // the centre reads as a clearing the eye lands on naturally.
+  function inSwingPath(x, y) {
+    // Normalised 0..100 coordinates. The bob's swing fan covers the
+    // central horizontal third and a vertical band from roughly the
+    // anchor at the top of the frame down to a little past the bob's
+    // rest position. Treat that rectangle as the quiet zone.
+    return x > 30 && x < 70 && y > 18 && y < 64;
+  }
+
+  function make(id, count, quietZone) {
     let svg = '<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" preserveAspectRatio="none">';
-    for (let i = 0; i < count; i++) {
+    let placed = 0, attempts = 0;
+    while (placed < count && attempts < count * 4) {
+      attempts++;
       const x = Math.random() * 100, y = Math.random() * 100;
-      const r = 0.4 + Math.random() * 1.4;
-      const base = 0.15 + Math.random() * 0.5;
-      const peak = Math.min(base + 0.3 + Math.random() * 0.3, 0.95);
+      const inZone = quietZone && inSwingPath(x, y);
+      // 80% of stars that land in the swing path get rejected outright,
+      // pushing the field toward the corners and edges.
+      if (inZone && Math.random() < 0.8) continue;
+      // Survivors in the zone are smaller and dimmer so they whisper
+      // instead of compete.
+      const sizeMul = inZone ? 0.55 : 1.0;
+      const dimMul  = inZone ? 0.55 : 1.0;
+      const r = (0.4 + Math.random() * 1.4) * sizeMul;
+      const base = (0.15 + Math.random() * 0.5) * dimMul;
+      const peak = Math.min((base + 0.3 + Math.random() * 0.3) * dimMul, 0.95);
       const dur = 3 + Math.random() * 5;
       const begin = -Math.random() * dur;
-      svg += '<circle cx="' + x + '%" cy="' + y + '%" r="' + r + '" fill="#FCF7F1">' +
+      svg += '<circle cx="' + x + '%" cy="' + y + '%" r="' + r.toFixed(2) + '" fill="#FCF7F1">' +
         '<animate attributeName="opacity" values="' + base.toFixed(2) + ';' + peak.toFixed(2) + ';' + base.toFixed(2) + '" dur="' + dur.toFixed(2) + 's" begin="' + begin.toFixed(2) + 's" repeatCount="indefinite"/>' +
         '</circle>';
+      placed++;
     }
     svg += '</svg>';
     const el = document.getElementById(id);
     if (el) el.innerHTML = svg;
   }
   const w = window.innerWidth, h = window.innerHeight;
-  const base = Math.floor((w * h) / 9000);
-  make("skyStars", Math.min(120, base));         // outside: the site night sky
-  make("frameStars", Math.min(180, base + 70));  // inside the frame: a rich starfield
+  const base = Math.floor((w * h) / 11000);          // sparser overall
+  make("skyStars",   Math.min(95,  base),       false); // outside the frame
+  make("frameStars", Math.min(100, base + 30),  true);  // inside, with a quiet zone
 })();
 
 /* The anchor Moon shows tonight's true phase — a quiet reminder
