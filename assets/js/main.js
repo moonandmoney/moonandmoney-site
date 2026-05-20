@@ -32,8 +32,23 @@
   const burger = document.querySelector('.burger');
   const links = document.querySelector('.nav-links');
   if (burger && links) {
-    burger.addEventListener('click', () => links.classList.toggle('open'));
-    links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => links.classList.remove('open')));
+    // Open/close keeps three pieces in sync so the visual state never
+    // drifts: the panel (.open), the burger icon (.open → animates into
+    // an X), and body scroll (locked while the menu covers the screen).
+    const setMenu = (open) => {
+      links.classList.toggle('open', open);
+      burger.classList.toggle('open', open);
+      document.body.classList.toggle('nav-open', open);
+      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    };
+    burger.setAttribute('aria-expanded', 'false');
+    burger.addEventListener('click', () => setMenu(!links.classList.contains('open')));
+    links.querySelectorAll('a').forEach(a =>
+      a.addEventListener('click', () => setMenu(false)));
+    // Escape closes — keyboard users and anyone hitting Cmd+W muscle memory.
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && links.classList.contains('open')) setMenu(false);
+    });
   }
 
   /* ---- Scroll reveal ---- */
