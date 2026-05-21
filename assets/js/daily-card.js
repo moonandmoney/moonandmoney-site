@@ -1,5 +1,5 @@
 /* ============================================================
-   MOON & MONEY — The Daily Card engine (v3)
+   MOON & MONEY — The Moon Card engine (v3)
 
    ONE card per MOON SIGN transit (not per calendar day). The
    Moon transits one sign for ~2.5 days; that sign draws one
@@ -92,7 +92,7 @@
     face.setAttribute('aria-live', 'polite');
     face.setAttribute('tabindex', '-1');
     face.setAttribute('aria-label',
-      'The Daily Card. Moon in ' + sign + '. ' + card.title + '.');
+      'The Moon Card. Moon in ' + sign + '. ' + card.title + '.');
 
     var eyebrow = elc('div', 'dc-eyebrow');
     var glyph = elc('span', 'dc-glyph');
@@ -331,7 +331,7 @@
     emblem.innerHTML = EMBLEM;
 
     face.appendChild(emblem);
-    face.appendChild(elc('div', 'dc-back-eyebrow', 'The Daily Card'));
+    face.appendChild(elc('div', 'dc-back-eyebrow', 'The Moon Card'));
     face.appendChild(elc('h3', 'dc-back-h', 'Draw your card'));
     face.appendChild(elc('div', 'dc-back-sign', 'Moon in ' + sign));
     face.appendChild(elc('div', 'dc-back-cue', 'Tap to turn'));
