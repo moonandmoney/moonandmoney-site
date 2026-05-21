@@ -32,22 +32,22 @@ const CATALOG = [
   { cat:'Collections', glyph:'air',   name:'Air Signs Money Collection',   desc:'Gemini · Libra · Aquarius. Strategy for the considered mind.', link:'', prev:'air.png' },
   { cat:'Collections', glyph:'water', name:'Water Signs Money Collection', desc:'Cancer · Scorpio · Pisces. Intuitive wealth for the deep feelers.', link:'', prev:'water.png' },
 
-  // ---- The Library ----
-  { cat:'The Library', glyph:'moon', name:'The Complete Lunar Collection', desc:'All twelve Moon Sign Money Guides, gathered in one luminous library. The whole zodiac.', link:'', badge:'Complete', prev:'complete.png' },
-  { cat:'The Library', glyph:'star', name:'The Premium Lunar Money Guide', desc:'The flagship. The full premium moon document. Your money architecture, read in depth.', link:'', badge:'Premium', prev:'premium.png' },
+  // ---- Library ----
+  { cat:'Library', glyph:'moon', name:'The Complete Lunar Collection', desc:'All twelve Moon Sign Money Guides, gathered in one luminous library. The whole zodiac.', link:'', badge:'Complete', prev:'complete.png' },
+  { cat:'Library', glyph:'star', name:'The Premium Lunar Money Guide', desc:'The flagship. The full premium moon document. Your money architecture, read in depth.', link:'', badge:'Premium', prev:'premium.png' },
 
   // ---- Calendar ----
   { cat:'Calendar', glyph:'calendar', name:'Lunar Money Calendar 2026', desc:'Every moon phase of the year, paired with the money move it favours. Your year, timed to the sky.', link:'', badge:'2026', prev:'calendar.png' },
 
-  // ---- The Cards ----
-  { cat:'The Cards', glyph:'Capricorn',  name:'Saturn Return Card', desc:'For the friend crossing the great threshold. Quiet, considered encouragement.', link:'', prev:'card-saturn.png' },
-  { cat:'The Cards', glyph:'Gemini',     name:'Mercury Retrograde Card', desc:'A knowing card for the astrologically literate. Send it before the static.', link:'', prev:'card-mercury.png' },
-  { cat:'The Cards', glyph:'moon',       name:'New Year Moon Card', desc:'Begin the year by the moon, not only the calendar.', link:'', prev:'card-newyear.png' },
-  { cat:'The Cards', glyph:'Cancer',     name:'New Baby Card', desc:'Welcome the new arrival with a considered, celestial note.', link:'', prev:'card-baby.png' },
-  { cat:'The Cards', glyph:'Leo',        name:'Leo Birthday Card', desc:'For the Leo, on their solar return.', link:'', prev:'card-leo.png' },
-  { cat:'The Cards', glyph:'Taurus',     name:'Taurus Birthday Card', desc:'Grounded, luxe and a little indulgent, like the Taurus it is for.', link:'', prev:'card-taurus.png' },
-  { cat:'The Cards', glyph:'Capricorn',  name:'Capricorn Congratulations Card', desc:'For the Capricorn who, of course, achieved the thing.', link:'', prev:'card-capricorn.png' },
-  { cat:'The Cards', glyph:'Scorpio',    name:'Scorpio New Chapter Card', desc:'Renewal, not ruin. A bold card for a powerful new beginning.', link:'', prev:'card-scorpio.png' }
+  // ---- Cards ----
+  { cat:'Cards', glyph:'Capricorn',  name:'Saturn Return Card', desc:'For the friend crossing the great threshold. Quiet, considered encouragement.', link:'', prev:'card-saturn.png' },
+  { cat:'Cards', glyph:'Gemini',     name:'Mercury Retrograde Card', desc:'A knowing card for the astrologically literate. Send it before the static.', link:'', prev:'card-mercury.png' },
+  { cat:'Cards', glyph:'moon',       name:'New Year Moon Card', desc:'Begin the year by the moon, not only the calendar.', link:'', prev:'card-newyear.png' },
+  { cat:'Cards', glyph:'Cancer',     name:'New Baby Card', desc:'Welcome the new arrival with a considered, celestial note.', link:'', prev:'card-baby.png' },
+  { cat:'Cards', glyph:'Leo',        name:'Leo Birthday Card', desc:'For the Leo, on their solar return.', link:'', prev:'card-leo.png' },
+  { cat:'Cards', glyph:'Taurus',     name:'Taurus Birthday Card', desc:'Grounded, luxe and a little indulgent, like the Taurus it is for.', link:'', prev:'card-taurus.png' },
+  { cat:'Cards', glyph:'Capricorn',  name:'Capricorn Congratulations Card', desc:'For the Capricorn who, of course, achieved the thing.', link:'', prev:'card-capricorn.png' },
+  { cat:'Cards', glyph:'Scorpio',    name:'Scorpio New Chapter Card', desc:'Renewal, not ruin. A bold card for a powerful new beginning.', link:'', prev:'card-scorpio.png' }
 ];
 
 (function renderShop() {

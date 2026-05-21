@@ -34,14 +34,14 @@ window.MM_CHECKOUT = {
   "Air Signs Money Collection": "",
   "Water Signs Money Collection": "",
 
-  // ---- The Library ----
+  // ---- Library ----
   "The Complete Lunar Collection": "",
   "The Premium Lunar Money Guide": "",
 
   // ---- Calendar ----
   "Lunar Money Calendar 2026": "",
 
-  // ---- The Cards ----
+  // ---- Cards ----
   "Saturn Return Card": "",
   "Mercury Retrograde Card": "",
   "New Year Moon Card": "",
