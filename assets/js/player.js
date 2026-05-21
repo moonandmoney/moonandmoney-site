@@ -18,7 +18,7 @@
   if (!host) return;
 
   const WELCOME_RAW = host.dataset.welcome || 'assets/audio/invocation.mp3';
-  const WELCOME = WELCOME_RAW + (WELCOME_RAW.indexOf('?') === -1 ? '?v=2' : '');
+  const WELCOME = WELCOME_RAW + (WELCOME_RAW.indexOf('?') === -1 ? '?v=3' : '');
   const SKEY = 'mm_audio_state';
   const RKEY = 'mm_rate';
   const RATES = [1, 1.25, 1.5, 0.85];
@@ -165,7 +165,7 @@
     document.querySelectorAll('[data-audio]').forEach(el => {
       if (el.querySelector('.mm-listen')) return;
       const srcRaw = el.getAttribute('data-audio');
-      const src = srcRaw + (srcRaw.indexOf('?') === -1 ? '?v=2' : '');
+      const src = srcRaw + (srcRaw.indexOf('?') === -1 ? '?v=3' : '');
       const label = el.getAttribute('data-audio-label') || 'Listen in Luna’s voice';
       const b = document.createElement('button');
       b.className = 'mm-listen';
