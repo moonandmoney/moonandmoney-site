@@ -82,11 +82,13 @@ window.MM_CHART_CHECKOUT = {
   // the email prefills the checkout. No birth time given (the "I don't
   // know" box) defaults to noon, matching the caveat shown on the page.
   function buildCheckoutUrl(base, d, t) {
-    var birthTime = (d.p1_time_unknown === 'yes' || !d.p1_birthtime) ? '12:00' : d.p1_birthtime;
+    var timeUnknown = (d.p1_time_unknown === 'yes' || !d.p1_birthtime);
+    var birthTime = timeUnknown ? '12:00' : d.p1_birthtime;
     var custom = {
       first_name: d.p1_first || '',
       birth_date: d.p1_birthdate || '',
       birth_time: birthTime,
+      birth_time_known: timeUnknown ? 'no' : 'yes',
       city:       d.p1_location || '',
       tier:       t
     };
