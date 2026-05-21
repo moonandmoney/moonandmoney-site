@@ -6,8 +6,8 @@
    request will route there after the details are captured.
    ============================================================ */
 window.MM_CHART_CHECKOUT = {
-  individual: '',   // e.g. 'https://moonandmoney.lemonsqueezy.com/buy/xxx'
-  pairs:      ''    // Lemon Squeezy checkout for the Pairs tier
+  individual: 'https://moonandmoney.lemonsqueezy.com/checkout/buy/bf4cc0ae-3e66-4914-a278-d1053b9b4733',
+  pairs:      ''    // Pairs (couples synastry) launches later
 };
 
 (function () {
@@ -75,6 +75,29 @@ window.MM_CHART_CHECKOUT = {
       encodeURIComponent(k) + '=' + encodeURIComponent(data[k])).join('&');
   }
 
+  // Build the Lemon Squeezy checkout URL carrying the birth data as
+  // custom data. LS passes checkout[custom][...] params through to the
+  // order webhook (meta.custom_data), where the chart engine reads them
+  // to generate the reading. Person 1 only for the Individual tier;
+  // the email prefills the checkout. No birth time given (the "I don't
+  // know" box) defaults to noon, matching the caveat shown on the page.
+  function buildCheckoutUrl(base, d, t) {
+    var birthTime = (d.p1_time_unknown === 'yes' || !d.p1_birthtime) ? '12:00' : d.p1_birthtime;
+    var custom = {
+      first_name: d.p1_first || '',
+      birth_date: d.p1_birthdate || '',
+      birth_time: birthTime,
+      city:       d.p1_location || '',
+      tier:       t
+    };
+    var parts = [];
+    Object.keys(custom).forEach(function (k) {
+      if (custom[k] !== '') parts.push('checkout[custom][' + k + ']=' + encodeURIComponent(custom[k]));
+    });
+    if (d.email) parts.push('checkout[email]=' + encodeURIComponent(d.email));
+    return base + (base.indexOf('?') > -1 ? '&' : '?') + parts.join('&');
+  }
+
   form.addEventListener('submit', e => {
     e.preventDefault();
     if (form.querySelector('[name="bot-field"]').value) return; // honeypot
@@ -82,16 +105,27 @@ window.MM_CHART_CHECKOUT = {
     const data = {};
     fd.forEach((v, k) => { data[k] = v; });
 
+    const base = (window.MM_CHART_CHECKOUT || {})[tier];
+
     const finish = () => {
-      track('money_chart_purchase_completed', { tier: tier });
-      form.hidden = true;
-      doneEl.hidden = false;
-      doneEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      const url = (window.MM_CHART_CHECKOUT || {})[tier];
-      if (url) setTimeout(() => window.open(url, '_blank', 'noopener'), 600);
+      if (base) {
+        // Hand off to Lemon Squeezy checkout with the birth data attached.
+        // Same-tab redirect (not window.open) so popup blockers can't
+        // swallow it after the async capture.
+        track('money_chart_checkout_opened', { tier: tier });
+        window.location.href = buildCheckoutUrl(base, data, tier);
+      } else {
+        // No checkout wired for this tier yet (e.g. Pairs pre-launch):
+        // capture the lead and show the confirmation note.
+        track('money_chart_request_received', { tier: tier });
+        form.hidden = true;
+        doneEl.hidden = false;
+        doneEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
     };
 
-    // Netlify Forms capture (works on the live host; harmless elsewhere)
+    // Netlify Forms capture first (a backup record of every intake, even
+    // if they bail at checkout), then hand off.
     fetch('/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
