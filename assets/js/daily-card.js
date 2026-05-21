@@ -1,16 +1,20 @@
 /* ============================================================
-   MOON & MONEY — The Daily Card engine (v2)
+   MOON & MONEY — The Daily Card engine (v3)
 
-   The Moon transits one sign for ~2.5 days. That sign draws
-   one card from its pool of 7 (window.MM_CARDS). The card
-   arrives FACE DOWN. Tap it to turn it.
+   ONE card per MOON SIGN transit (not per calendar day). The
+   Moon transits one sign for ~2.5 days; that sign draws one
+   card from its pool of 7 (window.MM_CARDS), and the SAME card
+   holds for the whole transit. The card arrives FACE DOWN. Tap
+   it to turn it.
 
-   Once turned, it stays turned for the rest of the calendar
-   day, even if you leave and return. But if the Moon changes
-   sign partway through the day, you earn a fresh card and a
-   fresh turn. State is stored per date in localStorage
-   (mm_card_<YYYY-MM-DD> = {sign, idx, revealed}); a sign or
-   date change resets the turn.
+   Once turned, it stays turned for the rest of that Moon-sign
+   transit, even across days and page reloads. When the Moon
+   enters a NEW sign, a fresh face-down card is drawn. This
+   walks the visitor through the zodiac as the Moon does, so the
+   signs are learned over time. State is a single localStorage
+   entry keyed by sign (mm_moon_card = {sign, idx, revealed});
+   when the stored sign no longer matches the Moon's current
+   sign, the card resets.
 
    Renders into any element with [data-daily-card]. The WHISPER
    carries two voices: the lie (gold) and the answer (forest).
@@ -37,19 +41,22 @@
 
   function track(n, d) { try { if (window.gtag) window.gtag('event', n, d || {}); } catch (e) {} }
 
-  function dateKey(d) {
-    return d.getFullYear() + '-' +
-      ('0' + (d.getMonth() + 1)).slice(-2) + '-' +
-      ('0' + d.getDate()).slice(-2);
-  }
+  // One card per MOON SIGN transit, not per calendar day. The Moon sits
+  // in a sign for ~2.5 days; the same card holds that whole time, and a
+  // fresh one is drawn the moment the Moon enters a new sign. This walks
+  // the visitor through the zodiac alongside the Moon, so the signs are
+  // absorbed over time. State is a single localStorage entry keyed by
+  // sign — when the stored sign no longer matches the Moon's current
+  // sign, we draw anew. (The Moon passes through all 12 signs between
+  // repeat visits to any one sign, so each transit naturally earns its
+  // own fresh card.)
+  var STORE_KEY = 'mm_moon_card';
 
-  function storeKeyFor(d) { return 'mm_card_' + dateKey(d); }
-
-  function load(sign, key) {
+  function load(sign) {
     var pool = window.MM_CARDS[sign];
     if (!pool || !pool.length) return null;
     var saved = null;
-    try { saved = JSON.parse(localStorage.getItem(key)); } catch (e) {}
+    try { saved = JSON.parse(localStorage.getItem(STORE_KEY)); } catch (e) {}
     if (saved && saved.sign === sign &&
         typeof saved.idx === 'number' && pool[saved.idx]) {
       return { card: pool[saved.idx], idx: saved.idx,
@@ -57,13 +64,13 @@
     }
     var idx = Math.floor(Math.random() * pool.length);
     var state = { sign: sign, idx: idx, revealed: false };
-    try { localStorage.setItem(key, JSON.stringify(state)); } catch (e) {}
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {}
     return { card: pool[idx], idx: idx, revealed: false };
   }
 
-  function markRevealed(sign, idx, key) {
+  function markRevealed(sign, idx) {
     try {
-      localStorage.setItem(key,
+      localStorage.setItem(STORE_KEY,
         JSON.stringify({ sign: sign, idx: idx, revealed: true }));
     } catch (e) {}
   }
@@ -318,20 +325,20 @@
     face.setAttribute('role', 'button');
     face.setAttribute('tabindex', '0');
     face.setAttribute('aria-label',
-      'Draw today’s card. The Moon is in ' + sign + '.');
+      'Draw your card. The Moon is in ' + sign + '.');
 
     var emblem = elc('div', 'dc-back-emblem');
     emblem.innerHTML = EMBLEM;
 
     face.appendChild(emblem);
     face.appendChild(elc('div', 'dc-back-eyebrow', 'The Daily Card'));
-    face.appendChild(elc('h3', 'dc-back-h', 'Draw today’s card'));
+    face.appendChild(elc('h3', 'dc-back-h', 'Draw your card'));
     face.appendChild(elc('div', 'dc-back-sign', 'Moon in ' + sign));
     face.appendChild(elc('div', 'dc-back-cue', 'Tap to turn'));
     return face;
   }
 
-  function render(mount, sign, state, key) {
+  function render(mount, sign, state) {
     mount.innerHTML = '';
     var flip = elc('div', 'dc-flip');
     var front = buildFront(sign, state.card);
@@ -341,7 +348,7 @@
     mount.appendChild(flip);
 
     if (state.revealed) {
-      // Already drawn today (same sign): show it turned, no replay.
+      // Already turned for this Moon sign: show it face up, no replay.
       flip.style.transition = 'none';
       flip.classList.add('is-flipped');
       back.setAttribute('aria-hidden', 'true');
@@ -359,7 +366,7 @@
       flip.classList.add('is-flipped');
       back.setAttribute('aria-hidden', 'true');
       back.removeAttribute('tabindex');
-      markRevealed(sign, state.idx, key);
+      markRevealed(sign, state.idx);
       track('daily_card_draw', { sign: sign, card: state.card.title });
       setTimeout(function () { try { front.focus(); } catch (e) {} }, 700);
     }
@@ -375,22 +382,20 @@
   function run() {
     var now = new Date();
     var sign = window.ZODIAC.moonSign(now);
-    var key = storeKeyFor(now);
-    var state = load(sign, key);
+    var state = load(sign);
     if (!state) return;
-    for (var i = 0; i < mounts.length; i++) render(mounts[i], sign, state, key);
+    for (var i = 0; i < mounts.length; i++) render(mounts[i], sign, state);
   }
 
   run();
 
-  // If the page is left open across a date or Moon-sign change,
-  // re-run so a fresh card (and a fresh turn) is offered.
+  // If the page is left open across a Moon-sign change, re-run so the
+  // new sign's fresh (face-down) card replaces the old one.
   setInterval(function () {
     var now = new Date();
     var sign = window.ZODIAC.moonSign(now);
-    var key = storeKeyFor(now);
     var saved = null;
-    try { saved = JSON.parse(localStorage.getItem(key)); } catch (e) {}
+    try { saved = JSON.parse(localStorage.getItem(STORE_KEY)); } catch (e) {}
     if (!saved || saved.sign !== sign) run();
   }, 15 * 60 * 1000);
 })();
