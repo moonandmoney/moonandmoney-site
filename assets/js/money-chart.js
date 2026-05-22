@@ -7,7 +7,7 @@
    ============================================================ */
 window.MM_CHART_CHECKOUT = {
   individual: 'https://moonandmoney.lemonsqueezy.com/checkout/buy/bf4cc0ae-3e66-4914-a278-d1053b9b4733',
-  pairs:      ''    // Pairs (couples synastry) launches later
+  pairs:      'https://moonandmoney.lemonsqueezy.com/checkout/buy/a1aac914-e089-414a-a576-ddee6d623185'
 };
 
 (function () {
