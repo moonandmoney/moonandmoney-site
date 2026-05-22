@@ -92,6 +92,16 @@ window.MM_CHART_CHECKOUT = {
       city:       d.p1_location || '',
       tier:       t
     };
+    // Pairs ($77): carry the second person too, so the engine can build the
+    // couples reading. Keys match what the chart engine reads (partner_*).
+    if (t === 'pairs') {
+      var p2Unknown = (d.p2_time_unknown === 'yes' || !d.p2_birthtime);
+      custom.partner_first_name      = d.p2_first || '';
+      custom.partner_birth_date      = d.p2_birthdate || '';
+      custom.partner_birth_time      = p2Unknown ? '12:00' : d.p2_birthtime;
+      custom.partner_birth_time_known = p2Unknown ? 'no' : 'yes';
+      custom.partner_city            = d.p2_location || '';
+    }
     var parts = [];
     Object.keys(custom).forEach(function (k) {
       if (custom[k] !== '') parts.push('checkout[custom][' + k + ']=' + encodeURIComponent(custom[k]));
