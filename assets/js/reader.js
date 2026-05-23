@@ -64,9 +64,9 @@
     reveal(el);
   }
 
-  /* ---------------- Archive listing (everything except this week) ---------------- */
+  /* ---------------- Archive listing (every reading, current week included) ---------------- */
   function renderList(el, posts) {
-    const arch = posts.slice(1).map(withExtras);
+    const arch = posts.map(withExtras);
     el.innerHTML = arch.length ? arch.map(p => `
       <a class="post reveal" href="article.html?slug=${encodeURIComponent(p.slug)}">
         <span class="meta">${esc(p.tag || 'Reading')} · ${esc(p.date || '')}</span>
