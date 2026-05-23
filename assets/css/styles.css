@@ -1090,3 +1090,70 @@ footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gr
   .qz-cta{gap:10px;margin-top:20px}
   .qz-share{padding:14px 26px;font-size:.72rem;width:100%;max-width:320px}
 }
+
+/* ──────────────────────────────────────────────────────────────
+   Nav dropdown (Tools)
+   Lets the free interactive pieces (Pendulum, Wheel, Card, Quiz,
+   and Calendar when it lands) live under a single nav slot, so
+   the top stays clean without burying anything. Opens on hover,
+   focus-within, or click (the JS toggles aria-expanded). On the
+   mobile burger menu the sub-items just flatten out — no nested
+   dropdown to fiddle with on a phone.
+   ────────────────────────────────────────────────────────────── */
+.nav-dropdown { position: relative; }
+.nav-trigger {
+  font-family: inherit; font-size: .82rem; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--mist);
+  background: none; border: 0; cursor: pointer; padding: 0;
+  display: inline-flex; align-items: center; gap: .4em;
+  transition: color .3s var(--ease);
+}
+.nav-trigger:hover, .nav-trigger:focus-visible { color: var(--parchment); }
+.nav-trigger .caret { font-size: .7em; opacity: .7; transition: transform .25s var(--ease); }
+.nav-dropdown[aria-expanded="true"] .nav-trigger .caret { transform: rotate(180deg); }
+
+.nav-submenu {
+  list-style: none; margin: 0; padding: 12px 0;
+  position: absolute; top: calc(100% + 14px); left: 50%;
+  transform: translateX(-50%) translateY(-4px);
+  min-width: 180px;
+  background: rgba(7,6,8,.94); backdrop-filter: blur(16px);
+  border: 1px solid var(--line); border-radius: 4px;
+  opacity: 0; pointer-events: none;
+  transition: opacity .25s var(--ease), transform .25s var(--ease);
+  z-index: 60;
+}
+.nav-dropdown[aria-expanded="true"] .nav-submenu,
+.nav-dropdown:hover .nav-submenu,
+.nav-dropdown:focus-within .nav-submenu {
+  opacity: 1; pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+.nav-submenu li { display: block; }
+.nav-submenu a {
+  display: block; padding: 9px 22px; white-space: nowrap;
+  font-size: .76rem; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--mist);
+}
+.nav-submenu a::after { display: none; }
+.nav-submenu a:hover, .nav-submenu a:focus-visible {
+  color: var(--gold-bright); background: rgba(201,162,78,.06);
+}
+
+@media (max-width: 900px) {
+  /* In the mobile burger menu, flatten the dropdown — the trigger
+     button disappears and the sub-items just slot into the full-screen
+     list with the rest of the items. No nested clicking on a phone. */
+  .nav-dropdown { width: 100%; }
+  .nav-trigger { display: none; }
+  .nav-submenu {
+    position: static; transform: none; opacity: 1; pointer-events: auto;
+    background: transparent; border: 0; padding: 0; min-width: 0;
+    backdrop-filter: none;
+    display: flex; flex-direction: column; align-items: center; gap: 30px;
+  }
+  .nav-submenu a {
+    font-size: 1.08rem; letter-spacing: .18em; color: var(--parchment);
+    padding: 6px 0; text-align: center;
+  }
+}

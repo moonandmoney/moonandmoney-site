@@ -545,3 +545,50 @@
     });
   });
 })();
+
+/* ----------------------------------------------------------------
+   Nav dropdown — keeps the "Tools" submenu reachable by click
+   (hover already works via CSS; this handles tap-on-mobile-tablet,
+   keyboard nav, and gives an explicit close on click-outside / Esc).
+   ---------------------------------------------------------------- */
+(function () {
+  'use strict';
+  var dropdowns = document.querySelectorAll('.nav-dropdown');
+  if (!dropdowns.length) return;
+
+  function closeAll(except) {
+    dropdowns.forEach(function (d) {
+      if (d !== except) {
+        d.setAttribute('aria-expanded', 'false');
+        var t = d.querySelector('.nav-trigger');
+        if (t) t.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+
+  dropdowns.forEach(function (dd) {
+    var trigger = dd.querySelector('.nav-trigger');
+    if (!trigger) return;
+    trigger.addEventListener('click', function (e) {
+      e.preventDefault(); e.stopPropagation();
+      var open = dd.getAttribute('aria-expanded') === 'true';
+      closeAll(dd);
+      dd.setAttribute('aria-expanded', open ? 'false' : 'true');
+      trigger.setAttribute('aria-expanded', open ? 'false' : 'true');
+    });
+  });
+
+  document.addEventListener('click', function (e) {
+    dropdowns.forEach(function (dd) {
+      if (dd.getAttribute('aria-expanded') === 'true' && !dd.contains(e.target)) {
+        dd.setAttribute('aria-expanded', 'false');
+        var t = dd.querySelector('.nav-trigger');
+        if (t) t.setAttribute('aria-expanded', 'false');
+      }
+    });
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeAll(null);
+  });
+})();
