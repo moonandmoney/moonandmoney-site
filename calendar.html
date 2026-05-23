@@ -81,6 +81,13 @@
 .lc-day-row { width:100%; display:flex; justify-content:space-between; align-items:center; }
 .lc-day-num { font-family:'Jost',sans-serif; font-size:10px; color:#8492AC; font-weight:500; }
 .lc-day.is-today .lc-day-num { color:#E5C77B; }
+/* Tiny gold "NEW" / "FULL" label, sat between the day number and the moon
+   disk in the day-row on New Moon and Full Moon days only — quick glance
+   reference for the two moments most people are tracking. */
+.lc-day-phase {
+  font-family:'Jost',sans-serif; font-size:8px; letter-spacing:1.4px;
+  font-weight:600; color:#E5C77B; text-shadow:0 0 4px rgba(229,199,123,.5);
+}
 .lc-day-glyph {
   flex:1; display:flex; align-items:center; justify-content:center;
   font-size:clamp(16px,5vw,25px); line-height:1;
@@ -285,7 +292,10 @@
   // ── Brand + sign metadata ──
   const C = { navy:'#0C2345', navyDeep:'#06122A', panel:'#11305A', panelEdge:'#1C406E',
               gold:'#B6A673', goldBright:'#E5C77B', cream:'#FCF7F1', muted:'#8492AC' };
-  const EL_COLOR = { Fire:'#E8A24C', Earth:'#5BB587', Air:'#D6CFA4', Water:'#4FBEBE' };
+  // Element colours: Fire pushed to a warm red (was orange) and Water pulled
+  // to a true blue (was teal) so it doesn't blur into Earth's green. Earth
+  // and Air stay where they were.
+  const EL_COLOR = { Fire:'#D8463A', Earth:'#5BB587', Air:'#D6CFA4', Water:'#4988D0' };
 
   const SIGNS = {
     Aries:       { glyph:'♈︎', element:'Fire',  modality:'Cardinal', lens:'Startups, IPOs, aggressive moves, entrepreneurship', mood:'A fast, restless mood. The urge is to act now and buy now. Make the move; sleep on the purchase.' },
@@ -494,9 +504,16 @@
       extra = 'style="background:radial-gradient(circle at 50% 42%, ' + col + '33, #11305A);outline:1px solid ' + col + ';box-shadow:0 0 18px ' + col + '55"';
     }
     const glyphStyle = 'color:' + col + ';text-shadow:0 0 ' + (isSelected ? 16 : 8) + 'px ' + col + (isSelected ? 'cc' : '88');
+    // Phase tag: only New and Full get a tiny label (those are the two beats
+    // most people track). The Quarters still get the gold halo on the disk
+    // so they're not invisible — just no text caption.
+    const phaseTag = rec.phase === 'New Moon'  ? '<span class="lc-day-phase">NEW</span>'
+                   : rec.phase === 'Full Moon' ? '<span class="lc-day-phase">FULL</span>'
+                   : '';
     return '<button class="' + cls.join(' ') + '" data-date="' + dateStr + '" ' + extra + ' role="gridcell">'
       + '<div class="lc-day-row">'
       +   '<span class="lc-day-num">' + rec.d + '</span>'
+      +   phaseTag
       +   moonDiskSVG(rec.illum, rec.waxing, 13, rec.phase ? '#E5C77B' : null)
       + '</div>'
       + (rec.events.length ? '<div class="lc-day-star">' + starSVG(9, '#E5C77B') + '</div>' : '')
