@@ -417,9 +417,13 @@
       const d = 'M 0 ' + (-r) + ' A ' + r + ' ' + r + ' 0 0 1 0 ' + r + ' A ' + a + ' ' + r + ' 0 0 ' + sweep + ' 0 ' + (-r) + ' Z';
       body = '<circle r="' + r + '" fill="' + dark + '"/><path d="' + d + '" fill="' + lit + '"/>';
     }
-    const ring = ringColor ? '<circle r="' + (r + 1.7) + '" fill="none" stroke="' + ringColor + '" stroke-width="1"/>' : '';
+    // When ringColor is set, this day is a phase peak (New / First Quarter /
+    // Full / Last Quarter). Make it visually unmistakable from the days on
+    // either side: thicker gold ring + a soft gold drop-shadow glow.
+    const ring = ringColor ? '<circle r="' + (r + 1.7) + '" fill="none" stroke="' + ringColor + '" stroke-width="1.6"/>' : '';
     const flip = !waxing ? ' transform="scale(-1,1)"' : '';
-    return '<svg width="' + size + '" height="' + size + '" viewBox="-12 -12 24 24" style="display:block"' + flip + '>' + ring + body + '</svg>';
+    const style = 'display:block' + (ringColor ? ';filter:drop-shadow(0 0 4px ' + ringColor + ')' : '');
+    return '<svg width="' + size + '" height="' + size + '" viewBox="-12 -12 24 24" style="' + style + '"' + flip + '>' + ring + body + '</svg>';
   }
   function starSVG(size, color) {
     size = size || 10; color = color || '#E5C77B';
@@ -472,6 +476,7 @@
     const parts = Object.entries(EL_COLOR).map(([el, c]) =>
       '<span><span class="lc-legend-dot" style="background:' + c + ';box-shadow:0 0 6px ' + c + '"></span>' + el + '</span>'
     );
+    parts.push('<span>' + moonDiskSVG(1, true, 13, '#E5C77B') + ' New &middot; Quarter &middot; Full moon</span>');
     parts.push('<span><span class="lc-legend-sm"></span>Sign change</span>');
     parts.push('<span>' + starSVG(10, '#E5C77B') + ' Astrological event</span>');
     $legend.innerHTML = parts.join('');
