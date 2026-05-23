@@ -54,7 +54,15 @@ window.MM_CHART_CHECKOUT = {
 
   tiersWrap.addEventListener('click', e => {
     const b = e.target.closest('.mc-tier');
-    if (b) { applyTier(b.dataset.tier); track('money_chart_tier_selected', { tier: b.dataset.tier }); }
+    if (!b) return;
+    applyTier(b.dataset.tier);
+    track('money_chart_tier_selected', { tier: b.dataset.tier });
+    // The tier buttons aren't the conversion — the intake form below is.
+    // Smooth-scroll the form into view immediately so the next step is
+    // unmistakable, instead of leaving the user staring at the buttons
+    // wondering whether anything just happened.
+    const target = document.getElementById('mcRequest');
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
   applyTier('individual');
   track('money_chart_intake_started', { source: document.referrer || 'direct' });
