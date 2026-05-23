@@ -1,0 +1,6 @@
+# Only declares where the serverless functions live + how to bundle them.
+# Does NOT set a build command or publish dir, so the existing static-site
+# deploy settings (configured in the Netlify dashboard) are left untouched.
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
