@@ -1101,6 +1101,14 @@ footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gr
    dropdown to fiddle with on a phone.
    ────────────────────────────────────────────────────────────── */
 .nav-dropdown { position: relative; }
+.nav-dropdown::after {
+  /* Invisible hover-bridge covering the 14px gap between the trigger
+     and the submenu, so the dropdown doesn't snap shut the instant the
+     mouse enters the gap on its way down to the menu. Wide enough to
+     cover the submenu's footprint. */
+  content: ''; position: absolute; top: 100%;
+  left: -100px; right: -100px; height: 18px;
+}
 .nav-trigger {
   font-family: inherit; font-size: .82rem; letter-spacing: .16em;
   text-transform: uppercase; color: var(--mist);

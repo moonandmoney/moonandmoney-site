@@ -263,9 +263,19 @@
       }
     };
 
-    let last = 0;
+    // Pause the heavy canvas redraw while the tab is hidden or the page is
+    // actively scrolling. The starfield was stealing frames from scroll on
+    // slower machines (visible as the page "losing content" mid-scroll). The
+    // sky freezes for a moment then resumes ~220ms after scroll stops.
+    let last = 0, paused = false, pauseT = null;
+    addEventListener('scroll', () => {
+      paused = true;
+      if (pauseT) clearTimeout(pauseT);
+      pauseT = setTimeout(() => { paused = false; }, 220);
+    }, { passive: true });
+    document.addEventListener('visibilitychange', () => { paused = document.hidden; });
     const loop = (t) => {
-      if (t - last > 33) {
+      if (!paused && t - last > 33) {
         last = t;
         ctx.clearRect(0, 0, W, H);
         for (const st of stars) {
