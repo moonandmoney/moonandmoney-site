@@ -97,7 +97,9 @@
     let stars = [], W, H, events = [];
     const resize = () => {
       W = cv.width = innerWidth; H = cv.height = innerHeight;
-      const n = Math.min(150, Math.floor(W * H / 12000));
+      // 90 max (was 150) + a sparser density. Same starfield feel, less work
+      // for the GPU on every frame. The biggest visible perf gain on the page.
+      const n = Math.min(90, Math.floor(W * H / 18000));
       stars = Array.from({ length: n }, () => ({
         x: Math.random() * W, y: Math.random() * H,
         r: Math.random() * 1.7 + .4, a: Math.random(),
@@ -290,19 +292,20 @@
       if (!paused && t - last > 33) {
         last = t;
         ctx.clearRect(0, 0, W, H);
+        // shadowBlur was the most expensive op per frame (a per-star GPU blur).
+        // Dropped it; the b-flag stars now just render slightly brighter, which
+        // reads the same on screen but takes a fraction of the work.
         for (const st of stars) {
           st.a += st.s * st.d;
           if (st.a <= .12 || st.a >= 1) st.d *= -1;
           ctx.beginPath();
           ctx.arc(st.x, st.y, st.r, 0, 6.283);
-          if (st.b) { ctx.shadowBlur = 4; ctx.shadowColor = st.g ? 'rgba(240,212,136,.9)' : 'rgba(255,255,255,.8)'; }
-          else ctx.shadowBlur = 0;
+          const boost = st.b ? 1.25 : 1;
           ctx.fillStyle = st.g
-            ? `rgba(240,212,136,${Math.min(1, st.a * 1.15)})`
-            : `rgba(245,240,228,${Math.min(1, st.a * 1.05)})`;
+            ? `rgba(240,212,136,${Math.min(1, st.a * 1.15 * boost)})`
+            : `rgba(245,240,228,${Math.min(1, st.a * 1.05 * boost)})`;
           ctx.fill();
         }
-        ctx.shadowBlur = 0;
         const now = performance.now();
         events = events.filter(e => (now - e.born) < e.dur);
         for (const e of events) drawEvent(e, now);
