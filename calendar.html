@@ -120,6 +120,22 @@
   0%,100% { opacity:.5; transform:scale(1); }
   50%     { opacity:.85; transform:scale(1.08); }
 }
+/* Sparkle burst when a new date is selected — six little gold motes shoot
+   out from the centre of the glyph. The animation re-fires every render
+   because renderDetail rewrites innerHTML (fresh DOM = fresh animation). */
+.lc-sparkles { position:absolute; inset:0; pointer-events:none; }
+.lc-sparkles b {
+  position:absolute; top:50%; left:50%; width:5px; height:5px;
+  margin:-2.5px 0 0 -2.5px; border-radius:50%;
+  background:#E5C77B; box-shadow:0 0 6px #E5C77B;
+  opacity:0; display:block;
+  animation: lcSparkle 1.1s ease-out forwards;
+}
+@keyframes lcSparkle {
+  0%   { opacity:0; transform:translate(0,0) scale(0); }
+  25%  { opacity:1; }
+  100% { opacity:0; transform:translate(var(--tx), var(--ty)) scale(1); }
+}
 .lc-glyph-big { font-size:62px; position:relative; }
 .lc-moon-row { display:flex; align-items:center; gap:9px; }
 .lc-moon-pct { font-family:'Jost',sans-serif; font-size:10px; color:#8492AC; }
@@ -541,6 +557,11 @@
       +   '<div class="lc-glyph-wrap">'
       +     '<div class="lc-glyph-halo" style="background:radial-gradient(circle, ' + col + '55, transparent 70%)"></div>'
       +     '<div class="lc-glyph-big" style="color:' + col + ';text-shadow:0 0 22px ' + col + '">' + s.glyph + '</div>'
+      +     '<div class="lc-sparkles">'
+      +       [[-38,-30],[40,-34],[-44,22],[46,26],[4,-50],[-8,48]].map(function (p, i) {
+                return '<b style="--tx:' + p[0] + 'px;--ty:' + p[1] + 'px;animation-delay:' + (i * 0.06) + 's"></b>';
+              }).join('')
+      +     '</div>'
       +   '</div>'
       +   '<div class="lc-moon-row">'
       +     moonDiskSVG(rec.illum, rec.waxing, 26, rec.phase ? '#E5C77B' : null)
