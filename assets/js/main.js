@@ -57,15 +57,27 @@
   }, { threshold: 0.12 });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
-  /* ---- Cursor glow ---- */
+  /* ---- Cursor glow ----
+     mousemove fires hundreds of times a second on desktop. The old code
+     wrote .left / .top per event, which triggers layout on a 520x520
+     element — visible as scroll jank / page glitching on slower hardware.
+     Now: batch with requestAnimationFrame so at most one update per frame,
+     and move via transform (composite-only, no layout). */
   if (!reduced && matchMedia('(pointer:fine)').matches) {
     const g = document.createElement('div');
     g.className = 'cursor-glow';
     document.body.appendChild(g);
+    let cx = 0, cy = 0, pending = false;
     window.addEventListener('mousemove', e => {
-      g.style.opacity = '1';
-      g.style.left = e.clientX + 'px';
-      g.style.top = e.clientY + 'px';
+      cx = e.clientX; cy = e.clientY;
+      if (!pending) {
+        pending = true;
+        requestAnimationFrame(() => {
+          g.style.opacity = '1';
+          g.style.transform = `translate3d(${cx}px, ${cy}px, 0) translate(-50%, -50%)`;
+          pending = false;
+        });
+      }
     }, { passive: true });
   }
 

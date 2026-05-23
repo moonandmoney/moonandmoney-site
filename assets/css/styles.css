@@ -56,9 +56,10 @@ a{color:inherit;text-decoration:none;transition:color .35s var(--ease)}
     radial-gradient(700px 700px at 50% 50%,rgba(28,25,36,.55),transparent 70%);
 }
 .cursor-glow{
-  position:fixed;width:520px;height:520px;border-radius:50%;z-index:0;pointer-events:none;
+  position:fixed;top:0;left:0;width:520px;height:520px;border-radius:50%;z-index:0;pointer-events:none;
   background:radial-gradient(circle,rgba(216,177,80,.07),transparent 65%);
   transform:translate(-50%,-50%);transition:opacity .6s var(--ease);opacity:0;
+  will-change:transform;
 }
 main,header,footer{position:relative;z-index:2}
 
