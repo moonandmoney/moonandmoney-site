@@ -4,3 +4,10 @@
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
+
+# Old loyalty page folded into the new Fifth Moon home (one loyalty page,
+# not two). Anyone landing on the legacy URL gets sent on cleanly.
+[[redirects]]
+  from = "/rewards.html"
+  to = "/fifth-moon.html"
+  status = 301

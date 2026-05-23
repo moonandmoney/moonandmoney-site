@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Fifth Moon · Moon &amp; Money</title>
+<meta name="description" content="The Money Chart loyalty card. Four charts mapped, the fifth is on the house. Buy a Money Chart and your card begins.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Moon &amp; Money">
+<meta property="og:image" content="https://moonandmoney.ca/assets/og/social.png?v=20260522">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://moonandmoney.ca/assets/og/social.png?v=20260522">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+<link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/assets/og/apple-touch-icon.png"><meta name="theme-color" content="#070608"><meta name="apple-mobile-web-app-title" content="Moon & Money"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="stylesheet" href="assets/css/styles.css">
+
+<style>
+/* ──────────────────────────────────────────────────────────────
+   The Fifth Moon — page-specific styles
+   Vanilla-JS port of the prototype card. Self-contained block
+   so the rest of the site is untouched.
+   ────────────────────────────────────────────────────────────── */
+.fm-stage { padding: 6px 0 38px; }
+.fm-card {
+  position: relative; max-width: 540px; margin: 0 auto;
+  background: linear-gradient(165deg, #11305A, #0C2345);
+  border: 1px solid #1C406E; border-radius: 6px;
+  padding: 52px 38px 44px; box-sizing: border-box;
+  box-shadow: 0 30px 70px rgba(0,0,0,0.5);
+}
+.fm-bracket { position: absolute; width: 20px; height: 20px; border-color: #B6A673; border-style: solid; }
+.fm-tl { top:16px; left:16px;  border-width: 2px 0 0 2px; }
+.fm-tr { top:16px; right:16px; border-width: 2px 2px 0 0; }
+.fm-bl { bottom:16px; left:16px;  border-width: 0 0 2px 2px; }
+.fm-br { bottom:16px; right:16px; border-width: 0 2px 2px 0; }
+
+.fm-brand { text-align:center; font-family:'Jost',sans-serif; font-size:10.5px; letter-spacing:4px; color:#B6A673; margin-bottom:22px; }
+.fm-title { text-align:center; font-family:'Cormorant Garamond',serif; font-size:44px; font-weight:600; color:#FCF7F1; line-height:1; margin-bottom:16px; }
+
+.fm-divider { display:flex; align-items:center; justify-content:center; gap:9px; }
+.fm-divider .l, .fm-divider .r { height:1px; width:90px; display:inline-block; }
+.fm-divider .l { background:linear-gradient(90deg,transparent,#B6A673); }
+.fm-divider .r { background:linear-gradient(90deg,#B6A673,transparent); }
+.fm-divider .d { width:5px; height:5px; border-radius:50%; background:#B6A673; display:inline-block; }
+.fm-divider.fm-divider--narrow .l, .fm-divider.fm-divider--narrow .r { width:70px; }
+
+.fm-tag { text-align:center; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:17px; color:#E5C77B; margin:18px auto 4px; max-width:340px; line-height:1.4; }
+
+.fm-moons { display:flex; justify-content:center; align-items:center; gap:14px; margin:38px 0 30px; flex-wrap:wrap; }
+.fm-moon { display:flex; flex-direction:column; align-items:center; gap:13px; }
+.fm-moon-disk { position:relative; width:58px; height:58px; }
+.fm-moon-ring, .fm-moon-fill, .fm-moon-dot { position:absolute; }
+.fm-moon-ring { inset:0; border-radius:50%; border:1.5px solid rgba(182,166,115,0.33); transition:border-color .5s ease; }
+.fm-moon-fill { inset:0; border-radius:50%;
+  background:radial-gradient(circle at 34% 30%, #E5C77B, #B6A673 72%);
+  box-shadow: 0 0 13px 1px rgba(182,166,115,0.27);
+  opacity:0; transform:scale(.55);
+  transition:opacity .55s ease, transform .6s cubic-bezier(.34,1.56,.64,1); }
+.fm-moon-dot { top:50%; left:50%; width:3px; height:3px; margin:-1.5px 0 0 -1.5px; border-radius:50%; background:rgba(182,166,115,0.33); opacity:0; }
+.fm-moon-label { font-family:'Jost',sans-serif; font-size:9.5px; letter-spacing:2.6px; font-weight:500; color:rgba(252,247,241,0.33); }
+
+/* State: empty (slots 1–4, not yet earned) */
+.fm-moon--empty .fm-moon-dot { opacity:1; }
+.fm-moon--empty .fm-moon-label { color:rgba(252,247,241,0.33); }
+
+/* State: filled (a paid Money Chart) */
+.fm-moon--filled .fm-moon-ring { border-color:transparent; }
+.fm-moon--filled .fm-moon-fill { opacity:1; transform:scale(1); }
+.fm-moon--filled .fm-moon-label { color:#B6A673; }
+
+/* State: gift-locked (5th slot, not yet unlocked) */
+.fm-moon--gift-locked .fm-moon-disk,
+.fm-moon--gift-ready  .fm-moon-disk { width:76px; height:76px; }
+.fm-moon--gift-locked .fm-moon-ring { border-style:dashed; border-color:rgba(182,166,115,0.4); }
+.fm-moon--gift-locked .fm-moon-label { color:#E5C77B; }
+
+/* State: gift-ready (4 marked, 5th unlocked) */
+.fm-moon--gift-ready .fm-moon-ring { border-color:transparent; }
+.fm-moon--gift-ready .fm-moon-fill { opacity:1; transform:scale(1);
+  box-shadow: 0 0 28px 5px rgba(182,166,115,0.6);
+  animation: fmPulse 2.6s ease-in-out infinite; }
+.fm-moon--gift-ready .fm-moon-label { color:#E5C77B; }
+.fm-orbit {
+  position:absolute; top:50%; left:50%; width:0; height:0; pointer-events:none;
+  animation: fmSpin 24s linear infinite;
+}
+.fm-orbit b { position:absolute; width:3px; height:3px; margin:-1.5px 0 0 -1.5px; border-radius:50%; background:#E5C77B; opacity:.7; display:block; }
+
+.fm-progress { text-align:center; font-family:'Cormorant Garamond',serif; font-size:16px; color:#FCF7F1; line-height:1.5; min-height:24px; }
+.fm-claim { text-align:center; margin-top:24px; animation: fmFade .6s ease; }
+.fm-btn-claim {
+  font-family:'Jost',sans-serif; font-size:12px; letter-spacing:2px; font-weight:500;
+  padding:13px 30px; border-radius:3px; cursor:pointer;
+  background:#B6A673; color:#06122A; border:1px solid #E5C77B;
+  transition:filter .2s ease;
+}
+.fm-btn-claim:hover { filter:brightness(1.08); }
+
+.fm-footnote { margin-top:30px; text-align:center; }
+.fm-foot-name { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:13px; color:#FCF7F1; margin-top:14px; }
+.fm-foot-url  { font-family:'Jost',sans-serif; font-size:9.5px; letter-spacing:1.8px; color:#B6A673; margin-top:4px; }
+
+/* Live demo controls (the card on this page is interactive so visitors
+   can see how the mechanic fills) */
+.fm-controls { margin: 26px auto 0; text-align:center; max-width:540px; }
+.fm-controls button {
+  font-family:'Jost',sans-serif; font-size:11px; letter-spacing:1.6px; font-weight:500;
+  padding:10px 18px; margin:0 5px; border-radius:3px;
+  background:transparent; color:#FCF7F1; border:1px solid #B6A673; cursor:pointer;
+  transition:all .2s ease;
+}
+.fm-controls button:disabled { color:#8492AC; border-color:#1C406E; cursor:default; }
+.fm-controls-note { margin-top:14px; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:13px; color:#8492AC; }
+
+@keyframes fmPulse { 0%,100% { box-shadow: 0 0 24px 4px rgba(182,166,115,0.47); } 50% { box-shadow: 0 0 36px 8px rgba(182,166,115,0.73); } }
+@keyframes fmSpin  { to { transform: rotate(360deg); } }
+@keyframes fmFade  { from { opacity:0; } to { opacity:1; } }
+</style>
+</head>
+<body>
+<canvas id="starfield"></canvas>
+<div class="nebula"></div>
+
+<header class="nav">
+  <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
+  <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="money-chart.html">Money Chart</a></li>
+    <li><a href="wheel.html">Wheel</a></li><li><a href="draw.html">Card</a></li>
+    <li><a href="quiz.html">Quiz</a></li>
+    <li><a href="shop.html">Atelier</a></li><li><a href="pendulum/">Pendulum</a></li>
+    <li><a href="archive.html">Archive</a></li>
+    <li><a href="sessions.html">Sessions</a></li>
+    <li><a href="courses.html">Academy</a></li>
+    <li><a href="about.html">Ethos</a></li>
+    <li><a class="nav-cta" href="https://moonandmoney.substack.com/subscribe" target="_blank">Crescent Club</a></li>
+  </ul>
+</header>
+
+<main>
+  <section class="page-hero">
+    <div class="wrap">
+      <span class="eyebrow">Loyalty</span>
+      <h1>The <span class="gold">Fifth Moon</span></h1>
+      <p>Four Money Charts mapped. The fifth is the Moon's gift to you.</p>
+    </div>
+  </section>
+
+  <section class="fm-stage">
+    <div class="wrap" style="max-width:640px">
+
+      <!-- The card -->
+      <div class="fm-card">
+        <div class="fm-bracket fm-tl"></div>
+        <div class="fm-bracket fm-tr"></div>
+        <div class="fm-bracket fm-bl"></div>
+        <div class="fm-bracket fm-br"></div>
+
+        <div class="fm-brand">MOON &nbsp;&amp;&nbsp; MONEY</div>
+        <div class="fm-title">The Fifth Moon</div>
+        <div class="fm-divider"><span class="l"></span><span class="d"></span><span class="r"></span></div>
+        <div class="fm-tag">Four charts mapped. The fifth is the Moon's gift to you.</div>
+
+        <div class="fm-moons" id="fmMoons"></div>
+
+        <div class="fm-progress" id="fmProgress"></div>
+
+        <div class="fm-claim" id="fmClaimWrap" hidden>
+          <button class="fm-btn-claim" id="fmClaimBtn">CLAIM YOUR FREE CHART</button>
+        </div>
+
+        <div class="fm-footnote">
+          <div class="fm-divider fm-divider--narrow"><span class="l"></span><span class="d"></span><span class="r"></span></div>
+          <div class="fm-foot-name">Moon &amp; Money</div>
+          <div class="fm-foot-url">moonandmoney.ca</div>
+        </div>
+      </div>
+
+      <!-- Live demo controls — this card is interactive so visitors can see how it fills -->
+      <div class="fm-controls">
+        <button id="fmAddBtn">+ Mark a moon</button>
+        <button id="fmResetBtn">Reset</button>
+        <p class="fm-controls-note">Tap to see how the card fills. Your real card begins the moment you order your first Money Chart.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Explainer -->
+  <section>
+    <div class="wrap" style="max-width:720px">
+
+      <div class="reveal" style="margin-bottom:48px">
+        <span class="eyebrow">How it works</span>
+        <h2 class="section-title" style="margin:14px 0 18px">Buy four. The fifth is on the house.</h2>
+        <p>Each Money Chart you order marks one moon on your card. Individual ($55) and Couples ($77) both count.</p>
+        <p style="margin-top:14px">When four moons are marked, the fifth unlocks. Your fifth Money Chart, complimentary.</p>
+        <p style="margin-top:14px;color:var(--mist)">The card stays with you. Moons do not expire. If you buy a fifth paid chart before claiming the gift, it banks toward the next card. The cycle closes only when the gift is claimed, and a fresh card begins.</p>
+      </div>
+
+      <div class="reveal" style="margin-bottom:48px">
+        <span class="eyebrow">What counts</span>
+        <h2 class="section-title" style="margin:14px 0 18px">Money Charts only</h2>
+        <p>The Fifth Moon is for the Money Chart tier specifically. PDFs from the Atelier, Crescent Club memberships, and Moon Cards each keep to their own rhythms. Mixing them would let the math leak.</p>
+        <p style="margin-top:14px;color:var(--mist)">The free fifth is always worth an Individual reading ($55). If you would like the fifth as a Couples chart, the difference is yours to add.</p>
+      </div>
+
+      <div class="reveal" style="margin-bottom:14px">
+        <span class="eyebrow">Begin a card</span>
+        <h2 class="section-title" style="margin:14px 0 18px">Your first Money Chart</h2>
+        <p>Order your first Money Chart and your card begins. The card lives at this page; we'll add the email lookup so you can check your own progress in a moment.</p>
+        <div style="margin-top:24px">
+          <a class="btn btn-gold" href="money-chart.html">Request your Money Chart</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
+        <p>Personal finance, read through astrology. By Luna Wilde.</p>
+      </div>
+      <div class="foot-col"><h4>Explore</h4><a href="wheel.html">Wheel</a><a href="draw.html">Card</a><a href="quiz.html">Quiz</a><a href="shop.html">Atelier</a><a href="pendulum/">Pendulum</a><a href="archive.html">Archive</a><a href="sessions.html">Sessions</a><a href="courses.html">Academy</a><a href="about.html">Ethos</a></div>
+      <div class="foot-col"><h4>Club</h4><a href="https://moonandmoney.substack.com" target="_blank">Substack</a><a href="https://moonandmoney.substack.com/subscribe" target="_blank">Crescent Club</a><a href="fifth-moon.html">The Fifth Moon</a><a href="about.html">Circle <span class="soon">Soon</span></a><a href="about.html">Token <span class="soon">Soon</span></a></div>
+      <div class="foot-col"><h4>Follow</h4><a href="https://moonandmoney.substack.com" target="_blank">@moonmoney</a><a href="archive.html">Notes</a><a href="index.html">Newsletter</a></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="yr"></span> Moon &amp; Money · Luna Wilde. All rights reserved.</span>
+      <span><a href="privacy.html" style="color:inherit;text-decoration:none;opacity:.85">Privacy</a></span>
+      <span>Built in rhythm with the moon ☾</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/zodiac.js"></script>
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
+<script src="assets/js/main.js"></script>
+
+<!-- ───────────────────────────────────────────────────────────────
+     The Fifth Moon — interactive demo
+     Vanilla-JS port of fifth_moon_card.jsx. Keeps the visible
+     behaviour identical: 4 marks fill, the 5th unlocks with the
+     orbiting dots and the claim button. State is in-page only —
+     when the live ledger ships (Phase B) this same UI will read
+     real progress from a small Netlify function keyed by email.
+     ─────────────────────────────────────────────────────────────── */
+</script>
+<script>
+(function () {
+  'use strict';
+  var state = { earned: 0, justClaimed: false };
+
+  var moonsEl    = document.getElementById('fmMoons');
+  var progEl     = document.getElementById('fmProgress');
+  var claimWrap  = document.getElementById('fmClaimWrap');
+  var claimBtn   = document.getElementById('fmClaimBtn');
+  var addBtn     = document.getElementById('fmAddBtn');
+  var resetBtn   = document.getElementById('fmResetBtn');
+
+  // Eight orbit-dots positioned around the gift moon when it unlocks.
+  // (CSS rotates the wrapper; the dots themselves sit on a circle.)
+  function orbitHTML(size) {
+    var r = size / 2 + 13, html = '', a;
+    for (var i = 0; i < 8; i++) {
+      a = (i / 8) * Math.PI * 2;
+      html += '<b style="left:' + (Math.cos(a) * r).toFixed(2) + 'px;top:' + (Math.sin(a) * r).toFixed(2) + 'px"></b>';
+    }
+    return '<div class="fm-orbit">' + html + '</div>';
+  }
+
+  function moonHTML(i) {
+    var isGift = (i === 4);
+    var giftReady = (state.earned === 4 && isGift);
+    var filled = (!isGift && state.earned > i) || giftReady;
+    var kind;
+    if (isGift) kind = giftReady ? 'gift-ready' : 'gift-locked';
+    else kind = filled ? 'filled' : 'empty';
+    var label = isGift ? 'GIFT' : ['I','II','III','IV'][i];
+    return ''
+      + '<div class="fm-moon fm-moon--' + kind + '">'
+      +   '<div class="fm-moon-disk">'
+      +     (giftReady ? orbitHTML(76) : '')
+      +     '<div class="fm-moon-ring"></div>'
+      +     '<div class="fm-moon-fill"></div>'
+      +     '<div class="fm-moon-dot"></div>'
+      +   '</div>'
+      +   '<div class="fm-moon-label">' + label + '</div>'
+      + '</div>';
+  }
+
+  function progressText() {
+    if (state.justClaimed) return 'The fifth moon is yours. A new card begins.';
+    var lines = [
+      'Your card is new. Each Money Chart you order marks a moon.',
+      'One moon marked. Four to go.',
+      'Two moons marked. The card is filling.',
+      'Three moons marked. One more, and the fifth is yours.',
+      'Four moons marked. The fifth Money Chart is on the house.'
+    ];
+    return lines[state.earned];
+  }
+
+  function render() {
+    moonsEl.innerHTML = [0,1,2,3,4].map(moonHTML).join('');
+    progEl.textContent = progressText();
+    claimWrap.hidden = (state.earned !== 4);
+    addBtn.disabled = (state.earned >= 4);
+  }
+
+  addBtn.addEventListener('click', function () {
+    if (state.earned < 4) {
+      state.earned += 1;
+      state.justClaimed = false;
+      render();
+    }
+  });
+  claimBtn.addEventListener('click', function () {
+    if (state.earned === 4) {
+      state.earned = 0;
+      state.justClaimed = true;
+      render();
+    }
+  });
+  resetBtn.addEventListener('click', function () {
+    state.earned = 0;
+    state.justClaimed = false;
+    render();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
