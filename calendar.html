@@ -98,10 +98,6 @@
 }
 .lc-day.is-selected .lc-day-label { color:#FCF7F1; }
 .lc-day-star { position:absolute; top:1px; left:50%; transform:translateX(-50%); }
-.lc-day-ingress {
-  position:absolute; bottom:4px; right:5px; width:4px; height:4px;
-  border-radius:50%; background:#E5C77B; box-shadow:0 0 5px #E5C77B;
-}
 @media (max-width:440px) { .lc-day-label { display:none; } }
 
 .lc-legend {
@@ -110,7 +106,6 @@
 }
 .lc-legend span { display:flex; align-items:center; gap:6px; }
 .lc-legend-dot { width:9px; height:9px; border-radius:50%; }
-.lc-legend-sm  { width:5px; height:5px; border-radius:50%; background:#E5C77B; box-shadow:0 0 5px #E5C77B; }
 
 .lc-detail {
   position:relative; background:linear-gradient(165deg,#11305A,#0C2345);
@@ -495,7 +490,6 @@
       '<span><span class="lc-legend-dot" style="background:' + c + ';box-shadow:0 0 6px ' + c + '"></span>' + el + '</span>'
     );
     parts.push('<span>' + moonDiskSVG(1, true, 13, '#E5C77B') + ' New &middot; Quarter &middot; Full moon</span>');
-    parts.push('<span><span class="lc-legend-sm"></span>Sign change</span>');
     parts.push('<span>' + starSVG(10, '#E5C77B') + ' Astrological event</span>');
     $legend.innerHTML = parts.join('');
   }
@@ -527,7 +521,6 @@
       + (rec.events.length ? '<div class="lc-day-star">' + starSVG(9, '#E5C77B') + '</div>' : '')
       + '<div class="lc-day-glyph" style="' + glyphStyle + '">' + s.glyph + '</div>'
       + '<div class="lc-day-label">' + rec.sign.slice(0, 3) + '</div>'
-      + (rec.ingress ? '<div class="lc-day-ingress"></div>' : '')
       + '</button>';
   }
 
