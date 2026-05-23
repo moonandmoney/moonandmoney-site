@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lunar Money Calendar · Moon &amp; Money</title>
+<meta name="description" content="Every day of 2026, the sign the Moon is moving through and the money mood that comes with it. Phases, ingresses, eclipses, retrogrades, all in your timezone.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Moon &amp; Money">
+<meta property="og:image" content="https://moonandmoney.ca/assets/og/social.png?v=20260522">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://moonandmoney.ca/assets/og/social.png?v=20260522">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+<link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/assets/og/apple-touch-icon.png"><meta name="theme-color" content="#070608"><meta name="apple-mobile-web-app-title" content="Moon & Money"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="stylesheet" href="assets/css/styles.css">
+
+<style>
+/* ──────────────────────────────────────────────────────────────
+   Lunar Money Calendar — page-specific styles (vanilla port of the
+   React prototype). All .lc-* classes are scoped to this page so
+   nothing leaks back into the rest of the site.
+   ────────────────────────────────────────────────────────────── */
+.lc-stage { padding: 4px 0 60px; }
+.lc-wrap { max-width: 680px; margin: 0 auto; position: relative; }
+
+.lc-brand { text-align:center; font-family:'Jost',sans-serif; font-size:10px; letter-spacing:4px; color:#B6A673; }
+.lc-h { text-align:center; font-family:'Cormorant Garamond',serif; font-size:clamp(28px,5vw,40px); font-weight:600; color:#FCF7F1; line-height:1.05; margin-top:6px; }
+.lc-sub { text-align:center; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:15px; color:#E5C77B; margin-top:4px; }
+.lc-tzrow { text-align:center; margin-top:11px; font-family:'Jost',sans-serif; font-size:10px; color:#8492AC; }
+.lc-tzrow select {
+  background:#11305A; color:#E5C77B; border:1px solid #1C406E;
+  border-radius:3px; padding:3px 7px; font-family:'Jost',sans-serif;
+  font-size:10px; cursor:pointer; margin-left:6px;
+}
+
+.lc-monthnav { display:flex; align-items:center; justify-content:center; gap:24px; margin:20px 0 14px; }
+.lc-navbtn {
+  width:38px; height:38px; border-radius:50%; cursor:pointer;
+  background:transparent; border:1px solid #B6A673; color:#E5C77B;
+  font-size:18px; line-height:1; display:flex; align-items:center; justify-content:center;
+  transition:all .2s;
+}
+.lc-navbtn:disabled { border-color:#1C406E; color:#3A4E72; cursor:default; }
+.lc-monthlabel { font-family:'Cormorant Garamond',serif; font-size:26px; color:#FCF7F1; min-width:200px; text-align:center; }
+.lc-monthlabel .yr { color:#B6A673; }
+
+.lc-todayrow { text-align:center; margin-top:-4px; margin-bottom:14px; min-height:18px; }
+.lc-todaybtn {
+  background:transparent; border:0; cursor:pointer;
+  font-family:'Jost',sans-serif; font-size:10px; letter-spacing:1.5px;
+  color:#B6A673; text-transform:uppercase;
+  border-bottom:1px solid #1C406E; padding-bottom:2px;
+}
+
+.lc-weekdays, .lc-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:5px; }
+.lc-weekdays { margin-bottom:5px; }
+.lc-weekdays div {
+  text-align:center; font-family:'Jost',sans-serif;
+  font-size:9px; letter-spacing:1px; color:#8492AC;
+}
+.lc-grid { animation: lcRise .4s ease; }
+@keyframes lcRise { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+
+.lc-day {
+  position:relative; aspect-ratio:1; border:none; cursor:pointer;
+  border-radius:7px; padding:5px 3px 4px;
+  background:linear-gradient(160deg,#11305A,#0C2345);
+  outline:1px solid #1C406E;
+  display:flex; flex-direction:column; align-items:center;
+  transition:all .18s ease; color:inherit;
+}
+.lc-day.is-today { outline:1.5px solid #E5C77B; animation: lcTodayPulse 2.6s ease-in-out infinite; }
+@keyframes lcTodayPulse {
+  0%,100% { box-shadow:0 0 0 rgba(229,199,123,0); }
+  50%     { box-shadow:0 0 14px rgba(229,199,123,.4); }
+}
+.lc-day-row { width:100%; display:flex; justify-content:space-between; align-items:center; }
+.lc-day-num { font-family:'Jost',sans-serif; font-size:10px; color:#8492AC; font-weight:500; }
+.lc-day.is-today .lc-day-num { color:#E5C77B; }
+.lc-day-glyph {
+  flex:1; display:flex; align-items:center; justify-content:center;
+  font-size:clamp(16px,5vw,25px); line-height:1;
+}
+.lc-day-label {
+  font-family:'Jost',sans-serif; font-size:8px; letter-spacing:.8px;
+  color:#8492AC; text-transform:uppercase;
+}
+.lc-day.is-selected .lc-day-label { color:#FCF7F1; }
+.lc-day-star { position:absolute; top:1px; left:50%; transform:translateX(-50%); }
+.lc-day-ingress {
+  position:absolute; bottom:4px; right:5px; width:4px; height:4px;
+  border-radius:50%; background:#E5C77B; box-shadow:0 0 5px #E5C77B;
+}
+@media (max-width:440px) { .lc-day-label { display:none; } }
+
+.lc-legend {
+  display:flex; flex-wrap:wrap; gap:8px 16px; justify-content:center;
+  margin:18px 0 22px; font-family:'Jost',sans-serif; font-size:9.5px; color:#8492AC;
+}
+.lc-legend span { display:flex; align-items:center; gap:6px; }
+.lc-legend-dot { width:9px; height:9px; border-radius:50%; }
+.lc-legend-sm  { width:5px; height:5px; border-radius:50%; background:#E5C77B; box-shadow:0 0 5px #E5C77B; }
+
+.lc-detail {
+  position:relative; background:linear-gradient(165deg,#11305A,#0C2345);
+  border:1px solid #1C406E; border-radius:8px; padding:26px 24px;
+  display:flex; gap:22px; align-items:center; flex-wrap:wrap;
+}
+.lc-detail-left {
+  position:relative; flex:0 0 auto; width:124px;
+  display:flex; flex-direction:column; align-items:center; gap:12px;
+}
+.lc-glyph-wrap { position:relative; width:96px; height:96px; display:flex; align-items:center; justify-content:center; }
+.lc-glyph-halo { position:absolute; inset:6px; border-radius:50%; animation: lcHaloPulse 3.4s ease-in-out infinite; }
+@keyframes lcHaloPulse {
+  0%,100% { opacity:.5; transform:scale(1); }
+  50%     { opacity:.85; transform:scale(1.08); }
+}
+.lc-glyph-big { font-size:62px; position:relative; }
+.lc-moon-row { display:flex; align-items:center; gap:9px; }
+.lc-moon-pct { font-family:'Jost',sans-serif; font-size:10px; color:#8492AC; }
+.lc-detail-right { flex:1 1 240px; min-width:220px; }
+.lc-detail-eyebrow { font-family:'Jost',sans-serif; font-size:10px; letter-spacing:2px; color:#B6A673; }
+.lc-detail-h { font-family:'Cormorant Garamond',serif; font-size:clamp(24px,5vw,32px); color:#FCF7F1; line-height:1.1; margin-top:2px; }
+.lc-detail-meta { font-family:'Jost',sans-serif; font-size:11px; letter-spacing:1px; margin-top:3px; }
+.lc-section { margin-top:13px; }
+.lc-section-eyebrow { font-family:'Jost',sans-serif; font-size:9px; letter-spacing:2px; color:#B6A673; margin-bottom:4px; }
+.lc-mood { font-family:'Cormorant Garamond',serif; font-size:16px; font-style:italic; color:#FCF7F1; line-height:1.5; }
+.lc-event {
+  margin-top:10px; padding:7px 12px; border-radius:4px;
+  font-family:'Cormorant Garamond',serif; font-style:italic; font-size:14px;
+}
+.lc-event.is-phase { background:rgba(229,199,123,.1); border-left:3px solid #E5C77B; color:#E5C77B; }
+.lc-event.is-astro { background:rgba(229,199,123,.1); border-left:3px solid #E5C77B; }
+.lc-event-kind { font-family:'Jost',sans-serif; font-size:8.5px; letter-spacing:2px; color:#B6A673; margin-bottom:2px; font-style:normal; }
+.lc-event-title { color:#E5C77B; }
+.lc-divider { margin-top:14px; padding-top:12px; border-top:1px solid #1C406E; }
+.lc-lens { font-family:'Cormorant Garamond',serif; font-size:15px; color:#FCF7F1; line-height:1.45; }
+
+.lc-foot { text-align:center; margin-top:26px; }
+.lc-foot-tz { font-family:'Jost',sans-serif; font-size:9px; color:#8492AC; letter-spacing:.5px; }
+.lc-foot-name { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:13px; color:#FCF7F1; margin-top:8px; }
+.lc-foot-url  { font-family:'Jost',sans-serif; font-size:9.5px; letter-spacing:1.8px; color:#B6A673; margin-top:3px; }
+</style>
+</head>
+<body>
+<canvas id="starfield"></canvas>
+<div class="nebula"></div>
+
+<header class="nav">
+  <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
+  <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li class="nav-dropdown" aria-expanded="false">
+      <button class="nav-trigger" type="button" aria-haspopup="true" aria-expanded="false">Tools <span class="caret" aria-hidden="true">&#9662;</span></button>
+      <ul class="nav-submenu">
+        <li><a href="pendulum/">Pendulum</a></li>
+        <li><a href="calendar.html">Calendar</a></li>
+        <li><a href="wheel.html">Wheel</a></li>
+        <li><a href="draw.html">Card</a></li>
+        <li><a href="quiz.html">Quiz</a></li>
+      </ul>
+    </li>
+    <li><a href="shop.html">Atelier</a></li>
+    <li><a href="archive.html">Archive</a></li>
+    <li><a href="sessions.html">Sessions</a></li>
+    <li><a href="about.html">Ethos</a></li>
+    <li><a href="https://moonandmoney.substack.com/subscribe" target="_blank">Crescent Club</a></li>
+    <li><a class="nav-cta" href="money-chart.html">Money Chart</a></li>
+  </ul>
+</header>
+
+<main>
+  <section class="page-hero">
+    <div class="wrap">
+      <span class="eyebrow">Tools</span>
+      <h1>The <span class="gold">Lunar Money Calendar</span></h1>
+      <p>The sign she moves through, every day of 2026. Tap any day for its money mood, the phase, and what the sign governs.</p>
+    </div>
+  </section>
+
+  <section class="lc-stage">
+    <div class="wrap">
+      <div class="lc-wrap">
+
+        <!-- header -->
+        <div class="lc-brand">MOON &nbsp;&amp;&nbsp; MONEY</div>
+        <div class="lc-h">Lunar Money Calendar</div>
+        <div class="lc-sub">The sign she moves through, every day of 2026.</div>
+        <div class="lc-tzrow">
+          Times shown for
+          <select id="lcTz" aria-label="Timezone"></select>
+        </div>
+
+        <!-- month nav -->
+        <div class="lc-monthnav">
+          <button class="lc-navbtn" id="lcPrev" aria-label="Previous month">&lsaquo;</button>
+          <div class="lc-monthlabel" id="lcMonth"></div>
+          <button class="lc-navbtn" id="lcNext" aria-label="Next month">&rsaquo;</button>
+        </div>
+
+        <div class="lc-todayrow" id="lcTodayRow"></div>
+
+        <!-- weekday row -->
+        <div class="lc-weekdays">
+          <div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div>
+        </div>
+
+        <!-- grid -->
+        <div class="lc-grid" id="lcGrid" role="grid" aria-label="Calendar grid"></div>
+
+        <!-- legend -->
+        <div class="lc-legend" id="lcLegend"></div>
+
+        <!-- detail -->
+        <div class="lc-detail" id="lcDetail"></div>
+
+        <!-- footer -->
+        <div class="lc-foot">
+          <div class="lc-foot-tz" id="lcFootTz"></div>
+          <div class="lc-foot-name">Moon &amp; Money</div>
+          <div class="lc-foot-url">moonandmoney.ca</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
+        <p>Personal finance, read through astrology. By Luna Wilde.</p>
+      </div>
+      <div class="foot-col"><h4>Explore</h4><a href="wheel.html">Wheel</a><a href="draw.html">Card</a><a href="quiz.html">Quiz</a><a href="shop.html">Atelier</a><a href="pendulum/">Pendulum</a><a href="calendar.html">Calendar</a><a href="archive.html">Archive</a><a href="sessions.html">Sessions</a><a href="courses.html">Academy</a><a href="about.html">Ethos</a></div>
+      <div class="foot-col"><h4>Club</h4><a href="https://moonandmoney.substack.com" target="_blank">Substack</a><a href="https://moonandmoney.substack.com/subscribe" target="_blank">Crescent Club</a><a href="fifth-moon.html">The Fifth Moon</a><a href="about.html">Circle <span class="soon">Soon</span></a><a href="about.html">Token <span class="soon">Soon</span></a></div>
+      <div class="foot-col"><h4>Follow</h4><a href="https://moonandmoney.substack.com" target="_blank">@moonmoney</a><a href="archive.html">Notes</a><a href="index.html">Newsletter</a></div>
+    </div>
+    <div class="foot-bottom">
+      <span>&copy; <span id="yr"></span> Moon &amp; Money &middot; Luna Wilde. All rights reserved.</span>
+      <span><a href="privacy.html" style="color:inherit;text-decoration:none;opacity:.85">Privacy</a></span>
+      <span>Built in rhythm with the moon &#9790;</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/zodiac.js"></script>
+<script>document.getElementById('yr').textContent = new Date().getFullYear();</script>
+<script src="assets/js/main.js"></script>
+
+<!-- ── Lunar Money Calendar data (pre-computed 2026 ephemeris) ── -->
+<script>window.LC_DATA = {"ingresses":[{"t":"2025-12-20T04:52:35Z","sign":"Capricorn"},{"t":"2025-12-22T15:51:50Z","sign":"Aquarius"},{"t":"2025-12-25T01:08:50Z","sign":"Pisces"},{"t":"2025-12-27T08:01:48Z","sign":"Aries"},{"t":"2025-12-29T11:57:21Z","sign":"Taurus"},{"t":"2025-12-31T13:13:05Z","sign":"Gemini"},{"t":"2026-01-02T13:09:00Z","sign":"Cancer"},{"t":"2026-01-04T13:43:27Z","sign":"Leo"},{"t":"2026-01-06T16:56:48Z","sign":"Virgo"},{"t":"2026-01-09T00:05:48Z","sign":"Libra"},{"t":"2026-01-11T10:55:20Z","sign":"Scorpio"},{"t":"2026-01-13T23:33:47Z","sign":"Sagittarius"},{"t":"2026-01-16T11:47:09Z","sign":"Capricorn"},{"t":"2026-01-18T22:17:59Z","sign":"Aquarius"},{"t":"2026-01-21T06:49:40Z","sign":"Pisces"},{"t":"2026-01-23T13:25:41Z","sign":"Aries"},{"t":"2026-01-25T18:05:19Z","sign":"Taurus"},{"t":"2026-01-27T20:55:01Z","sign":"Gemini"},{"t":"2026-01-29T22:31:42Z","sign":"Cancer"},{"t":"2026-02-01T00:08:58Z","sign":"Leo"},{"t":"2026-02-03T03:21:14Z","sign":"Virgo"},{"t":"2026-02-05T09:32:32Z","sign":"Libra"},{"t":"2026-02-07T19:13:08Z","sign":"Scorpio"},{"t":"2026-02-10T07:21:50Z","sign":"Sagittarius"},{"t":"2026-02-12T19:44:22Z","sign":"Capricorn"},{"t":"2026-02-15T06:16:39Z","sign":"Aquarius"},{"t":"2026-02-17T14:09:06Z","sign":"Pisces"},{"t":"2026-02-19T19:39:06Z","sign":"Aries"},{"t":"2026-02-21T23:30:56Z","sign":"Taurus"},{"t":"2026-02-24T02:28:53Z","sign":"Gemini"},{"t":"2026-02-26T05:11:07Z","sign":"Cancer"},{"t":"2026-02-28T08:16:43Z","sign":"Leo"},{"t":"2026-03-02T12:33:44Z","sign":"Virgo"},{"t":"2026-03-04T18:55:47Z","sign":"Libra"},{"t":"2026-03-07T04:01:27Z","sign":"Scorpio"},{"t":"2026-03-09T15:36:30Z","sign":"Sagittarius"},{"t":"2026-03-12T04:07:07Z","sign":"Capricorn"},{"t":"2026-03-14T15:13:31Z","sign":"Aquarius"},{"t":"2026-03-16T23:15:37Z","sign":"Pisces"},{"t":"2026-03-19T04:03:00Z","sign":"Aries"},{"t":"2026-03-21T06:35:07Z","sign":"Taurus"},{"t":"2026-03-23T08:18:41Z","sign":"Gemini"},{"t":"2026-03-25T10:32:57Z","sign":"Cancer"},{"t":"2026-03-27T14:10:11Z","sign":"Leo"},{"t":"2026-03-29T19:33:19Z","sign":"Virgo"},{"t":"2026-04-01T02:50:46Z","sign":"Libra"},{"t":"2026-04-03T12:10:53Z","sign":"Scorpio"},{"t":"2026-04-05T23:31:32Z","sign":"Sagittarius"},{"t":"2026-04-08T12:04:18Z","sign":"Capricorn"},{"t":"2026-04-10T23:55:32Z","sign":"Aquarius"},{"t":"2026-04-13T08:55:34Z","sign":"Pisces"},{"t":"2026-04-15T14:03:57Z","sign":"Aries"},{"t":"2026-04-17T15:57:48Z","sign":"Taurus"},{"t":"2026-04-19T16:17:38Z","sign":"Gemini"},{"t":"2026-04-21T17:00:16Z","sign":"Cancer"},{"t":"2026-04-23T19:40:44Z","sign":"Leo"},{"t":"2026-04-26T01:04:26Z","sign":"Virgo"},{"t":"2026-04-28T09:02:44Z","sign":"Libra"},{"t":"2026-04-30T19:01:50Z","sign":"Scorpio"},{"t":"2026-05-03T06:33:30Z","sign":"Sagittarius"},{"t":"2026-05-05T19:06:07Z","sign":"Capricorn"},{"t":"2026-05-08T07:27:25Z","sign":"Aquarius"},{"t":"2026-05-10T17:39:25Z","sign":"Pisces"},{"t":"2026-05-13T00:03:41Z","sign":"Aries"},{"t":"2026-05-15T02:31:09Z","sign":"Taurus"},{"t":"2026-05-17T02:23:02Z","sign":"Gemini"},{"t":"2026-05-19T01:46:05Z","sign":"Cancer"},{"t":"2026-05-21T02:47:38Z","sign":"Leo"},{"t":"2026-05-23T06:57:00Z","sign":"Virgo"},{"t":"2026-05-25T14:34:09Z","sign":"Libra"},{"t":"2026-05-28T00:52:32Z","sign":"Scorpio"},{"t":"2026-05-30T12:44:49Z","sign":"Sagittarius"},{"t":"2026-06-02T01:19:15Z","sign":"Capricorn"},{"t":"2026-06-04T13:45:37Z","sign":"Aquarius"},{"t":"2026-06-07T00:42:46Z","sign":"Pisces"},{"t":"2026-06-09T08:33:20Z","sign":"Aries"},{"t":"2026-06-11T12:28:09Z","sign":"Taurus"},{"t":"2026-06-13T13:06:02Z","sign":"Gemini"},{"t":"2026-06-15T12:14:15Z","sign":"Cancer"},{"t":"2026-06-17T12:05:06Z","sign":"Leo"},{"t":"2026-06-19T14:36:53Z","sign":"Virgo"},{"t":"2026-06-21T20:54:55Z","sign":"Libra"},{"t":"2026-06-24T06:43:17Z","sign":"Scorpio"},{"t":"2026-06-26T18:40:55Z","sign":"Sagittarius"},{"t":"2026-06-29T07:18:36Z","sign":"Capricorn"},{"t":"2026-07-01T19:32:51Z","sign":"Aquarius"},{"t":"2026-07-04T06:30:11Z","sign":"Pisces"},{"t":"2026-07-06T15:07:04Z","sign":"Aries"},{"t":"2026-07-08T20:30:44Z","sign":"Taurus"},{"t":"2026-07-10T22:41:37Z","sign":"Gemini"},{"t":"2026-07-12T22:46:29Z","sign":"Cancer"},{"t":"2026-07-14T22:35:12Z","sign":"Leo"},{"t":"2026-07-17T00:07:08Z","sign":"Virgo"},{"t":"2026-07-19T04:56:34Z","sign":"Libra"},{"t":"2026-07-21T13:34:34Z","sign":"Scorpio"},{"t":"2026-07-24T01:07:00Z","sign":"Sagittarius"},{"t":"2026-07-26T13:44:18Z","sign":"Capricorn"},{"t":"2026-07-29T01:46:11Z","sign":"Aquarius"},{"t":"2026-07-31T12:13:52Z","sign":"Pisces"},{"t":"2026-08-02T20:36:47Z","sign":"Aries"},{"t":"2026-08-05T02:35:25Z","sign":"Taurus"},{"t":"2026-08-07T06:07:47Z","sign":"Gemini"},{"t":"2026-08-09T07:45:41Z","sign":"Cancer"},{"t":"2026-08-11T08:38:08Z","sign":"Leo"},{"t":"2026-08-13T10:18:08Z","sign":"Virgo"},{"t":"2026-08-15T14:19:43Z","sign":"Libra"},{"t":"2026-08-17T21:46:04Z","sign":"Scorpio"},{"t":"2026-08-20T08:30:07Z","sign":"Sagittarius"},{"t":"2026-08-22T20:59:07Z","sign":"Capricorn"},{"t":"2026-08-25T09:01:41Z","sign":"Aquarius"},{"t":"2026-08-27T19:03:45Z","sign":"Pisces"},{"t":"2026-08-30T02:37:47Z","sign":"Aries"},{"t":"2026-09-01T08:01:18Z","sign":"Taurus"},{"t":"2026-09-03T11:47:16Z","sign":"Gemini"},{"t":"2026-09-05T14:30:26Z","sign":"Cancer"},{"t":"2026-09-07T16:49:27Z","sign":"Leo"},{"t":"2026-09-09T19:35:04Z","sign":"Virgo"},{"t":"2026-09-11T23:51:43Z","sign":"Libra"},{"t":"2026-09-14T06:43:52Z","sign":"Scorpio"},{"t":"2026-09-16T16:41:15Z","sign":"Sagittarius"},{"t":"2026-09-19T04:54:52Z","sign":"Capricorn"},{"t":"2026-09-21T17:14:24Z","sign":"Aquarius"},{"t":"2026-09-24T03:23:38Z","sign":"Pisces"},{"t":"2026-09-26T10:23:06Z","sign":"Aries"},{"t":"2026-09-28T14:40:03Z","sign":"Taurus"},{"t":"2026-09-30T17:26:02Z","sign":"Gemini"},{"t":"2026-10-02T19:54:06Z","sign":"Cancer"},{"t":"2026-10-04T22:54:12Z","sign":"Leo"},{"t":"2026-10-07T02:52:35Z","sign":"Virgo"},{"t":"2026-10-09T08:10:33Z","sign":"Libra"},{"t":"2026-10-11T15:21:17Z","sign":"Scorpio"},{"t":"2026-10-14T00:59:27Z","sign":"Sagittarius"},{"t":"2026-10-16T12:57:02Z","sign":"Capricorn"},{"t":"2026-10-19T01:39:55Z","sign":"Aquarius"},{"t":"2026-10-21T12:35:09Z","sign":"Pisces"},{"t":"2026-10-23T19:53:32Z","sign":"Aries"},{"t":"2026-10-25T23:34:40Z","sign":"Taurus"},{"t":"2026-10-28T01:01:53Z","sign":"Gemini"},{"t":"2026-10-30T02:05:34Z","sign":"Cancer"},{"t":"2026-11-01T04:18:13Z","sign":"Leo"},{"t":"2026-11-03T08:27:45Z","sign":"Virgo"},{"t":"2026-11-05T14:38:19Z","sign":"Libra"},{"t":"2026-11-07T22:39:58Z","sign":"Scorpio"},{"t":"2026-11-10T08:35:46Z","sign":"Sagittarius"},{"t":"2026-11-12T20:27:17Z","sign":"Capricorn"},{"t":"2026-11-15T09:24:15Z","sign":"Aquarius"},{"t":"2026-11-17T21:19:25Z","sign":"Pisces"},{"t":"2026-11-20T05:52:12Z","sign":"Aries"},{"t":"2026-11-22T10:09:42Z","sign":"Taurus"},{"t":"2026-11-24T11:09:40Z","sign":"Gemini"},{"t":"2026-11-26T10:51:09Z","sign":"Cancer"},{"t":"2026-11-28T11:20:35Z","sign":"Leo"},{"t":"2026-11-30T14:12:38Z","sign":"Virgo"},{"t":"2026-12-02T20:03:53Z","sign":"Libra"},{"t":"2026-12-05T04:35:04Z","sign":"Scorpio"},{"t":"2026-12-07T15:06:34Z","sign":"Sagittarius"},{"t":"2026-12-10T03:08:40Z","sign":"Capricorn"},{"t":"2026-12-12T16:05:38Z","sign":"Aquarius"},{"t":"2026-12-15T04:35:38Z","sign":"Pisces"},{"t":"2026-12-17T14:34:21Z","sign":"Aries"},{"t":"2026-12-19T20:29:42Z","sign":"Taurus"},{"t":"2026-12-21T22:27:07Z","sign":"Gemini"},{"t":"2026-12-23T21:58:23Z","sign":"Cancer"},{"t":"2026-12-25T21:12:17Z","sign":"Leo"},{"t":"2026-12-27T22:12:51Z","sign":"Virgo"},{"t":"2026-12-30T02:26:41Z","sign":"Libra"},{"t":"2027-01-01T10:15:54Z","sign":"Scorpio"},{"t":"2027-01-03T20:57:01Z","sign":"Sagittarius"}],"phases":[{"t":"2025-12-20T01:43:22Z","name":"New Moon"},{"t":"2025-12-27T19:09:52Z","name":"First Quarter"},{"t":"2026-01-03T10:02:55Z","name":"Full Moon"},{"t":"2026-01-10T15:48:24Z","name":"Last Quarter"},{"t":"2026-01-18T19:52:01Z","name":"New Moon"},{"t":"2026-01-26T04:47:23Z","name":"First Quarter"},{"t":"2026-02-01T22:09:14Z","name":"Full Moon"},{"t":"2026-02-09T12:43:08Z","name":"Last Quarter"},{"t":"2026-02-17T12:01:11Z","name":"New Moon"},{"t":"2026-02-24T12:27:35Z","name":"First Quarter"},{"t":"2026-03-03T11:37:56Z","name":"Full Moon"},{"t":"2026-03-11T09:38:31Z","name":"Last Quarter"},{"t":"2026-03-19T01:23:29Z","name":"New Moon"},{"t":"2026-03-25T19:17:44Z","name":"First Quarter"},{"t":"2026-04-02T02:12:01Z","name":"Full Moon"},{"t":"2026-04-10T04:51:40Z","name":"Last Quarter"},{"t":"2026-04-17T11:51:49Z","name":"New Moon"},{"t":"2026-04-24T02:31:46Z","name":"First Quarter"},{"t":"2026-05-01T17:23:10Z","name":"Full Moon"},{"t":"2026-05-09T21:10:28Z","name":"Last Quarter"},{"t":"2026-05-16T20:01:03Z","name":"New Moon"},{"t":"2026-05-23T11:10:56Z","name":"First Quarter"},{"t":"2026-05-31T08:45:11Z","name":"Full Moon"},{"t":"2026-06-08T10:00:29Z","name":"Last Quarter"},{"t":"2026-06-15T02:54:11Z","name":"New Moon"},{"t":"2026-06-21T21:55:23Z","name":"First Quarter"},{"t":"2026-06-29T23:56:42Z","name":"Full Moon"},{"t":"2026-07-07T19:29:00Z","name":"Last Quarter"},{"t":"2026-07-14T09:43:37Z","name":"New Moon"},{"t":"2026-07-21T11:05:36Z","name":"First Quarter"},{"t":"2026-07-29T14:35:46Z","name":"Full Moon"},{"t":"2026-08-06T02:21:28Z","name":"Last Quarter"},{"t":"2026-08-12T17:36:44Z","name":"New Moon"},{"t":"2026-08-20T02:46:24Z","name":"First Quarter"},{"t":"2026-08-28T04:18:32Z","name":"Full Moon"},{"t":"2026-09-04T07:51:13Z","name":"Last Quarter"},{"t":"2026-09-11T03:27:02Z","name":"New Moon"},{"t":"2026-09-18T20:43:50Z","name":"First Quarter"},{"t":"2026-09-26T16:49:02Z","name":"Full Moon"},{"t":"2026-10-03T13:25:04Z","name":"Last Quarter"},{"t":"2026-10-10T15:50:06Z","name":"New Moon"},{"t":"2026-10-18T16:12:41Z","name":"First Quarter"},{"t":"2026-10-26T04:11:48Z","name":"Full Moon"},{"t":"2026-11-01T20:28:28Z","name":"Last Quarter"},{"t":"2026-11-09T07:02:08Z","name":"New Moon"},{"t":"2026-11-17T11:47:47Z","name":"First Quarter"},{"t":"2026-11-24T14:53:36Z","name":"Full Moon"},{"t":"2026-12-01T06:08:39Z","name":"Last Quarter"},{"t":"2026-12-09T00:51:52Z","name":"New Moon"},{"t":"2026-12-17T05:42:40Z","name":"First Quarter"},{"t":"2026-12-24T01:28:16Z","name":"Full Moon"},{"t":"2026-12-30T18:59:29Z","name":"Last Quarter"}],"events":[{"t":"2026-01-20T01:44:56Z","kind":"season","title":"Aquarius season begins","sign":"Aquarius"},{"t":"2026-02-17T12:11:53Z","kind":"eclipse","title":"Annular Solar Eclipse in Aquarius","sign":"Aquarius"},{"t":"2026-02-18T15:51:55Z","kind":"season","title":"Pisces season begins","sign":"Pisces"},{"t":"2026-02-26T06:48:13Z","kind":"retrograde","title":"Mercury stations retrograde in Pisces","sign":"Pisces"},{"t":"2026-03-03T11:33:42Z","kind":"eclipse","title":"Total Lunar Eclipse in Virgo","sign":"Virgo"},{"t":"2026-03-20T14:45:59Z","kind":"season","title":"March Equinox  \u00b7  Aries season begins","sign":"Aries"},{"t":"2026-03-20T19:32:55Z","kind":"retrograde","title":"Mercury stations direct in Pisces","sign":"Pisces"},{"t":"2026-04-20T01:39:08Z","kind":"season","title":"Taurus season begins","sign":"Taurus"},{"t":"2026-05-21T00:36:44Z","kind":"season","title":"Gemini season begins","sign":"Gemini"},{"t":"2026-06-21T08:24:31Z","kind":"season","title":"June Solstice  \u00b7  Cancer season begins","sign":"Cancer"},{"t":"2026-06-29T17:36:00Z","kind":"retrograde","title":"Mercury stations retrograde in Cancer","sign":"Cancer"},{"t":"2026-07-22T19:13:05Z","kind":"season","title":"Leo season begins","sign":"Leo"},{"t":"2026-07-23T22:57:56Z","kind":"retrograde","title":"Mercury stations direct in Cancer","sign":"Cancer"},{"t":"2026-08-12T17:45:57Z","kind":"eclipse","title":"Total Solar Eclipse in Leo","sign":"Leo"},{"t":"2026-08-23T02:18:49Z","kind":"season","title":"Virgo season begins","sign":"Virgo"},{"t":"2026-08-28T04:12:58Z","kind":"eclipse","title":"Partial Lunar Eclipse in Pisces","sign":"Pisces"},{"t":"2026-09-23T00:05:13Z","kind":"season","title":"September Equinox  \u00b7  Libra season begins","sign":"Libra"},{"t":"2026-10-03T07:15:51Z","kind":"retrograde","title":"Venus stations retrograde in Scorpio","sign":"Scorpio"},{"t":"2026-10-23T09:37:57Z","kind":"season","title":"Scorpio season begins","sign":"Scorpio"},{"t":"2026-10-24T07:12:48Z","kind":"retrograde","title":"Mercury stations retrograde in Scorpio","sign":"Scorpio"},{"t":"2026-11-13T15:53:56Z","kind":"retrograde","title":"Mercury stations direct in Scorpio","sign":"Scorpio"},{"t":"2026-11-14T00:27:31Z","kind":"retrograde","title":"Venus stations direct in Libra","sign":"Libra"},{"t":"2026-11-22T07:23:21Z","kind":"season","title":"Sagittarius season begins","sign":"Sagittarius"},{"t":"2026-12-21T20:50:14Z","kind":"season","title":"December Solstice  \u00b7  Capricorn season begins","sign":"Capricorn"}],"illum":{"2026-01-01":{"k":0.946,"wax":true},"2026-01-02":{"k":0.988,"wax":true},"2026-01-03":{"k":1.0,"wax":false},"2026-01-04":{"k":0.983,"wax":false},"2026-01-05":{"k":0.941,"wax":false},"2026-01-06":{"k":0.877,"wax":false},"2026-01-07":{"k":0.798,"wax":false},"2026-01-08":{"k":0.708,"wax":false},"2026-01-09":{"k":0.613,"wax":false},"2026-01-10":{"k":0.515,"wax":false},"2026-01-11":{"k":0.419,"wax":false},"2026-01-12":{"k":0.328,"wax":false},"2026-01-13":{"k":0.243,"wax":false},"2026-01-14":{"k":0.167,"wax":false},"2026-01-15":{"k":0.102,"wax":false},"2026-01-16":{"k":0.052,"wax":false},"2026-01-17":{"k":0.017,"wax":false},"2026-01-18":{"k":0.001,"wax":false},"2026-01-19":{"k":0.005,"wax":true},"2026-01-20":{"k":0.029,"wax":true},"2026-01-21":{"k":0.073,"wax":true},"2026-01-22":{"k":0.137,"wax":true},"2026-01-23":{"k":0.218,"wax":true},"2026-01-24":{"k":0.314,"wax":true},"2026-01-25":{"k":0.421,"wax":true},"2026-01-26":{"k":0.534,"wax":true},"2026-01-27":{"k":0.647,"wax":true},"2026-01-28":{"k":0.754,"wax":true},"2026-01-29":{"k":0.847,"wax":true},"2026-01-30":{"k":0.922,"wax":true},"2026-01-31":{"k":0.973,"wax":true},"2026-02-01":{"k":0.998,"wax":true},"2026-02-02":{"k":0.996,"wax":false},"2026-02-03":{"k":0.969,"wax":false},"2026-02-04":{"k":0.921,"wax":false},"2026-02-05":{"k":0.856,"wax":false},"2026-02-06":{"k":0.778,"wax":false},"2026-02-07":{"k":0.69,"wax":false},"2026-02-08":{"k":0.598,"wax":false},"2026-02-09":{"k":0.503,"wax":false},"2026-02-10":{"k":0.409,"wax":false},"2026-02-11":{"k":0.318,"wax":false},"2026-02-12":{"k":0.232,"wax":false},"2026-02-13":{"k":0.156,"wax":false},"2026-02-14":{"k":0.092,"wax":false},"2026-02-15":{"k":0.043,"wax":false},"2026-02-16":{"k":0.011,"wax":false},"2026-02-17":{"k":0.0,"wax":false},"2026-02-18":{"k":0.011,"wax":true},"2026-02-19":{"k":0.046,"wax":true},"2026-02-20":{"k":0.103,"wax":true},"2026-02-21":{"k":0.181,"wax":true},"2026-02-22":{"k":0.276,"wax":true},"2026-02-23":{"k":0.384,"wax":true},"2026-02-24":{"k":0.498,"wax":true},"2026-02-25":{"k":0.612,"wax":true},"2026-02-26":{"k":0.72,"wax":true},"2026-02-27":{"k":0.816,"wax":true},"2026-02-28":{"k":0.895,"wax":true},"2026-03-01":{"k":0.954,"wax":true},"2026-03-02":{"k":0.989,"wax":true},"2026-03-03":{"k":1.0,"wax":false},"2026-03-04":{"k":0.988,"wax":false},"2026-03-05":{"k":0.956,"wax":false},"2026-03-06":{"k":0.905,"wax":false},"2026-03-07":{"k":0.84,"wax":false},"2026-03-08":{"k":0.763,"wax":false},"2026-03-09":{"k":0.677,"wax":false},"2026-03-10":{"k":0.585,"wax":false},"2026-03-11":{"k":0.491,"wax":false},"2026-03-12":{"k":0.396,"wax":false},"2026-03-13":{"k":0.304,"wax":false},"2026-03-14":{"k":0.217,"wax":false},"2026-03-15":{"k":0.14,"wax":false},"2026-03-16":{"k":0.076,"wax":false},"2026-03-17":{"k":0.03,"wax":false},"2026-03-18":{"k":0.004,"wax":false},"2026-03-19":{"k":0.003,"wax":true},"2026-03-20":{"k":0.027,"wax":true},"2026-03-21":{"k":0.078,"wax":true},"2026-03-22":{"k":0.152,"wax":true},"2026-03-23":{"k":0.245,"wax":true},"2026-03-24":{"k":0.352,"wax":true},"2026-03-25":{"k":0.465,"wax":true},"2026-03-26":{"k":0.579,"wax":true},"2026-03-27":{"k":0.687,"wax":true},"2026-03-28":{"k":0.784,"wax":true},"2026-03-29":{"k":0.866,"wax":true},"2026-03-30":{"k":0.93,"wax":true},"2026-03-31":{"k":0.974,"wax":true},"2026-04-01":{"k":0.996,"wax":true},"2026-04-02":{"k":0.998,"wax":false},"2026-04-03":{"k":0.98,"wax":false},"2026-04-04":{"k":0.944,"wax":false},"2026-04-05":{"k":0.891,"wax":false},"2026-04-06":{"k":0.825,"wax":false},"2026-04-07":{"k":0.747,"wax":false},"2026-04-08":{"k":0.66,"wax":false},"2026-04-09":{"k":0.567,"wax":false},"2026-04-10":{"k":0.471,"wax":false},"2026-04-11":{"k":0.374,"wax":false},"2026-04-12":{"k":0.28,"wax":false},"2026-04-13":{"k":0.191,"wax":false},"2026-04-14":{"k":0.114,"wax":false},"2026-04-15":{"k":0.053,"wax":false},"2026-04-16":{"k":0.014,"wax":false},"2026-04-17":{"k":0.0,"wax":true},"2026-04-18":{"k":0.015,"wax":true},"2026-04-19":{"k":0.058,"wax":true},"2026-04-20":{"k":0.127,"wax":true},"2026-04-21":{"k":0.217,"wax":true},"2026-04-22":{"k":0.321,"wax":true},"2026-04-23":{"k":0.432,"wax":true},"2026-04-24":{"k":0.544,"wax":true},"2026-04-25":{"k":0.65,"wax":true},"2026-04-26":{"k":0.748,"wax":true},"2026-04-27":{"k":0.832,"wax":true},"2026-04-28":{"k":0.901,"wax":true},"2026-04-29":{"k":0.953,"wax":true},"2026-04-30":{"k":0.986,"wax":true},"2026-05-01":{"k":1.0,"wax":true},"2026-05-02":{"k":0.994,"wax":false},"2026-05-03":{"k":0.971,"wax":false},"2026-05-04":{"k":0.93,"wax":false},"2026-05-05":{"k":0.875,"wax":false},"2026-05-06":{"k":0.805,"wax":false},"2026-05-07":{"k":0.725,"wax":false},"2026-05-08":{"k":0.635,"wax":false},"2026-05-09":{"k":0.538,"wax":false},"2026-05-10":{"k":0.438,"wax":false},"2026-05-11":{"k":0.337,"wax":false},"2026-05-12":{"k":0.24,"wax":false},"2026-05-13":{"k":0.152,"wax":false},"2026-05-14":{"k":0.079,"wax":false},"2026-05-15":{"k":0.027,"wax":false},"2026-05-16":{"k":0.002,"wax":false},"2026-05-17":{"k":0.007,"wax":true},"2026-05-18":{"k":0.042,"wax":true},"2026-05-19":{"k":0.105,"wax":true},"2026-05-20":{"k":0.19,"wax":true},"2026-05-21":{"k":0.289,"wax":true},"2026-05-22":{"k":0.395,"wax":true},"2026-05-23":{"k":0.504,"wax":true},"2026-05-24":{"k":0.609,"wax":true},"2026-05-25":{"k":0.706,"wax":true},"2026-05-26":{"k":0.793,"wax":true},"2026-05-27":{"k":0.867,"wax":true},"2026-05-28":{"k":0.926,"wax":true},"2026-05-29":{"k":0.968,"wax":true},"2026-05-30":{"k":0.993,"wax":true},"2026-05-31":{"k":1.0,"wax":false},"2026-06-01":{"k":0.988,"wax":false},"2026-06-02":{"k":0.959,"wax":false},"2026-06-03":{"k":0.913,"wax":false},"2026-06-04":{"k":0.852,"wax":false},"2026-06-05":{"k":0.777,"wax":false},"2026-06-06":{"k":0.69,"wax":false},"2026-06-07":{"k":0.594,"wax":false},"2026-06-08":{"k":0.491,"wax":false},"2026-06-09":{"k":0.385,"wax":false},"2026-06-10":{"k":0.281,"wax":false},"2026-06-11":{"k":0.184,"wax":false},"2026-06-12":{"k":0.102,"wax":false},"2026-06-13":{"k":0.04,"wax":false},"2026-06-14":{"k":0.006,"wax":false},"2026-06-15":{"k":0.002,"wax":true},"2026-06-16":{"k":0.029,"wax":true},"2026-06-17":{"k":0.084,"wax":true},"2026-06-18":{"k":0.16,"wax":true},"2026-06-19":{"k":0.252,"wax":true},"2026-06-20":{"k":0.353,"wax":true},"2026-06-21":{"k":0.457,"wax":true},"2026-06-22":{"k":0.56,"wax":true},"2026-06-23":{"k":0.658,"wax":true},"2026-06-24":{"k":0.747,"wax":true},"2026-06-25":{"k":0.827,"wax":true},"2026-06-26":{"k":0.893,"wax":true},"2026-06-27":{"k":0.944,"wax":true},"2026-06-28":{"k":0.98,"wax":true},"2026-06-29":{"k":0.998,"wax":true},"2026-06-30":{"k":0.998,"wax":false},"2026-07-01":{"k":0.979,"wax":false},"2026-07-02":{"k":0.943,"wax":false},"2026-07-03":{"k":0.889,"wax":false},"2026-07-04":{"k":0.819,"wax":false},"2026-07-05":{"k":0.735,"wax":false},"2026-07-06":{"k":0.639,"wax":false},"2026-07-07":{"k":0.534,"wax":false},"2026-07-08":{"k":0.424,"wax":false},"2026-07-09":{"k":0.315,"wax":false},"2026-07-10":{"k":0.212,"wax":false},"2026-07-11":{"k":0.123,"wax":false},"2026-07-12":{"k":0.054,"wax":false},"2026-07-13":{"k":0.012,"wax":false},"2026-07-14":{"k":0.0,"wax":true},"2026-07-15":{"k":0.018,"wax":true},"2026-07-16":{"k":0.062,"wax":true},"2026-07-17":{"k":0.128,"wax":true},"2026-07-18":{"k":0.211,"wax":true},"2026-07-19":{"k":0.305,"wax":true},"2026-07-20":{"k":0.404,"wax":true},"2026-07-21":{"k":0.504,"wax":true},"2026-07-22":{"k":0.602,"wax":true},"2026-07-23":{"k":0.694,"wax":true},"2026-07-24":{"k":0.778,"wax":true},"2026-07-25":{"k":0.852,"wax":true},"2026-07-26":{"k":0.913,"wax":true},"2026-07-27":{"k":0.959,"wax":true},"2026-07-28":{"k":0.988,"wax":true},"2026-07-29":{"k":1.0,"wax":true},"2026-07-30":{"k":0.992,"wax":false},"2026-07-31":{"k":0.965,"wax":false},"2026-08-01":{"k":0.918,"wax":false},"2026-08-02":{"k":0.853,"wax":false},"2026-08-03":{"k":0.771,"wax":false},"2026-08-04":{"k":0.674,"wax":false},"2026-08-05":{"k":0.567,"wax":false},"2026-08-06":{"k":0.454,"wax":false},"2026-08-07":{"k":0.341,"wax":false},"2026-08-08":{"k":0.235,"wax":false},"2026-08-09":{"k":0.142,"wax":false},"2026-08-10":{"k":0.069,"wax":false},"2026-08-11":{"k":0.021,"wax":false},"2026-08-12":{"k":0.001,"wax":false},"2026-08-13":{"k":0.008,"wax":true},"2026-08-14":{"k":0.041,"wax":true},"2026-08-15":{"k":0.096,"wax":true},"2026-08-16":{"k":0.167,"wax":true},"2026-08-17":{"k":0.252,"wax":true},"2026-08-18":{"k":0.344,"wax":true},"2026-08-19":{"k":0.44,"wax":true},"2026-08-20":{"k":0.537,"wax":true},"2026-08-21":{"k":0.631,"wax":true},"2026-08-22":{"k":0.72,"wax":true},"2026-08-23":{"k":0.801,"wax":true},"2026-08-24":{"k":0.872,"wax":true},"2026-08-25":{"k":0.929,"wax":true},"2026-08-26":{"k":0.971,"wax":true},"2026-08-27":{"k":0.995,"wax":true},"2026-08-28":{"k":0.999,"wax":false},"2026-08-29":{"k":0.981,"wax":false},"2026-08-30":{"k":0.941,"wax":false},"2026-08-31":{"k":0.88,"wax":false},"2026-09-01":{"k":0.8,"wax":false},"2026-09-02":{"k":0.703,"wax":false},"2026-09-03":{"k":0.594,"wax":false},"2026-09-04":{"k":0.48,"wax":false},"2026-09-05":{"k":0.366,"wax":false},"2026-09-06":{"k":0.258,"wax":false},"2026-09-07":{"k":0.164,"wax":false},"2026-09-08":{"k":0.088,"wax":false},"2026-09-09":{"k":0.034,"wax":false},"2026-09-10":{"k":0.005,"wax":false},"2026-09-11":{"k":0.002,"wax":true},"2026-09-12":{"k":0.022,"wax":true},"2026-09-13":{"k":0.064,"wax":true},"2026-09-14":{"k":0.123,"wax":true},"2026-09-15":{"k":0.197,"wax":true},"2026-09-16":{"k":0.281,"wax":true},"2026-09-17":{"k":0.371,"wax":true},"2026-09-18":{"k":0.465,"wax":true},"2026-09-19":{"k":0.56,"wax":true},"2026-09-20":{"k":0.653,"wax":true},"2026-09-21":{"k":0.741,"wax":true},"2026-09-22":{"k":0.821,"wax":true},"2026-09-23":{"k":0.891,"wax":true},"2026-09-24":{"k":0.946,"wax":true},"2026-09-25":{"k":0.983,"wax":true},"2026-09-26":{"k":1.0,"wax":true},"2026-09-27":{"k":0.992,"wax":false},"2026-09-28":{"k":0.96,"wax":false},"2026-09-29":{"k":0.904,"wax":false},"2026-09-30":{"k":0.825,"wax":false},"2026-10-01":{"k":0.729,"wax":false},"2026-10-02":{"k":0.621,"wax":false},"2026-10-03":{"k":0.507,"wax":false},"2026-10-04":{"k":0.393,"wax":false},"2026-10-05":{"k":0.286,"wax":false},"2026-10-06":{"k":0.191,"wax":false},"2026-10-07":{"k":0.112,"wax":false},"2026-10-08":{"k":0.052,"wax":false},"2026-10-09":{"k":0.015,"wax":false},"2026-10-10":{"k":0.0,"wax":false},"2026-10-11":{"k":0.008,"wax":true},"2026-10-12":{"k":0.036,"wax":true},"2026-10-13":{"k":0.082,"wax":true},"2026-10-14":{"k":0.143,"wax":true},"2026-10-15":{"k":0.217,"wax":true},"2026-10-16":{"k":0.3,"wax":true},"2026-10-17":{"k":0.389,"wax":true},"2026-10-18":{"k":0.483,"wax":true},"2026-10-19":{"k":0.579,"wax":true},"2026-10-20":{"k":0.672,"wax":true},"2026-10-21":{"k":0.762,"wax":true},"2026-10-22":{"k":0.843,"wax":true},"2026-10-23":{"k":0.912,"wax":true},"2026-10-24":{"k":0.964,"wax":true},"2026-10-25":{"k":0.994,"wax":true},"2026-10-26":{"k":0.999,"wax":false},"2026-10-27":{"k":0.976,"wax":false},"2026-10-28":{"k":0.926,"wax":false},"2026-10-29":{"k":0.851,"wax":false},"2026-10-30":{"k":0.758,"wax":false},"2026-10-31":{"k":0.652,"wax":false},"2026-11-01":{"k":0.54,"wax":false},"2026-11-02":{"k":0.428,"wax":false},"2026-11-03":{"k":0.322,"wax":false},"2026-11-04":{"k":0.225,"wax":false},"2026-11-05":{"k":0.143,"wax":false},"2026-11-06":{"k":0.078,"wax":false},"2026-11-07":{"k":0.032,"wax":false},"2026-11-08":{"k":0.006,"wax":false},"2026-11-09":{"k":0.0,"wax":true},"2026-11-10":{"k":0.014,"wax":true},"2026-11-11":{"k":0.046,"wax":true},"2026-11-12":{"k":0.094,"wax":true},"2026-11-13":{"k":0.156,"wax":true},"2026-11-14":{"k":0.23,"wax":true},"2026-11-15":{"k":0.314,"wax":true},"2026-11-16":{"k":0.405,"wax":true},"2026-11-17":{"k":0.501,"wax":true},"2026-11-18":{"k":0.599,"wax":true},"2026-11-19":{"k":0.696,"wax":true},"2026-11-20":{"k":0.788,"wax":true},"2026-11-21":{"k":0.871,"wax":true},"2026-11-22":{"k":0.937,"wax":true},"2026-11-23":{"k":0.982,"wax":true},"2026-11-24":{"k":1.0,"wax":true},"2026-11-25":{"k":0.988,"wax":false},"2026-11-26":{"k":0.948,"wax":false},"2026-11-27":{"k":0.881,"wax":false},"2026-11-28":{"k":0.793,"wax":false},"2026-11-29":{"k":0.691,"wax":false},"2026-11-30":{"k":0.583,"wax":false},"2026-12-01":{"k":0.473,"wax":false},"2026-12-02":{"k":0.368,"wax":false},"2026-12-03":{"k":0.271,"wax":false},"2026-12-04":{"k":0.185,"wax":false},"2026-12-05":{"k":0.114,"wax":false},"2026-12-06":{"k":0.059,"wax":false},"2026-12-07":{"k":0.022,"wax":false},"2026-12-08":{"k":0.003,"wax":false},"2026-12-09":{"k":0.002,"wax":true},"2026-12-10":{"k":0.019,"wax":true},"2026-12-11":{"k":0.053,"wax":true},"2026-12-12":{"k":0.103,"wax":true},"2026-12-13":{"k":0.167,"wax":true},"2026-12-14":{"k":0.244,"wax":true},"2026-12-15":{"k":0.331,"wax":true},"2026-12-16":{"k":0.426,"wax":true},"2026-12-17":{"k":0.527,"wax":true},"2026-12-18":{"k":0.63,"wax":true},"2026-12-19":{"k":0.731,"wax":true},"2026-12-20":{"k":0.825,"wax":true},"2026-12-21":{"k":0.904,"wax":true},"2026-12-22":{"k":0.963,"wax":true},"2026-12-23":{"k":0.995,"wax":true},"2026-12-24":{"k":0.997,"wax":false},"2026-12-25":{"k":0.968,"wax":false},"2026-12-26":{"k":0.912,"wax":false},"2026-12-27":{"k":0.834,"wax":false},"2026-12-28":{"k":0.74,"wax":false},"2026-12-29":{"k":0.637,"wax":false},"2026-12-30":{"k":0.531,"wax":false},"2026-12-31":{"k":0.427,"wax":false}}};</script>
+
+<!-- ── Calendar logic (vanilla port of the React prototype) ── -->
+<script>
+(function () {
+  'use strict';
+
+  const DATA = window.LC_DATA;
+  if (!DATA) return;
+
+  // ── Brand + sign metadata ──
+  const C = { navy:'#0C2345', navyDeep:'#06122A', panel:'#11305A', panelEdge:'#1C406E',
+              gold:'#B6A673', goldBright:'#E5C77B', cream:'#FCF7F1', muted:'#8492AC' };
+  const EL_COLOR = { Fire:'#E8A24C', Earth:'#5BB587', Air:'#D6CFA4', Water:'#4FBEBE' };
+
+  const SIGNS = {
+    Aries:       { glyph:'♈︎', element:'Fire',  modality:'Cardinal', lens:'Startups, IPOs, aggressive moves, entrepreneurship', mood:'A fast, restless mood. The urge is to act now and buy now. Make the move; sleep on the purchase.' },
+    Taurus:      { glyph:'♉︎', element:'Earth', modality:'Fixed',    lens:'Real estate, agriculture, banking, gold, tangible assets', mood:'Steady, sensual, grounded. Money feels calmer now. The pull is toward comfort, so catch the small luxuries before they stack up.' },
+    Gemini:      { glyph:'♊︎', element:'Air',   modality:'Mutable',  lens:'Media, tech, trade, communication, gig economy', mood:'A busy, curious mood. People want to compare, research, talk it through. Strong for gathering options, shaky for committing to one.' },
+    Cancer:      { glyph:'♋︎', element:'Water', modality:'Cardinal', lens:'Housing, food, family business, consumer spending', mood:'The mood softens toward safety and home. Saving feels good and generosity comes easily. Watch for soothing a feeling with the card.' },
+    Leo:         { glyph:'♌︎', element:'Fire',  modality:'Fixed',    lens:'Luxury goods, entertainment, speculation, creative industries', mood:'Warm, generous, a little theatrical. The urge is to treat, to host, to be seen doing it. Enjoy it, just not to prove anything.' },
+    Virgo:       { glyph:'♍︎', element:'Earth', modality:'Mutable',  lens:'Healthcare, efficiency, labour markets, service economy', mood:'A tidy, careful mood. Good days to review the budget, fix the leaks, sort the details. Useful, until it tips into worry.' },
+    Libra:       { glyph:'♎︎', element:'Air',   modality:'Cardinal', lens:'Trade agreements, partnerships, art and design, fair pricing', mood:'The mood wants money to feel fair and pleasant. Strong for partnership and shared decisions, easy to over-give to keep the peace.' },
+    Scorpio:     { glyph:'♏︎', element:'Water', modality:'Fixed',    lens:'Debt, taxes, insurance, mergers, crisis economics', mood:'Money goes quiet and intense. The mood favours strategy, privacy, and an honest look at debt or shared finances.' },
+    Sagittarius: { glyph:'♐︎', element:'Fire',  modality:'Mutable',  lens:'International trade, education, publishing, tourism', mood:'An optimistic, restless mood. The pull is toward experiences, travel, the big yes. Wonderful, just check the balance first.' },
+    Capricorn:   { glyph:'♑︎', element:'Earth', modality:'Cardinal', lens:'Government policy, regulation, corporate hierarchy, austerity', mood:'A serious, practical mood. Strong for long-term planning and discipline. The risk is letting money feel like a verdict on you.' },
+    Aquarius:    { glyph:'♒︎', element:'Air',   modality:'Fixed',    lens:'Technology, innovation, decentralization, social movements', mood:'A cool, future-minded mood. Money gets thought about in systems and patterns. Good for vision, easy to skip the actual numbers.' },
+    Pisces:      { glyph:'♓︎', element:'Water', modality:'Mutable',  lens:'Oil, pharmaceuticals, film and music, market illusions', mood:'A dreamy, porous mood. Intuition runs strong and generosity overflows. A day to look at the balance, gently, rather than away from it.' }
+  };
+
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const DAYNAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+  const TZ_LIST = [
+    ['Pacific/Honolulu','Hawaii'],
+    ['America/Anchorage','Alaska'],
+    ['America/Los_Angeles','Pacific Time'],
+    ['America/Denver','Mountain Time'],
+    ['America/Chicago','Central Time'],
+    ['America/Toronto','Eastern Time'],
+    ['America/Halifax','Atlantic Time'],
+    ['America/Sao_Paulo','Brazil'],
+    ['Europe/London','UK & Ireland'],
+    ['Europe/Paris','Central Europe'],
+    ['Europe/Athens','Eastern Europe'],
+    ['Africa/Johannesburg','South Africa'],
+    ['Asia/Dubai','Gulf'],
+    ['Asia/Kolkata','India'],
+    ['Asia/Singapore','Southeast Asia'],
+    ['Asia/Shanghai','China'],
+    ['Asia/Tokyo','Japan & Korea'],
+    ['Australia/Sydney','Australia (East)'],
+    ['Pacific/Auckland','New Zealand']
+  ];
+
+  const DETECTED = (() => {
+    try { return Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/Edmonton'; }
+    catch (e) { return 'America/Edmonton'; }
+  })();
+
+  // ── timezone helpers (no external library) ──
+  function tzOffsetMs(utcMs, tz) {
+    const dtf = new Intl.DateTimeFormat('en-US', {
+      timeZone: tz, hourCycle: 'h23', year: 'numeric', month: '2-digit',
+      day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'
+    });
+    const p = {};
+    for (const part of dtf.formatToParts(new Date(utcMs)))
+      if (part.type !== 'literal') p[part.type] = part.value;
+    const asUTC = Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute, +p.second);
+    return asUTC - utcMs;
+  }
+  function zonedWallToUtc(y, mo, d, h, mi, tz) {
+    const guess = Date.UTC(y, mo, d, h, mi);
+    let off = tzOffsetMs(guess, tz);
+    off = tzOffsetMs(guess - off, tz);
+    return guess - off;
+  }
+  function fmtTime(iso, tz) {
+    return new Intl.DateTimeFormat('en-US', { timeZone: tz, hour: 'numeric', minute: '2-digit' })
+      .format(new Date(iso));
+  }
+  function localYMD(ms, tz) {
+    const dtf = new Intl.DateTimeFormat('en-US', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit' });
+    const p = {};
+    for (const part of dtf.formatToParts(new Date(ms)))
+      if (part.type !== 'literal') p[part.type] = part.value;
+    return { y: +p.year, m: +p.month - 1, d: +p.day };
+  }
+
+  // ── prepared event/ingress/phase arrays ──
+  const ING = DATA.ingresses.map(x => ({ sign: x.sign, t: x.t, ms: Date.parse(x.t) }));
+  const PHA = DATA.phases.map(x => ({ name: x.name, t: x.t, ms: Date.parse(x.t) }));
+  const EVT = DATA.events.map(x => ({ kind: x.kind, title: x.title, t: x.t, ms: Date.parse(x.t) }));
+
+  function moonSignAt(ms) {
+    let s = ING[0].sign;
+    for (let i = 0; i < ING.length; i++) {
+      if (ING[i].ms <= ms) s = ING[i].sign; else break;
+    }
+    return s;
+  }
+  function isoOf(month, d) {
+    return '2026-' + String(month + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+  }
+  function buildDay(month, d, tz) {
+    const noon = zonedWallToUtc(2026, month, d, 12, 0, tz);
+    const dayStart = zonedWallToUtc(2026, month, d, 0, 0, tz);
+    const dayEnd = zonedWallToUtc(2026, month, d + 1, 0, 0, tz);
+    const ing = ING.find(x => x.ms >= dayStart && x.ms < dayEnd);
+    const pha = PHA.find(x => x.ms >= dayStart && x.ms < dayEnd);
+    const evts = EVT.filter(x => x.ms >= dayStart && x.ms < dayEnd);
+    const il = DATA.illum[isoOf(month, d)] || { k: 0.5, wax: true };
+    return {
+      d: d,
+      sign: moonSignAt(noon),
+      illum: il.k, waxing: il.wax,
+      ingress: ing ? { to: ing.sign, from: moonSignAt(ing.ms - 60000), time: fmtTime(ing.t, tz) } : null,
+      phase: pha ? pha.name : null,
+      phaseTime: pha ? fmtTime(pha.t, tz) : null,
+      events: evts.map(e => ({ kind: e.kind, title: e.title, time: fmtTime(e.t, tz) }))
+    };
+  }
+  function phaseLabel(rec) {
+    if (rec.phase) return rec.phase;
+    const g = rec.illum >= 0.5;
+    if (rec.waxing) return g ? 'Waxing Gibbous' : 'Waxing Crescent';
+    return g ? 'Waning Gibbous' : 'Waning Crescent';
+  }
+
+  // ── tiny SVG builders ──
+  function moonDiskSVG(illum, waxing, size, ringColor) {
+    size = size || 14;
+    const r = 10;
+    const k = Math.max(0, Math.min(1, illum));
+    const lit = '#F4EFE2', dark = '#1A2D4F';
+    let body;
+    if (k < 0.015) body = '<circle r="' + r + '" fill="' + dark + '" stroke="#2A3F63" stroke-width="0.8"/>';
+    else if (k > 0.985) body = '<circle r="' + r + '" fill="' + lit + '"/>';
+    else {
+      const a = Math.abs(1 - 2 * k) * r;
+      const sweep = k > 0.5 ? 1 : 0;
+      const d = 'M 0 ' + (-r) + ' A ' + r + ' ' + r + ' 0 0 1 0 ' + r + ' A ' + a + ' ' + r + ' 0 0 ' + sweep + ' 0 ' + (-r) + ' Z';
+      body = '<circle r="' + r + '" fill="' + dark + '"/><path d="' + d + '" fill="' + lit + '"/>';
+    }
+    const ring = ringColor ? '<circle r="' + (r + 1.7) + '" fill="none" stroke="' + ringColor + '" stroke-width="1"/>' : '';
+    const flip = !waxing ? ' transform="scale(-1,1)"' : '';
+    return '<svg width="' + size + '" height="' + size + '" viewBox="-12 -12 24 24" style="display:block"' + flip + '>' + ring + body + '</svg>';
+  }
+  function starSVG(size, color) {
+    size = size || 10; color = color || '#E5C77B';
+    return '<svg width="' + size + '" height="' + size + '" viewBox="-10 -10 20 20" style="filter:drop-shadow(0 0 3px ' + color + ');display:block">'
+      + '<path d="M0,-10 L2.4,-2.4 L10,0 L2.4,2.4 L0,10 L-2.4,2.4 L-10,0 L-2.4,-2.4 Z" fill="' + color + '"/></svg>';
+  }
+
+  // ── state ──
+  const initLocal = localYMD(Date.now(), DETECTED);
+  const state = {
+    tz: DETECTED,
+    month: initLocal.y === 2026 ? initLocal.m : 4,
+    selected: initLocal.y === 2026 ? isoOf(initLocal.m, initLocal.d) : '2026-05-22'
+  };
+
+  function todayStr() {
+    const t = localYMD(Date.now(), state.tz);
+    return t.y === 2026 ? isoOf(t.m, t.d) : null;
+  }
+
+  // ── elements ──
+  const $tz = document.getElementById('lcTz');
+  const $month = document.getElementById('lcMonth');
+  const $prev = document.getElementById('lcPrev');
+  const $next = document.getElementById('lcNext');
+  const $today = document.getElementById('lcTodayRow');
+  const $grid = document.getElementById('lcGrid');
+  const $legend = document.getElementById('lcLegend');
+  const $detail = document.getElementById('lcDetail');
+  const $footTz = document.getElementById('lcFootTz');
+
+  // ── timezone picker ──
+  function renderTz() {
+    const city = DETECTED.split('/').pop().replace(/_/g, ' ');
+    const opts = [[DETECTED, 'Your timezone — ' + city]];
+    for (const [v, l] of TZ_LIST) if (v !== DETECTED) opts.push([v, l]);
+    $tz.innerHTML = opts.map(([v, l]) =>
+      '<option value="' + v + '"' + (v === state.tz ? ' selected' : '') + '>' + l + '</option>'
+    ).join('');
+  }
+  function tzLabel() {
+    const city = DETECTED.split('/').pop().replace(/_/g, ' ');
+    if (state.tz === DETECTED) return 'Your timezone — ' + city;
+    const hit = TZ_LIST.find(o => o[0] === state.tz);
+    return hit ? hit[1] : state.tz;
+  }
+
+  // ── legend ──
+  function renderLegend() {
+    const parts = Object.entries(EL_COLOR).map(([el, c]) =>
+      '<span><span class="lc-legend-dot" style="background:' + c + ';box-shadow:0 0 6px ' + c + '"></span>' + el + '</span>'
+    );
+    parts.push('<span><span class="lc-legend-sm"></span>Sign change</span>');
+    parts.push('<span>' + starSVG(10, '#E5C77B') + ' Astrological event</span>');
+    $legend.innerHTML = parts.join('');
+  }
+
+  // ── day cell ──
+  function dayCellHTML(rec, dateStr, isToday, isSelected) {
+    const s = SIGNS[rec.sign];
+    const col = EL_COLOR[s.element];
+    const cls = ['lc-day'];
+    if (isToday) cls.push('is-today');
+    if (isSelected) cls.push('is-selected');
+    let extra = '';
+    if (isSelected) {
+      extra = 'style="background:radial-gradient(circle at 50% 42%, ' + col + '33, #11305A);outline:1px solid ' + col + ';box-shadow:0 0 18px ' + col + '55"';
+    }
+    const glyphStyle = 'color:' + col + ';text-shadow:0 0 ' + (isSelected ? 16 : 8) + 'px ' + col + (isSelected ? 'cc' : '88');
+    return '<button class="' + cls.join(' ') + '" data-date="' + dateStr + '" ' + extra + ' role="gridcell">'
+      + '<div class="lc-day-row">'
+      +   '<span class="lc-day-num">' + rec.d + '</span>'
+      +   moonDiskSVG(rec.illum, rec.waxing, 13, rec.phase ? '#E5C77B' : null)
+      + '</div>'
+      + (rec.events.length ? '<div class="lc-day-star">' + starSVG(9, '#E5C77B') + '</div>' : '')
+      + '<div class="lc-day-glyph" style="' + glyphStyle + '">' + s.glyph + '</div>'
+      + '<div class="lc-day-label">' + rec.sign.slice(0, 3) + '</div>'
+      + (rec.ingress ? '<div class="lc-day-ingress"></div>' : '')
+      + '</button>';
+  }
+
+  // ── render ──
+  function renderMonthLabel() {
+    $month.innerHTML = MONTHS[state.month] + ' <span class="yr">2026</span>';
+    $prev.disabled = state.month === 0;
+    $next.disabled = state.month === 11;
+  }
+  function renderTodayBtn() {
+    const ts = todayStr();
+    $today.innerHTML = ts ? '<button class="lc-todaybtn" id="lcTodayBtn">Jump to today</button>' : '';
+    const b = document.getElementById('lcTodayBtn');
+    if (b) b.addEventListener('click', goToday);
+  }
+  function renderGrid() {
+    const first = new Date(Date.UTC(2026, state.month, 1)).getUTCDay();
+    const dim = new Date(Date.UTC(2026, state.month + 1, 0)).getUTCDate();
+    let html = '';
+    for (let i = 0; i < first; i++) html += '<div></div>';
+    const ts = todayStr();
+    for (let d = 1; d <= dim; d++) {
+      const ds = isoOf(state.month, d);
+      const rec = buildDay(state.month, d, state.tz);
+      html += dayCellHTML(rec, ds, ds === ts, ds === state.selected);
+    }
+    $grid.innerHTML = html;
+    // re-trigger the rise animation on month/tz change
+    $grid.style.animation = 'none'; $grid.offsetHeight; $grid.style.animation = '';
+  }
+  function renderDetail() {
+    const selMonth = +state.selected.slice(5, 7) - 1;
+    const selDay = +state.selected.slice(8, 10);
+    const rec = buildDay(selMonth, selDay, state.tz);
+    const s = SIGNS[rec.sign];
+    const col = EL_COLOR[s.element];
+    const dayName = DAYNAMES[new Date(Date.UTC(2026, selMonth, selDay)).getUTCDay()];
+
+    let evts = '';
+    if (rec.phase) {
+      evts += '<div class="lc-event is-phase">' + rec.phase + ' at ' + rec.phaseTime + '</div>';
+    }
+    if (rec.ingress) {
+      evts += '<div class="lc-event" style="background:' + col + '18;border-left:3px solid ' + col + ';color:#FCF7F1">'
+        + 'Moon enters ' + rec.ingress.to + ' at ' + rec.ingress.time + ', leaving ' + rec.ingress.from + '.'
+        + '</div>';
+    }
+    for (const e of rec.events) {
+      evts += '<div class="lc-event is-astro">'
+        + '<div class="lc-event-kind">' + e.kind.toUpperCase() + '</div>'
+        + '<div class="lc-event-title">' + e.title + ', ' + e.time + '</div>'
+        + '</div>';
+    }
+
+    $detail.innerHTML = ''
+      + '<div class="lc-detail-left">'
+      +   '<div class="lc-glyph-wrap">'
+      +     '<div class="lc-glyph-halo" style="background:radial-gradient(circle, ' + col + '55, transparent 70%)"></div>'
+      +     '<div class="lc-glyph-big" style="color:' + col + ';text-shadow:0 0 22px ' + col + '">' + s.glyph + '</div>'
+      +   '</div>'
+      +   '<div class="lc-moon-row">'
+      +     moonDiskSVG(rec.illum, rec.waxing, 26, rec.phase ? '#E5C77B' : null)
+      +     '<span class="lc-moon-pct">' + Math.round(rec.illum * 100) + '% lit</span>'
+      +   '</div>'
+      + '</div>'
+      + '<div class="lc-detail-right">'
+      +   '<div class="lc-detail-eyebrow">' + dayName.toUpperCase() + ' &middot; ' + MONTHS[selMonth] + ' ' + selDay + '</div>'
+      +   '<div class="lc-detail-h">Moon in ' + rec.sign + '</div>'
+      +   '<div class="lc-detail-meta" style="color:' + col + '">' + s.element + ' &middot; ' + s.modality + ' &middot; ' + phaseLabel(rec) + '</div>'
+      +   '<div class="lc-section">'
+      +     '<div class="lc-section-eyebrow">THE MONEY MOOD</div>'
+      +     '<div class="lc-mood">' + s.mood + '</div>'
+      +   '</div>'
+      +   evts
+      +   '<div class="lc-divider">'
+      +     '<div class="lc-section-eyebrow">WHAT THIS SIGN GOVERNS</div>'
+      +     '<div class="lc-lens">' + s.lens + '.</div>'
+      +   '</div>'
+      + '</div>';
+  }
+  function renderFootTz() {
+    $footTz.textContent = 'Computed with Swiss Ephemeris. Times shown for ' + tzLabel() + '.';
+  }
+
+  // ── actions ──
+  function selectDate(dateStr) {
+    state.selected = dateStr;
+    renderGrid();
+    renderDetail();
+  }
+  function changeMonth(delta) {
+    const nm = Math.min(11, Math.max(0, state.month + delta));
+    state.month = nm;
+    state.selected = isoOf(nm, 1);
+    renderMonthLabel();
+    renderGrid();
+    renderDetail();
+  }
+  function goToday() {
+    const ts = todayStr();
+    if (!ts) return;
+    state.month = +ts.slice(5, 7) - 1;
+    state.selected = ts;
+    renderMonthLabel();
+    renderGrid();
+    renderDetail();
+  }
+
+  // ── wire ──
+  $prev.addEventListener('click', () => changeMonth(-1));
+  $next.addEventListener('click', () => changeMonth(1));
+  $tz.addEventListener('change', e => {
+    state.tz = e.target.value;
+    renderGrid();
+    renderDetail();
+    renderTodayBtn();
+    renderFootTz();
+  });
+  $grid.addEventListener('click', e => {
+    const cell = e.target.closest('[data-date]');
+    if (cell) selectDate(cell.dataset.date);
+  });
+
+  // ── boot ──
+  renderTz();
+  renderLegend();
+  renderMonthLabel();
+  renderTodayBtn();
+  renderGrid();
+  renderDetail();
+  renderFootTz();
+})();
+</script>
+</body>
+</html>
