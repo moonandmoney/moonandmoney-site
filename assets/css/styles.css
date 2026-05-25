@@ -7,6 +7,7 @@
 :root{
   /* Core palette — pulled from the Moon & Money logo */
   --obsidian:#070608;
+  --bg-page:#050E20;        /* deep navy-black for the body — one shade darker than locked navy #0B2545 */
   --ink:#0d0c12;
   --ink-2:#15131c;
   --char:#1c1924;
@@ -35,7 +36,7 @@
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 body{
   font-family:var(--sans);
-  background:var(--obsidian);
+  background:var(--bg-page);
   color:var(--parchment);
   line-height:1.65;
   overflow-x:hidden;
