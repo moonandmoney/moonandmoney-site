@@ -363,10 +363,11 @@ section{padding:clamp(70px,11vw,140px) 0}
 #shopGrid{grid-template-columns:repeat(4,1fr)}
 .product{
   display:flex;flex-direction:column;border:1px solid var(--line);border-radius:8px;overflow:hidden;
-  background:linear-gradient(180deg,var(--ink-2),var(--obsidian));
+  background:linear-gradient(180deg,#0F1B2F,#06101D);
+  box-shadow:0 8px 30px -10px rgba(0,0,0,.55),0 0 24px rgba(201,162,78,.10);
   transition:transform .55s var(--ease),box-shadow .55s var(--ease),border-color .55s var(--ease);
 }
-.product:hover{transform:translateY(-10px);border-color:var(--gold-soft);box-shadow:var(--shadow-deep),var(--glow-gold)}
+.product:hover{transform:translateY(-10px);border-color:var(--gold-soft);box-shadow:0 30px 70px -20px rgba(0,0,0,.85),0 0 40px rgba(229,199,123,.32)}
 .product .cover{
   aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;position:relative;
   background:radial-gradient(circle at 50% 38%,var(--char),var(--obsidian));overflow:hidden;
