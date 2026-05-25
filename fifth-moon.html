@@ -32,20 +32,20 @@
   padding: 52px 38px 44px; box-sizing: border-box;
   box-shadow: 0 30px 70px rgba(0,0,0,0.5);
 }
-.fm-bracket { position: absolute; width: 20px; height: 20px; border-color: #B6A673; border-style: solid; }
+.fm-bracket { position: absolute; width: 20px; height: 20px; border-color: #C9A24E; border-style: solid; }
 .fm-tl { top:16px; left:16px;  border-width: 2px 0 0 2px; }
 .fm-tr { top:16px; right:16px; border-width: 2px 2px 0 0; }
 .fm-bl { bottom:16px; left:16px;  border-width: 0 0 2px 2px; }
 .fm-br { bottom:16px; right:16px; border-width: 0 2px 2px 0; }
 
-.fm-brand { text-align:center; font-family:'Jost',sans-serif; font-size:10.5px; letter-spacing:4px; color:#B6A673; margin-bottom:22px; }
+.fm-brand { text-align:center; font-family:'Jost',sans-serif; font-size:10.5px; letter-spacing:4px; color:#C9A24E; margin-bottom:22px; }
 .fm-title { text-align:center; font-family:'Cormorant Garamond',serif; font-size:44px; font-weight:600; color:#FCF7F1; line-height:1; margin-bottom:16px; }
 
 .fm-divider { display:flex; align-items:center; justify-content:center; gap:9px; }
 .fm-divider .l, .fm-divider .r { height:1px; width:90px; display:inline-block; }
-.fm-divider .l { background:linear-gradient(90deg,transparent,#B6A673); }
-.fm-divider .r { background:linear-gradient(90deg,#B6A673,transparent); }
-.fm-divider .d { width:5px; height:5px; border-radius:50%; background:#B6A673; display:inline-block; }
+.fm-divider .l { background:linear-gradient(90deg,transparent,#C9A24E); }
+.fm-divider .r { background:linear-gradient(90deg,#C9A24E,transparent); }
+.fm-divider .d { width:5px; height:5px; border-radius:50%; background:#C9A24E; display:inline-block; }
 .fm-divider.fm-divider--narrow .l, .fm-divider.fm-divider--narrow .r { width:70px; }
 
 .fm-tag { text-align:center; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:17px; color:#E5C77B; margin:18px auto 4px; max-width:340px; line-height:1.4; }
@@ -54,13 +54,13 @@
 .fm-moon { display:flex; flex-direction:column; align-items:center; gap:13px; }
 .fm-moon-disk { position:relative; width:58px; height:58px; }
 .fm-moon-ring, .fm-moon-fill, .fm-moon-dot { position:absolute; }
-.fm-moon-ring { inset:0; border-radius:50%; border:1.5px solid rgba(182,166,115,0.33); transition:border-color .5s ease; }
+.fm-moon-ring { inset:0; border-radius:50%; border:1.5px solid rgba(201,162,78,0.33); transition:border-color .5s ease; }
 .fm-moon-fill { inset:0; border-radius:50%;
-  background:radial-gradient(circle at 34% 30%, #E5C77B, #B6A673 72%);
-  box-shadow: 0 0 13px 1px rgba(182,166,115,0.27);
+  background:radial-gradient(circle at 34% 30%, #E5C77B, #C9A24E 72%);
+  box-shadow: 0 0 13px 1px rgba(201,162,78,0.27);
   opacity:0; transform:scale(.55);
   transition:opacity .55s ease, transform .6s cubic-bezier(.34,1.56,.64,1); }
-.fm-moon-dot { top:50%; left:50%; width:3px; height:3px; margin:-1.5px 0 0 -1.5px; border-radius:50%; background:rgba(182,166,115,0.33); opacity:0; }
+.fm-moon-dot { top:50%; left:50%; width:3px; height:3px; margin:-1.5px 0 0 -1.5px; border-radius:50%; background:rgba(201,162,78,0.33); opacity:0; }
 .fm-moon-label { font-family:'Jost',sans-serif; font-size:9.5px; letter-spacing:2.6px; font-weight:500; color:rgba(252,247,241,0.33); }
 
 /* State: empty (slots 1–4, not yet earned) */
@@ -70,18 +70,18 @@
 /* State: filled (a paid Money Chart) */
 .fm-moon--filled .fm-moon-ring { border-color:transparent; }
 .fm-moon--filled .fm-moon-fill { opacity:1; transform:scale(1); }
-.fm-moon--filled .fm-moon-label { color:#B6A673; }
+.fm-moon--filled .fm-moon-label { color:#C9A24E; }
 
 /* State: gift-locked (5th slot, not yet unlocked) */
 .fm-moon--gift-locked .fm-moon-disk,
 .fm-moon--gift-ready  .fm-moon-disk { width:76px; height:76px; }
-.fm-moon--gift-locked .fm-moon-ring { border-style:dashed; border-color:rgba(182,166,115,0.4); }
+.fm-moon--gift-locked .fm-moon-ring { border-style:dashed; border-color:rgba(201,162,78,0.4); }
 .fm-moon--gift-locked .fm-moon-label { color:#E5C77B; }
 
 /* State: gift-ready (4 marked, 5th unlocked) */
 .fm-moon--gift-ready .fm-moon-ring { border-color:transparent; }
 .fm-moon--gift-ready .fm-moon-fill { opacity:1; transform:scale(1);
-  box-shadow: 0 0 28px 5px rgba(182,166,115,0.6);
+  box-shadow: 0 0 28px 5px rgba(201,162,78,0.6);
   animation: fmPulse 2.6s ease-in-out infinite; }
 .fm-moon--gift-ready .fm-moon-label { color:#E5C77B; }
 .fm-orbit {
@@ -95,14 +95,14 @@
 .fm-btn-claim {
   font-family:'Jost',sans-serif; font-size:12px; letter-spacing:2px; font-weight:500;
   padding:13px 30px; border-radius:3px; cursor:pointer;
-  background:#B6A673; color:#06122A; border:1px solid #E5C77B;
+  background:#C9A24E; color:#06122A; border:1px solid #E5C77B;
   transition:filter .2s ease;
 }
 .fm-btn-claim:hover { filter:brightness(1.08); }
 
 .fm-footnote { margin-top:30px; text-align:center; }
 .fm-foot-name { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:13px; color:#FCF7F1; margin-top:14px; }
-.fm-foot-url  { font-family:'Jost',sans-serif; font-size:9.5px; letter-spacing:1.8px; color:#B6A673; margin-top:4px; }
+.fm-foot-url  { font-family:'Jost',sans-serif; font-size:9.5px; letter-spacing:1.8px; color:#C9A24E; margin-top:4px; }
 
 /* Live demo controls (the card on this page is interactive so visitors
    can see how the mechanic fills) */
@@ -110,15 +110,45 @@
 .fm-controls button {
   font-family:'Jost',sans-serif; font-size:11px; letter-spacing:1.6px; font-weight:500;
   padding:10px 18px; margin:0 5px; border-radius:3px;
-  background:transparent; color:#FCF7F1; border:1px solid #B6A673; cursor:pointer;
+  background:transparent; color:#FCF7F1; border:1px solid #C9A24E; cursor:pointer;
   transition:all .2s ease;
 }
 .fm-controls button:disabled { color:#8492AC; border-color:#1C406E; cursor:default; }
 .fm-controls-note { margin-top:14px; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:13px; color:#8492AC; }
 
-@keyframes fmPulse { 0%,100% { box-shadow: 0 0 24px 4px rgba(182,166,115,0.47); } 50% { box-shadow: 0 0 36px 8px rgba(182,166,115,0.73); } }
+@keyframes fmPulse { 0%,100% { box-shadow: 0 0 24px 4px rgba(201,162,78,0.47); } 50% { box-shadow: 0 0 36px 8px rgba(201,162,78,0.73); } }
 @keyframes fmSpin  { to { transform: rotate(360deg); } }
 @keyframes fmFade  { from { opacity:0; } to { opacity:1; } }
+
+/* Shooting star: streaks across the card the moment the 5th moon unlocks.
+   A single bright head with a soft gold trail, one-shot, then removes itself. */
+.fm-shoot {
+  position: absolute;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #FCF7F1;
+  box-shadow: 0 0 8px 2px #E5C77B, 0 0 22px 6px rgba(229,199,123,.55);
+  pointer-events: none;
+  opacity: 0;
+  z-index: 5;
+}
+.fm-shoot::after {
+  content: '';
+  position: absolute;
+  top: 1.5px; right: 4px;
+  width: 90px; height: 1.5px;
+  background: linear-gradient(90deg, transparent, rgba(229,199,123,.85));
+  border-radius: 2px;
+}
+.fm-shoot.go {
+  animation: fmShootStreak 1.4s cubic-bezier(.22,.8,.4,1) forwards;
+}
+@keyframes fmShootStreak {
+  0%   { opacity: 0; transform: translate(-40px, -30px) rotate(32deg); }
+  12%  { opacity: 1; }
+  88%  { opacity: 1; }
+  100% { opacity: 0; transform: translate(540px, 360px) rotate(32deg); }
+}
 </style>
 </head>
 <body>
@@ -330,8 +360,21 @@
       state.earned += 1;
       state.justClaimed = false;
       render();
+      if (state.earned === 4) triggerShootingStar();
     }
   });
+
+  function triggerShootingStar() {
+    var card = document.querySelector('.fm-card');
+    if (!card) return;
+    var prior = card.querySelector('.fm-shoot');
+    if (prior) prior.remove();
+    var star = document.createElement('div');
+    star.className = 'fm-shoot';
+    card.appendChild(star);
+    requestAnimationFrame(function () { star.classList.add('go'); });
+    setTimeout(function () { if (star.parentNode) star.remove(); }, 1500);
+  }
   claimBtn.addEventListener('click', function () {
     if (state.earned === 4) {
       state.earned = 0;

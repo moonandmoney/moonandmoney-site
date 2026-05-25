@@ -47,7 +47,10 @@ const CATALOG = [
   { cat:'Cards', glyph:'Leo',        name:'Leo Birthday Card', desc:'For the Leo, on their solar return.', link:'', prev:'card-leo.png' },
   { cat:'Cards', glyph:'Taurus',     name:'Taurus Birthday Card', desc:'Grounded, luxe and a little indulgent, like the Taurus it is for.', link:'', prev:'card-taurus.png' },
   { cat:'Cards', glyph:'Capricorn',  name:'Capricorn Congratulations Card', desc:'For the Capricorn who, of course, achieved the thing.', link:'', prev:'card-capricorn.png' },
-  { cat:'Cards', glyph:'Scorpio',    name:'Scorpio New Chapter Card', desc:'Renewal, not ruin. A bold card for a powerful new beginning.', link:'', prev:'card-scorpio.png' }
+  { cat:'Cards', glyph:'Scorpio',    name:'Scorpio New Chapter Card', desc:'Renewal, not ruin. A bold card for a powerful new beginning.', link:'', prev:'card-scorpio.png' },
+
+  // ---- Atelier Notes (quiet free pieces at the tail of the catalogue) ----
+  { cat:'Atelier Notes', glyph:'moon',     name:'Moon & Money Glyphs',     desc:'A small set of glyphs used in the Moon & Money house. A free download from the studio, for your notebooks, your screens, your own correspondence.', link:'', badge:'Free', prev:'glyphs.png' }
 ];
 
 (function renderShop() {

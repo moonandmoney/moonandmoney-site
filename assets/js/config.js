@@ -49,5 +49,8 @@ window.MM_CHECKOUT = {
   "Leo Birthday Card": "",
   "Taurus Birthday Card": "",
   "Capricorn Congratulations Card": "",
-  "Scorpio New Chapter Card": ""
+  "Scorpio New Chapter Card": "",
+
+  // ---- Atelier Notes (free pieces, kept quiet at the tail) ----
+  "Moon & Money Glyphs": ""
 };
