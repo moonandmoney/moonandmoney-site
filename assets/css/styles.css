@@ -361,7 +361,8 @@ section{padding:clamp(70px,11vw,140px) 0}
 .shop-filters{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:54px}
 .chip{
   font-family:var(--sans);font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;
-  background:transparent;border:1px solid var(--line);color:var(--mist);padding:10px 20px;border-radius:999px;
+  background:transparent;border:1px solid var(--line);color:var(--mist);padding:12px 22px;border-radius:999px;
+  min-height:44px;display:inline-flex;align-items:center;
   transition:all .35s var(--ease);
 }
 .chip:hover{color:var(--parchment)}
@@ -467,7 +468,8 @@ footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gr
 
 /* ---------- Persistent voice player (compact pill) ---------- */
 .mm-player{
-  position:fixed;bottom:20px;right:20px;z-index:45;display:flex;align-items:center;gap:9px;
+  position:fixed;bottom:calc(20px + env(safe-area-inset-bottom, 0px));right:20px;z-index:45;
+  display:flex;align-items:center;gap:9px;
   background:rgba(9,8,12,.8);backdrop-filter:blur(14px);border:1px solid var(--line);
   padding:6px 12px 6px 6px;border-radius:999px;box-shadow:var(--shadow-deep);
   max-width:min(90vw,300px);
@@ -491,7 +493,8 @@ footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gr
 .mm-meta{display:flex;flex-direction:column;gap:4px;min-width:78px;flex:1}
 .mm-title{
   font-family:var(--display);font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--mist);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px;
+  color:var(--mist);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  max-width:clamp(70px, 28vw, 160px);
 }
 .mm-bar{height:2px;background:rgba(168,159,180,.2);border-radius:2px;overflow:hidden}
 .mm-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold-soft),var(--gold-bright));transition:width .25s linear}
@@ -520,8 +523,8 @@ footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gr
 .mm-player.resume{animation:pulse 1.4s ease-in-out infinite;border-color:var(--gold)}
 /* the block currently being read aloud */
 @media(max-width:560px){
-  .mm-player{right:14px;bottom:14px;gap:8px;padding:5px 10px 5px 6px}
-  .mm-title{max-width:96px}
+  .mm-player{right:14px;bottom:calc(14px + env(safe-area-inset-bottom, 0px));gap:8px;padding:5px 10px 5px 6px}
+  .mm-title{max-width:clamp(70px, 26vw, 130px)}
   .mm-player .mm-skip{display:none}
   .mm-player.mm-collapsed{padding:5px 7px}
 }
@@ -718,12 +721,14 @@ footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gr
 .mc-grid label,.mc-deliver label{display:flex;flex-direction:column;gap:7px;font-family:var(--display);
   font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--mist)}
 .mc-grid input,.mc-deliver input{background:rgba(7,6,8,.6);border:1px solid var(--line);color:var(--parchment);
-  padding:13px 14px;border-radius:7px;font-family:var(--sans);font-size:.95rem;letter-spacing:.01em}
+  padding:16px 14px;border-radius:7px;font-family:var(--sans);font-size:1rem;letter-spacing:.01em;
+  min-height:48px;-webkit-appearance:none;appearance:none}
 .mc-grid input:focus,.mc-deliver input:focus{outline:none;border-color:var(--gold);box-shadow:var(--glow-gold)}
 .mc-time{grid-column:1/-1}
-.mc-check{display:flex;align-items:center;gap:9px;text-transform:none;letter-spacing:0;
-  font-family:var(--sans);font-size:.82rem;color:var(--mist);margin-top:8px}
-.mc-check input{width:15px;height:15px;accent-color:var(--gold)}
+.mc-check{display:flex;align-items:center;gap:12px;text-transform:none;letter-spacing:0;
+  font-family:var(--sans);font-size:.9rem;color:var(--mist);margin-top:10px;
+  min-height:44px;cursor:pointer;padding:6px 0}
+.mc-check input{width:22px;height:22px;accent-color:var(--gold);cursor:pointer;flex:0 0 22px}
 .mc-deliver{grid-template-columns:1fr;max-width:680px;margin:0 auto;width:100%}
 .mc-time-note{text-align:center;color:var(--jade-glow);font-family:var(--serif);font-style:italic;font-size:1rem}
 .mc-submit{display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:6px}

@@ -51,6 +51,32 @@
     });
   }
 
+  /* ---- Nav dropdown (Tools): click/touch toggle ----
+     CSS opens the submenu on :hover and :focus-within for mouse + keyboard.
+     Touch devices on the desktop layout (iPad, etc.) never fire :hover, so
+     the dropdown silently failed. This makes the trigger an explicit
+     toggle, and a tap outside closes it. ---- */
+  document.querySelectorAll('.nav-dropdown').forEach(dd => {
+    const trigger = dd.querySelector('.nav-trigger');
+    if (!trigger) return;
+    trigger.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const open = dd.getAttribute('aria-expanded') === 'true';
+      dd.setAttribute('aria-expanded', open ? 'false' : 'true');
+      trigger.setAttribute('aria-expanded', open ? 'false' : 'true');
+    });
+  });
+  document.addEventListener('click', (e) => {
+    document.querySelectorAll('.nav-dropdown[aria-expanded="true"]').forEach(dd => {
+      if (!dd.contains(e.target)) {
+        dd.setAttribute('aria-expanded', 'false');
+        const t = dd.querySelector('.nav-trigger');
+        if (t) t.setAttribute('aria-expanded', 'false');
+      }
+    });
+  });
+
   /* ---- Scroll reveal ---- */
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });

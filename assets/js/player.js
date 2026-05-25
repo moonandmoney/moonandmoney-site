@@ -76,7 +76,10 @@
       const top = footer.getBoundingClientRect().top;
       const vh = window.innerHeight;
       const base = window.innerWidth <= 560 ? 14 : 20;
-      host.style.bottom = (top < vh ? (vh - top) + 14 : base) + 'px';
+      const px = (top < vh ? (vh - top) + 14 : base);
+      // Add iPhone home-indicator safe area so the player never sits
+      // on top of the swipe-up gesture zone.
+      host.style.bottom = `calc(${px}px + env(safe-area-inset-bottom, 0px))`;
     };
     const onScroll = () => { if (!raf) raf = requestAnimationFrame(place); };
     window.addEventListener('scroll', onScroll, { passive: true });
