@@ -11,9 +11,9 @@
   --ink:#0d0c12;
   --ink-2:#15131c;
   --char:#1c1924;
-  --gold:#d8b150;
-  --gold-bright:#f0d488;
-  --gold-soft:#b9923c;
+  --gold:#C9A24E;          /* Ops Manual locked gold (was #d8b150 — drift caught 2026-05-25) */
+  --gold-bright:#E5C77B;   /* Ops Manual stroke gold (was #f0d488) */
+  --gold-soft:#A8841F;     /* darker tone for gradient depth, harmonised to the new base */
   --jade:#2f7d5b;
   --jade-glow:#3fae7a;
   --parchment:#efe7d4;
