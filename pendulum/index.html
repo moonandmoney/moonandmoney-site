@@ -925,8 +925,11 @@ function tick(ts) {
   // swells large as the breath fills, and settles back down as
   // it empties. No words. (Breath fullness: 0 at one far side,
   // 1 at the other — a smooth cosine, peaking at the turn.)
+  // Range bumped 2026-05-25: 20% wasn't readable, owner couldn't see it.
+  // Now ~0.78 -> 1.24 = a clear expand/contract you can follow with eyes
+  // closed in low light.
   var B = 0.5 - 0.5 * Math.cos(2 * Math.PI * phase);
-  var bobS = 0.90 + 0.20 * B;            // gentle: ~0.9 empty -> ~1.1 full (the swing leads, not the swell)
+  var bobS = 0.78 + 0.46 * B;
   state.bobGroup.setAttribute("transform",
     "translate(190 " + state.bobY + ") scale(" + bobS.toFixed(4) +
     ") translate(-190 -" + state.bobY + ")");
@@ -940,9 +943,12 @@ function tick(ts) {
   }
   state.prevPhase = phase;
 
+  // The halo around the bob also swells with the breath (in addition to
+  // brightening with coherence), so the inhale/exhale is unmistakable
+  // even on a quick glance — opacity + radius both expand and settle.
   const c = state.coherenceScore;
-  state.bobHalo.setAttribute("opacity", String(0.45 + c * 0.5));
-  state.bobHalo.setAttribute("r", String(80 + c * 36));
+  state.bobHalo.setAttribute("opacity", String(0.40 + c * 0.4 + B * 0.22));
+  state.bobHalo.setAttribute("r", String(74 + c * 28 + B * 22));
   state.trail.setAttribute("opacity", String(0.05 + c * 0.55));
 
   const m = Math.floor(remaining / 60), s = Math.floor(remaining % 60);
