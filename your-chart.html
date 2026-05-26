@@ -85,13 +85,26 @@
     display: grid; gap: 12px;
   }
   .yc-place {
-    padding: 14px 18px;
+    padding: 14px 18px 14px 18px;
     border: 1px solid rgba(201,162,78,.22); border-radius: 8px;
     background: rgba(7,6,8,.4);
     font-family: var(--serif);
-    transition: border-color .25s ease, background .25s ease;
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+    -webkit-tap-highlight-color: rgba(201,162,78,.18);
+    transition: border-color .25s ease, background .25s ease, transform .15s ease;
   }
-  .yc-place:hover { border-color: rgba(201,162,78,.45); }
+  .yc-place::after {
+    content: '+';
+    position: absolute; right: 18px; top: 50%; transform: translateY(-50%);
+    color: var(--gold); font-family: 'Jost', sans-serif; font-size: 1.05rem;
+    font-weight: 400; opacity: .55; transition: transform .25s ease, opacity .25s ease;
+  }
+  .yc-place.open::after { transform: translateY(-50%) rotate(45deg); opacity: 1; }
+  .yc-place:hover { border-color: rgba(201,162,78,.5); background: rgba(7,6,8,.55); }
+  .yc-place:active { transform: scale(.995); }
+  .yc-row .ps { padding-right: 22px; }
   .yc-row { display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: center; }
   .yc-place .pn { font-style: italic; color: var(--mist); font-size: 1.02rem; }
   .yc-place .ps { color: var(--gold-bright); letter-spacing: .04em; font-size: 1.02rem; }
@@ -526,13 +539,16 @@
       const b = pointAt(lon, R_INNER);  // spoke extends to inner ring now
       lines.push(`<line x1="${a.x.toFixed(2)}" y1="${a.y.toFixed(2)}" x2="${b.x.toFixed(2)}" y2="${b.y.toFixed(2)}" stroke="${PALETTE.spoke}" stroke-width="1"/>`);
       const mid = pointAt(lon + 15, R_SIGN_LABEL);
-      lines.push(`<text x="${mid.x.toFixed(2)}" y="${mid.y.toFixed(2)}" text-anchor="middle" dominant-baseline="middle" font-family="DejaVu Sans, sans-serif" font-size="22" fill="${PALETTE.sign}">${SIGNS[i].glyph}</text>`);
+      lines.push(`<text x="${mid.x.toFixed(2)}" y="${mid.y.toFixed(2)}" text-anchor="middle" dominant-baseline="middle" font-family="Noto Sans Symbols 2, DejaVu Sans, sans-serif" font-size="22" fill="${PALETTE.sign}">${SIGNS[i].glyph}</text>`);
       // House number inside the inner ring, in this sign's wedge.
+      // Uses Cormorant Garamond (always loaded on this page) — earlier
+      // Jost weight 600 wasn't in the loaded subset (only 300/400/500),
+      // so digits fell back to a system font that rendered them weirdly.
       if (hasHouses) {
         const houseNum = ((i - ascSignIdx + 12) % 12) + 1;
-        const hmid = pointAt(lon + 15, R_INNER + 18);
+        const hmid = pointAt(lon + 15, R_INNER + 20);
         const isAscHouse = houseNum === 1;
-        lines.push(`<text x="${hmid.x.toFixed(2)}" y="${hmid.y.toFixed(2)}" text-anchor="middle" dominant-baseline="middle" font-family="Jost, sans-serif" font-size="${isAscHouse ? 14 : 12}" font-weight="${isAscHouse ? 600 : 400}" fill="${isAscHouse ? PALETTE.ring : 'rgba(229,199,123,.55)'}">${HOUSE_LABEL[houseNum - 1]}</text>`);
+        lines.push(`<text x="${hmid.x.toFixed(2)}" y="${hmid.y.toFixed(2)}" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="${isAscHouse ? 18 : 15}" font-style="italic" fill="${isAscHouse ? PALETTE.ring : 'rgba(229,199,123,.62)'}">${HOUSE_LABEL[houseNum - 1]}</text>`);
       }
     }
 
@@ -586,11 +602,11 @@
         lines.push(`<circle cx="${pt.x.toFixed(2)}" cy="${pt.y.toFixed(2)}" r="22" fill="rgba(229,199,123,.10)" stroke="none"/>`);
       }
       lines.push(`<circle cx="${pt.x.toFixed(2)}" cy="${pt.y.toFixed(2)}" r="16" fill="rgba(11,37,69,.92)" stroke="${ringColor}" stroke-width="${ringWidth}"/>`);
-      lines.push(`<text x="${pt.x.toFixed(2)}" y="${pt.y.toFixed(2)}" text-anchor="middle" dominant-baseline="middle" font-family="DejaVu Sans, sans-serif" font-size="${isMoon ? 22 : 20}" fill="${fillColor}">${p.glyph}</text>`);
+      lines.push(`<text x="${pt.x.toFixed(2)}" y="${pt.y.toFixed(2)}" text-anchor="middle" dominant-baseline="middle" font-family="Noto Sans Symbols 2, DejaVu Sans, sans-serif" font-size="${isMoon ? 22 : 20}" fill="${fillColor}">${p.glyph}</text>`);
     });
 
     // center crescent + brand
-    lines.push(`<text x="${CX}" y="${CY - 6}" text-anchor="middle" dominant-baseline="middle" font-family="DejaVu Sans, sans-serif" font-size="34" fill="${PALETTE.ring}">☾</text>`);
+    lines.push(`<text x="${CX}" y="${CY - 6}" text-anchor="middle" dominant-baseline="middle" font-family="Noto Sans Symbols 2, DejaVu Sans, sans-serif" font-size="34" fill="${PALETTE.ring}">☾</text>`);
     lines.push(`<text x="${CX}" y="${CY + 22}" text-anchor="middle" font-family="Jost, sans-serif" font-size="8" letter-spacing="2.6" fill="${PALETTE.sign}">MOON &amp; MONEY</text>`);
 
     lines.push(`</svg>`);
@@ -624,20 +640,28 @@
     return out.join('');
   }
 
-  /* Click-to-explain: toggle a small explainer below each placement. */
+  /* Click-to-explain: toggle a small explainer below each placement.
+     The "+ / x" indicator on the right edge makes the tap target visibly
+     interactive; click anywhere on the row. */
   function wireReadoutClicks() {
     readEl.querySelectorAll('.yc-place[data-explain]').forEach(row => {
-      row.style.cursor = 'pointer';
-      row.addEventListener('click', () => {
+      row.setAttribute('role', 'button');
+      row.setAttribute('tabindex', '0');
+      const toggle = () => {
         const key = row.getAttribute('data-explain');
         const existing = row.querySelector('.yc-explain');
-        if (existing) { existing.remove(); return; }
+        if (existing) { existing.remove(); row.classList.remove('open'); return; }
         const text = EXPLAIN[key] || '';
         if (!text) return;
         const exp = document.createElement('div');
         exp.className = 'yc-explain';
         exp.innerHTML = text;
         row.appendChild(exp);
+        row.classList.add('open');
+      };
+      row.addEventListener('click', toggle);
+      row.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
       });
     });
   }
