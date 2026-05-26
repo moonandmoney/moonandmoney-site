@@ -43,9 +43,21 @@
     background: rgba(7,6,8,.6); border: 1px solid var(--line); color: var(--parchment);
     padding: 16px 14px; border-radius: 7px; font-family: var(--sans);
     font-size: 1rem; min-height: 48px; -webkit-appearance: none; appearance: none;
+    transition: border-color .15s ease;
   }
   .yc-grid input:focus, .yc-deliver input:focus {
-    outline: none; border-color: var(--gold); box-shadow: var(--glow-gold);
+    outline: none; border-color: var(--gold);
+    box-shadow: 0 0 0 2px rgba(201,162,78,.20);  /* cheap inset-style glow, no 40px blur */
+  }
+  /* Form card: lighter shadow on mobile so input focus doesn't trigger
+     a huge GPU repaint each time you tab between fields. */
+  @media (max-width: 768px) {
+    .yc-form {
+      box-shadow: 0 4px 16px -8px rgba(0,0,0,.4);
+    }
+    .yc-grid input:focus, .yc-deliver input:focus {
+      box-shadow: none;
+    }
   }
   .yc-city { grid-column: 1 / -1; }
   .yc-check {

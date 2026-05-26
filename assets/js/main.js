@@ -141,7 +141,33 @@
       }));
     };
     resize();
-    addEventListener('resize', resize);
+    // Resize fires on every iOS keyboard show/hide, which made tabbing
+    // between form fields rebuild the entire starfield every time. Debounce
+    // and ignore tiny height-only changes (keyboard up/down) so star data
+    // only regenerates on a real layout change.
+    let resizeT = 0, lastW = innerWidth, lastH = innerHeight;
+    addEventListener('resize', () => {
+      if (resizeT) clearTimeout(resizeT);
+      resizeT = setTimeout(() => {
+        const dw = Math.abs(innerWidth - lastW);
+        const dh = Math.abs(innerHeight - lastH);
+        if (dw > 50 || dh > 300) {  // real layout change, not keyboard
+          lastW = innerWidth; lastH = innerHeight;
+          resize();
+        }
+      }, 180);
+    });
+    // Pause the canvas while an input is focused so the form is buttery.
+    document.addEventListener('focusin', (e) => {
+      if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) {
+        paused = true;
+      }
+    });
+    document.addEventListener('focusout', (e) => {
+      if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) {
+        paused = false;
+      }
+    });
 
     // The 12 zodiac constellations, stylised as ordered star
     // polylines in a ~0..1.4 box. The sky draws the one the
