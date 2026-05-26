@@ -257,15 +257,16 @@
     { key: 'jupiter', name: 'Jupiter', glyph: '♃' },
     { key: 'saturn',  name: 'Saturn',  glyph: '♄' },
     { key: 'lilith',  name: 'Lilith',  glyph: '⚸' },
+    { key: 'node',    name: 'North Node', glyph: '☊' },
   ];
 
   // House numbers: plain Arabic so nobody has to translate Roman in their head.
   const HOUSE_LABEL = ['1','2','3','4','5','6','7','8','9','10','11','12'];
 
-  // Readout order — Moon first (this is Moon & Money, the Moon leads), Sun
-  // second, the rest in their usual order. Lilith last because she's the
-  // poet in the back.
-  const READOUT_ORDER = ['moon','sun','mercury','venus','mars','jupiter','saturn','lilith'];
+  // Readout order — Moon first (Moon & Money, the Moon leads), Sun second,
+  // the rest in their usual cosmic order. Lilith and Node are the poets,
+  // they sit at the end.
+  const READOUT_ORDER = ['moon','sun','mercury','venus','mars','jupiter','saturn','lilith','node'];
 
   function signOf(longitude) {
     const i = Math.floor(norm(longitude) / 30) % 12;
