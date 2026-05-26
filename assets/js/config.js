@@ -26,7 +26,7 @@ window.MM_CHECKOUT = {
 
   // ---- Element Collections ----
   "Fire Signs Money Collection":  "https://moonandmoney.lemonsqueezy.com/checkout/buy/79c698d0-0e0d-4b80-a147-a31bdb2b01f1",
-  "Earth Signs Money Collection": "https://moonandmoney.lemonsqueezy.com/checkout/buy/3189ca83-718a-4228-845c-bf94adf36ab8",
+  "Earth Signs Money Collection": "https://moonandmoney.lemonsqueezy.com/checkout/buy/a2555083-a0a9-482c-a308-06816bd3e911",
   "Air Signs Money Collection":   "https://moonandmoney.lemonsqueezy.com/checkout/buy/7aa50bd2-50c0-4ad9-9df2-115566916dda",
   "Water Signs Money Collection": "https://moonandmoney.lemonsqueezy.com/checkout/buy/8a353e51-a1a6-480e-bc32-10acbe135d3c",
 
