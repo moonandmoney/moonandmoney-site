@@ -12,10 +12,10 @@
 window.MM_CHECKOUT = {
   // ---- Moon Sign Money Guides ----
   "Aries Moon Money Guide":       "https://moonandmoney.lemonsqueezy.com/checkout/buy/7aca3593-4e60-43e1-b636-6330c978face",
-  "Taurus Moon Money Guide":      "https://moonandmoney.lemonsqueezy.com/checkout/buy/d978169c-f7e4-47b6-81a0-c5b1e4ba0f48",
+  "Taurus Moon Money Guide":      "https://moonandmoney.lemonsqueezy.com/checkout/buy/fd88269b-0dbb-4108-81b4-a8bfbae4387e",
   "Gemini Moon Money Guide":      "https://moonandmoney.lemonsqueezy.com/checkout/buy/50f7a769-2487-4729-ad9d-b0adba659848",
   "Cancer Moon Money Guide":      "https://moonandmoney.lemonsqueezy.com/checkout/buy/7599c4a5-af0d-4251-87a6-b1bca3751b89",
-  "Leo Moon Money Guide":         "https://moonandmoney.lemonsqueezy.com/checkout/buy/b5c581a2-0964-48d2-bc56-ae288af1471f",
+  "Leo Moon Money Guide":         "https://moonandmoney.lemonsqueezy.com/checkout/buy/f7d0dae9-2376-4d5c-a24a-c9ebdf689e80",
   "Virgo Moon Money Guide":       "https://moonandmoney.lemonsqueezy.com/checkout/buy/bc5c1859-b090-4251-accb-aa7d296e5ee4",
   "Libra Moon Money Guide":       "https://moonandmoney.lemonsqueezy.com/checkout/buy/a69142d9-f0cc-4342-b21d-43c31a29c44a",
   "Scorpio Moon Money Guide":     "https://moonandmoney.lemonsqueezy.com/checkout/buy/10aaf01b-d88e-4d7d-bb9f-f33f573b5ad0",
@@ -25,7 +25,7 @@ window.MM_CHECKOUT = {
   "Pisces Moon Money Guide":      "https://moonandmoney.lemonsqueezy.com/checkout/buy/c7a59df4-64f5-4b37-944c-61f8572b4eb6",
 
   // ---- Element Collections ----
-  "Fire Signs Money Collection":  "https://moonandmoney.lemonsqueezy.com/checkout/buy/050532b4-a89c-425e-a49b-1fd860301d97",
+  "Fire Signs Money Collection":  "https://moonandmoney.lemonsqueezy.com/checkout/buy/79c698d0-0e0d-4b80-a147-a31bdb2b01f1",
   "Earth Signs Money Collection": "https://moonandmoney.lemonsqueezy.com/checkout/buy/3189ca83-718a-4228-845c-bf94adf36ab8",
   "Air Signs Money Collection":   "https://moonandmoney.lemonsqueezy.com/checkout/buy/7aa50bd2-50c0-4ad9-9df2-115566916dda",
   "Water Signs Money Collection": "https://moonandmoney.lemonsqueezy.com/checkout/buy/8a353e51-a1a6-480e-bc32-10acbe135d3c",
