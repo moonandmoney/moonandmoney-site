@@ -2,7 +2,12 @@
    MOON & MONEY — Celestial Luxury × Dark Glam design system
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&family=Noto+Sans+Symbols+2&display=swap');
+/* Fonts are now loaded via <link rel="stylesheet"> in each HTML
+   <head>, NOT @import here. @import is serial (browser must fetch
+   styles.css first, parse it, find the @import, then fetch the
+   font CSS, then fetch the WOFF2 files), which was the biggest
+   cause of the "dial-up" perceived load delay. <link> in HTML
+   parallelises the requests so fonts arrive alongside the CSS. */
 
 :root{
   /* Core palette — pulled from the Moon & Money logo */
@@ -1141,9 +1146,10 @@ footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gr
 .nav-trigger {
   font-family: inherit; font-size: .82rem; letter-spacing: .16em;
   text-transform: uppercase; color: var(--mist);
-  background: none; border: 0; cursor: pointer; padding: 0;
+  background: none; border: 0; cursor: pointer; padding: 8px 4px;
   display: inline-flex; align-items: center; gap: .4em;
-  transition: color .3s var(--ease);
+  transition: color .25s var(--ease);
+  touch-action: manipulation;  /* kill the 300ms tap-delay on iOS */
 }
 .nav-trigger:hover, .nav-trigger:focus-visible { color: var(--parchment); }
 .nav-trigger .caret { font-size: .7em; opacity: .7; transition: transform .25s var(--ease); }
@@ -1151,14 +1157,33 @@ footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gr
 
 .nav-submenu {
   list-style: none; margin: 0; padding: 12px 0;
-  position: absolute; top: calc(100% + 14px); left: 50%;
-  transform: translateX(-50%) translateY(-4px);
+  position: absolute; top: calc(100% + 10px); left: 50%;
+  transform: translateX(-50%) translateY(-2px);
   min-width: 180px;
-  background: rgba(7,6,8,.94); backdrop-filter: blur(16px);
+  background: rgba(7,6,8,.96);
   border: 1px solid var(--line); border-radius: 4px;
   opacity: 0; pointer-events: none;
-  transition: opacity .25s var(--ease), transform .25s var(--ease);
+  transition: opacity .14s ease-out, transform .14s ease-out;
   z-index: 60;
+}
+@media (hover: hover) {
+  /* Backdrop-filter is GPU-expensive and causes scroll jank on lower-end
+     hardware. Reserve it for mouse-driven desktops where perf is solid. */
+  .nav-submenu { backdrop-filter: blur(16px); background: rgba(7,6,8,.88); }
+}
+/* Touch devices: don't depend on :hover (which never fires). The JS
+   click toggle drives aria-expanded; CSS opens the submenu from that. */
+@media (hover: none) {
+  .nav-dropdown:hover .nav-submenu { opacity: 0; pointer-events: none; }
+  .nav-dropdown[aria-expanded="true"] .nav-submenu {
+    opacity: 1; pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+/* Remove the invisible hover-bridge on touch — it can intercept taps
+   confusingly on iPad / hybrid devices. */
+@media (hover: none) {
+  .nav-dropdown::after { display: none; }
 }
 .nav-dropdown[aria-expanded="true"] .nav-submenu,
 .nav-dropdown:hover .nav-submenu,
@@ -1193,4 +1218,37 @@ footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gr
     font-size: 1.08rem; letter-spacing: .18em; color: var(--parchment);
     padding: 6px 0; text-align: center;
   }
+}
+
+/* ──────────────────────────────────────────────────────────────
+   PERFORMANCE GUARDS — mobile + low-power devices
+
+   The big celestial scenery (starfield canvas + nebula gradient
+   layer + backdrop-filter blurs) looks beautiful on a 5K desktop
+   but absolutely murders frame rate on phones. This block hides
+   the most expensive effects below 768px and respects the user's
+   reduced-motion preference. The site still looks composed; it
+   just stops paying for animations that nobody asked for.
+   ────────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  /* Starfield canvas: ~250 stars repainting every frame. Off on phones. */
+  #starfield { display: none !important; }
+  /* Nebula gradient layer: full-viewport gradient with animated lighting.
+     Off on phones — body bg navy is enough atmosphere. */
+  .nebula { display: none !important; }
+  /* Backdrop-filter forces a separate GPU compositor layer continuously.
+     Drop it everywhere on mobile; the navy backgrounds underneath are
+     opaque enough to read against. */
+  .nav, .mm-player, .nav-submenu, .nav-links {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  /* Shorter, snappier transitions site-wide on mobile. */
+  * { transition-duration: .2s !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #starfield, .nebula { display: none !important; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }

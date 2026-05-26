@@ -108,10 +108,15 @@
   }
 
   /* ---- Starfield (kicks in one frame after first paint so
-     LCP lands first, but the sky lights up effectively immediately) ---- */
+     LCP lands first, but the sky lights up effectively immediately) ----
+     Skipped on phones: ~250 stars repainting every frame at 60fps was the
+     biggest cause of the "dial-up / janky" feel on mobile. Off-screen by
+     CSS too, but this kills the animation loop entirely so we don't pay
+     for it. ---- */
   const cv = document.getElementById('starfield');
   function startStarfield() {
     if (!cv || reduced) return;
+    if (window.innerWidth < 768) return;
     runStarfield();
   }
   // Two rAFs = the browser paints once, then we light the sky on
