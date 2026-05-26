@@ -19,7 +19,10 @@
 
 <style>
   /* Your Chart — page-specific styles, scoped with yc- */
-  .yc-stage { padding: 12px 0 60px; }
+  .yc-stage { padding: 0 0 60px; }
+  /* Tighten the page-hero on this page — the form sits a click below the
+     intro paragraph, no need for the full hero pad. */
+  .page-hero ~ .yc-stage { margin-top: -12px; }
   .yc-form  {
     max-width: 640px; margin: 0 auto;
     border: 1px solid var(--line); border-radius: 12px;
@@ -56,7 +59,7 @@
   }
 
   /* The wheel */
-  .yc-result { display: none; max-width: 720px; margin: 30px auto 0; }
+  .yc-result { display: none; max-width: 720px; margin: 8px auto 0; }
   .yc-result.show { display: block; animation: ycReveal .6s ease-out; }
   @keyframes ycReveal { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
   .yc-wheel-wrap {
@@ -130,12 +133,12 @@
 </header>
 
 <main>
-  <section class="page-hero">
+  <section class="page-hero" style="padding-bottom:clamp(16px,3vw,28px)">
     <div class="wrap">
       <span class="eyebrow">Your Sky</span>
       <h1>Your <span class="gold">birth chart</span>, drawn live</h1>
-      <p>Enter your birth data. See where the Sun, the Moon, and the visible planets were the moment you arrived. A free taste of what your Money Chart reads in full.</p>
-      <p style="margin:14px auto 0;max-width:520px;color:var(--mist);font-size:.85rem;font-style:italic;opacity:.78;text-align:center">For reflection and self-knowledge. Not financial or investment advice.</p>
+      <p style="max-width:560px;margin:0 auto">Enter your birth data. See where the Moon, the Sun, and the visible planets were the moment you arrived. A free taste of what your Money Chart reads in full.</p>
+      <p style="margin:10px auto 0;max-width:520px;color:var(--mist);font-size:.85rem;font-style:italic;opacity:.78;text-align:center">For reflection and self-knowledge. Not financial or investment advice.</p>
     </div>
   </section>
 
@@ -245,8 +248,13 @@
     { key: 'lilith',  name: 'Lilith',  glyph: '⚸' },
   ];
 
-  // Roman numerals for the house markers
-  const ROMAN = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
+  // House numbers: plain Arabic so nobody has to translate Roman in their head.
+  const HOUSE_LABEL = ['1','2','3','4','5','6','7','8','9','10','11','12'];
+
+  // Readout order — Moon first (this is Moon & Money, the Moon leads), Sun
+  // second, the rest in their usual order. Lilith last because she's the
+  // poet in the back.
+  const READOUT_ORDER = ['moon','sun','mercury','venus','mars','jupiter','saturn','lilith'];
 
   function signOf(longitude) {
     const i = Math.floor(norm(longitude) / 30) % 12;
@@ -463,11 +471,12 @@
       lines.push(`<line x1="${a.x.toFixed(2)}" y1="${a.y.toFixed(2)}" x2="${b.x.toFixed(2)}" y2="${b.y.toFixed(2)}" stroke="${PALETTE.spoke}" stroke-width="1"/>`);
       const mid = pointAt(lon + 15, R_SIGN_LABEL);
       lines.push(`<text x="${mid.x.toFixed(2)}" y="${mid.y.toFixed(2)}" text-anchor="middle" dominant-baseline="middle" font-family="DejaVu Sans, sans-serif" font-size="22" fill="${PALETTE.sign}">${SIGNS[i].glyph}</text>`);
-      // House roman numeral inside the inner ring, in this sign's wedge
+      // House number inside the inner ring, in this sign's wedge.
       if (hasHouses) {
         const houseNum = ((i - ascSignIdx + 12) % 12) + 1;
         const hmid = pointAt(lon + 15, R_INNER + 18);
-        lines.push(`<text x="${hmid.x.toFixed(2)}" y="${hmid.y.toFixed(2)}" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif" font-style="italic" font-size="14" fill="rgba(229,199,123,.62)">${ROMAN[houseNum - 1]}</text>`);
+        const isAscHouse = houseNum === 1;
+        lines.push(`<text x="${hmid.x.toFixed(2)}" y="${hmid.y.toFixed(2)}" text-anchor="middle" dominant-baseline="middle" font-family="Jost, sans-serif" font-size="${isAscHouse ? 14 : 12}" font-weight="${isAscHouse ? 600 : 400}" fill="${isAscHouse ? PALETTE.ring : 'rgba(229,199,123,.55)'}">${HOUSE_LABEL[houseNum - 1]}</text>`);
       }
     }
 
@@ -503,8 +512,17 @@
       const t2 = pointAt(lon, R_SIGN_RING - 12);
       lines.push(`<line x1="${t1.x.toFixed(2)}" y1="${t1.y.toFixed(2)}" x2="${t2.x.toFixed(2)}" y2="${t2.y.toFixed(2)}" stroke="${PALETTE.ring}" stroke-width="1.4"/>`);
 
-      lines.push(`<circle cx="${pt.x.toFixed(2)}" cy="${pt.y.toFixed(2)}" r="16" fill="rgba(11,37,69,.92)" stroke="${PALETTE.ring}" stroke-width="1"/>`);
-      lines.push(`<text x="${pt.x.toFixed(2)}" y="${pt.y.toFixed(2)}" text-anchor="middle" dominant-baseline="middle" font-family="DejaVu Sans, sans-serif" font-size="20" fill="${PALETTE.planet}">${p.glyph}</text>`);
+      // Moon gets a gold-tinted glyph + a halo so she's unmistakable —
+      // this is Moon & Money, she leads.
+      const isMoon = p.key === 'moon';
+      const ringColor = isMoon ? PALETTE.ring : PALETTE.ring;
+      const ringWidth = isMoon ? 1.6 : 1;
+      const fillColor = isMoon ? PALETTE.sign : PALETTE.planet;
+      if (isMoon) {
+        lines.push(`<circle cx="${pt.x.toFixed(2)}" cy="${pt.y.toFixed(2)}" r="22" fill="rgba(229,199,123,.10)" stroke="none"/>`);
+      }
+      lines.push(`<circle cx="${pt.x.toFixed(2)}" cy="${pt.y.toFixed(2)}" r="16" fill="rgba(11,37,69,.92)" stroke="${ringColor}" stroke-width="${ringWidth}"/>`);
+      lines.push(`<text x="${pt.x.toFixed(2)}" y="${pt.y.toFixed(2)}" text-anchor="middle" dominant-baseline="middle" font-family="DejaVu Sans, sans-serif" font-size="${isMoon ? 22 : 20}" fill="${fillColor}">${p.glyph}</text>`);
     });
 
     // center crescent + brand
@@ -516,14 +534,21 @@
   }
 
   function buildReadout(chart) {
+    const byKey = Object.fromEntries(PLANETS.map(p => [p.key, p]));
     const out = [];
     if (typeof chart.asc === 'number') {
       const s = signOf(chart.asc);
       out.push(`<div class="yc-place" style="border-color:rgba(201,162,78,.5)"><span class="pn"><strong style="color:var(--gold-bright);font-style:normal">ASC</strong>&nbsp; Rising</span><span class="ps">${s.sign.name} ${Math.floor(s.deg)}°</span></div>`);
     }
-    PLANETS.forEach((p) => {
+    READOUT_ORDER.forEach((k) => {
+      const p = byKey[k];
       const s = signOf(chart[p.key]);
-      out.push(`<div class="yc-place"><span class="pn">${p.glyph}&nbsp; ${p.name}</span><span class="ps">${s.sign.name} ${Math.floor(s.deg)}°</span></div>`);
+      const isMoon = p.key === 'moon';
+      const style = isMoon
+        ? 'border-color:rgba(229,199,123,.7); background:rgba(201,162,78,.07)'
+        : '';
+      const nameStyle = isMoon ? 'color:var(--gold-bright); font-style:normal' : '';
+      out.push(`<div class="yc-place" style="${style}"><span class="pn" style="${nameStyle}">${p.glyph}&nbsp; ${p.name}</span><span class="ps">${s.sign.name} ${Math.floor(s.deg)}°</span></div>`);
     });
     return out.join('');
   }
