@@ -60,6 +60,21 @@
     }
   }
   .yc-city { grid-column: 1 / -1; }
+  /* 24-hour time entered as two numeric inputs side-by-side. No system
+     12h/24h locale ambiguity — what you type is what we read. */
+  .yc-time-pair { display: flex; align-items: center; gap: 8px; }
+  .yc-time-pair input {
+    width: 84px; text-align: center;
+    background: rgba(7,6,8,.6); border: 1px solid var(--line); color: var(--parchment);
+    padding: 16px 8px; border-radius: 7px; font-family: var(--sans);
+    font-size: 1.05rem; letter-spacing: .04em; min-height: 48px;
+    -webkit-appearance: none; appearance: none; -moz-appearance: textfield;
+    transition: border-color .15s ease;
+  }
+  .yc-time-pair input::-webkit-outer-spin-button,
+  .yc-time-pair input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .yc-time-pair input:focus { outline: none; border-color: var(--gold); }
+  .yc-time-sep { font-family: var(--sans); font-size: 1.4rem; color: var(--gold); opacity: .65; }
   .yc-check {
     display: flex; align-items: center; gap: 12px; min-height: 44px; cursor: pointer;
     font-family: var(--sans); font-size: .9rem; color: var(--mist); margin-top: 6px;
@@ -203,7 +218,13 @@
         <div class="yc-grid">
           <label>First name<input type="text" id="ycName" placeholder="Your name" autocomplete="given-name"></label>
           <label>Birth date<input type="date" id="ycDate" required></label>
-          <label>Birth time (24h)<input type="time" id="ycTime" placeholder="HH:MM"></label>
+          <label>Birth time (24-hour)
+            <div class="yc-time-pair">
+              <input type="number" id="ycHour" placeholder="HH" min="0" max="23" inputmode="numeric" pattern="[0-9]*" autocomplete="off">
+              <span class="yc-time-sep">:</span>
+              <input type="number" id="ycMinute" placeholder="MM" min="0" max="59" inputmode="numeric" pattern="[0-9]*" autocomplete="off">
+            </div>
+          </label>
           <label class="yc-city">Birth city<input type="text" id="ycCity" placeholder="Edmonton, Canada" autocomplete="off"></label>
         </div>
         <label class="yc-check"><input type="checkbox" id="ycUnknown"> I don't know my birth time</label>
@@ -716,7 +737,30 @@
   const readEl  = document.getElementById('ycReadout');
   const errEl   = document.getElementById('ycError');
   const unknown = document.getElementById('ycUnknown');
-  const timeEl  = document.getElementById('ycTime');
+  const hourEl   = document.getElementById('ycHour');
+  const minuteEl = document.getElementById('ycMinute');
+
+  // Shim the old single-input "timeEl" with a virtual object that reads
+  // from the two new HH/MM number boxes, so the rest of the form code
+  // (which uses timeEl.value / timeEl.disabled) keeps working unchanged.
+  const timeEl = {
+    get value() {
+      const h = (hourEl.value || '').trim();
+      const m = (minuteEl.value || '').trim();
+      if (!h || !m) return '';
+      const hh = String(Math.max(0, Math.min(23, parseInt(h, 10) || 0))).padStart(2, '0');
+      const mm = String(Math.max(0, Math.min(59, parseInt(m, 10) || 0))).padStart(2, '0');
+      return hh + ':' + mm;
+    },
+    set value(v) {
+      if (!v || !v.includes(':')) { hourEl.value = ''; minuteEl.value = ''; return; }
+      const [h, m] = v.split(':');
+      hourEl.value = h.replace(/^0+(?=\d)/, '');     // drop leading zero for cleaner display
+      minuteEl.value = m.replace(/^0+(?=\d)/, '');
+    },
+    set disabled(b) { hourEl.disabled = b; minuteEl.disabled = b; },
+    get disabled() { return hourEl.disabled; },
+  };
   const redoBtn = document.getElementById('ycRedo');
   const remember = document.getElementById('ycRemember');
   const savedTag = document.getElementById('ycSaved');
