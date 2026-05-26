@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Your Birth Chart · Moon &amp; Money</title>
+<meta name="description" content="A free, interactive natal chart wheel. See where the Sun, Moon, and visible planets were the moment you arrived. A taste of what the Money Chart reads in full.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Moon &amp; Money">
+<meta property="og:image" content="https://moonandmoney.ca/assets/og/social.png?v=20260525">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://moonandmoney.ca/assets/og/social.png?v=20260525">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/assets/og/apple-touch-icon.png"><meta name="theme-color" content="#070608"><meta name="apple-mobile-web-app-title" content="Moon & Money"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&family=Noto+Sans+Symbols+2&display=swap"><link rel="stylesheet" href="assets/css/styles.css">
+
+<style>
+  /* Your Chart — page-specific styles, scoped with yc- */
+  .yc-stage { padding: 12px 0 60px; }
+  .yc-form  {
+    max-width: 640px; margin: 0 auto;
+    border: 1px solid var(--line); border-radius: 12px;
+    background: linear-gradient(165deg, #11233D, #07121F);
+    padding: clamp(24px, 4vw, 36px);
+    box-shadow: 0 8px 30px -10px rgba(0,0,0,.55), 0 0 28px rgba(201,162,78,.12);
+  }
+  .yc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .yc-grid label, .yc-deliver label {
+    display: flex; flex-direction: column; gap: 7px;
+    font-family: var(--display); font-size: .6rem; letter-spacing: .18em;
+    text-transform: uppercase; color: var(--mist);
+  }
+  .yc-grid input, .yc-deliver input {
+    background: rgba(7,6,8,.6); border: 1px solid var(--line); color: var(--parchment);
+    padding: 16px 14px; border-radius: 7px; font-family: var(--sans);
+    font-size: 1rem; min-height: 48px; -webkit-appearance: none; appearance: none;
+  }
+  .yc-grid input:focus, .yc-deliver input:focus {
+    outline: none; border-color: var(--gold); box-shadow: var(--glow-gold);
+  }
+  .yc-city { grid-column: 1 / -1; }
+  .yc-check {
+    display: flex; align-items: center; gap: 12px; min-height: 44px; cursor: pointer;
+    font-family: var(--sans); font-size: .9rem; color: var(--mist); margin-top: 6px;
+  }
+  .yc-check input { width: 22px; height: 22px; accent-color: var(--gold); flex: 0 0 22px; }
+  .yc-submit {
+    display: flex; justify-content: center; margin-top: 18px;
+  }
+  .yc-fine { text-align: center; color: var(--mist); font-size: .82rem; opacity: .78; margin-top: 14px; }
+  .yc-error {
+    color: #e8a; font-size: .92rem; text-align: center; margin-top: 12px; min-height: 1.4em;
+  }
+
+  /* The wheel */
+  .yc-result { display: none; max-width: 720px; margin: 30px auto 0; }
+  .yc-result.show { display: block; animation: ycReveal .6s ease-out; }
+  @keyframes ycReveal { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  .yc-wheel-wrap {
+    aspect-ratio: 1 / 1; max-width: 620px; margin: 0 auto;
+  }
+  .yc-wheel-wrap svg { width: 100%; height: 100%; display: block; }
+  .yc-readout {
+    max-width: 540px; margin: 30px auto 0;
+    display: grid; gap: 12px;
+  }
+  .yc-place {
+    display: grid; grid-template-columns: 1fr auto; gap: 14px;
+    padding: 14px 18px;
+    border: 1px solid rgba(201,162,78,.22); border-radius: 8px;
+    background: rgba(7,6,8,.4);
+    font-family: var(--serif);
+  }
+  .yc-place .pn { font-style: italic; color: var(--mist); font-size: 1.02rem; }
+  .yc-place .ps { color: var(--gold-bright); letter-spacing: .04em; font-size: 1.02rem; }
+  .yc-result .yc-redo {
+    display: flex; justify-content: center; margin: 28px 0 0;
+  }
+  .yc-redo button {
+    background: none; border: 0; cursor: pointer;
+    color: var(--mist); font-family: var(--display); font-size: .68rem;
+    letter-spacing: .22em; text-transform: uppercase;
+  }
+  .yc-redo button:hover { color: var(--gold-bright); }
+
+  /* the bottom money-chart CTA on the result */
+  .yc-pitch {
+    max-width: 620px; margin: 40px auto 0;
+    padding: clamp(26px, 4vw, 38px);
+    border: 1px solid rgba(201,162,78,.35); border-radius: 12px;
+    background: linear-gradient(165deg, #11233D, #07121F);
+    text-align: center;
+    box-shadow: 0 0 40px rgba(201,162,78,.18);
+  }
+  .yc-pitch .eyebrow { color: var(--gold); }
+  .yc-pitch h3 { font-size: clamp(1.6rem, 3.4vw, 2.1rem); margin: 12px 0 12px; }
+  .yc-pitch p { color: var(--mist); max-width: 460px; margin: 0 auto 22px; }
+</style>
+</head>
+<body>
+<canvas id="starfield"></canvas>
+<div class="nebula"></div>
+
+<header class="nav">
+  <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
+  <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li class="nav-dropdown" aria-expanded="false">
+      <button class="nav-trigger" type="button" aria-haspopup="true" aria-expanded="false">Tools <span class="caret" aria-hidden="true">&#9662;</span></button>
+      <ul class="nav-submenu">
+        <li><a href="pendulum/">Pendulum</a></li>
+        <li><a href="calendar.html">Calendar</a></li>
+        <li><a href="wheel.html">Wheel</a></li>
+        <li><a href="draw.html">Card</a></li>
+        <li><a href="quiz.html">Quiz</a></li>
+        <li><a href="your-chart.html">Your Chart</a></li>
+      </ul>
+    </li>
+    <li><a href="shop.html">Atelier</a></li>
+    <li><a href="archive.html">Archive</a></li>
+    <li><a href="sessions.html">Sessions</a></li>
+    <li><a href="about.html">Ethos</a></li>
+    <li><a href="https://moonandmoney.substack.com/subscribe" target="_blank">Crescent Club</a></li>
+    <li><a class="nav-cta" href="money-chart.html">Money Chart</a></li>
+  </ul>
+</header>
+
+<main>
+  <section class="page-hero">
+    <div class="wrap">
+      <span class="eyebrow">Your Sky</span>
+      <h1>Your <span class="gold">birth chart</span>, drawn live</h1>
+      <p>Enter your birth data. See where the Sun, the Moon, and the visible planets were the moment you arrived. A free taste of what your Money Chart reads in full.</p>
+      <p style="margin:14px auto 0;max-width:520px;color:var(--mist);font-size:.85rem;font-style:italic;opacity:.78;text-align:center">For reflection and self-knowledge. Not financial or investment advice.</p>
+    </div>
+  </section>
+
+  <section class="yc-stage">
+    <div class="wrap">
+
+      <form class="yc-form" id="ycForm" novalidate>
+        <div class="yc-grid">
+          <label>First name<input type="text" id="ycName" placeholder="Your name" autocomplete="given-name"></label>
+          <label>Birth date<input type="date" id="ycDate" required></label>
+          <label>Birth time (24h)<input type="time" id="ycTime" placeholder="HH:MM"></label>
+          <label class="yc-city">Birth city<input type="text" id="ycCity" placeholder="Edmonton, Canada" autocomplete="off"></label>
+        </div>
+        <label class="yc-check"><input type="checkbox" id="ycUnknown"> I don't know my birth time</label>
+        <div class="yc-submit">
+          <button class="btn btn-gold" type="submit">Draw the wheel</button>
+        </div>
+        <p class="yc-fine">Nothing is sent or saved. Your placements are computed in your browser and stay with you.</p>
+        <div class="yc-error" id="ycError" aria-live="polite"></div>
+      </form>
+
+      <div class="yc-result" id="ycResult">
+        <div class="yc-wheel-wrap" id="ycWheelWrap"></div>
+        <div class="yc-readout" id="ycReadout"></div>
+        <div class="yc-redo">
+          <button type="button" id="ycRedo">Draw another ✦</button>
+        </div>
+
+        <div class="yc-pitch">
+          <span class="eyebrow">Want this read for you</span>
+          <h3>The <em>Money Chart</em> goes deeper</h3>
+          <p>Your wheel above shows <em>where</em> the planets were. The Money Chart reads <em>what they mean</em> for how money actually moves through you. Eight pages, drawn from these placements.</p>
+          <a class="btn btn-gold" href="money-chart.html">Order your Money Chart</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
+        <p>Personal finance, read through astrology. By Luna Wilde.</p>
+      </div>
+      <div class="foot-col"><h4>Explore</h4><a href="wheel.html">Wheel</a><a href="draw.html">Card</a><a href="quiz.html">Quiz</a><a href="shop.html">Atelier</a><a href="pendulum/">Pendulum</a><a href="calendar.html">Calendar</a><a href="archive.html">Archive</a><a href="sessions.html">Sessions</a><a href="courses.html">Academy</a><a href="about.html">Ethos</a></div>
+      <div class="foot-col"><h4>Club</h4><a href="https://moonandmoney.substack.com" target="_blank">Substack</a><a href="https://moonandmoney.substack.com/subscribe" target="_blank">Crescent Club</a><a href="fifth-moon.html">The Fifth Moon</a><a href="about.html#circle">Circle <span class="soon">Soon</span></a><a href="about.html#token">Token <span class="soon">Soon</span></a></div>
+      <div class="foot-col"><h4>Follow</h4><a href="https://moonandmoney.substack.com" target="_blank">@moonmoney</a><a href="archive.html">Notes</a><a href="index.html">Newsletter</a></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="yr"></span> Moon &amp; Money · Luna Wilde. All rights reserved.</span>
+      <span><a href="privacy.html" style="color:inherit;text-decoration:none;opacity:.85">Privacy</a></span>
+      <span>Built in rhythm with the moon ☾</span>
+    </div>
+    <p class="foot-legal" style="text-align:center;font-family:Cormorant Garamond,Georgia,serif;font-style:italic;font-size:.82rem;opacity:.55;color:#a89fb4;margin:14px 0 0 0;letter-spacing:.02em">For reflection and self-knowledge. Not financial or investment advice.</p>
+  </div>
+</footer>
+
+<div id="mmPlayer" data-welcome="assets/audio/invocation.mp3"></div>
+
+<script src="assets/js/zodiac.js"></script>
+<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/player.js"></script>
+
+<script>
+/* ===========================================================================
+   YOUR CHART — natal wheel, computed in-browser, no backend.
+
+   The maths is a simplified Schlyter/Meeus model: mean Keplerian elements at
+   J2000 with first-order corrections. Accurate to within ~1 degree of sign
+   for the Sun and Moon, ~1-2 degrees for the visible planets. That's fine
+   for a sign-placement preview; the full chart engine (used for the paid
+   Money Chart) goes deeper.
+   =========================================================================== */
+(function () {
+  'use strict';
+
+  const DEG = Math.PI / 180;
+  const norm = (a) => { a = a % 360; return a < 0 ? a + 360 : a; };
+
+  const SIGNS = [
+    { name: 'Aries',       glyph: '♈' },
+    { name: 'Taurus',      glyph: '♉' },
+    { name: 'Gemini',      glyph: '♊' },
+    { name: 'Cancer',      glyph: '♋' },
+    { name: 'Leo',         glyph: '♌' },
+    { name: 'Virgo',       glyph: '♍' },
+    { name: 'Libra',       glyph: '♎' },
+    { name: 'Scorpio',     glyph: '♏' },
+    { name: 'Sagittarius', glyph: '♐' },
+    { name: 'Capricorn',   glyph: '♑' },
+    { name: 'Aquarius',    glyph: '♒' },
+    { name: 'Pisces',      glyph: '♓' },
+  ];
+
+  const PLANETS = [
+    { key: 'sun',     name: 'Sun',     glyph: '☉' },
+    { key: 'moon',    name: 'Moon',    glyph: '☽' },
+    { key: 'mercury', name: 'Mercury', glyph: '☿' },
+    { key: 'venus',   name: 'Venus',   glyph: '♀' },
+    { key: 'mars',    name: 'Mars',    glyph: '♂' },
+    { key: 'jupiter', name: 'Jupiter', glyph: '♃' },
+    { key: 'saturn',  name: 'Saturn',  glyph: '♄' },
+  ];
+
+  function signOf(longitude) {
+    const i = Math.floor(norm(longitude) / 30) % 12;
+    const deg = norm(longitude) - i * 30;
+    return { index: i, sign: SIGNS[i], deg };
+  }
+
+  /* --- Time --- */
+  function julianDate(d) {
+    // d is a JS Date in UTC
+    return d.getTime() / 86400000 + 2440587.5;
+  }
+
+  /* --- Sun longitude (Meeus simplified, in degrees) --- */
+  function sunLongitude(JD) {
+    const D = JD - 2451545.0;
+    const L = norm(280.460 + 0.9856474 * D);
+    const g = norm(357.528 + 0.9856003 * D) * DEG;
+    return norm(L + 1.915 * Math.sin(g) + 0.020 * Math.sin(2 * g));
+  }
+
+  /* --- Moon longitude (Meeus simplified, in degrees) --- */
+  function moonLongitude(JD) {
+    const D = JD - 2451545.0;
+    const Lm = norm(218.316 + 13.176396 * D);
+    const M = norm(134.963 + 13.064993 * D) * DEG;
+    return norm(Lm + 6.289 * Math.sin(M));
+  }
+
+  /* --- Planet orbital elements (Schlyter, J2000 + daily rates).
+       Each: [N0, Nd, i0, id, w0, wd, a0, ad, e0, ed, M0, Md].
+       Earth is included so we can compute geocentric for the inner planets. */
+  const ELEMENTS = {
+    earth:   { N0:0,        Nd:0,           i0:0,      id:0,            w0:282.9404, wd:4.70935e-5, a0:1.000000, ad:0,          e0:0.016709, ed:-1.151e-9,  M0:356.0470, Md:0.9856002585 },
+    mercury: { N0:48.3313,  Nd:3.24587e-5,  i0:7.0047, id:5.00e-8,      w0:29.1241,  wd:1.01444e-5, a0:0.387098, ad:0,          e0:0.205635, ed:5.59e-10,   M0:168.6562, Md:4.0923344368 },
+    venus:   { N0:76.6799,  Nd:2.46590e-5,  i0:3.3946, id:2.75e-8,      w0:54.8910,  wd:1.38374e-5, a0:0.723330, ad:0,          e0:0.006773, ed:-1.302e-9,  M0:48.0052,  Md:1.6021302244 },
+    mars:    { N0:49.5574,  Nd:2.11081e-5,  i0:1.8497, id:-1.78e-8,     w0:286.5016, wd:2.92961e-5, a0:1.523688, ad:0,          e0:0.093405, ed:2.516e-9,   M0:18.6021,  Md:0.5240207766 },
+    jupiter: { N0:100.4542, Nd:2.76854e-5,  i0:1.3030, id:-1.557e-7,    w0:273.8777, wd:1.64505e-5, a0:5.20256,  ad:0,          e0:0.048498, ed:4.469e-9,   M0:19.8950,  Md:0.0830853001 },
+    saturn:  { N0:113.6634, Nd:2.38980e-5,  i0:2.4886, id:-1.081e-7,    w0:339.3939, wd:2.97661e-5, a0:9.55475,  ad:0,          e0:0.055546, ed:-9.499e-9,  M0:316.9670, Md:0.0334442282 },
+  };
+
+  /* Solve Kepler's equation iteratively (M and e in radians for M, e is dimensionless) */
+  function kepler(M, e) {
+    let E = M + e * Math.sin(M) * (1 + e * Math.cos(M));
+    for (let i = 0; i < 8; i++) {
+      const dE = (E - e * Math.sin(E) - M) / (1 - e * Math.cos(E));
+      E -= dE;
+      if (Math.abs(dE) < 1e-9) break;
+    }
+    return E;
+  }
+
+  /* Heliocentric ecliptic position of a planet on Julian Date JD.
+     Returns { x, y, z, r, lon } in AU and degrees. */
+  function helioPos(elements, JD) {
+    const D = JD - 2451545.0;
+    const N = norm(elements.N0 + elements.Nd * D) * DEG;
+    const i = (elements.i0 + elements.id * D) * DEG;
+    const w = norm(elements.w0 + elements.wd * D) * DEG;
+    const a = elements.a0 + elements.ad * D;
+    const e = elements.e0 + elements.ed * D;
+    const M = norm(elements.M0 + elements.Md * D) * DEG;
+
+    const E = kepler(M, e);
+    const xv = a * (Math.cos(E) - e);
+    const yv = a * Math.sqrt(1 - e * e) * Math.sin(E);
+    const v = Math.atan2(yv, xv);
+    const r = Math.sqrt(xv * xv + yv * yv);
+
+    const x = r * (Math.cos(N) * Math.cos(v + w) - Math.sin(N) * Math.sin(v + w) * Math.cos(i));
+    const y = r * (Math.sin(N) * Math.cos(v + w) + Math.cos(N) * Math.sin(v + w) * Math.cos(i));
+    const z = r * Math.sin(v + w) * Math.sin(i);
+
+    const lon = norm(Math.atan2(y, x) / DEG);
+    return { x, y, z, r, lon };
+  }
+
+  /* Geocentric ecliptic longitude (degrees) for a planet on Julian Date.
+     Subtracts Earth's heliocentric position to get the apparent direction
+     from Earth. Inner planets matter most; outer planets are within ~1 deg
+     either way. */
+  function planetGeoLongitude(key, JD) {
+    const p = helioPos(ELEMENTS[key], JD);
+    const e = helioPos(ELEMENTS.earth, JD);
+    const dx = p.x - e.x;
+    const dy = p.y - e.y;
+    return norm(Math.atan2(dy, dx) / DEG);
+  }
+
+  /* Compute all placements for an input UTC Date. */
+  function computeChart(date) {
+    const JD = julianDate(date);
+    return {
+      sun:     sunLongitude(JD),
+      moon:    moonLongitude(JD),
+      mercury: planetGeoLongitude('mercury', JD),
+      venus:   planetGeoLongitude('venus',   JD),
+      mars:    planetGeoLongitude('mars',    JD),
+      jupiter: planetGeoLongitude('jupiter', JD),
+      saturn:  planetGeoLongitude('saturn',  JD),
+    };
+  }
+
+  /* --- SVG wheel rendering ---
+     Aries 0deg sits at 9 o'clock (mathematical 180deg). Signs progress
+     counter-clockwise (Taurus below, Gemini at 7 o'clock, etc).
+     Math angle = (longitude + 180) mod 360, with SVG y inverted. */
+  const SIZE = 600;
+  const CX = SIZE / 2, CY = SIZE / 2;
+  const R_OUTER = 285;
+  const R_SIGN_RING = 235;       // inner edge of zodiac segment band
+  const R_SIGN_LABEL = 260;      // where the sign glyphs sit
+  const R_PLANET = 195;          // where planet glyphs sit (inside the sign ring)
+  const R_INNER = 90;            // center disc
+
+  const PALETTE = {
+    bg: '#0B2545',
+    bgInner: '#07111F',
+    ring: '#C9A24E',
+    ringSoft: 'rgba(201,162,78,.45)',
+    spoke: 'rgba(201,162,78,.18)',
+    text: '#EFE7D4',
+    sign: '#E5C77B',
+    planet: '#FCF7F1',
+  };
+
+  function pointAt(longitude, radius) {
+    const a = (longitude + 180) * DEG;
+    return { x: CX + radius * Math.cos(a), y: CY - radius * Math.sin(a) };
+  }
+
+  function buildSVG(chart) {
+    const lines = [];
+    lines.push(`<svg viewBox="0 0 ${SIZE} ${SIZE}" xmlns="http://www.w3.org/2000/svg" aria-label="Natal chart wheel">`);
+
+    // outer background disc with subtle gradient
+    lines.push(`<defs>
+      <radialGradient id="ycBg" cx="50%" cy="48%" r="62%">
+        <stop offset="0" stop-color="${PALETTE.bgInner}"/>
+        <stop offset="1" stop-color="${PALETTE.bg}"/>
+      </radialGradient>
+      <radialGradient id="ycGlow" cx="50%" cy="50%" r="60%">
+        <stop offset="0" stop-color="rgba(229,199,123,.18)"/>
+        <stop offset="1" stop-color="rgba(229,199,123,0)"/>
+      </radialGradient>
+    </defs>`);
+
+    lines.push(`<circle cx="${CX}" cy="${CY}" r="${R_OUTER}" fill="url(#ycBg)"/>`);
+    lines.push(`<circle cx="${CX}" cy="${CY}" r="${R_OUTER + 4}" fill="none" stroke="${PALETTE.ring}" stroke-width="1.4"/>`);
+    lines.push(`<circle cx="${CX}" cy="${CY}" r="${R_SIGN_RING}" fill="none" stroke="${PALETTE.ringSoft}" stroke-width="1"/>`);
+    lines.push(`<circle cx="${CX}" cy="${CY}" r="${R_INNER}" fill="url(#ycGlow)" stroke="${PALETTE.ringSoft}" stroke-width="1"/>`);
+
+    // 12 sign spokes + sign glyphs
+    for (let i = 0; i < 12; i++) {
+      const lon = i * 30;
+      const a = pointAt(lon, R_OUTER);
+      const b = pointAt(lon, R_SIGN_RING);
+      lines.push(`<line x1="${a.x.toFixed(2)}" y1="${a.y.toFixed(2)}" x2="${b.x.toFixed(2)}" y2="${b.y.toFixed(2)}" stroke="${PALETTE.spoke}" stroke-width="1"/>`);
+      const mid = pointAt(lon + 15, R_SIGN_LABEL);
+      lines.push(`<text x="${mid.x.toFixed(2)}" y="${mid.y.toFixed(2)}" text-anchor="middle" dominant-baseline="middle" font-family="DejaVu Sans, sans-serif" font-size="22" fill="${PALETTE.sign}">${SIGNS[i].glyph}</text>`);
+    }
+
+    // planet glyphs at their longitudes, with simple collision spreading along
+    // a tangent so two close planets don't print on top of each other
+    const placed = [];
+    PLANETS.forEach((p) => {
+      const lon = chart[p.key];
+      let r = R_PLANET;
+      // if too close in longitude (<8 deg) to a previously placed planet, pull this one inward
+      for (const q of placed) {
+        const d = Math.abs(((lon - q.lon + 540) % 360) - 180);
+        if (Math.abs(180 - d) < 8) { r -= 28; }
+      }
+      const pt = pointAt(lon, r);
+      placed.push({ lon, r });
+
+      // tick mark on the sign ring at this longitude
+      const t1 = pointAt(lon, R_SIGN_RING);
+      const t2 = pointAt(lon, R_SIGN_RING - 12);
+      lines.push(`<line x1="${t1.x.toFixed(2)}" y1="${t1.y.toFixed(2)}" x2="${t2.x.toFixed(2)}" y2="${t2.y.toFixed(2)}" stroke="${PALETTE.ring}" stroke-width="1.4"/>`);
+
+      // glyph with a soft halo
+      lines.push(`<circle cx="${pt.x.toFixed(2)}" cy="${pt.y.toFixed(2)}" r="16" fill="rgba(11,37,69,.85)" stroke="${PALETTE.ring}" stroke-width="1"/>`);
+      lines.push(`<text x="${pt.x.toFixed(2)}" y="${pt.y.toFixed(2)}" text-anchor="middle" dominant-baseline="middle" font-family="DejaVu Sans, sans-serif" font-size="20" fill="${PALETTE.planet}">${p.glyph}</text>`);
+    });
+
+    // center mark — small crescent + brand
+    lines.push(`<text x="${CX}" y="${CY - 6}" text-anchor="middle" dominant-baseline="middle" font-family="DejaVu Sans, sans-serif" font-size="34" fill="${PALETTE.ring}">☽</text>`);
+    lines.push(`<text x="${CX}" y="${CY + 22}" text-anchor="middle" font-family="Jost, sans-serif" font-size="8" letter-spacing="2.6" fill="${PALETTE.sign}">MOON &amp; MONEY</text>`);
+
+    lines.push(`</svg>`);
+    return lines.join('\n');
+  }
+
+  function buildReadout(chart) {
+    const out = [];
+    PLANETS.forEach((p) => {
+      const s = signOf(chart[p.key]);
+      out.push(`<div class="yc-place"><span class="pn">${p.glyph}&nbsp; ${p.name}</span><span class="ps">${s.sign.name} ${Math.floor(s.deg)}°</span></div>`);
+    });
+    return out.join('');
+  }
+
+  /* --- Page wiring --- */
+  const form    = document.getElementById('ycForm');
+  const result  = document.getElementById('ycResult');
+  const wheelEl = document.getElementById('ycWheelWrap');
+  const readEl  = document.getElementById('ycReadout');
+  const errEl   = document.getElementById('ycError');
+  const unknown = document.getElementById('ycUnknown');
+  const timeEl  = document.getElementById('ycTime');
+  const redoBtn = document.getElementById('ycRedo');
+
+  unknown.addEventListener('change', () => {
+    timeEl.disabled = unknown.checked;
+    if (unknown.checked) timeEl.value = '';
+  });
+
+  redoBtn.addEventListener('click', () => {
+    result.classList.remove('show');
+    form.style.display = '';
+    window.scrollTo({ top: form.getBoundingClientRect().top + window.pageYOffset - 100, behavior: 'smooth' });
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    errEl.textContent = '';
+    const dateStr = document.getElementById('ycDate').value;
+    const timeStr = unknown.checked ? '12:00' : (timeEl.value || '12:00');
+    if (!dateStr) { errEl.textContent = 'Please enter your birth date.'; return; }
+    // Build a Date — interpret the input as local time (best we can do
+    // without geocoding; the Money Chart engine resolves the proper birth
+    // city timezone). For sign placement this is accurate enough.
+    const d = new Date(dateStr + 'T' + timeStr);
+    if (isNaN(d.getTime())) { errEl.textContent = 'That date and time did not parse — try YYYY-MM-DD and HH:MM.'; return; }
+    if (d.getFullYear() < 1900 || d.getFullYear() > 2099) {
+      errEl.textContent = 'This free wheel is tuned for years 1900–2099. Your Money Chart can read any date.';
+      return;
+    }
+    const chart = computeChart(d);
+    wheelEl.innerHTML = buildSVG(chart);
+    readEl.innerHTML = buildReadout(chart);
+    form.style.display = 'none';
+    result.classList.add('show');
+    setTimeout(() => result.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+  });
+})();
+</script>
+
+</body>
+</html>
