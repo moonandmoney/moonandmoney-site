@@ -1232,10 +1232,13 @@ footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gr
    ────────────────────────────────────────────────────────────── */
 
 @media (max-width: 768px) {
-  /* Starfield canvas: ~250 stars repainting every frame. Off on phones. */
-  #starfield { display: none !important; }
-  /* Nebula gradient layer: full-viewport gradient with animated lighting.
-     Off on phones — body bg navy is enough atmosphere. */
+  /* Starfield stays visible on phones (the brand needs the sky), but the JS
+     runs in a lightweight mode there: fewer stars, slower frame cadence, no
+     constellation overlay. See runStarfield() in main.js. */
+
+  /* Nebula gradient layer: a full-viewport animated radial-gradient. Off on
+     phones — it was the heavier of the two backdrops and the navy body
+     colour already carries the atmosphere. */
   .nebula { display: none !important; }
   /* Backdrop-filter forces a separate GPU compositor layer continuously.
      Drop it everywhere on mobile; the navy backgrounds underneath are
