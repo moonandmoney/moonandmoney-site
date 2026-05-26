@@ -904,6 +904,28 @@ function audioChime(freq) {
   o.start(t); o.stop(t + 1.8);
 }
 
+/* End-of-session bell — louder, lower, longer than the breath chimes,
+   so closing your eyes through a session leaves no question that it's
+   done. A low-mid sine layered with a soft fifth above it for warmth. */
+function audioEndBell() {
+  if (!audio.ctx) return;
+  var t = audio.ctx.currentTime;
+  var play = function (freq, gainPeak, dur) {
+    var o = audio.ctx.createOscillator(); o.type = "sine"; o.frequency.value = freq;
+    var g = audio.ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(gainPeak, t + 0.06);
+    g.gain.exponentialRampToValueAtTime(0.0008, t + dur);
+    o.connect(g); g.connect(audio.master);
+    o.start(t); o.stop(t + dur + 0.05);
+  };
+  // Fundamental (lower, warmer than the breath chimes) + a fifth above it.
+  // Roughly 2.5x the volume of a turn chime, and 2-3x the length.
+  play(330.0, 0.46, 4.2);            // E4 fundamental
+  play(494.0, 0.18, 3.6);            // B4 fifth, quieter
+  play(165.0, 0.22, 5.0);            // E3 sub-octave for depth
+}
+
 // smootherstep ramp between a and b
 function sstep(a, b, x) {
   x = Math.max(0, Math.min(1, (x - a) / (b - a)));
@@ -1079,7 +1101,12 @@ function completeSession(early) {
 
   state.pendulum.setAttribute("transform", "rotate(0 190 2)");
   state.bobGroup.removeAttribute("transform");
-  if (audio.ctx) audio.swell.gain.setTargetAtTime(0, audio.ctx.currentTime, 0.4);
+  if (audio.ctx) {
+    audio.swell.gain.setTargetAtTime(0, audio.ctx.currentTime, 0.4);
+    // A pronounced end-bell, regardless of whether the breath audio was on,
+    // so closing your eyes through a session always gets a clear "done."
+    audioEndBell();
+  }
   state.breathHint.classList.remove("show");
   document.getElementById("sessionState").classList.remove("active");
   state.hrvGraphWrap.classList.remove("active");
