@@ -236,7 +236,7 @@
 
   const PLANETS = [
     { key: 'sun',     name: 'Sun',     glyph: '☉' },
-    { key: 'moon',    name: 'Moon',    glyph: '☽' },
+    { key: 'moon',    name: 'Moon',    glyph: '☾' },
     { key: 'mercury', name: 'Mercury', glyph: '☿' },
     { key: 'venus',   name: 'Venus',   glyph: '♀' },
     { key: 'mars',    name: 'Mars',    glyph: '♂' },
@@ -321,14 +321,17 @@
   }
 
   /* Geocentric ecliptic longitude (degrees) for a planet on Julian Date.
-     Subtracts Earth's heliocentric position to get the apparent direction
-     from Earth. Inner planets matter most; outer planets are within ~1 deg
-     either way. */
+     IMPORTANT: Schlyter's "Sun" elements (which we use here for "earth")
+     actually return the SUN's geocentric position vector, which equals the
+     NEGATIVE of Earth's true heliocentric position. So to get the planet's
+     geocentric direction from Earth, we ADD this vector to the planet's
+     heliocentric position (equivalent to subtracting Earth's true helio).
+     This was the bug that flipped every planet by 180 degrees. */
   function planetGeoLongitude(key, JD) {
     const p = helioPos(ELEMENTS[key], JD);
-    const e = helioPos(ELEMENTS.earth, JD);
-    const dx = p.x - e.x;
-    const dy = p.y - e.y;
+    const sun = helioPos(ELEMENTS.earth, JD);   // = Sun geocentric = -Earth helio
+    const dx = p.x + sun.x;
+    const dy = p.y + sun.y;
     return norm(Math.atan2(dy, dx) / DEG);
   }
 
@@ -430,7 +433,7 @@
     });
 
     // center mark — small crescent + brand
-    lines.push(`<text x="${CX}" y="${CY - 6}" text-anchor="middle" dominant-baseline="middle" font-family="DejaVu Sans, sans-serif" font-size="34" fill="${PALETTE.ring}">☽</text>`);
+    lines.push(`<text x="${CX}" y="${CY - 6}" text-anchor="middle" dominant-baseline="middle" font-family="DejaVu Sans, sans-serif" font-size="34" fill="${PALETTE.ring}">☾</text>`);
     lines.push(`<text x="${CX}" y="${CY + 22}" text-anchor="middle" font-family="Jost, sans-serif" font-size="8" letter-spacing="2.6" fill="${PALETTE.sign}">MOON &amp; MONEY</text>`);
 
     lines.push(`</svg>`);
