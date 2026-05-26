@@ -242,7 +242,11 @@
     { key: 'mars',    name: 'Mars',    glyph: '♂' },
     { key: 'jupiter', name: 'Jupiter', glyph: '♃' },
     { key: 'saturn',  name: 'Saturn',  glyph: '♄' },
+    { key: 'lilith',  name: 'Lilith',  glyph: '⚸' },
   ];
+
+  // Roman numerals for the house markers
+  const ROMAN = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
 
   function signOf(longitude) {
     const i = Math.floor(norm(longitude) / 30) % 12;
@@ -270,6 +274,35 @@
     const Lm = norm(218.316 + 13.176396 * D);
     const M = norm(134.963 + 13.064993 * D) * DEG;
     return norm(Lm + 6.289 * Math.sin(M));
+  }
+
+  /* --- Mean Black Moon Lilith longitude (lunar apogee) ---
+     Derived from L_moon - M_moon: the apsidal precession of the Moon's
+     orbit gives a mean motion of about 0.1114 deg/day, completing a
+     full circuit in roughly 8.85 years. */
+  function lilithLongitude(JD) {
+    const D = JD - 2451545.0;
+    return norm(83.353 + 0.111404 * D);
+  }
+
+  /* --- Ascendant (rising sign) ---
+     Needs Local Sidereal Time, which needs the birth city's longitude.
+     Standard Meeus formula:
+       tan(asc) = -cos(theta) / (sin(theta)*cos(obl) + tan(lat)*sin(obl))
+     where theta = LST. Quadrant correction: asc must lie within 180 deg
+     east of LST in ecliptic longitude. */
+  function ascendant(JD, latDeg, lngDeg) {
+    const D = JD - 2451545.0;
+    const gmst = norm(280.46061837 + 360.98564736629 * D);
+    const lst = norm(gmst + lngDeg);
+    const obl = 23.4392911 * DEG;
+    const lstRad = lst * DEG;
+    const latRad = latDeg * DEG;
+    let asc = Math.atan2(-Math.cos(lstRad), Math.sin(lstRad) * Math.cos(obl) + Math.tan(latRad) * Math.sin(obl));
+    asc = norm(asc / DEG);
+    const diff = norm(asc - lst);
+    if (diff > 180) asc = norm(asc + 180);
+    return asc;
   }
 
   /* --- Planet orbital elements (Schlyter, J2000 + daily rates).
@@ -336,9 +369,9 @@
   }
 
   /* Compute all placements for an input UTC Date. */
-  function computeChart(date) {
+  function computeChart(date, lat, lng) {
     const JD = julianDate(date);
-    return {
+    const chart = {
       sun:     sunLongitude(JD),
       moon:    moonLongitude(JD),
       mercury: planetGeoLongitude('mercury', JD),
@@ -346,7 +379,29 @@
       mars:    planetGeoLongitude('mars',    JD),
       jupiter: planetGeoLongitude('jupiter', JD),
       saturn:  planetGeoLongitude('saturn',  JD),
+      lilith:  lilithLongitude(JD),
     };
+    if (typeof lat === 'number' && typeof lng === 'number' && !Number.isNaN(lat) && !Number.isNaN(lng)) {
+      chart.asc = ascendant(JD, lat, lng);
+    }
+    return chart;
+  }
+
+  /* --- Geocode the birth city via Nominatim (free, ~1 req/sec).
+     Falls back gracefully if the request fails — the wheel still draws
+     without houses, just shows the planet placements. */
+  async function geocode(city) {
+    if (!city || city.trim().length < 2) return null;
+    const url = 'https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' + encodeURIComponent(city.trim());
+    try {
+      const r = await fetch(url, { headers: { 'Accept': 'application/json' } });
+      if (!r.ok) return null;
+      const data = await r.json();
+      if (!data || !data.length) return null;
+      return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon), display: data[0].display_name };
+    } catch (e) {
+      return null;
+    }
   }
 
   /* --- SVG wheel rendering ---
@@ -379,9 +434,11 @@
 
   function buildSVG(chart) {
     const lines = [];
+    const hasHouses = typeof chart.asc === 'number';
+    const ascSignIdx = hasHouses ? Math.floor(chart.asc / 30) : -1;
+
     lines.push(`<svg viewBox="0 0 ${SIZE} ${SIZE}" xmlns="http://www.w3.org/2000/svg" aria-label="Natal chart wheel">`);
 
-    // outer background disc with subtle gradient
     lines.push(`<defs>
       <radialGradient id="ycBg" cx="50%" cy="48%" r="62%">
         <stop offset="0" stop-color="${PALETTE.bgInner}"/>
@@ -398,41 +455,59 @@
     lines.push(`<circle cx="${CX}" cy="${CY}" r="${R_SIGN_RING}" fill="none" stroke="${PALETTE.ringSoft}" stroke-width="1"/>`);
     lines.push(`<circle cx="${CX}" cy="${CY}" r="${R_INNER}" fill="url(#ycGlow)" stroke="${PALETTE.ringSoft}" stroke-width="1"/>`);
 
-    // 12 sign spokes + sign glyphs
+    // 12 sign spokes + sign glyphs + (if asc known) house roman numerals
     for (let i = 0; i < 12; i++) {
       const lon = i * 30;
       const a = pointAt(lon, R_OUTER);
-      const b = pointAt(lon, R_SIGN_RING);
+      const b = pointAt(lon, R_INNER);  // spoke extends to inner ring now
       lines.push(`<line x1="${a.x.toFixed(2)}" y1="${a.y.toFixed(2)}" x2="${b.x.toFixed(2)}" y2="${b.y.toFixed(2)}" stroke="${PALETTE.spoke}" stroke-width="1"/>`);
       const mid = pointAt(lon + 15, R_SIGN_LABEL);
       lines.push(`<text x="${mid.x.toFixed(2)}" y="${mid.y.toFixed(2)}" text-anchor="middle" dominant-baseline="middle" font-family="DejaVu Sans, sans-serif" font-size="22" fill="${PALETTE.sign}">${SIGNS[i].glyph}</text>`);
+      // House roman numeral inside the inner ring, in this sign's wedge
+      if (hasHouses) {
+        const houseNum = ((i - ascSignIdx + 12) % 12) + 1;
+        const hmid = pointAt(lon + 15, R_INNER + 18);
+        lines.push(`<text x="${hmid.x.toFixed(2)}" y="${hmid.y.toFixed(2)}" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif" font-style="italic" font-size="14" fill="rgba(229,199,123,.62)">${ROMAN[houseNum - 1]}</text>`);
+      }
     }
 
-    // planet glyphs at their longitudes, with simple collision spreading along
-    // a tangent so two close planets don't print on top of each other
+    // ASC marker — a thicker gold spoke at the ascendant longitude, with a
+    // small "ASC" label hanging off the outer edge.
+    if (hasHouses) {
+      const a = pointAt(chart.asc, R_OUTER + 14);
+      const b = pointAt(chart.asc, R_INNER);
+      lines.push(`<line x1="${a.x.toFixed(2)}" y1="${a.y.toFixed(2)}" x2="${b.x.toFixed(2)}" y2="${b.y.toFixed(2)}" stroke="${PALETTE.ring}" stroke-width="2.4" stroke-linecap="round"/>`);
+      const lbl = pointAt(chart.asc, R_OUTER + 24);
+      lines.push(`<text x="${lbl.x.toFixed(2)}" y="${lbl.y.toFixed(2)}" text-anchor="middle" dominant-baseline="middle" font-family="Jost, sans-serif" font-size="10" letter-spacing="2.2" fill="${PALETTE.ring}">ASC</text>`);
+    }
+
+    // Planet placements with a corrected collision-spreading algorithm.
+    // For every planet within 10 deg of another already-placed planet, we
+    // step inward by ~32px so the glyphs stack along the radial axis instead
+    // of printing on top of each other. Capped at R_PLANET - 96 (3 deep)
+    // so the innermost still sits outside the centre brand mark.
     const placed = [];
     PLANETS.forEach((p) => {
       const lon = chart[p.key];
-      let r = R_PLANET;
-      // if too close in longitude (<8 deg) to a previously placed planet, pull this one inward
+      let collisions = 0;
       for (const q of placed) {
-        const d = Math.abs(((lon - q.lon + 540) % 360) - 180);
-        if (Math.abs(180 - d) < 8) { r -= 28; }
+        let d = Math.abs(lon - q.lon);
+        if (d > 180) d = 360 - d;
+        if (d < 10) collisions++;
       }
+      let r = R_PLANET - Math.min(collisions, 3) * 32;
       const pt = pointAt(lon, r);
       placed.push({ lon, r });
 
-      // tick mark on the sign ring at this longitude
       const t1 = pointAt(lon, R_SIGN_RING);
       const t2 = pointAt(lon, R_SIGN_RING - 12);
       lines.push(`<line x1="${t1.x.toFixed(2)}" y1="${t1.y.toFixed(2)}" x2="${t2.x.toFixed(2)}" y2="${t2.y.toFixed(2)}" stroke="${PALETTE.ring}" stroke-width="1.4"/>`);
 
-      // glyph with a soft halo
-      lines.push(`<circle cx="${pt.x.toFixed(2)}" cy="${pt.y.toFixed(2)}" r="16" fill="rgba(11,37,69,.85)" stroke="${PALETTE.ring}" stroke-width="1"/>`);
+      lines.push(`<circle cx="${pt.x.toFixed(2)}" cy="${pt.y.toFixed(2)}" r="16" fill="rgba(11,37,69,.92)" stroke="${PALETTE.ring}" stroke-width="1"/>`);
       lines.push(`<text x="${pt.x.toFixed(2)}" y="${pt.y.toFixed(2)}" text-anchor="middle" dominant-baseline="middle" font-family="DejaVu Sans, sans-serif" font-size="20" fill="${PALETTE.planet}">${p.glyph}</text>`);
     });
 
-    // center mark — small crescent + brand
+    // center crescent + brand
     lines.push(`<text x="${CX}" y="${CY - 6}" text-anchor="middle" dominant-baseline="middle" font-family="DejaVu Sans, sans-serif" font-size="34" fill="${PALETTE.ring}">☾</text>`);
     lines.push(`<text x="${CX}" y="${CY + 22}" text-anchor="middle" font-family="Jost, sans-serif" font-size="8" letter-spacing="2.6" fill="${PALETTE.sign}">MOON &amp; MONEY</text>`);
 
@@ -442,6 +517,10 @@
 
   function buildReadout(chart) {
     const out = [];
+    if (typeof chart.asc === 'number') {
+      const s = signOf(chart.asc);
+      out.push(`<div class="yc-place" style="border-color:rgba(201,162,78,.5)"><span class="pn"><strong style="color:var(--gold-bright);font-style:normal">ASC</strong>&nbsp; Rising</span><span class="ps">${s.sign.name} ${Math.floor(s.deg)}°</span></div>`);
+    }
     PLANETS.forEach((p) => {
       const s = signOf(chart[p.key]);
       out.push(`<div class="yc-place"><span class="pn">${p.glyph}&nbsp; ${p.name}</span><span class="ps">${s.sign.name} ${Math.floor(s.deg)}°</span></div>`);
@@ -470,22 +549,31 @@
     window.scrollTo({ top: form.getBoundingClientRect().top + window.pageYOffset - 100, behavior: 'smooth' });
   });
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     errEl.textContent = '';
     const dateStr = document.getElementById('ycDate').value;
     const timeStr = unknown.checked ? '12:00' : (timeEl.value || '12:00');
+    const cityStr = document.getElementById('ycCity').value;
     if (!dateStr) { errEl.textContent = 'Please enter your birth date.'; return; }
-    // Build a Date — interpret the input as local time (best we can do
-    // without geocoding; the Money Chart engine resolves the proper birth
-    // city timezone). For sign placement this is accurate enough.
     const d = new Date(dateStr + 'T' + timeStr);
     if (isNaN(d.getTime())) { errEl.textContent = 'That date and time did not parse — try YYYY-MM-DD and HH:MM.'; return; }
     if (d.getFullYear() < 1900 || d.getFullYear() > 2099) {
       errEl.textContent = 'This free wheel is tuned for years 1900–2099. Your Money Chart can read any date.';
       return;
     }
-    const chart = computeChart(d);
+    // Geocode the city for houses + ascendant. Only attempted if birth
+    // time is known (no time = no meaningful houses anyway).
+    let geo = null;
+    if (!unknown.checked && cityStr && cityStr.trim()) {
+      errEl.textContent = 'Drawing your wheel…';
+      geo = await geocode(cityStr);
+      errEl.textContent = '';
+      if (!geo) {
+        errEl.textContent = "Couldn't place that city, so houses are skipped. Planets still drew below.";
+      }
+    }
+    const chart = computeChart(d, geo ? geo.lat : null, geo ? geo.lng : null);
     wheelEl.innerHTML = buildSVG(chart);
     readEl.innerHTML = buildReadout(chart);
     form.style.display = 'none';
