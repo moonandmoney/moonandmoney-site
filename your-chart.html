@@ -50,6 +50,20 @@
     font-family: var(--sans); font-size: .9rem; color: var(--mist); margin-top: 6px;
   }
   .yc-check input { width: 22px; height: 22px; accent-color: var(--gold); flex: 0 0 22px; }
+  .yc-saved {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    margin-top: 14px;
+    font-family: var(--display); font-size: .68rem; letter-spacing: .18em;
+    text-transform: uppercase; color: var(--gold);
+  }
+  .yc-saved button {
+    background: none; border: 0; padding: 0; cursor: pointer;
+    color: var(--mist); font-family: inherit; font-size: inherit;
+    letter-spacing: inherit; text-transform: inherit;
+    border-bottom: 1px solid rgba(168,159,180,.4);
+    transition: color .2s ease, border-color .2s ease;
+  }
+  .yc-saved button:hover { color: var(--gold-bright); border-color: var(--gold); }
   .yc-submit {
     display: flex; justify-content: center; margin-top: 18px;
   }
@@ -164,11 +178,16 @@
           <label class="yc-city">Birth city<input type="text" id="ycCity" placeholder="Edmonton, Canada" autocomplete="off"></label>
         </div>
         <label class="yc-check"><input type="checkbox" id="ycUnknown"> I don't know my birth time</label>
+        <label class="yc-check"><input type="checkbox" id="ycRemember" checked> Remember on this device so I don't re-enter it</label>
         <div class="yc-submit">
           <button class="btn btn-gold" type="submit">Draw the wheel</button>
         </div>
-        <p class="yc-fine">Nothing is sent or saved. Your placements are computed in your browser and stay with you.</p>
+        <p class="yc-fine">Your placements are computed in your browser and stay with you. We can also remember your birth data on this device so you don't re-enter it on return visits — turn it on with the save box at the top of the form.</p>
         <div class="yc-error" id="ycError" aria-live="polite"></div>
+        <div class="yc-saved" id="ycSaved" hidden>
+          <span>✦ Saved on this device.</span>
+          <button type="button" id="ycForget">Forget</button>
+        </div>
       </form>
 
       <div class="yc-result" id="ycResult">
@@ -632,6 +651,56 @@
   const unknown = document.getElementById('ycUnknown');
   const timeEl  = document.getElementById('ycTime');
   const redoBtn = document.getElementById('ycRedo');
+  const remember = document.getElementById('ycRemember');
+  const savedTag = document.getElementById('ycSaved');
+  const forgetBtn = document.getElementById('ycForget');
+
+  /* localStorage save: a single most-recent birth-data record kept on
+     this device. Never leaves the browser, never sent anywhere.
+     Key shape: { name, date, time, timeUnknown, city }. */
+  const STORE_KEY = 'mm_your_chart_v1';
+  function loadSaved() {
+    try {
+      const raw = localStorage.getItem(STORE_KEY);
+      if (!raw) return null;
+      return JSON.parse(raw);
+    } catch (e) { return null; }
+  }
+  function saveCurrent() {
+    try {
+      const data = {
+        name: document.getElementById('ycName').value || '',
+        date: document.getElementById('ycDate').value || '',
+        time: timeEl.value || '',
+        timeUnknown: !!unknown.checked,
+        city: document.getElementById('ycCity').value || '',
+      };
+      localStorage.setItem(STORE_KEY, JSON.stringify(data));
+      savedTag.hidden = false;
+    } catch (e) {}
+  }
+  function clearSaved() {
+    try { localStorage.removeItem(STORE_KEY); } catch (e) {}
+    savedTag.hidden = true;
+    document.getElementById('ycName').value = '';
+    document.getElementById('ycDate').value = '';
+    timeEl.value = '';
+    unknown.checked = false;
+    timeEl.disabled = false;
+    document.getElementById('ycCity').value = '';
+  }
+  // Prefill on load
+  (function () {
+    const s = loadSaved();
+    if (!s) return;
+    if (s.name) document.getElementById('ycName').value = s.name;
+    if (s.date) document.getElementById('ycDate').value = s.date;
+    if (s.time) timeEl.value = s.time;
+    if (s.timeUnknown) { unknown.checked = true; timeEl.disabled = true; }
+    if (s.city) document.getElementById('ycCity').value = s.city;
+    savedTag.hidden = false;
+  })();
+  forgetBtn.addEventListener('click', clearSaved);
 
   unknown.addEventListener('change', () => {
     timeEl.disabled = unknown.checked;
@@ -678,6 +747,8 @@
     wheelEl.innerHTML = buildSVG(chart);
     readEl.innerHTML = buildReadout(chart);
     wireReadoutClicks();
+    // Remember the inputs locally (only if the visitor opted in).
+    if (remember && remember.checked) saveCurrent();
     form.style.display = 'none';
     result.classList.add('show');
     setTimeout(() => result.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
