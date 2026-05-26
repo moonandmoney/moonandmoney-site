@@ -6,7 +6,12 @@
    request will route there after the details are captured.
    ============================================================ */
 window.MM_CHART_CHECKOUT = {
-  individual: 'https://moonandmoney.lemonsqueezy.com/checkout/buy/bf4cc0ae-3e66-4914-a278-d1053b9b4733',
+  // LIVE (post-test-mode) URLs. The test-mode UUIDs were
+  // bf4cc0ae-3e66-4914-a278-d1053b9b4733 (Individual)
+  // a1aac914-e089-414a-a576-ddee6d623185 (Pairs)
+  // Replaced 2026-05-26 once owner migrated the catalogue to live.
+  // Pairs still on the old test UUID until owner sends the live one.
+  individual: 'https://moonandmoney.lemonsqueezy.com/checkout/buy/2092d32c-3d0b-4cbc-8705-737d0b5ada7f',
   pairs:      'https://moonandmoney.lemonsqueezy.com/checkout/buy/a1aac914-e089-414a-a576-ddee6d623185'
 };
 
