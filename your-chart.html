@@ -604,9 +604,14 @@
   }
 
   /* --- SVG wheel rendering ---
-     Aries 0deg sits at 9 o'clock (mathematical 180deg). Signs progress
-     counter-clockwise (Taurus below, Gemini at 7 o'clock, etc).
-     Math angle = (longitude + 180) mod 360, with SVG y inverted. */
+     The wheel is ROTATED to put the chart-owner's ASC at 9 o'clock,
+     which makes the horizontal midline the actual horizon at birth:
+     top half = above horizon (visible sky), bottom half = below
+     (the dark / underworld). When no birth time is given, ROT stays
+     at 0 and the wheel falls back to Aries-on-the-left (the standard
+     non-rotated zodiac orientation).
+     Math angle = (longitude - ROT + 180) mod 360, with SVG y inverted. */
+  let ROT = 0;  // chart rotation in degrees; buildSVG sets this per draw
   const SIZE = 600;
   const CX = SIZE / 2, CY = SIZE / 2;
   const R_OUTER = 285;
@@ -627,7 +632,7 @@
   };
 
   function pointAt(longitude, radius) {
-    const a = (longitude + 180) * DEG;
+    const a = (longitude - ROT + 180) * DEG;
     return { x: CX + radius * Math.cos(a), y: CY - radius * Math.sin(a) };
   }
 
@@ -635,6 +640,10 @@
     const lines = [];
     const hasHouses = typeof chart.asc === 'number';
     const ascSignIdx = hasHouses ? Math.floor(chart.asc / 30) : -1;
+    // Rotate the wheel so ASC sits at 9 o'clock. Without a birth time
+    // we cannot know the horizon, so ROT stays 0 and the wheel falls
+    // back to the standard Aries-on-the-left zodiac orientation.
+    ROT = hasHouses ? chart.asc : 0;
 
     lines.push(`<svg viewBox="0 0 ${SIZE} ${SIZE}" xmlns="http://www.w3.org/2000/svg" aria-label="Natal chart wheel">`);
 
@@ -647,9 +656,25 @@
         <stop offset="0" stop-color="rgba(229,199,123,.18)"/>
         <stop offset="1" stop-color="rgba(229,199,123,0)"/>
       </radialGradient>
+      <linearGradient id="ycSky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="rgba(229,199,123,.10)"/>
+        <stop offset="1" stop-color="rgba(229,199,123,0)"/>
+      </linearGradient>
+      <linearGradient id="ycUnderworld" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="rgba(0,0,0,0)"/>
+        <stop offset="1" stop-color="rgba(0,0,0,.22)"/>
+      </linearGradient>
     </defs>`);
 
     lines.push(`<circle cx="${CX}" cy="${CY}" r="${R_OUTER}" fill="url(#ycBg)"/>`);
+    // Sky (above-horizon) and underworld (below-horizon) tints. Only
+    // drawn when ASC is known, since the horizon line is otherwise
+    // undefined. The wheel is rotated to put ASC at 9 o'clock, which
+    // makes the horizontal midline through (CX, CY) the actual horizon.
+    if (hasHouses) {
+      lines.push(`<path d="M ${CX - R_SIGN_RING} ${CY} A ${R_SIGN_RING} ${R_SIGN_RING} 0 0 0 ${CX + R_SIGN_RING} ${CY} Z" fill="url(#ycSky)"/>`);
+      lines.push(`<path d="M ${CX - R_SIGN_RING} ${CY} A ${R_SIGN_RING} ${R_SIGN_RING} 0 0 1 ${CX + R_SIGN_RING} ${CY} Z" fill="url(#ycUnderworld)"/>`);
+    }
     lines.push(`<circle cx="${CX}" cy="${CY}" r="${R_OUTER + 4}" fill="none" stroke="${PALETTE.ring}" stroke-width="1.4"/>`);
     lines.push(`<circle cx="${CX}" cy="${CY}" r="${R_SIGN_RING}" fill="none" stroke="${PALETTE.ringSoft}" stroke-width="1"/>`);
     lines.push(`<circle cx="${CX}" cy="${CY}" r="${R_INNER}" fill="url(#ycGlow)" stroke="${PALETTE.ringSoft}" stroke-width="1"/>`);
@@ -672,6 +697,15 @@
         const isAscHouse = houseNum === 1;
         lines.push(`<text x="${hmid.x.toFixed(2)}" y="${hmid.y.toFixed(2)}" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="${isAscHouse ? 18 : 15}" font-style="italic" fill="${isAscHouse ? PALETTE.ring : 'rgba(229,199,123,.62)'}">${HOUSE_LABEL[houseNum - 1]}</text>`);
       }
+    }
+
+    // Horizon line. With the wheel rotated to ASC-left, the horizontal
+    // midline IS the horizon at birth. A faint gold dashed line plus a
+    // tiny label teaches the metaphor without shouting. Spans the inner
+    // diameter so it doesn't cut through the zodiac glyphs on the ring.
+    if (hasHouses) {
+      lines.push(`<line x1="${CX - R_SIGN_RING}" y1="${CY}" x2="${CX + R_SIGN_RING}" y2="${CY}" stroke="${PALETTE.ring}" stroke-width="0.9" stroke-dasharray="2 5" opacity="0.45"/>`);
+      lines.push(`<text x="${CX + R_SIGN_RING - 6}" y="${CY - 5}" text-anchor="end" font-family="Jost, sans-serif" font-size="7" letter-spacing="2.4" fill="${PALETTE.ring}" opacity="0.55">HORIZON</text>`);
     }
 
     // ASC marker — a slim gold tick at the ascendant longitude, small label
