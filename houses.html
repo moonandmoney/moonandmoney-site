@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The 12 Houses · Moon &amp; Money</title>
+<meta name="description" content="A teaching reference for the twelve astrological houses, read through the lens of money and self-reflection. By Luna Wilde at Moon &amp; Money."><meta property="og:type" content="website">
+<meta property="og:title" content="The 12 Houses · Moon &amp; Money">
+<meta property="og:description" content="A teaching reference for the twelve astrological houses, read through the lens of money and self-reflection.">
+<meta property="og:site_name" content="Moon &amp; Money">
+<meta property="og:image" content="https://moonandmoney.ca/assets/og/social.png?v=20260526">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://moonandmoney.ca/assets/og/social.png?v=20260526">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/assets/og/apple-touch-icon.png"><meta name="theme-color" content="#070608"><meta name="apple-mobile-web-app-title" content="Moon & Money"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&family=Noto+Sans+Symbols+2&display=swap"><link rel="stylesheet" href="assets/css/styles.css">
+
+<style>
+  /* The 12 Houses — page-specific styles.
+     Brand palette stays dominant; each house gets a thin colored stripe
+     using its traditional sign color, dialed to read well on the dark navy
+     background without breaking the locked palette. */
+  .houses-toc {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(7,6,8,.92); backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(201,162,78,.18);
+    padding: 12px 0;
+  }
+  .houses-toc .wrap {
+    display: flex; flex-wrap: wrap; gap: 4px 14px;
+    justify-content: center; align-items: center;
+    font-family: Jost, sans-serif; font-size: .78rem;
+    letter-spacing: .18em; text-transform: uppercase;
+    color: var(--mist);
+  }
+  .houses-toc .toc-label { opacity: .55; margin-right: 8px; }
+  .houses-toc a {
+    color: var(--mist); text-decoration: none;
+    padding: 4px 8px; border-radius: 3px;
+    transition: color .2s, background .2s;
+  }
+  .houses-toc a:hover { color: var(--gold-bright); background: rgba(201,162,78,.06); }
+
+  .house-section {
+    padding: 70px 0 40px;
+    border-top: 1px solid rgba(201,162,78,.10);
+  }
+  .house-section:first-of-type { border-top: 0; }
+  .house-section .wrap { max-width: 760px; }
+  .house-stripe {
+    height: 4px; width: 80px;
+    margin: 0 auto 28px;
+    border-radius: 2px;
+    box-shadow: 0 0 24px 0 currentColor;
+    opacity: .85;
+  }
+  .house-section .eyebrow {
+    display: block; text-align: center; margin-bottom: 10px;
+  }
+  .house-section h2 {
+    text-align: center; margin: 0 0 8px;
+    font-family: Cormorant Garamond, Georgia, serif;
+    font-size: clamp(2rem, 5vw, 2.6rem);
+    font-weight: 500; color: var(--cream);
+    letter-spacing: .01em;
+  }
+  .house-section h2 em {
+    color: var(--gold-bright); font-style: italic;
+  }
+  .house-tagline {
+    text-align: center;
+    font-family: Cormorant Garamond, Georgia, serif;
+    font-style: italic; font-size: 1.15rem;
+    color: var(--gold); margin: 0 0 26px;
+    opacity: .9;
+  }
+  .house-info {
+    text-align: center; margin: 0 auto 32px;
+    padding: 14px 22px;
+    background: rgba(11,37,69,.45);
+    border: 1px solid rgba(201,162,78,.18);
+    border-radius: 4px;
+    font-family: Jost, sans-serif; font-size: .88rem;
+    color: var(--mist); line-height: 1.7;
+    max-width: 640px;
+  }
+  .house-info strong { color: var(--gold-bright); font-weight: 500; }
+  .house-info .dot {
+    display: inline-block; width: 6px; height: 6px;
+    margin: 0 10px 1px; border-radius: 50%;
+    background: var(--gold); opacity: .5;
+    vertical-align: middle;
+  }
+  .house-section h3 {
+    font-family: Jost, sans-serif;
+    font-size: .82rem; letter-spacing: .22em;
+    text-transform: uppercase; color: var(--gold);
+    margin: 30px 0 12px;
+    font-weight: 500;
+  }
+  .house-section p {
+    color: var(--parchment); line-height: 1.75;
+    font-size: 1.02rem; margin: 0 0 16px;
+  }
+  .house-section p em { color: var(--cream); }
+  .house-example {
+    background: rgba(229,199,123,.05);
+    border-left: 2px solid rgba(229,199,123,.35);
+    padding: 18px 22px;
+    margin: 18px 0;
+    font-style: italic;
+  }
+  .house-example em { color: var(--gold-bright); font-style: italic; font-weight: 500; }
+  .house-back-top {
+    display: block; text-align: center;
+    margin-top: 24px;
+    font-family: Jost, sans-serif; font-size: .72rem;
+    letter-spacing: .22em; text-transform: uppercase;
+    color: var(--mist); opacity: .55;
+    text-decoration: none;
+    transition: opacity .2s, color .2s;
+  }
+  .house-back-top:hover { opacity: 1; color: var(--gold-bright); }
+
+  .houses-closing {
+    padding: 70px 0 40px;
+    border-top: 1px solid rgba(201,162,78,.18);
+  }
+  .houses-closing .wrap { max-width: 720px; text-align: center; }
+  .houses-closing h2 {
+    font-family: Cormorant Garamond, Georgia, serif;
+    font-size: 2rem; font-weight: 500; color: var(--cream);
+    margin: 0 0 18px;
+  }
+  .houses-closing h2 em { color: var(--gold-bright); font-style: italic; }
+  .houses-closing p {
+    color: var(--mist); line-height: 1.7;
+    font-size: 1.02rem; margin: 0 0 16px;
+  }
+  .houses-closing .btn { margin-top: 12px; }
+  .houses-meta {
+    margin-top: 50px; padding-top: 28px;
+    border-top: 1px solid rgba(201,162,78,.12);
+    font-family: Cormorant Garamond, Georgia, serif;
+    font-style: italic; font-size: .85rem;
+    color: var(--mist); opacity: .65;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 640px) {
+    .houses-toc .wrap { font-size: .7rem; gap: 2px 8px; }
+    .houses-toc .toc-label { display: none; }
+    .house-section { padding: 50px 0 30px; }
+    .house-info { font-size: .82rem; padding: 12px 16px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="starfield"></canvas>
+<div class="nebula"></div>
+
+<header class="nav">
+  <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
+  <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li class="nav-dropdown" aria-expanded="false">
+      <button class="nav-trigger" type="button" aria-haspopup="true" aria-expanded="false">Tools <span class="caret" aria-hidden="true">&#9662;</span></button>
+      <ul class="nav-submenu">
+        <li><a href="pendulum/">Pendulum</a></li>
+        <li><a href="calendar.html">Calendar</a></li>
+        <li><a href="wheel.html">Wheel</a></li>
+        <li><a href="draw.html">Card</a></li>
+        <li><a href="quiz.html">Quiz</a></li>
+        <li><a href="your-chart.html">Your Chart</a></li>
+        <li><a href="houses.html">Houses</a></li>
+      </ul>
+    </li>
+    <li><a href="shop.html">Atelier</a></li>
+    <li><a href="archive.html">Archive</a></li>
+    <li><a href="sessions.html">Sessions</a></li>
+    <li><a href="about.html">Ethos</a></li>
+    <li><a href="https://moonandmoney.substack.com/subscribe" target="_blank">Crescent Club</a></li>
+    <li><a class="nav-cta" href="money-chart.html">Money Chart</a></li>
+  </ul>
+</header>
+
+<main>
+  <section class="page-hero" id="top">
+    <div class="wrap">
+      <span class="eyebrow">Reference</span>
+      <h1>The 12 <span class="gold">Houses</span></h1>
+      <p style="max-width:620px;margin:0 auto">A teaching reference for the twelve life domains of an astrological chart, read through the lens of money and self-reflection. Use it to overlay your own chart and start piecing together how you are wired.</p>
+      <p style="margin:10px auto 0;max-width:520px;color:var(--mist);font-size:.85rem;font-style:italic;opacity:.78;text-align:center">For reflection and self-knowledge. Not financial or investment advice.</p>
+    </div>
+  </section>
+
+  <nav class="houses-toc" aria-label="Jump to a house">
+    <div class="wrap">
+      <span class="toc-label">Jump to</span>
+      <a href="#house-1">1</a>
+      <a href="#house-2">2</a>
+      <a href="#house-3">3</a>
+      <a href="#house-4">4</a>
+      <a href="#house-5">5</a>
+      <a href="#house-6">6</a>
+      <a href="#house-7">7</a>
+      <a href="#house-8">8</a>
+      <a href="#house-9">9</a>
+      <a href="#house-10">10</a>
+      <a href="#house-11">11</a>
+      <a href="#house-12">12</a>
+    </div>
+  </nav>
+
+  <!-- ===== House 1 ===== -->
+  <section id="house-1" class="house-section">
+    <div class="wrap">
+      <div class="house-stripe" style="background:#C8312E;color:#C8312E"></div>
+      <span class="eyebrow">First House</span>
+      <h2>The <em>Self</em></h2>
+      <p class="house-tagline">The body you walk into the room with.</p>
+      <div class="house-info">
+        Naturally ruled by <strong>Aries</strong> and <strong>Mars</strong>
+        <span class="dot"></span> Color: <strong>scarlet red</strong>
+        <span class="dot"></span> Body: <strong>the head and face</strong>
+      </div>
+
+      <p>The First House is the most personal place on your chart. It is your body, your face, the first impression you make before you have said a word. It is the way someone reads you while you are still walking across the room. The sign on your First House cusp is your Rising Sign or Ascendant, and it shapes the costume you wear in this lifetime, often without your permission.</p>
+
+      <p>Most people know their Sun sign, because you only need a birth date to look it up. The Rising Sign is less famous: finding it requires the exact time of birth. But it is just as defining. Where the Sun is your essence, the steady inner flame you came here to express, the Rising is the lens you look through and the style you arrive in. People often experience a real gap between the two: they feel one way on the inside and come across another way to the outside world. The First House asks you to make peace with both.</p>
+
+      <h3>What it rules</h3>
+      <p>The physical body, especially the head and face; vitality and health; physical appearance and style; mannerisms; first impressions; new beginnings of any kind; the part of life that no one can live for you.</p>
+
+      <h3>The money angle</h3>
+      <p>Your First House governs how you <em>show up</em> to your financial life. How present, embodied, and energetic you are in the moments money is on the line. The job interview. The pitch. The negotiation. The first meeting with a banker, an investor, a landlord. The body you bring to those rooms is read before the numbers are. People with a strong First House (planets there, or a vital Mars-ruled Rising) tend to take up space in money conversations. People with a quieter or burdened First House may default to under-charging, shrinking, or letting other people set the tone. This is not a verdict; it is information.</p>
+
+      <div class="house-example">
+        <p><em>An example.</em> Two designers walk into the same coffee meeting with the same prospective client. Both have similar portfolios. The first has a Leo Rising: she sits tall, makes warm eye contact, names her rate without softening it. The second has a Pisces Rising: she dresses beautifully, listens deeply, and quotes a number 30% below what she meant to. Same skill, same coffee, very different financial outcome. The First House is the room you bring before you are allowed to bring anything else.</p>
+      </div>
+
+      <h3>Its polarity: the First-Seventh axis</h3>
+      <p>The First House sits across from the Seventh, the house of one-to-one partnership (spouses, business partners, close adversaries). This is the axis of <em>self versus other</em>. You cannot understand your First House without your Seventh, because every way you arrive in the world is shaped by what kind of meeting you want on the other side. In money terms: the First is what you bring; the Seventh is the partner, contract, or client you make it with.</p>
+
+      <a class="house-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <!-- ===== House 2 ===== -->
+  <section id="house-2" class="house-section">
+    <div class="wrap">
+      <div class="house-stripe" style="background:#2F6B3E;color:#2F6B3E"></div>
+      <span class="eyebrow">Second House</span>
+      <h2>Money, Values, <em>Worth</em></h2>
+      <p class="house-tagline">What you carry, and what you say you are worth.</p>
+      <div class="house-info">
+        Naturally ruled by <strong>Taurus</strong> and <strong>Venus</strong>
+        <span class="dot"></span> Color: <strong>forest green</strong>
+        <span class="dot"></span> Body: <strong>throat, neck, vocal cords</strong>
+      </div>
+
+      <p>The Second House is your relationship to what is <em>yours</em>. It is the money in your account, the things you own, the talents you bring to the table, and the deeper question sitting beneath all of those: what do you actually value? In the old language, this is the house of substance. The First House is who you are; the Second House is what you carry. Both money and self-worth live here, and they tend to move together more than people realize.</p>
+
+      <h3>What it rules</h3>
+      <p>Personal income (money you earn, not inherit); savings; possessions (especially what you can hold in your hands, as distinct from real estate); the body as a resource; your voice (literally, since Taurus rules the throat); your values; self-worth; talent and skill as economic assets; what comforts you; how you spend on yourself.</p>
+
+      <h3>The money angle</h3>
+      <p>This is the house most directly about your money. It governs your earning capacity, your relationship to savings, your spending habits, and (crucially) your sense of being worth what you charge. A strong Second House (Venus-ruled, well-aspected, planets present) typically shows someone who can build a steady base, knows what they value, and can ask for it. A challenged Second House often correlates with feast-or-famine income, unclear values around money, or a chronic sense of <em>I should charge less.</em> The Second House is where the work of self-worth and the work of money turn out to be the same work.</p>
+
+      <div class="house-example">
+        <p><em>An example.</em> A consultant prices her work too low for years. Each time she raises the rate, she feels physically queasy and apologizes in the email. After a Saturn transit to her Second House, she stops apologizing. The number is the number. Her income doubles in eighteen months, not because the work changed but because the worth did. The Second House is where you learn that being paid well is a body skill, not a math skill.</p>
+      </div>
+
+      <h3>Its polarity: the Second-Eighth axis</h3>
+      <p>The Second sits across from the Eighth, the house of <em>other people&apos;s</em> money: debt, inheritance, taxes, joint accounts, money that flows toward you from outside yourself. This is the axis of <em>mine versus ours</em>. You cannot fully run your Second House without confronting your Eighth: every freelancer learns this when a client does not pay, every spouse learns it during a joint financial decision, every business owner learns it when they need outside capital. Your Second House is yours alone. Your Eighth is the door to everyone else&apos;s resources.</p>
+
+      <a class="house-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <!-- ===== House 3 ===== -->
+  <section id="house-3" class="house-section">
+    <div class="wrap">
+      <div class="house-stripe" style="background:#E8D26C;color:#E8D26C"></div>
+      <span class="eyebrow">Third House</span>
+      <h2>Mind, Voice, <em>Daily Orbit</em></h2>
+      <p class="house-tagline">The territory of the everyday mind.</p>
+      <div class="house-info">
+        Naturally ruled by <strong>Gemini</strong> and <strong>Mercury</strong>
+        <span class="dot"></span> Color: <strong>pale yellow</strong>
+        <span class="dot"></span> Body: <strong>arms, hands, shoulders, lungs, nervous system</strong>
+      </div>
+
+      <p>The Third House is the territory of the everyday mind. It is your siblings and your neighbors, the streets you walk every day, the way you learned to read and write, the way you take in information and pass it along. Where the Ninth House (its polar opposite) is the long expedition, the Third House is the short trip: the school bus, the corner store, the daily conversation. It is also the house of communication in all its forms: the email, the pitch, the text, the way you explain yourself.</p>
+
+      <h3>What it rules</h3>
+      <p>Siblings; early education; short trips; daily communications (texts, emails, calls); writing and speaking; thinking style; neighbors; the local environment; commutes; learning new skills; the way you absorb and pass on information; humor and wit; manual dexterity.</p>
+
+      <h3>The money angle</h3>
+      <p>This is the house of communication, which means it is also the house of pricing emails, sales calls, negotiation messages, marketing copy, and the daily back-and-forth of business. The Third House does not necessarily make you money, but it determines how clearly you can ask for it. A Mercury-strong Third House writes the proposal that converts. A quieter Third House might lose deals not because the work is wrong but because the message is. It also rules the daily small earnings: the gig, the side income, the part of your money life that adds up in increments rather than in lump sums.</p>
+
+      <div class="house-example">
+        <p><em>An example.</em> A coach who could not get clients was a brilliant practitioner but a confusing communicator. Her newsletter was beautiful but unclear. Her sales emails apologized for taking up space. When she rewrote her one-pager in plain language (what she does, who she does it for, what it costs), her booking calendar filled in six weeks. The work was always good. The Third House finally said it cleanly.</p>
+      </div>
+
+      <h3>Its polarity: the Third-Ninth axis</h3>
+      <p>The Third sits across from the Ninth, the house of long-distance travel, higher education, philosophy, publishing, the long expedition of meaning. The axis is <em>short trip versus long journey, daily mind versus big mind</em>. In money terms: the Third is your day-to-day economic conversation; the Ninth is the big idea you might one day publish, the move you might one day make to another country, the bet on belief. Both kinds of mind are real, and most people lean too far into one.</p>
+
+      <a class="house-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <!-- ===== House 4 ===== -->
+  <section id="house-4" class="house-section">
+    <div class="wrap">
+      <div class="house-stripe" style="background:#B8C5D6;color:#B8C5D6"></div>
+      <span class="eyebrow">Fourth House</span>
+      <h2>Home, Roots, <em>Lineage</em></h2>
+      <p class="house-tagline">The foundation under everything else.</p>
+      <div class="house-info">
+        Naturally ruled by <strong>Cancer</strong> and the <strong>Moon</strong>
+        <span class="dot"></span> Color: <strong>silver, pearl, moonstone</strong>
+        <span class="dot"></span> Body: <strong>chest, breasts, stomach</strong>
+      </div>
+
+      <p>The Fourth House is the deepest house of personal life. It sits at the very bottom of the chart, the IC (Imum Coeli, <em>the bottom of the sky</em>), which is the midnight point at your birth. This is your origin: the family you were born into, the home you grew up in, the emotional weather of your early years, and what you have built (or have not yet built) of your own home as an adult. It is the house of mother in most modern traditions, though classical and traditional sources place mother in the 10th instead. Either way, it is the parent who fed you and the parent&apos;s energy that grounded (or unsettled) your childhood. It is also the deep inner home: the place you go when you go quiet.</p>
+
+      <h3>What it rules</h3>
+      <p>Home (the physical place); real estate; family of origin; mother (in modern Western traditions); ancestry and lineage; emotional foundation; private life; childhood; the end of any matter; what is buried, both literally and emotionally; what you inherit, both materially and emotionally; the deepest sense of belonging.</p>
+
+      <h3>The money angle</h3>
+      <p>The Fourth House is the money you inherit, broadly: family money, family property, family <em>patterns</em> around money. It is also the home you buy, the mortgage you carry, the foundation you build for the next generation. More deeply, it is the emotional substrate beneath all of your money habits. Why does this person save compulsively? Why does that one spend the moment a paycheck lands? The Fourth House holds the family story you absorbed before you were old enough to choose differently. Money work that ignores the Fourth House is decorative. Money work that honors it is real.</p>
+
+      <div class="house-example">
+        <p><em>An example.</em> A man inherits forty thousand dollars from his grandmother. Within eight months, every dollar is gone, not on anything memorable, just absorbed into life. He cannot explain it to himself. Years later, working with a therapist, he traces it: his grandmother grew up in poverty and spoke about money with such guilt that he had absorbed an unconscious rule that money in his hands was a betrayal of hers. The Fourth House had been spending the money before his bank account could.</p>
+      </div>
+
+      <h3>Its polarity: the Fourth-Tenth axis</h3>
+      <p>The Fourth sits across from the Tenth, the public peak of the chart: your career, your reputation, what you are known for. This is the axis of <em>private versus public, home versus world, inner foundation versus outer achievement</em>. You cannot build a sustainable Tenth (career) without a stable Fourth (home base). People who burn out at work almost always have a Fourth House that has been ignored. In money terms: the Fourth is the floor (what funds you when nothing is coming in); the Tenth is the ceiling (what the world pays you for).</p>
+
+      <a class="house-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <!-- ===== House 5 ===== -->
+  <section id="house-5" class="house-section">
+    <div class="wrap">
+      <div class="house-stripe" style="background:#D4A847;color:#D4A847"></div>
+      <span class="eyebrow">Fifth House</span>
+      <h2>Creativity, Pleasure, <em>the Bet</em></h2>
+      <p class="house-tagline">What comes out of you when you are delighted.</p>
+      <div class="house-info">
+        Naturally ruled by <strong>Leo</strong> and the <strong>Sun</strong>
+        <span class="dot"></span> Color: <strong>gold, yellow</strong>
+        <span class="dot"></span> Body: <strong>heart, spine, back</strong>
+      </div>
+
+      <p>The Fifth House is where you create and play and risk for joy. It is the love affairs, the children, the art you make for its own sake, the things you do without an outcome in mind. Where the Fourth House is the family you came from, the Fifth is what you make next: the children, the creative work, the things you put into the world that did not exist before you. It is also the house of romance and pleasure (not marriage, that lives in the Seventh; this is the love affair, the dating, the joy of being chosen). And it is the house of bets: speculation, gambling, the willingness to risk for delight.</p>
+
+      <h3>What it rules</h3>
+      <p>Children (biological children, and the creative offspring you make); romance and dating; love affairs; creativity and artistic self-expression; play; pleasure; sports and recreation; risk and speculation (the gamble, the bet); investment that has the flavor of play; hobbies; what you do for joy.</p>
+
+      <h3>The money angle</h3>
+      <p>The Fifth House is the house of money you make from creativity: the artist&apos;s royalties, the entrepreneur&apos;s bet, the speculator&apos;s trade. It is also the house of money you spend on pleasure (the meal out, the trip, the dress, the season tickets). And critically, it is the house of <em>risk-tolerance</em>: how comfortable you are with money that could double or vanish. A strong Fifth House often correlates with people who can take calculated bets and enjoy doing so. A challenged Fifth House may correlate with compulsive gambling on one extreme, or a deep suspicion of any speculative move on the other. The middle path lives here.</p>
+
+      <div class="house-example">
+        <p><em>An example.</em> A graphic designer with a strong Fifth House started a side project for fun: a print series of moon-phase illustrations, made on weekends, no business plan. She put them online for $40 each. Two years later, the print series was earning more than her client work. The Fifth House had built something her Sixth House (work routine) never would have. The signal: when something started as pure delight begins to earn, the Fifth House is at work.</p>
+      </div>
+
+      <h3>Its polarity: the Fifth-Eleventh axis</h3>
+      <p>The Fifth sits across from the Eleventh, the house of friends, community, networks, and long-term hopes. The axis is <em>what I make for joy versus what I make with others</em>; the personal creative spark versus the wider audience that receives it. In money terms: the Fifth is the personal bet (the side project, the speculation, the thing you risk for yourself); the Eleventh is the network effect (the audience that buys the print series, the community that funds the kickstarter, the friends who refer the client). The artist needs both.</p>
+
+      <a class="house-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <!-- ===== House 6 ===== -->
+  <section id="house-6" class="house-section">
+    <div class="wrap">
+      <div class="house-stripe" style="background:#8FA876;color:#8FA876"></div>
+      <span class="eyebrow">Sixth House</span>
+      <h2>Work, Health, <em>Routine</em></h2>
+      <p class="house-tagline">The small unglamorous things that make a life run.</p>
+      <div class="house-info">
+        Naturally ruled by <strong>Virgo</strong> and <strong>Mercury</strong>
+        <span class="dot"></span> Color: <strong>sage green, brown</strong>
+        <span class="dot"></span> Body: <strong>digestive system, intestines, gut</strong>
+      </div>
+
+      <p>The Sixth House is the house of the daily. It is the work routine, the morning, the way you keep your body fed and rested and moving. It is the small unglamorous tasks that make a life run: the inbox processed, the lunch eaten, the appointment kept. Where the Tenth House is the career (your public role and reputation), the Sixth is the work itself: the hours you actually put in, the meetings, the tasks, the routine. It is also the house of service: how you serve others, and how others serve you.</p>
+
+      <h3>What it rules</h3>
+      <p>Daily work and routines; health and the daily care of the body; illness, and recovery from illness; diet, exercise, sleep; service and being of use; employees and assistants; coworkers and the people who work for you (bosses belong to the Tenth); pets and small animals; chores and obligations; mental health practices; the unglamorous structure that makes a life run.</p>
+
+      <h3>The money angle</h3>
+      <p>The Sixth House is the house of <em>the paycheck job</em>. It is the routine work that pays the bills: the day job, the freelance hours, the shifts, the tasks you complete in exchange for money. It is also the house of the body&apos;s capacity to do that work. If your health goes, your Sixth House income often goes with it. Money-smart people invest in their Sixth House: they care for their bodies because the body is the asset that earns. They build routines because routine compounds. They pay good employees well because the Sixth House also rules the help you hire. A strong Sixth often shows a steady earner, a person who can keep showing up. A weak Sixth often shows burnout cycles: brilliant peaks followed by collapses.</p>
+
+      <div class="house-example">
+        <p><em>An example.</em> A founder built her business on raw output for three years. She worked 12-hour days, slept poorly, skipped meals, and earned well. Then in her early 40s her thyroid gave out and she lost a full year of productive capacity. The income she had built dropped by 70% because the Sixth House (the body, the daily routine) had been borrowed against for years and finally called the loan. The Sixth House is the house that whispers before it shouts.</p>
+      </div>
+
+      <h3>Its polarity: the Sixth-Twelfth axis</h3>
+      <p>The Sixth sits across from the Twelfth, the house of rest, retreat, the unseen, the hospital bed, the spiritual life, what is hidden. The axis is <em>labor versus rest, the visible task versus the invisible recovery, action versus surrender</em>. You cannot run the Sixth indefinitely without honoring the Twelfth. The body that works needs the rest that no one sees. In money terms: the Sixth is the money you earn through effort; the Twelfth is the money that does not require your effort (passive income, but also the money you lose to invisible drains, the subscriptions you forgot to cancel, the leaks under the floorboards).</p>
+
+      <a class="house-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <!-- ===== House 7 ===== -->
+  <section id="house-7" class="house-section">
+    <div class="wrap">
+      <div class="house-stripe" style="background:#D9A4A8;color:#D9A4A8"></div>
+      <span class="eyebrow">Seventh House</span>
+      <h2>Partnership, Marriage, <em>the Other</em></h2>
+      <p class="house-tagline">Who keeps showing up to meet you.</p>
+      <div class="house-info">
+        Naturally ruled by <strong>Libra</strong> and <strong>Venus</strong>
+        <span class="dot"></span> Color: <strong>pink, soft blue</strong>
+        <span class="dot"></span> Body: <strong>kidneys, lower back, hormone balance</strong>
+      </div>
+
+      <p>The Seventh House is the house of the close other. It is your spouse, your business partner, the contract you sign, the client who becomes more than a client, the open enemy you cannot stop thinking about. The Seventh House is the mirror: it shows you what you project, who you choose, and who keeps showing up across the table from you. The First House is who you are; the Seventh is who keeps showing up to meet you. The patterns are not accidental; they are information.</p>
+
+      <h3>What it rules</h3>
+      <p>Marriage and committed partnership; business partners; contracts; one-to-one relationships of every formal kind; open enemies (the rival you compete with publicly); clients and consultants you work with closely; the person you choose to face every day; legal agreements and the people on the other side of them.</p>
+
+      <h3>The money angle</h3>
+      <p>The Seventh House is the house of the money relationship. It is the joint bank account, the prenup, the business partnership agreement, the contract with the major client. It also rules the legal money: lawsuits, divorces, the financial unwinding of a partnership. A strong Seventh House often correlates with people who can build clean money agreements with others: they choose well, write clearly, and know when to walk. A challenged Seventh often shows messy contracts, repeated partnership conflicts, or a tendency to attract the wrong people into formal money structures. The Seventh House is where your choices in partners show up in your bank account.</p>
+
+      <div class="house-example">
+        <p><em>An example.</em> A coach took on a business partner she had known for ten years. They split everything equally without a written agreement because they were friends. Eighteen months in, the partnership ended badly and the legal cost of unwinding it (because there was no signed structure) consumed both of their savings. The Seventh House was teaching her, expensively, what a written agreement is for. The next partnership she entered had a 30-page agreement signed before anyone took a salary.</p>
+      </div>
+
+      <h3>Its polarity: the Seventh-First axis</h3>
+      <p>The Seventh sits across from the First, the most important polarity in the whole chart. The First is who you are; the Seventh is who you choose to stand across from. Your partners (spouses, business partners, close enemies) are not random; they show you something about yourself that you cannot see directly. In money terms: the First is what you bring to the table; the Seventh is the contract you sign for it. One without the other does not work. A First House without a Seventh is the freelancer who can never close. A Seventh without a First is the partner who disappears into the relationship and loses their own terms.</p>
+
+      <a class="house-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <!-- ===== House 8 ===== -->
+  <section id="house-8" class="house-section">
+    <div class="wrap">
+      <div class="house-stripe" style="background:#6B1E2C;color:#6B1E2C"></div>
+      <span class="eyebrow">Eighth House</span>
+      <h2>Other People&apos;s Money, Intimacy, <em>Transformation</em></h2>
+      <p class="house-tagline">What you cannot do alone.</p>
+      <div class="house-info">
+        Naturally ruled by <strong>Scorpio</strong>, <strong>Pluto</strong> (modern), and <strong>Mars</strong> (traditional)
+        <span class="dot"></span> Color: <strong>black, deep red, maroon</strong>
+        <span class="dot"></span> Body: <strong>reproductive organs, eliminative system, pelvic area</strong>
+      </div>
+
+      <p>The Eighth House is one of the most powerful and most misunderstood houses in the chart. It is the house of <em>other people&apos;s</em> money: debt, inheritance, taxes, shared finances, the resources that flow toward you from outside yourself. It is also the house of intimacy, sex, death, and transformation. The thread connecting all of these is the same: what you cannot do alone. You cannot inherit alone, you cannot have sex alone, you cannot die alone in any meaningful sense, and you cannot truly transform without something falling away. The Eighth House is the door to everything that requires another, or that requires the surrender of who you have been.</p>
+
+      <h3>What it rules</h3>
+      <p>Other people&apos;s money (inheritance, debt, taxes, joint accounts, joint mortgages, investments held with others); insurance and pensions; intimacy and sexuality; deep emotional bonds; transformation and rebirth; psychology and the unconscious; the occult and the hidden; death and what survives it; surgery and other deep bodily interventions.</p>
+
+      <h3>The money angle</h3>
+      <p>The Eighth House is the house of <em>money that is not yours alone</em>. It is the inheritance you receive (or do not), the debt you carry, the credit you are extended, the joint account, the investor&apos;s capital, the mortgage on the house. It is also the house of the IRS: taxes are an Eighth House matter. A strong Eighth House often shows someone who is comfortable receiving (large gifts, inheritances, business investment, financial help from family). A challenged Eighth often shows discomfort with receiving, fear of debt, avoidance of money conversations with intimates, or repeated financial entanglements that end badly. Many money problems people have are not Second House problems (their own earning); they are Eighth House problems (how money moves through them and around them with others).</p>
+
+      <div class="house-example">
+        <p><em>An example.</em> A woman in her early 30s came into a substantial inheritance after her father died. Within two years the money was gone, not lost in any single bad decision but bled out across a hundred small choices. Therapy revealed she could not bear to hold the money, because holding it felt like accepting that her father was actually gone. The Eighth House had been processing the grief through the bank account. The work was not financial planning; it was grief work, after which the financial planning became possible.</p>
+      </div>
+
+      <h3>Its polarity: the Eighth-Second axis</h3>
+      <p>The Eighth sits across from the Second, the same axis we have already met from the other side. The Second House is what is <em>yours</em>; the Eighth is what is <em>shared</em>. The mature person learns to run both, knowing what belongs to them alone (Second) and what belongs to a system that includes them (Eighth). One without the other is poverty in disguise: a Second House person who cannot accept help, an Eighth House person who never builds their own.</p>
+
+      <a class="house-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <!-- ===== House 9 ===== -->
+  <section id="house-9" class="house-section">
+    <div class="wrap">
+      <div class="house-stripe" style="background:#6A4A8C;color:#6A4A8C"></div>
+      <span class="eyebrow">Ninth House</span>
+      <h2>Higher Mind, Travel, <em>Belief</em></h2>
+      <p class="house-tagline">The framework you use to make sense of your life.</p>
+      <div class="house-info">
+        Naturally ruled by <strong>Sagittarius</strong> and <strong>Jupiter</strong>
+        <span class="dot"></span> Color: <strong>purple, royal blue</strong>
+        <span class="dot"></span> Body: <strong>hips, thighs, liver</strong>
+      </div>
+
+      <p>The Ninth House is the house of the long view. It is the foreign country, the philosophy class, the religious text, the book you have always meant to write, the field you have always meant to study. Where the Third House is the daily mind (commute, text message, conversation with the neighbor), the Ninth is the big mind: the question of what it all means, the framework you use to make sense of your life, the move you might one day make to another country. It is also the house of publishing in the broad sense: putting your ideas into the world at scale.</p>
+
+      <h3>What it rules</h3>
+      <p>Long-distance travel; foreign cultures and languages; higher education (the university, the graduate degree, the apprenticeship to a discipline); philosophy and meaning-making; religion and spiritual belief systems; law (as in the principles of justice, not the contracts of the Seventh); publishing and media; teachers and mentors; the long view; the framework you use to interpret your life.</p>
+
+      <h3>The money angle</h3>
+      <p>The Ninth House is the house of money that comes from belief. It is the book deal, the speaking circuit, the published work, the foreign business venture, the move abroad that pays off, the graduate degree that opens doors, the philosophy you teach. It is also the house of money you bet on a worldview: the long-term investment in a country, an asset class, a movement, a belief about how the world will look in twenty years. A strong Ninth House often shows someone whose money is connected to their meaning: they earn from what they teach, from what they publish, from the long bet on what they believe. A weaker Ninth may show someone who earns well but cannot articulate why their work matters, which makes the work harder to scale.</p>
+
+      <div class="house-example">
+        <p><em>An example.</em> A consultant spent her thirties making good money on small contracts but always felt scattered. In her early forties she decided to write a book on the niche subject she had quietly become an expert in. The book took eighteen months. The advance was modest. But within a year of publication, her speaking fees tripled, her consulting day-rate tripled, and she had clients flying her internationally. The Ninth House had not given her money directly; it had given her a body of work she could stand on, after which the money became easy.</p>
+      </div>
+
+      <h3>Its polarity: the Ninth-Third axis</h3>
+      <p>The Ninth sits across from the Third, the daily mind we have already met. The axis is <em>small thought versus big thought, the inbox versus the manifesto, the local conversation versus the long-distance call</em>. You cannot have one without the other. The Ninth without the Third is the abstract thinker who cannot send the email. The Third without the Ninth is the busy operator with no framework for what they are doing. Both kinds of mind are real, and the powerful life runs them in conversation.</p>
+
+      <a class="house-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <!-- ===== House 10 ===== -->
+  <section id="house-10" class="house-section">
+    <div class="wrap">
+      <div class="house-stripe" style="background:#3A3A45;color:#3A3A45"></div>
+      <span class="eyebrow">Tenth House</span>
+      <h2>Career, Reputation, <em>the Public Peak</em></h2>
+      <p class="house-tagline">What the world calls you when you walk into a room of strangers.</p>
+      <div class="house-info">
+        Naturally ruled by <strong>Capricorn</strong> and <strong>Saturn</strong>
+        <span class="dot"></span> Color: <strong>black, deep charcoal</strong>
+        <span class="dot"></span> Body: <strong>bones, joints, knees, skin, teeth</strong>
+      </div>
+
+      <p>The Tenth House is the highest point in the chart, the MC (Medium Coeli, <em>the top of the sky</em>), which marks where the sun was directly overhead at the moment of your birth. This is the public peak: your career, your reputation, what the world calls you when you walk into a room of strangers. It is the title on your business card, the introduction at the conference, the obituary someone would write today. It is also the house of authority: bosses, mentors, the father in many traditions, the institutions you serve and that serve you back.</p>
+
+      <h3>What it rules</h3>
+      <p>Career (the public role, not just the work); reputation; public standing and visibility; authority and bosses; institutions; structure and discipline; the father (in many modern traditions; some traditions give the father to the Fourth instead); honors and titles; legacy and what is remembered; ambition; the long arc of public life.</p>
+
+      <h3>The money angle</h3>
+      <p>The Tenth House is the house of <em>the salary, the title, and the recognition that earns</em>. It is the corporate ladder, the promotion, the partnership at the firm, the line on the LinkedIn profile that opens doors. It is the money you earn from your reputation, which is different from the money you earn from your daily work (Sixth) or your creativity (Fifth). A strong Tenth House often shows people who climb visibly: Saturn-ruled, structured, willing to do the long work for the eventual title. A weak or challenged Tenth sometimes shows brilliant people who cannot turn their work into public standing, or who actively avoid the structures (corporate, institutional, formal) that confer status and salary.</p>
+
+      <div class="house-example">
+        <p><em>An example.</em> A photographer spent fifteen years doing exceptional work for moderate fees. She finally took a contract with a major fashion house (not the most creatively interesting work, but the credit appeared on the masthead). Within two years her freelance rate had quadrupled, even for projects she had been quoting at the old rate. The work had not changed. The Tenth House had simply given her a title, and the title did the rest. The Tenth House is the house where reputation compounds.</p>
+      </div>
+
+      <h3>Its polarity: the Tenth-Fourth axis</h3>
+      <p>The Tenth sits across from the Fourth, the deep private foundation we have already met. The axis is <em>what you are seen for versus what you come from, the public peak versus the private root, achievement versus belonging</em>. A successful Tenth without a tended Fourth is the famous person who never feels at home. A tended Fourth without an expressed Tenth is the person who has built a beautiful inner life but feels invisible to the world. Both are real, both are needed. In money terms: the Tenth is the income you earn from your public standing; the Fourth is the foundation that funds you when the public standing is not yet paying.</p>
+
+      <a class="house-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <!-- ===== House 11 ===== -->
+  <section id="house-11" class="house-section">
+    <div class="wrap">
+      <div class="house-stripe" style="background:#4DA6BA;color:#4DA6BA"></div>
+      <span class="eyebrow">Eleventh House</span>
+      <h2>Friends, Community, <em>the Future</em></h2>
+      <p class="house-tagline">The wider circle that receives what you make.</p>
+      <div class="house-info">
+        Naturally ruled by <strong>Aquarius</strong>, <strong>Uranus</strong> (modern), and <strong>Saturn</strong> (traditional)
+        <span class="dot"></span> Color: <strong>electric blue, turquoise</strong>
+        <span class="dot"></span> Body: <strong>calves, ankles, circulatory system</strong>
+      </div>
+
+      <p>The Eleventh House is the house of the wider circle. It is your friends (not your spouse, who is the Seventh; not your business partner alone, who is also the Seventh; the wider net of friendship beyond formal partnership), your communities, your professional networks, the audience that receives your work, and the long-term hopes you carry about the future. Where the Tenth House is your title, the Eleventh is the audience that recognizes the title. Where the Fifth House is the personal creative spark, the Eleventh is the wider circle that receives and amplifies it.</p>
+
+      <h3>What it rules</h3>
+      <p>Friends and friendship circles; communities and clubs; professional associations and networks; the audience for your work; long-term hopes and wishes; the future you are building toward; social movements and group causes; collective action; gains from career (the rewards your work brings in over time); the wider circle beyond intimate relationships.</p>
+
+      <h3>The money angle</h3>
+      <p>The Eleventh House is the house of money that comes through networks. It is the referral, the introduction, the audience that buys, the community that funds, the friend who recommends you for the job. In the traditional reading, it is also the house of <em>gains from one&apos;s work</em>: the rewards the Tenth House (career) eventually generates. It rules group investment too: cooperatives, syndicates, crowdfunding, collective economic structures. A strong Eleventh House often shows someone whose income is amplified by the people around them: they have an audience, a network, a community that compounds their work. A weaker Eleventh sometimes shows someone whose work is excellent but who has no scaffolding of support around it, which limits how far the work travels.</p>
+
+      <div class="house-example">
+        <p><em>An example.</em> A baker had a tiny but devoted local following for years. She was great at making bread; she was not particularly online. A regular customer (with a large social media presence) posted a photo of one of her loaves. The post went modestly viral. Within a month her wholesale list had tripled. The Eleventh House had not changed her bread; it had given her audience reach she could not have built alone. She kept making the same bread, but now more people knew the bread existed.</p>
+      </div>
+
+      <h3>Its polarity: the Eleventh-Fifth axis</h3>
+      <p>The Eleventh sits across from the Fifth, the personal creative spark we have already met. The axis is <em>the work I make for joy versus the people who receive it; the inside spark versus the outside circle</em>. The Fifth without the Eleventh is the artist whose work nobody sees. The Eleventh without the Fifth is the well-connected person with nothing personal to offer. Both are real, and the powerful life runs them together: make something true (Fifth), then bring it to the people who can receive it (Eleventh).</p>
+
+      <a class="house-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <!-- ===== House 12 ===== -->
+  <section id="house-12" class="house-section">
+    <div class="wrap">
+      <div class="house-stripe" style="background:#7B9F8E;color:#7B9F8E"></div>
+      <span class="eyebrow">Twelfth House</span>
+      <h2>The Unseen, Surrender, <em>Spiritual Life</em></h2>
+      <p class="house-tagline">The place where you go when you go quiet for a long time.</p>
+      <div class="house-info">
+        Naturally ruled by <strong>Pisces</strong>, <strong>Neptune</strong> (modern), and <strong>Jupiter</strong> (traditional)
+        <span class="dot"></span> Color: <strong>sea green, lavender, deep ocean blue</strong>
+        <span class="dot"></span> Body: <strong>feet, lymphatic system, immune system</strong>
+      </div>
+
+      <p>The Twelfth House is the most mysterious house in the chart. It is the unseen, the unconscious, the hidden, the place where you go when you go quiet for a long time. It rules dreams, spiritual practice, retreats, and the places that contain (and sometimes confine) you when you cannot face the world: hospitals, monasteries, prisons, long illnesses, periods of withdrawal. It is also the house of self-undoing: the patterns you bring on yourself without seeing, the leaks beneath the floor, the things you cannot quite admit to yourself. And it is the house of what is collective and greater than you: the ocean of the unconscious, the spiritual life, the dissolution of the small self.</p>
+
+      <h3>What it rules</h3>
+      <p>The unconscious; dreams; sleep; spiritual practice and contemplative life; hidden enemies (people working against you in ways you cannot see); confined or restricted places (hospitals, prisons, monasteries, retreat centers); self-undoing patterns; sacrifice; what you cannot face directly; karma and the unfinished business of past lives (in traditions that include this); the ocean of the collective.</p>
+
+      <h3>The money angle</h3>
+      <p>The Twelfth House is the most subtle of the money houses. It rules the money you lose in ways you do not see: the subscription you forgot to cancel, the slow leak in the household budget, the embezzlement, the divorce settlement you should have read more carefully. It also rules the money that comes to you through grace rather than effort: the surprise gift, the unexpected windfall, the inheritance you did not know was coming, the money that arrives when you stop chasing it. A strong Twelfth House often shows someone with quiet, hidden financial resources (assets held privately, a discreet kind of wealth) and a knack for receiving when they stop striving. A challenged Twelfth often shows chronic small leaks in the money life, repeated losses to the unseen, or financial entanglements that drain quietly for years.</p>
+
+      <div class="house-example">
+        <p><em>An example.</em> A small business owner spent a decade quietly losing money to a bookkeeper she trusted absolutely. The numbers were always close enough to be plausible, and she never looked deeply. When she finally hired an outside auditor, the loss was in six figures. The Twelfth House had been bleeding her for years. The lesson was not to distrust people, but to honor the Twelfth House by <em>looking at what you would rather not look at</em>. The Twelfth rewards the brave inward glance.</p>
+      </div>
+
+      <h3>Its polarity: the Twelfth-Sixth axis</h3>
+      <p>The Twelfth sits across from the Sixth, the labor and routine we have already met. The axis is <em>action versus surrender, what you do versus what you stop doing, the visible task versus the invisible recovery</em>. The Sixth without the Twelfth is the high-earner who burns out and cannot understand why. The Twelfth without the Sixth is the dreamer who never quite shows up to do the work. In money terms: the Sixth is the income you earn by effort; the Twelfth is the income that arrives by grace (the windfall, the surprise gift, the passive yield) and also the income that disappears by inattention (the slow leak, the forgotten subscription, what you would rather not look at).</p>
+
+      <a class="house-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <!-- ===== Closing CTA ===== -->
+  <section class="houses-closing">
+    <div class="wrap">
+      <span class="eyebrow">Want this read for you</span>
+      <h2>The <em>Money Chart</em> reads your houses in full</h2>
+      <p>This page is the universal teaching. Your <em>Money Chart</em> reads where each house falls in your own chart, what planets you carry there, and what that means for how money actually moves through you. Eight pages, in your voice.</p>
+      <a class="btn btn-gold" href="money-chart.html">Order your Money Chart</a>
+
+      <p class="houses-meta">The examples in this guide are illustrative composites, written to bring each money angle to life. They are not real case studies. For reflection and self-knowledge. Not financial or investment advice.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
+        <p>Personal finance, read through astrology. By Luna Wilde.</p>
+      </div>
+      <div class="foot-col"><h4>Explore</h4><a href="wheel.html">Wheel</a><a href="draw.html">Card</a><a href="quiz.html">Quiz</a><a href="your-chart.html">Your Chart</a><a href="houses.html">Houses</a><a href="shop.html">Atelier</a><a href="pendulum/">Pendulum</a><a href="calendar.html">Calendar</a><a href="archive.html">Archive</a><a href="sessions.html">Sessions</a><a href="courses.html">Academy</a><a href="about.html">Ethos</a></div>
+      <div class="foot-col"><h4>Club</h4><a href="https://moonandmoney.substack.com" target="_blank">Substack</a><a href="https://moonandmoney.substack.com/subscribe" target="_blank">Crescent Club</a><a href="fifth-moon.html">The Fifth Moon</a><a href="about.html#circle">Circle <span class="soon">Soon</span></a><a href="about.html#token">Token <span class="soon">Soon</span></a></div>
+      <div class="foot-col"><h4>Follow</h4><a href="https://moonandmoney.substack.com" target="_blank">@moonmoney</a><a href="archive.html">Notes</a><a href="index.html">Newsletter</a></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="yr"></span> Moon &amp; Money · Luna Wilde. All rights reserved.</span>
+      <span><a href="privacy.html" style="color:inherit;text-decoration:none;opacity:.85">Privacy</a></span>
+      <span>Built in rhythm with the moon ☾</span>
+    </div>
+    <p class="foot-legal" style="text-align:center;font-family:Cormorant Garamond,Georgia,serif;font-style:italic;font-size:.82rem;opacity:.55;color:#a89fb4;margin:14px 0 0 0;letter-spacing:.02em">For reflection and self-knowledge. Not financial or investment advice.</p>
+  </div>
+</footer>
+
+<div id="mmPlayer" data-welcome="assets/audio/invocation.mp3"></div>
+
+<script src="assets/js/zodiac.js"></script>
+<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/player.js"></script>
+</body>
+</html>
