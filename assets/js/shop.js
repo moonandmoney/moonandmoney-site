@@ -64,7 +64,20 @@ const CATALOG = [
     .map((c, i) => `<button class="chip${i === 0 ? ' active' : ''}" data-f="${c}">${c}</button>`)
     .join('');
 
-  const card = (p, i) => `
+  // Price comes from window.MM_PRICES (defined in config.js). "" means
+  // "no LS product yet — preview only"; "Free" shows alongside the same
+  // styling as a price; a dollar amount shows as the visible CTA.
+  const priceFor = (name) => (window.MM_PRICES && window.MM_PRICES[name]) || '';
+
+  const card = (p, i) => {
+    const price = priceFor(p.name);
+    const isPreviewOnly = price === '';
+    const isFree = price === 'Free';
+    const buttonLabel = isPreviewOnly ? 'Preview' : (isFree ? 'Get it' : 'Order');
+    const footHTML = isPreviewOnly
+      ? `<button class="buy" data-i="${i}">${buttonLabel}</button>`
+      : `<span class="price">${price}</span><button class="buy" data-i="${i}">${buttonLabel}</button>`;
+    return `
     <article class="product reveal" data-i="${i}">
       <div class="cover">
         <span class="sigil">${Z ? Z.svg(p.glyph) : ''}</span>
@@ -75,11 +88,10 @@ const CATALOG = [
         <span class="cat">${p.cat}</span>
         <h3>${p.name}</h3>
         <p>${p.desc}</p>
-        <div class="foot">
-          <button class="buy" data-i="${i}">Preview</button>
-        </div>
+        <div class="foot">${footHTML}</div>
       </div>
     </article>`;
+  };
 
   const paint = (f) => {
     const list = CATALOG.map((p, i) => ({ p, i })).filter(o => f === 'All' || o.p.cat === f);

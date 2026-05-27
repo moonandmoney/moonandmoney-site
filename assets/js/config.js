@@ -50,3 +50,53 @@ window.MM_CHECKOUT = {
   // ---- Atelier Notes (free pieces, kept quiet at the tail) ----
   "Moon & Money Glyphs":          "https://moonandmoney.lemonsqueezy.com/checkout/buy/a4619c2a-4184-4d4e-805b-ce4d8c1ef9c1"
 };
+
+/* ============================================================
+   PRICES — displayed on the homepage + shop cards so visitors
+   know what something costs before they click. Strings (not
+   numbers) so we can render "Free" cleanly alongside dollar
+   amounts, and so we don't accidentally format currency wrong.
+   The actual transactional price still lives in Lemon Squeezy;
+   this is the display label. Keep them in sync.
+   ============================================================ */
+window.MM_PRICES = {
+  // Moon Sign Money Guides — $3.99 each
+  "Aries Moon Money Guide":       "$3.99",
+  "Taurus Moon Money Guide":      "$3.99",
+  "Gemini Moon Money Guide":      "$3.99",
+  "Cancer Moon Money Guide":      "$3.99",
+  "Leo Moon Money Guide":         "$3.99",
+  "Virgo Moon Money Guide":       "$3.99",
+  "Libra Moon Money Guide":       "$3.99",
+  "Scorpio Moon Money Guide":     "$3.99",
+  "Sagittarius Moon Money Guide": "$3.99",
+  "Capricorn Moon Money Guide":   "$3.99",
+  "Aquarius Moon Money Guide":    "$3.99",
+  "Pisces Moon Money Guide":      "$3.99",
+
+  // Element Collections — $6.99 each (a bundle of 3 guides, save $5)
+  "Fire Signs Money Collection":  "$6.99",
+  "Earth Signs Money Collection": "$6.99",
+  "Air Signs Money Collection":   "$6.99",
+  "Water Signs Money Collection": "$6.99",
+
+  // Library
+  "The Complete Lunar Collection": "$11.11",
+  "The Premium Lunar Money Guide": "$17.77",
+
+  // Calendar
+  "Lunar Money Calendar 2026":    "Free",
+
+  // Cards — no LS product yet, stay as "preview only" with no price label
+  "Saturn Return Card":             "",
+  "Mercury Retrograde Card":        "",
+  "New Year Moon Card":             "",
+  "New Baby Card":                  "",
+  "Leo Birthday Card":              "",
+  "Taurus Birthday Card":           "",
+  "Capricorn Congratulations Card": "",
+  "Scorpio New Chapter Card":       "",
+
+  // Atelier Notes
+  "Moon & Money Glyphs":          "Free",
+};
