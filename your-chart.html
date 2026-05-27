@@ -334,14 +334,18 @@
   ];
 
   const PLANETS = [
-    { key: 'sun',     name: 'Sun',     glyph: '☉' },
-    { key: 'moon',    name: 'Moon',    glyph: '☾' },
-    { key: 'mercury', name: 'Mercury', glyph: '☿' },
-    { key: 'venus',   name: 'Venus',   glyph: '♀' },
-    { key: 'mars',    name: 'Mars',    glyph: '♂' },
-    { key: 'jupiter', name: 'Jupiter', glyph: '♃' },
-    { key: 'saturn',  name: 'Saturn',  glyph: '♄' },
-    { key: 'lilith',  name: 'Lilith',  glyph: '⚸' },
+    { key: 'sun',     name: 'Sun',        glyph: '☉' },
+    { key: 'moon',    name: 'Moon',       glyph: '☾' },
+    { key: 'mercury', name: 'Mercury',    glyph: '☿' },
+    { key: 'venus',   name: 'Venus',      glyph: '♀' },
+    { key: 'mars',    name: 'Mars',       glyph: '♂' },
+    { key: 'jupiter', name: 'Jupiter',    glyph: '♃' },
+    { key: 'saturn',  name: 'Saturn',     glyph: '♄' },
+    { key: 'uranus',  name: 'Uranus',     glyph: '♅' },
+    { key: 'neptune', name: 'Neptune',    glyph: '♆' },
+    { key: 'pluto',   name: 'Pluto',      glyph: '♇' },
+    { key: 'chiron',  name: 'Chiron',     glyph: '⚷' },
+    { key: 'lilith',  name: 'Lilith',     glyph: '⚸' },
     { key: 'node',    name: 'North Node', glyph: '☊' },
   ];
 
@@ -351,7 +355,7 @@
   // Readout order: Moon first (Moon & Money, the Moon leads), Sun second,
   // the rest in their usual cosmic order. Lilith and Node are the poets,
   // they sit at the end.
-  const READOUT_ORDER = ['moon','sun','mercury','venus','mars','jupiter','saturn','lilith','node'];
+  const READOUT_ORDER = ['moon','sun','mercury','venus','mars','jupiter','saturn','uranus','neptune','pluto','chiron','lilith','node'];
 
   // Tap-to-learn copy. Education + self-reflection register. Money-aware
   // where natural, never advisory. No em-dashes.
@@ -365,6 +369,10 @@
     mars:    'Your engine. How you take action, defend your time, fight for what is yours. Where you push, and where you sometimes push past the point of repair.',
     jupiter: 'Where things tend to grow easily for you. Your luck, your appetite, your generosity. Jupiter is abundant, and also the planet of <em>a bit too much</em>.',
     saturn:  'Your discipline and your tender places. Where you have to work twice as hard for what comes easily to others. Saturn is the long teacher; what you build here lasts.',
+    uranus:  'The lightning bolt. The sudden change, the unexpected break, the original idea that does not yet have permission to exist. Uranus is where you cannot conform, even when conformity would be easier.',
+    neptune: 'The dissolver and the dreamer. Imagination, art, mysticism, addiction, illusion, the longing for what cannot quite be named. Neptune softens edges, including the edges of your bank account when you are not paying attention.',
+    pluto:   'The depths. Power, intimacy, taboo, transformation, what dies and what survives the dying. Pluto is slow and not negotiable. Wherever it sits, life will eventually take you to your knees and ask you to rebuild from the bone.',
+    chiron:  'The wounded healer. The place you were hurt early, often before you had language for it, and the place where (because of that wound) you can hold space for others. Chiron is not glamorous, but it is where the deepest gifts often come from.',
     lilith:  'Where you refuse to be tamed. The places you will lose a friendship, a job, or a quiet life rather than betray yourself. Lilith is the line you do not cross, even when it costs you.',
     node:    'Your direction of growth in this lifetime. Not the comfortable path; the one that is coming for you. Money often follows the Node: walk toward it, and the right things tend to find their way.',
   };
@@ -587,6 +595,52 @@
     return chart;
   }
 
+  /* --- Engine-backed chart (Phase 2 upgrade) ---
+     Calls /api/chart-preview on the Moon & Money chart engine for
+     Swiss Ephemeris accuracy, the outer planets (Uranus/Neptune/Pluto)
+     + Chiron, and the conventional aspect set. Returns the same chart
+     shape buildSVG/buildReadout already consume, plus chart.aspects.
+     Falls back to null on any failure so callers can degrade to the
+     in-browser computeChart() approximation. */
+  const CHART_ENGINE_URL = 'https://moonmoney-chart-engine.onrender.com/api/chart-preview';
+
+  async function computeChartViaEngine(date, lat, lng) {
+    // Engine requires date + time + lat + lng. Without lat/lng the
+    // browser's Schlyter fallback is just as accurate (no houses
+    // either way), so don't waste a network round-trip.
+    if (typeof lat !== 'number' || typeof lng !== 'number') return null;
+    if (Number.isNaN(lat) || Number.isNaN(lng)) return null;
+    const tz_name = (Intl.DateTimeFormat().resolvedOptions().timeZone) || 'UTC';
+    const pad = (n) => String(n).padStart(2, '0');
+    const birth_date = `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}`;
+    const birth_time = `${pad(date.getHours())}:${pad(date.getMinutes())}`;
+    try {
+      const ctl = new AbortController();
+      const t = setTimeout(() => ctl.abort(), 8000);   // 8s ceiling; Render cold-start can be slow
+      const r = await fetch(CHART_ENGINE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ birth_date, birth_time, tz_name, lat, lon: lng }),
+        signal: ctl.signal,
+      });
+      clearTimeout(t);
+      if (!r.ok) return null;
+      const data = await r.json();
+      // Reshape into the chart object the rest of this script expects.
+      const chart = {};
+      for (const k of Object.keys(data.placements || {})) {
+        if (data.placements[k]) chart[k] = data.placements[k].lon;
+      }
+      if (data.ascendant) chart.asc = data.ascendant.lon;
+      if (data.midheaven) chart.mc  = data.midheaven.lon;
+      chart.aspects = Array.isArray(data.aspects) ? data.aspects : [];
+      chart._engine = true;    // signals: buildSVG can render outer planets + aspect lines
+      return chart;
+    } catch (e) {
+      return null;             // network error, abort, parse error — fall back
+    }
+  }
+
   /* --- Geocode the birth city via Nominatim (free, ~1 req/sec).
      Falls back gracefully if the request fails — the wheel still draws
      without houses, just shows the planet placements. */
@@ -732,9 +786,19 @@
     // step inward by ~32px so the glyphs stack along the radial axis instead
     // of printing on top of each other. Capped at R_PLANET - 96 (3 deep)
     // so the innermost still sits outside the centre brand mark.
+    // Pass 1: compute placement positions + draw the small tick marks
+    // on the sign ring. Glyphs themselves are drawn in pass 2 so the
+    // aspect lines (drawn between the passes) sit BENEATH the glyphs,
+    // not on top of them.
     const placed = [];
+    const placedByKey = {};
+    const renderList = [];   // {p, pt, lon} for the second pass
     PLANETS.forEach((p) => {
       const lon = chart[p.key];
+      // Skip planets the current chart doesn't carry — the in-browser
+      // fallback omits Uranus/Neptune/Pluto/Chiron, so without a value
+      // we'd plot NaN coordinates and the glyph would land at (0,0).
+      if (typeof lon !== 'number' || Number.isNaN(lon)) return;
       let collisions = 0;
       for (const q of placed) {
         let d = Math.abs(lon - q.lon);
@@ -744,15 +808,46 @@
       let r = R_PLANET - Math.min(collisions, 3) * 32;
       const pt = pointAt(lon, r);
       placed.push({ lon, r });
+      placedByKey[p.key] = pt;
+      renderList.push({ p, pt, lon });
 
       const t1 = pointAt(lon, R_SIGN_RING);
       const t2 = pointAt(lon, R_SIGN_RING - 12);
       lines.push(`<line x1="${t1.x.toFixed(2)}" y1="${t1.y.toFixed(2)}" x2="${t2.x.toFixed(2)}" y2="${t2.y.toFixed(2)}" stroke="${PALETTE.ring}" stroke-width="1.4"/>`);
+    });
 
-      // Moon gets a gold-tinted glyph + a halo so she's unmistakable —
+    // Aspect lines. Drawn ONLY when the engine has returned them (i.e.
+    // chart._engine is true and chart.aspects is populated). The in-browser
+    // fallback doesn't compute aspects so this is a no-op there.
+    // Color convention: blue family for harmonious (trine, sextile), red
+    // family for tense (square, opposition), gold for conjunction. Subtle
+    // opacity — the wheel is dense enough already.
+    if (Array.isArray(chart.aspects) && chart.aspects.length) {
+      const ASPECT_STYLE = {
+        trine:       { stroke: 'rgba(120,170,210,0.55)', width: 0.9 },
+        sextile:     { stroke: 'rgba(120,170,210,0.40)', width: 0.7 },
+        square:      { stroke: 'rgba(200,100,95,0.55)',  width: 0.9 },
+        opposition:  { stroke: 'rgba(200,100,95,0.55)',  width: 0.9 },
+        conjunction: { stroke: 'rgba(201,162,78,0.50)',  width: 0.8 },
+      };
+      chart.aspects.forEach((asp) => {
+        const a = placedByKey[asp.a];
+        const b = placedByKey[asp.b];
+        if (!a || !b) return;
+        const st = ASPECT_STYLE[asp.type];
+        if (!st) return;
+        lines.push(`<line x1="${a.x.toFixed(2)}" y1="${a.y.toFixed(2)}" x2="${b.x.toFixed(2)}" y2="${b.y.toFixed(2)}" stroke="${st.stroke}" stroke-width="${st.width}" stroke-linecap="round"/>`);
+      });
+    }
+
+    // Pass 2: planet glyphs. Drawn after the aspect lines so they sit on
+    // top — the lines visually connect to glyph centers without occluding
+    // the glyph itself.
+    renderList.forEach(({ p, pt }) => {
+      // Moon gets a gold-tinted glyph + a halo so she's unmistakable;
       // this is Moon & Money, she leads.
       const isMoon = p.key === 'moon';
-      const ringColor = isMoon ? PALETTE.ring : PALETTE.ring;
+      const ringColor = PALETTE.ring;
       const ringWidth = isMoon ? 1.6 : 1;
       const fillColor = isMoon ? PALETTE.sign : PALETTE.planet;
       if (isMoon) {
@@ -786,7 +881,12 @@
     }
     READOUT_ORDER.forEach((k) => {
       const p = byKey[k];
-      const s = signOf(chart[p.key]);
+      const lon = chart[p.key];
+      // Skip planets the chart doesn't carry (the in-browser fallback
+      // omits Uranus/Neptune/Pluto/Chiron). The wheel and readout stay
+      // honest about which placements are actually computed.
+      if (typeof lon !== 'number' || Number.isNaN(lon)) return;
+      const s = signOf(lon);
       const isMoon = p.key === 'moon';
       const style = isMoon
         ? 'border-color:rgba(229,199,123,.7); background:rgba(201,162,78,.07)'
@@ -972,7 +1072,19 @@
     } else if (!haveTime) {
       errEl.textContent = "Without a birth time, the wheel still draws — but houses + your rising sign need the time.";
     }
-    const chart = computeChart(d, geo ? geo.lat : null, geo ? geo.lng : null);
+    // Try the engine first (Swiss Ephemeris precision + outer planets +
+    // aspects). Falls back to the in-browser Schlyter math if the engine
+    // is unreachable so the page never breaks. Only attempts the engine
+    // when we have lat/lng + a real birth time — without those it adds
+    // nothing the browser cannot do itself.
+    let chart = null;
+    if (haveTime && geo) {
+      const prev = errEl.textContent;
+      errEl.textContent = 'Reaching for precise placements…';
+      chart = await computeChartViaEngine(d, geo.lat, geo.lng);
+      errEl.textContent = prev;   // restore whatever message was there (or empty)
+    }
+    if (!chart) chart = computeChart(d, geo ? geo.lat : null, geo ? geo.lng : null);
     wheelEl.innerHTML = buildSVG(chart);
     readEl.innerHTML = buildReadout(chart);
     wireReadoutClicks();
