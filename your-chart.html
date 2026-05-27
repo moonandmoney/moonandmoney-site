@@ -147,6 +147,20 @@
     animation: ycExp .35s ease;
   }
   .yc-explain strong { color: var(--gold-bright); font-style: normal; }
+  .yc-explain p { margin: 0; }
+  .yc-explain p + p { margin-top: 8px; }
+  .yc-sign-line { font-style: normal; color: var(--parchment); font-size: 1rem; }
+  .yc-sign-desc { color: var(--mist); font-size: .88rem; opacity: .9; }
+  .yc-upsell {
+    margin-top: 14px !important; padding-top: 10px;
+    border-top: 1px dashed rgba(201,162,78,.18);
+    text-align: center; font-size: .85rem; font-style: italic; opacity: .9;
+  }
+  .yc-upsell a {
+    color: var(--gold-bright); text-decoration: none;
+    border-bottom: 1px solid rgba(201,162,78,.3); padding-bottom: 1px;
+  }
+  .yc-upsell a:hover { border-bottom-color: var(--gold-bright); }
   @keyframes ycExp { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
   .yc-result .yc-redo {
     display: flex; justify-content: center; margin: 28px 0 0;
@@ -353,6 +367,58 @@
     lilith:  'Where you refuse to be tamed. The places you will lose a friendship, a job, or a quiet life rather than betray yourself. Lilith is the line you do not cross, even when it costs you.',
     node:    'Your direction of growth in this lifetime. Not the comfortable path; the one that is coming for you. Money often follows the Node: walk toward it, and the right things tend to find their way.',
   };
+
+  // One-line sign descriptors. Plain brand voice, evocative, not advisory.
+  // These appear above each placement blurb so the reader can assemble a
+  // basic read themselves (planet meaning + sign flavor). The personalized
+  // interpretation stays with the paid Money Chart.
+  const SIGN_DESC = {
+    'Aries':       'bold, direct, the first to move.',
+    'Taurus':      'grounded, sensual, slow and steady.',
+    'Gemini':      'curious, quick, a mind in motion.',
+    'Cancer':      'tender, protective, the keeper of home and feeling.',
+    'Leo':         'warm, generous, the heart on display.',
+    'Virgo':       'precise, useful, the quiet craft of getting things right.',
+    'Libra':       'relational, fair, weighing each yes against each no.',
+    'Scorpio':     'deep, private, what runs beneath the surface.',
+    'Sagittarius': 'restless, philosophical, hungry for the long view.',
+    'Capricorn':   'patient, structured, the long build.',
+    'Aquarius':    'curious, unconventional, future-oriented.',
+    'Pisces':      'porous, dreamy, the felt sense of things.',
+  };
+
+  // Human-readable display name for the "Your X is in Y" line. Pulled
+  // from PLANETS where possible; asc/mc get bespoke phrasing.
+  function placementDisplayName(key) {
+    if (key === 'asc') return 'Rising Sign';
+    if (key === 'mc')  return 'Midheaven';
+    const p = PLANETS.find(p => p.key === key);
+    return p ? p.name : key;
+  }
+
+  // Build the inner HTML of an opened explanation. Composed of:
+  //   1. "Your <Placement> is in <Sign>." (or "Your Rising Sign is <Sign>.")
+  //   2. "<Sign>: <one-line sign descriptor>."
+  //   3. The general placement blurb.
+  //   4. A soft Money Chart upsell pointing to the personalized read.
+  function buildExplainHTML(key, signName) {
+    const blurb = EXPLAIN[key];
+    if (!blurb) return '';
+    const name  = placementDisplayName(key);
+    const desc  = SIGN_DESC[signName] || '';
+    const pre   = key === 'asc'
+      ? `Your <strong>Rising Sign</strong> is <strong>${signName}</strong>.`
+      : `Your <strong>${name}</strong> is in <strong>${signName}</strong>.`;
+    const descLine = desc
+      ? `<p class="yc-sign-desc">${signName}: ${desc}</p>`
+      : '';
+    return (
+      `<p class="yc-sign-line">${pre}</p>` +
+      descLine +
+      `<p>${blurb}</p>` +
+      `<p class="yc-upsell"><a href="money-chart.html">Your <em>Money Chart</em> reads what this means for your money &rarr;</a></p>`
+    );
+  }
 
   function signOf(longitude) {
     const i = Math.floor(norm(longitude) / 30) % 12;
@@ -677,11 +743,11 @@
 
     if (typeof chart.asc === 'number') {
       const s = signOf(chart.asc);
-      out.push(`<div class="yc-place" data-explain="asc" style="border-color:rgba(201,162,78,.45)"><div class="yc-row"><span class="pn"><strong style="color:var(--gold-bright);font-style:normal">ASC</strong>&nbsp; Rising</span><span class="ps">${s.sign.name} ${Math.floor(s.deg)}°</span></div></div>`);
+      out.push(`<div class="yc-place" data-explain="asc" data-sign="${s.sign.name}" style="border-color:rgba(201,162,78,.45)"><div class="yc-row"><span class="pn"><strong style="color:var(--gold-bright);font-style:normal">ASC</strong>&nbsp; Rising</span><span class="ps">${s.sign.name} ${Math.floor(s.deg)}°</span></div></div>`);
     }
     if (typeof chart.mc === 'number') {
       const s = signOf(chart.mc);
-      out.push(`<div class="yc-place" data-explain="mc" style="border-color:rgba(201,162,78,.32)"><div class="yc-row"><span class="pn"><strong style="color:var(--gold-bright);font-style:normal">MC</strong>&nbsp; Midheaven</span><span class="ps">${s.sign.name} ${Math.floor(s.deg)}°</span></div></div>`);
+      out.push(`<div class="yc-place" data-explain="mc" data-sign="${s.sign.name}" style="border-color:rgba(201,162,78,.32)"><div class="yc-row"><span class="pn"><strong style="color:var(--gold-bright);font-style:normal">MC</strong>&nbsp; Midheaven</span><span class="ps">${s.sign.name} ${Math.floor(s.deg)}°</span></div></div>`);
     }
     READOUT_ORDER.forEach((k) => {
       const p = byKey[k];
@@ -691,7 +757,7 @@
         ? 'border-color:rgba(229,199,123,.7); background:rgba(201,162,78,.07)'
         : '';
       const nameStyle = isMoon ? 'color:var(--gold-bright); font-style:normal' : '';
-      out.push(`<div class="yc-place" data-explain="${p.key}" style="${style}"><div class="yc-row"><span class="pn" style="${nameStyle}">${p.glyph}&nbsp; ${p.name}</span><span class="ps">${s.sign.name} ${Math.floor(s.deg)}°</span></div></div>`);
+      out.push(`<div class="yc-place" data-explain="${p.key}" data-sign="${s.sign.name}" style="${style}"><div class="yc-row"><span class="pn" style="${nameStyle}">${p.glyph}&nbsp; ${p.name}</span><span class="ps">${s.sign.name} ${Math.floor(s.deg)}°</span></div></div>`);
     });
     return out.join('');
   }
@@ -707,46 +773,36 @@
       row.setAttribute('tabindex', '0');
     });
   }
-  // Delegate the click on the readout container itself, once on page load.
-  document.addEventListener('DOMContentLoaded', () => {
-    const r = document.getElementById('ycReadout');
-    if (!r) return;
-    r.addEventListener('click', (e) => {
-      const row = e.target.closest('.yc-place[data-explain]');
-      if (!row || !r.contains(row)) return;
-      const key = row.getAttribute('data-explain');
-      const existing = row.querySelector('.yc-explain');
-      if (existing) { existing.remove(); row.classList.remove('open'); return; }
-      const text = EXPLAIN[key] || '';
-      if (!text) return;
-      const exp = document.createElement('div');
-      exp.className = 'yc-explain';
-      exp.innerHTML = text;
-      row.appendChild(exp);
-      row.classList.add('open');
-    });
-  });
-  // If DOMContentLoaded already fired (script is at end of body), wire now.
-  if (document.readyState !== 'loading') {
-    const r = document.getElementById('ycReadout');
-    if (r && !r.dataset.wired) {
-      r.dataset.wired = '1';
-      r.addEventListener('click', (e) => {
-        const row = e.target.closest('.yc-place[data-explain]');
-        if (!row || !r.contains(row)) return;
-        const key = row.getAttribute('data-explain');
-        const existing = row.querySelector('.yc-explain');
-        if (existing) { existing.remove(); row.classList.remove('open'); return; }
-        const text = EXPLAIN[key] || '';
-        if (!text) return;
-        const exp = document.createElement('div');
-        exp.className = 'yc-explain';
-        exp.innerHTML = text;
-        row.appendChild(exp);
-        row.classList.add('open');
-      });
-    }
+  // Shared click handler. Toggles open/close; on open, composes sign-aware
+  // HTML via buildExplainHTML. Uses event delegation so it works regardless
+  // of when the rows are rendered.
+  function handleReadoutClick(e) {
+    const r   = e.currentTarget;
+    const row = e.target.closest('.yc-place[data-explain]');
+    if (!row || !r.contains(row)) return;
+    const existing = row.querySelector('.yc-explain');
+    if (existing) { existing.remove(); row.classList.remove('open'); return; }
+    const key  = row.getAttribute('data-explain');
+    const sign = row.getAttribute('data-sign') || '';
+    const html = buildExplainHTML(key, sign);
+    if (!html) return;
+    const exp = document.createElement('div');
+    exp.className = 'yc-explain';
+    exp.innerHTML = html;
+    row.appendChild(exp);
+    row.classList.add('open');
   }
+  // Wire once on DOMContentLoaded, and again immediately if the DOM is
+  // already parsed (this script lives at end of body). The dataset.wired
+  // flag prevents double-binding.
+  function wireReadoutDelegation() {
+    const r = document.getElementById('ycReadout');
+    if (!r || r.dataset.wired) return;
+    r.dataset.wired = '1';
+    r.addEventListener('click', handleReadoutClick);
+  }
+  document.addEventListener('DOMContentLoaded', wireReadoutDelegation);
+  if (document.readyState !== 'loading') wireReadoutDelegation();
 
   /* --- Page wiring --- */
   const form    = document.getElementById('ycForm');
