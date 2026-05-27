@@ -333,10 +333,26 @@
   // House numbers: plain Arabic so nobody has to translate Roman in their head.
   const HOUSE_LABEL = ['1','2','3','4','5','6','7','8','9','10','11','12'];
 
-  // Readout order — Moon first (Moon & Money, the Moon leads), Sun second,
+  // Readout order: Moon first (Moon & Money, the Moon leads), Sun second,
   // the rest in their usual cosmic order. Lilith and Node are the poets,
   // they sit at the end.
   const READOUT_ORDER = ['moon','sun','mercury','venus','mars','jupiter','saturn','lilith','node'];
+
+  // Tap-to-learn copy. Education + self-reflection register. Money-aware
+  // where natural, never advisory. No em-dashes.
+  const EXPLAIN = {
+    asc:     'How the world first meets you, before you say a word. Notice the moments people read you in ways that surprise you; that gap between your inside and your <em>outside</em> is information worth keeping.',
+    mc:      'Your public sky. What you are known for, what you build toward, the work the world expects from you. A fair question to sit with: is the career you are in the one your MC is pointing at?',
+    sun:     'The core of who you are when nothing is performing. Where you recharge. Where your money tends to flow when you are spending from <em>joy</em> rather than fear.',
+    moon:    'Your inner weather. What you need to feel safe, settled, fed. The Moon often runs your unconscious spending, so knowing yours is a quiet form of financial self-knowledge.',
+    mercury: 'How your mind moves. How you write, talk, sell, ask for the raise, draft the email, set the price. Mercury is the voice you use when money is on the table.',
+    venus:   'What you find beautiful and worth paying for. Your taste, your relationships, the small luxuries that make you say yes. Venus is where pleasure and budget meet.',
+    mars:    'Your engine. How you take action, defend your time, fight for what is yours. Where you push, and where you sometimes push past the point of repair.',
+    jupiter: 'Where things tend to grow easily for you. Your luck, your appetite, your generosity. Jupiter is abundant, and also the planet of <em>a bit too much</em>.',
+    saturn:  'Your discipline and your tender places. Where you have to work twice as hard for what comes easily to others. Saturn is the long teacher; what you build here lasts.',
+    lilith:  'Where you refuse to be tamed. The places you will lose a friendship, a job, or a quiet life rather than betray yourself. Lilith is the line you do not cross, even when it costs you.',
+    node:    'Your direction of growth in this lifetime. Not the comfortable path; the one that is coming for you. Money often follows the Node: walk toward it, and the right things tend to find their way.',
+  };
 
   function signOf(longitude) {
     const i = Math.floor(norm(longitude) / 30) % 12;
@@ -367,12 +383,14 @@
   }
 
   /* --- Mean Black Moon Lilith longitude (lunar apogee) ---
-     Derived from L_moon - M_moon: the apsidal precession of the Moon's
-     orbit gives a mean motion of about 0.1114 deg/day, completing a
-     full circuit in roughly 8.85 years. */
+     The Moon's perigee precesses prograde at ~0.1114 deg/day, completing
+     a circuit in ~8.85 years. Lilith is the apogee (the empty far focus
+     of the orbital ellipse), which sits exactly 180 deg from perigee.
+     Meeus' simplified series gives perigee at 83.353 deg at J2000, so
+     apogee = 83.353 + 180 = 263.353. */
   function lilithLongitude(JD) {
     const D = JD - 2451545.0;
-    return norm(83.353 + 0.111404 * D);
+    return norm(263.353 + 0.111404 * D);
   }
 
   /* --- Mean Lunar North Node ---
