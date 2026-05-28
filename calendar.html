@@ -115,6 +115,18 @@
   .lc-monthlabel { font-size:20px; min-width:0; padding:0 4px; }
   .lc-weekdays, .lc-grid { gap:4px; }
   .lc-weekdays div { font-size:8px; }
+  /* THE OVERFLOW CULPRIT — calendar cells were forcing 53px width
+     each (from aspect-ratio:1 + "FULL"/"NEW" badge + padding),
+     while 1fr grid columns only allotted ~48px. CSS grid's 1fr
+     has an implicit `auto` minimum that prevents shrinking below
+     content size, so cells overflowed the grid by ~25px and the
+     entire Saturday column fell off the right of the iPhone
+     viewport. Setting min-width:0 releases the cell from that
+     intrinsic minimum so columns can actually shrink to 1fr. */
+  .lc-day { min-width:0; padding:4px 2px 3px; }
+  .lc-day-num { font-size:9px; }
+  .lc-day-phase { font-size:7px; letter-spacing:1px; }
+  .lc-day-glyph { font-size:clamp(13px,4vw,18px); }
   .lc-tzrow { margin-top:6px; }
   /* .lc-detail had flex with a 220px min-width on its right column,
      which on a narrow viewport could push the whole panel wider than
