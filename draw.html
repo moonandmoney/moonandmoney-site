@@ -22,16 +22,6 @@
   .draw-wrap .wrap{width:100%}
   .draw-wrap .dc-card{max-width:clamp(280px,90vw,560px);margin:0 auto}
   .draw-wrap .dc-intro{margin-bottom:clamp(18px,3vw,30px)}
-  /* iPhone: the face-down card runs past the bottom URL bar. Reclaim
-     vertical space above the card — keep just enough top padding to
-     clear the fixed nav (~77px), shrink the intro paragraph + its
-     margin — so the whole card (and TAP TO TURN) fits on screen. */
-  @media (max-width:640px){
-    .draw-wrap{padding:82px 14px 30px}
-    .draw-wrap .dc-intro{margin-bottom:14px}
-    .draw-wrap .dc-intro p{font-size:.92rem;line-height:1.45;margin-top:8px}
-    .draw-wrap .dc-card{max-width:94vw}
-  }
 </style>
 </head>
 <body>

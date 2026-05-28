@@ -960,24 +960,6 @@ footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gr
    whisper + move + actions stack tall. Tighten the paddings, vertical
    margins, and font sizes so the whole card fits more comfortably on
    one screen without losing the literary register. */
-@media (max-width:640px) {
-  .dc-face { padding:20px 18px; }
-  .dc-eyebrow { margin-bottom:12px; }
-  .dc-title { font-size:1.45rem; margin:0 0 14px; }
-  .dc-label { margin:0 0 7px; }
-  .dc-read { font-size:.98rem; line-height:1.5; margin:0 0 16px; }
-  .dc-whisper { padding:14px 16px; }
-  .dc-lie, .dc-answer { font-size:.98rem; line-height:1.45; }
-  .dc-lie { margin:0 0 7px; }
-  .dc-rule { margin:16px auto 12px; }
-  .dc-move { font-size:.98rem; line-height:1.45; }
-  .dc-actions { margin-top:18px; }
-  /* Face-down card: shrink the breathing emblem + the gaps so the
-     face-down state is compact and the whole card fits on iPhone
-     without the bottom (and TAP TO TURN) hiding behind the URL bar. */
-  .dc-back-emblem { width:72px; height:72px; }
-  .dc-face-back { gap:14px; }
-}
 .dc-intro{max-width:560px;margin:0 auto 38px;text-align:center}
 .dc-intro p{font-family:var(--serif);font-style:italic;font-size:1.15rem;
   color:var(--mist);line-height:1.6}
@@ -1122,25 +1104,33 @@ footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gr
    Photos is the primary action on mobile.
    ============================================================ */
 @media (max-width:480px) {
-  /* Daily Card */
-  .draw-wrap{padding:84px 12px 32px}
-  .dc-intro{margin-bottom:18px}
+  /* Daily Card — tightened so the whole card (face-down state +
+     TAP TO TURN) fits within an iPhone viewport without the bottom
+     hiding behind the browser URL bar. The card height is driven by
+     the front (reading) face, so every font + margin + padding here
+     compounds into the final card height. */
+  .draw-wrap{padding:82px 12px 28px}
+  .dc-intro{margin-bottom:12px}
   .dc-intro .eyebrow{font-size:.58rem;letter-spacing:.26em}
-  .dc-intro p{font-size:.92rem;line-height:1.5;margin:8px auto 0;max-width:380px}
-  .dc-face{padding:24px 20px 26px;border-radius:14px}
-  .dc-eyebrow{margin-bottom:14px;gap:8px}
+  .dc-intro p{font-size:.88rem;line-height:1.45;margin:6px auto 0;max-width:360px}
+  .dc-face{padding:18px 18px 20px;border-radius:14px}
+  .dc-eyebrow{margin-bottom:10px;gap:8px}
   .dc-eyebrow-txt{font-size:.66rem;letter-spacing:.18em}
-  .dc-title{font-size:1.7rem;margin:0 0 18px}
-  .dc-label{font-size:.6rem;letter-spacing:.28em;margin:0 0 7px}
-  .dc-read{font-size:1.02rem;line-height:1.52;margin:0 0 20px}
-  .dc-whisper{padding:18px 16px;border-radius:10px}
-  .dc-lie,.dc-answer{font-size:1.04rem;line-height:1.45}
-  .dc-lie{margin:0 0 8px}
-  .dc-rule{margin:22px auto 18px}
-  .dc-move{font-size:1.02rem;line-height:1.5}
-  .dc-actions{margin-top:24px}
-  .dc-share-btn{padding:14px 26px;font-size:.72rem;letter-spacing:.2em;
-    width:100%;max-width:320px;display:block;margin:0 auto}
+  .dc-title{font-size:1.4rem;margin:0 0 12px}
+  .dc-label{font-size:.58rem;letter-spacing:.26em;margin:0 0 6px}
+  .dc-read{font-size:.96rem;line-height:1.46;margin:0 0 14px}
+  .dc-whisper{padding:13px 15px;border-radius:10px}
+  .dc-lie,.dc-answer{font-size:.96rem;line-height:1.4}
+  .dc-lie{margin:0 0 7px}
+  .dc-rule{margin:14px auto 12px}
+  .dc-move{font-size:.96rem;line-height:1.42}
+  .dc-actions{margin-top:16px}
+  .dc-share-btn{padding:13px 24px;font-size:.7rem;letter-spacing:.2em;
+    width:100%;max-width:300px;display:block;margin:0 auto}
+  /* Face-down card: compact breathing emblem + tighter gaps so the
+     down-state reads as a neat card, not a tall panel. */
+  .dc-back-emblem{width:68px;height:68px}
+  .dc-face-back{gap:13px}
 
   /* Quiz */
   .qz-wrap{padding:90px 14px 32px}
