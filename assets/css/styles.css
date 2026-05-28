@@ -1214,10 +1214,18 @@ footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gr
 @media (max-width: 900px) {
   /* In the mobile burger menu, flatten the dropdown — the trigger
      button disappears and the sub-items just slot into the full-screen
-     list with the rest of the items. No nested clicking on a phone. */
+     list with the rest of the items. No nested clicking on a phone.
+
+     Specificity note: rules above like .nav-dropdown:focus-within
+     .nav-submenu (specificity 0,2,0) re-apply transform:translateX(-50%)
+     — which, on mobile, pushes the flattened submenu off the left edge
+     the moment iOS gives focus to any link in the panel. The selectors
+     below are bumped to .nav-links .nav-dropdown .nav-submenu
+     (specificity 0,3,0) so they win the cascade regardless of focus /
+     hover / aria-expanded state. */
   .nav-dropdown { width: 100%; }
   .nav-trigger { display: none; }
-  .nav-submenu {
+  .nav-links .nav-dropdown .nav-submenu {
     position: static; transform: none; opacity: 1; pointer-events: auto;
     background: transparent; border: 0; padding: 0; min-width: 0;
     backdrop-filter: none;
@@ -1226,7 +1234,7 @@ footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gr
        reading as a sub-cluster. */
     display: flex; flex-direction: column; align-items: center; gap: 22px;
   }
-  .nav-submenu a {
+  .nav-links .nav-dropdown .nav-submenu a {
     font-size: 1.08rem; letter-spacing: .18em; color: var(--parchment);
     padding: 6px 0; text-align: center;
   }
