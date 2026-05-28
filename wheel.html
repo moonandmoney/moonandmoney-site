@@ -41,6 +41,15 @@
   .lw-node:focus-visible circle:nth-child(2){stroke:#E5C77B}
   .lw-control{cursor:pointer}
   @media(prefers-reduced-motion:reduce){.lw-star,.lw-active-glow,.lw-active-ray,.lw-shimmer-orn{animation:none}}
+  /* iPhone: the wheel was vertically centered inside a 100vh hero,
+     which left it small and floating mid-screen with lots of empty
+     space above and below. On a narrow viewport, push it up toward
+     the top of the visible area and let it grow to nearly fill the
+     width so it reads as the page's centerpiece, not a small ornament. */
+  @media(max-width:640px){
+    .wheel-hero{min-height:auto;padding:18px 0 36px;align-items:flex-start}
+    .lw-wrap{max-width:min(96vw,calc((100vh - 80px) * 0.909))}
+  }
   .wheel-cta{max-width:620px;margin:0 auto;text-align:center}
   .wheel-cta p{font-family:var(--serif);font-style:italic;font-size:1.2rem;color:var(--mist);
     max-width:480px;margin:0 auto 24px;line-height:1.6}
