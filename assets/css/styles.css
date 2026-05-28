@@ -808,10 +808,19 @@ footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gr
   .nav-links{
     position:fixed;inset:0;width:100%;
     background:#0a090e;
-    flex-direction:column;justify-content:center;gap:30px;
+    flex-direction:column;
+    /* `safe center` centers the items when they fit, but falls back to
+       top-alignment when the menu would otherwise push items off-screen
+       at the top and bottom (the classic flex-center clipping trap on
+       tall menus). Combined with overflow-y:auto, this guarantees every
+       item is reachable on every iPhone size, from SE to Pro Max. */
+    justify-content:safe center;
+    gap:22px;
     padding:max(80px,env(safe-area-inset-top) + 60px) 24px max(40px,env(safe-area-inset-bottom));
     transform:translateX(100%);transition:transform .42s var(--ease);
     z-index:55;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
   }
   .nav-links a{
     font-size:1.08rem;letter-spacing:.18em;color:var(--parchment);
@@ -1212,7 +1221,10 @@ footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gr
     position: static; transform: none; opacity: 1; pointer-events: auto;
     background: transparent; border: 0; padding: 0; min-width: 0;
     backdrop-filter: none;
-    display: flex; flex-direction: column; align-items: center; gap: 30px;
+    /* Gap matches the parent .nav-links gap so the flattened Tools
+       items visually integrate with the top-level items rather than
+       reading as a sub-cluster. */
+    display: flex; flex-direction: column; align-items: center; gap: 22px;
   }
   .nav-submenu a {
     font-size: 1.08rem; letter-spacing: .18em; color: var(--parchment);
