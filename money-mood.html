@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Money Mood by Sign · Moon &amp; Money</title>
+<meta name="description" content="A free teaching reference for how each of the twelve zodiac signs relates to money — how they earn, feel, spend, and where to watch. By Luna Wilde at Moon &amp; Money. For reflection and self-knowledge; not financial advice.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Money Mood by Sign · Moon &amp; Money">
+<meta property="og:description" content="How each of the twelve zodiac signs relates to money — how they earn, feel, spend, and the quiet lie to watch.">
+<meta property="og:site_name" content="Moon &amp; Money">
+<meta property="og:image" content="https://moonandmoney.ca/assets/og/social.png?v=20260527">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://moonandmoney.ca/assets/og/social.png?v=20260527">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/assets/og/apple-touch-icon.png"><meta name="theme-color" content="#070608"><meta name="apple-mobile-web-app-title" content="Moon & Money"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&family=Noto+Sans+Symbols+2&display=swap"><link rel="stylesheet" href="assets/css/styles.css">
+
+<style>
+  /* Money Mood by Sign — mirrors the .house-* shape from /houses with .sign-*
+     classes so the look is twin to the Houses reference page. */
+  .signs-toc {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(7,6,8,.92); backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(201,162,78,.18);
+    padding: 12px 0;
+  }
+  .signs-toc .wrap {
+    display: flex; flex-wrap: wrap; gap: 4px 14px;
+    justify-content: center; align-items: center;
+    font-family: Jost, sans-serif; font-size: .76rem;
+    letter-spacing: .18em; text-transform: uppercase;
+    color: var(--mist);
+  }
+  .signs-toc .toc-label { opacity: .55; margin-right: 8px; }
+  .signs-toc a {
+    color: var(--mist); text-decoration: none;
+    padding: 4px 8px; border-radius: 3px;
+    transition: color .2s, background .2s;
+  }
+  .signs-toc a:hover { color: var(--gold-bright); background: rgba(201,162,78,.06); }
+
+  .sign-section {
+    padding: 70px 0 40px;
+    border-top: 1px solid rgba(201,162,78,.10);
+  }
+  .sign-section:first-of-type { border-top: 0; }
+  .sign-section .wrap { max-width: 760px; }
+  .sign-stripe {
+    height: 4px; width: 80px;
+    margin: 0 auto 28px;
+    border-radius: 2px;
+    box-shadow: 0 0 24px 0 currentColor;
+    opacity: .85;
+  }
+  .sign-section .eyebrow {
+    display: block; text-align: center; margin-bottom: 10px;
+  }
+  .sign-section h2 {
+    text-align: center; margin: 0 0 8px;
+    font-family: Cormorant Garamond, Georgia, serif;
+    font-size: clamp(2rem, 5vw, 2.6rem);
+    font-weight: 500; color: var(--cream);
+    letter-spacing: .01em;
+  }
+  .sign-section h2 em { color: var(--gold-bright); font-style: italic; }
+  .sign-tagline {
+    text-align: center;
+    font-family: Cormorant Garamond, Georgia, serif;
+    font-style: italic; font-size: 1.15rem;
+    color: var(--gold); margin: 0 0 26px; opacity: .9;
+  }
+  .sign-info {
+    text-align: center; margin: 0 auto 32px;
+    padding: 14px 22px;
+    background: rgba(11,37,69,.45);
+    border: 1px solid rgba(201,162,78,.18);
+    border-radius: 4px;
+    font-family: Jost, sans-serif; font-size: .88rem;
+    color: var(--mist); line-height: 1.7;
+    max-width: 640px;
+  }
+  .sign-info strong { color: var(--gold-bright); font-weight: 500; }
+  .sign-info .dot {
+    display: inline-block; width: 6px; height: 6px;
+    margin: 0 10px 1px; border-radius: 50%;
+    background: var(--gold); opacity: .5;
+    vertical-align: middle;
+  }
+  .sign-section h3 {
+    font-family: Jost, sans-serif;
+    font-size: .82rem; letter-spacing: .22em;
+    text-transform: uppercase; color: var(--gold);
+    margin: 30px 0 12px; font-weight: 500;
+  }
+  .sign-section p {
+    color: var(--parchment); line-height: 1.75;
+    font-size: 1.02rem; margin: 0 0 16px;
+  }
+  .sign-section p em { color: var(--cream); }
+  .sign-example {
+    background: rgba(229,199,123,.05);
+    border-left: 2px solid rgba(229,199,123,.35);
+    padding: 18px 22px; margin: 18px 0;
+    font-style: italic;
+  }
+  .sign-example em { color: var(--gold-bright); font-style: italic; font-weight: 500; }
+  .sign-back-top {
+    display: block; text-align: center;
+    margin-top: 24px;
+    font-family: Jost, sans-serif; font-size: .72rem;
+    letter-spacing: .22em; text-transform: uppercase;
+    color: var(--mist); opacity: .55; text-decoration: none;
+    transition: opacity .2s, color .2s;
+  }
+  .sign-back-top:hover { opacity: 1; color: var(--gold-bright); }
+
+  .signs-closing {
+    padding: 70px 0 40px;
+    border-top: 1px solid rgba(201,162,78,.18);
+  }
+  .signs-closing .wrap { max-width: 720px; text-align: center; }
+  .signs-closing h2 {
+    font-family: Cormorant Garamond, Georgia, serif;
+    font-size: 2rem; font-weight: 500; color: var(--cream);
+    margin: 0 0 18px;
+  }
+  .signs-closing h2 em { color: var(--gold-bright); font-style: italic; }
+  .signs-closing p {
+    color: var(--mist); line-height: 1.7;
+    font-size: 1.02rem; margin: 0 0 16px;
+  }
+  .signs-closing .btn { margin-top: 12px; }
+
+  @media (max-width: 640px) {
+    .signs-toc .wrap { font-size: .68rem; gap: 2px 8px; }
+    .signs-toc .toc-label { display: none; }
+    .sign-section { padding: 50px 0 30px; }
+    .sign-info { font-size: .82rem; padding: 12px 16px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="starfield"></canvas>
+<div class="nebula"></div>
+
+<header class="nav">
+  <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
+  <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li class="nav-dropdown" aria-expanded="false">
+      <button class="nav-trigger" type="button" aria-haspopup="true" aria-expanded="false">Tools <span class="caret" aria-hidden="true">&#9662;</span></button>
+      <ul class="nav-submenu">
+        <li><a href="pendulum/">Pendulum</a></li>
+        <li><a href="calendar.html">Calendar</a></li>
+        <li><a href="wheel.html">Wheel</a></li>
+        <li><a href="draw.html">Card</a></li>
+        <li><a href="quiz.html">Quiz</a></li>
+        <li><a href="your-chart.html">Your Chart</a></li>
+        <li><a href="houses.html">Houses</a></li>
+        <li><a href="money-mood.html">Money Mood</a></li>
+      </ul>
+    </li>
+    <li><a href="shop.html">Atelier</a></li>
+    <li><a href="archive.html">Archive</a></li>
+    <li><a href="sessions.html">Sessions</a></li>
+    <li><a href="about.html">Ethos</a></li>
+    <li><a href="https://moonandmoney.substack.com/subscribe" target="_blank">Crescent Club</a></li>
+    <li><a class="nav-cta" href="money-chart.html">Money Chart</a></li>
+  </ul>
+</header>
+
+<main>
+  <section class="page-hero" id="top">
+    <div class="wrap">
+      <span class="eyebrow">Reference</span>
+      <h1>Money <span class="gold">Mood</span> by Sign</h1>
+      <p style="max-width:640px;margin:0 auto">A teaching reference for how each of the twelve signs relates to money. How they earn, how they feel about it, how they spend, and the quiet lie each one is prone to. Free, browsable, and written in plain English.</p>
+      <p style="margin:10px auto 0;max-width:520px;color:var(--mist);font-size:.85rem;font-style:italic;opacity:.78;text-align:center">For reflection and self-knowledge. Not financial or investment advice.</p>
+    </div>
+  </section>
+
+  <nav class="signs-toc" aria-label="Jump to a sign">
+    <div class="wrap">
+      <span class="toc-label">Jump to</span>
+      <a href="#aries">♈ ARI</a>
+      <a href="#taurus">♉ TAU</a>
+      <a href="#gemini">♊ GEM</a>
+      <a href="#cancer">♋ CAN</a>
+      <a href="#leo">♌ LEO</a>
+      <a href="#virgo">♍ VIR</a>
+      <a href="#libra">♎ LIB</a>
+      <a href="#scorpio">♏ SCO</a>
+      <a href="#sagittarius">♐ SAG</a>
+      <a href="#capricorn">♑ CAP</a>
+      <a href="#aquarius">♒ AQU</a>
+      <a href="#pisces">♓ PIS</a>
+    </div>
+  </nav>
+
+  <section id="aries" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#C8312E;color:#C8312E"></div>
+      <span class="eyebrow">Aries</span>
+      <h2>The <em>opener</em></h2>
+      <p class="sign-tagline">Earned by going first.</p>
+      <div class="sign-info">
+        Ruled by <strong>Mars</strong>
+        <span class="dot"></span> Element: <strong>Fire</strong>
+        <span class="dot"></span> Modality: <strong>Cardinal</strong>
+        <span class="dot"></span> Body: <strong>head and face</strong>
+      </div>
+
+      <p>Aries is the sign of the first move. With Aries somewhere in your chart, money rewards you for being the one who started, not the one who waited to be asked.</p>
+
+      <h3>How Aries earns</h3>
+      <p>An Aries Sun earns by going first. You see the opening before anyone else does, and your money comes from being willing to move while others are still thinking. Aries makes founders, fighters, and people who start things. The paycheck follows the courage.</p><p>Your earning power lives in initiation. You build wealth by launching, competing, and refusing to ask permission. The dollar amount may be smaller in the early years and disproportionate later, because compound returns favor those who start.</p><p>The shadow is speed without sequence. Aries can begin five things and finish none, leaving wealth on the table for someone slower and more patient. Pair every launch with a built-in pause. Your bravery is the asset. Your follow through is the multiplier.</p>
+
+      <h3>How Aries feels about money</h3>
+      <p>An Aries Moon feels money like a race. Your emotional wiring around wealth is competitive, impatient, and quick. Other people's wins land as challenges you must meet. Waiting feels like losing. You want the win, you want it now, and the slow build feels like punishment.</p><p>This wiring serves you in moments that reward boldness. You ask for the raise. You make the offer. You move before you have full information, and more often than not, the move pays. The body knows the answer before the spreadsheet finishes loading.</p><p>The shadow is impulse spending followed by guilt. Aries Moon makes the purchase first and reads the return policy second. The healing work is putting a 24-hour rule between feeling and action, not to silence the fire, but to let it choose its targets more wisely.</p>
+
+      <h3>How Aries spends</h3>
+      <p>Venus in Aries spends on impulse. You see it, you want it, you buy it. The pleasure is in the decisiveness as much as the object. Venus here loves what is new, bold, and slightly risky, and finds patient deliberation exhausting.</p><p>What you value is excitement. The thing that moves you to spend is usually the thing that promises to keep you alive, awake, and in motion. Sports gear, travel, anything that gets the heart up. Spending feels like permission to be a person.</p><p>The shadow is the impulse without the audit. Venus in Aries can wake up to four purchases it doesn't remember authorizing, and feel embarrassed rather than curious. The discipline is one designated impulse fund. The fire still gets its outlet. The rent stays paid.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'If I wait, I'll miss it.' Most opportunities recur. Impulse is not the same as instinct.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85">It shows up around earning as: <em>'I'll figure out the details later.' You won't. The follow-through is half the asset.</em></p>
+        <p style="margin-top:6px;font-size:.95em;opacity:.85">And around spending as: <em>'I deserve this, I worked hard.' Maybe you did. The question is whether you want this. Deserve and want are different transactions.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section id="taurus" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#2F6B3E;color:#2F6B3E"></div>
+      <span class="eyebrow">Taurus</span>
+      <h2>The <em>holder</em></h2>
+      <p class="sign-tagline">Built by holding steady.</p>
+      <div class="sign-info">
+        Ruled by <strong>Venus</strong>
+        <span class="dot"></span> Element: <strong>Earth</strong>
+        <span class="dot"></span> Modality: <strong>Fixed</strong>
+        <span class="dot"></span> Body: <strong>throat, neck, vocal cords</strong>
+      </div>
+
+      <p>Taurus is the sign of money itself. Ruled by Venus, tied to the body and the earth, Taurus understands worth at a level most signs only theorise about. The work here is steady accumulation, and the trust that slow is not the same as small.</p>
+
+      <h3>How Taurus earns</h3>
+      <p>A Taurus Sun earns by holding. You build wealth the way oak trees grow: slowly, deeply, and in ways nobody notices until the canopy is already wide. Taurus is the sign of money itself, ruled by Venus, deeply tied to the material world. You understand value at a body level.</p><p>Your earning power lives in steady accumulation. Long careers. Real assets. Compounding. You may not chase the flashiest opportunity, and that is precisely why your account grows while flashier accounts deflate. Time is your ally.</p><p>The shadow is stubbornness. Taurus can hold a position past its usefulness and confuse comfort with safety. The discipline is to know when holding becomes hoarding, and when patience becomes paralysis. Your steadiness is the asset. Your willingness to release is what protects it.</p>
+
+      <h3>How Taurus feels about money</h3>
+      <p>A Taurus Moon feels money in the body. Financial stress lands in your shoulders before your brain registers it. Security is not a concept to you. It is a felt sense, located in the chest, the gut, the breath. When your account is full, you can rest. When it isn't, you cannot.</p><p>This wiring serves you in long-term planning. Taurus Moon naturally builds reserves, knows where the money is, and refuses to make decisions in panic. Your nervous system slows the room down, which is exactly what financial decisions need.</p><p>The shadow is comfort spending that creeps. The good meal, the better couch, the small luxuries that quietly drain. Taurus Moon can mistake softness for safety. The discipline is asking whether the comfort is real nourishment or anesthesia.</p>
+
+      <h3>How Taurus spends</h3>
+      <p>Venus in Taurus spends on the real. You want the well-made thing, the natural fiber, the hand-built piece, the meal that took time. Venus is at home in Taurus, which means your taste is unusually accurate and your patience for what is fake or cheap is unusually low.</p><p>What you value is quality that lasts. The cashmere over the synthetic. The land over the lease. The single excellent piece of furniture over four acceptable ones. You spend more per item than most people and own less, and that math works in your favor over time.</p><p>The shadow is comfort that crept past the budget. Venus in Taurus can treat itself daily and lose track of the cumulative weight. The discipline is naming the difference between investment and indulgence, and protecting one with the other.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'I'll feel safe once I have enough.' You won't. Enough was never a number. Safety is something you generate, not something the account gives you.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85">It shows up around earning as: <em>'I should wait until conditions are perfect.' Conditions are never perfect. The waiting is the price you pay.</em></p>
+        <p style="margin-top:6px;font-size:.95em;opacity:.85">And around spending as: <em>'I'll just enjoy this one little thing.' There are six little things a week. The cumulative is the budget.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section id="gemini" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#B6A047;color:#B6A047"></div>
+      <span class="eyebrow">Gemini</span>
+      <h2>The <em>connector</em></h2>
+      <p class="sign-tagline">Gathered in many places at once.</p>
+      <div class="sign-info">
+        Ruled by <strong>Mercury</strong>
+        <span class="dot"></span> Element: <strong>Air</strong>
+        <span class="dot"></span> Modality: <strong>Mutable</strong>
+        <span class="dot"></span> Body: <strong>hands, arms, lungs</strong>
+      </div>
+
+      <p>Gemini is the sign of trade. Information, words, contacts, bridges — Gemini money flows wherever language and connection do, often through several streams at once.</p>
+
+      <h3>How Gemini earns</h3>
+      <p>A Gemini Sun earns through language. You think in connections, and you make money where ideas, words, and information move. Writing, teaching, brokering, translating, selling: any work that turns one thing into something a person can use. Mercury rules you, which means commerce is in your bones.</p><p>Your earning power lives in multiplicity. You may have several income streams running at once, and that scatter is not failure. It is the architecture. Gemini Sun wealth tends to grow through optionality, side projects, and the ability to pivot fast when the wind shifts.</p><p>The shadow is dispersion. Twelve half-built ideas earn less than one fully built one. Gemini Sun often knows more than the experts and earns less. The discipline is choosing one focus long enough for the compounding to begin.</p>
+
+      <h3>How Gemini feels about money</h3>
+      <p>A Gemini Moon feels money in motion. You process financial decisions by talking them out, reading three articles, asking five people, and changing your mind twice. The emotional layer is curious, scattered, and rarely still. You may not know what you feel about money until you hear yourself say it.</p><p>This wiring serves you in research-heavy decisions. Gemini Moon spots patterns others miss, asks the questions everyone forgot, and can pivot fast when conditions change. You learn what you need by encountering it.</p><p>The shadow is analysis paralysis. Gemini Moon can research six investment strategies and execute none. The discipline is choosing one path long enough to feel what the inside actually feels like, instead of judging from the outside.</p>
+
+      <h3>How Gemini spends</h3>
+      <p>Venus in Gemini spends on the new. The latest book, the next class, the novel restaurant, the gadget you saw in a podcast. Your spending reflects a curious mind, and your closet, shelf, or subscription list reflects a person trying many things at once.</p><p>What you value is variety. The five things instead of the one. Spending is connected to learning, conversation, and the pleasure of having options. Books, courses, devices, anything that opens a door.</p><p>The shadow is novelty without depth. Venus in Gemini can buy the course and not finish it, subscribe to ten things and use three. The discipline is one rule: nothing new until the current one has been completed or released. The mind stays curious. The clutter stops compounding.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'Once I've researched it, I'll feel sure.' You won't. Certainty comes from acting, not from reading more.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85">It shows up around earning as: <em>'I'll be ready once I know enough.' You already know enough. The next move is execution, not more research.</em></p>
+        <p style="margin-top:6px;font-size:.95em;opacity:.85">And around spending as: <em>'This is the one I'll actually finish.' You said that about the last four. Finish first, buy second.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section id="cancer" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#8FA3C7;color:#8FA3C7"></div>
+      <span class="eyebrow">Cancer</span>
+      <h2>The <em>nurturer</em></h2>
+      <p class="sign-tagline">Carried with care.</p>
+      <div class="sign-info">
+        Ruled by <strong>the Moon</strong>
+        <span class="dot"></span> Element: <strong>Water</strong>
+        <span class="dot"></span> Modality: <strong>Cardinal</strong>
+        <span class="dot"></span> Body: <strong>chest, stomach, breasts</strong>
+      </div>
+
+      <p>Cancer is the sign of what holds us. Money for Cancer is interlaced with safety, family, and the meaning of home. Care is the currency, and the work is letting it be paid for.</p>
+
+      <h3>How Cancer earns</h3>
+      <p>A Cancer Sun earns through care. Your work is taking something private, emotion, intuition, the wisdom of having lived, and making it available to others. You teach, hold, nurture, translate. Cancer earns by carrying what only the inner world can produce.</p><p>Your earning power lives in fields where presence is the product. Caregiving, coaching, counseling, teaching, hospitality, anything where the person you bring matters more than the technique. Cancer also has unusual luck with property and home, because the sign rules the foundation itself.</p><p>The shadow is that Cancer earnings feel like nurturing, not work. So you undercharge. You give it away because giving feels right. The healing isn't to harden. It is to recognize what you do is rare, and pricing it does not betray the care.</p>
+
+      <h3>How Cancer feels about money</h3>
+      <p>A Cancer Moon feels money as safety. Not luxury, not status, safety. Your savings are your mother, your shelter, your nervous system regulator. When the emergency fund is full, you can breathe. When it isn't, the floor feels uncertain.</p><p>This wiring serves you in the discipline of saving. Cancer Moons build emergency funds without being told. You think in generations: the wealth you build is for the children, the parents, the future. Your intuition about timing is exceptional.</p><p>The shadow is emotional spending. Cancer Moon soothes hard feelings with small comforts: the retail purchase, the takeout, the gift you didn't need to send. The healing is asking what the feeling actually wants, before the card comes out.</p>
+
+      <h3>How Cancer spends</h3>
+      <p>Venus in Cancer spends on home. The food, the bed, the things that make the kitchen smell right. Your spending is rooted in the body, the household, and the people you take care of. Gifts come easily, and the gifts are always the right ones.</p><p>What you value is nourishment. You will spend on a slow-cooked dinner before you spend on a logo. You will pay for the school you trust before you upgrade the car. The wealth is meant to feed people, not to perform.</p><p>The shadow is over-giving until the well runs dry. Venus in Cancer can send money to family members who never return it, treat dinners for people who do not reciprocate, and end the month wondering where it all went. The discipline is generosity that includes you in the receiving.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'I'll feel okay once the people I love are taken care of.' You cannot care for them out of a depleted account. You first, every time.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85">It shows up around earning as: <em>You undercharge for the inner work because it doesn't feel like work to you. It feels like breathing. But it is the rarest thing you do.</em></p>
+        <p style="margin-top:6px;font-size:.95em;opacity:.85">And around spending as: <em>'If I don't bring something, I'll be a burden.' You are not a burden. The gift was never the price of admission.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section id="leo" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#D69343;color:#D69343"></div>
+      <span class="eyebrow">Leo</span>
+      <h2>The <em>presence</em></h2>
+      <p class="sign-tagline">Earned by being seen for what is real.</p>
+      <div class="sign-info">
+        Ruled by <strong>the Sun</strong>
+        <span class="dot"></span> Element: <strong>Fire</strong>
+        <span class="dot"></span> Modality: <strong>Fixed</strong>
+        <span class="dot"></span> Body: <strong>heart, spine, upper back</strong>
+      </div>
+
+      <p>Leo is the sign of expression. Money follows Leo's willingness to be the face, the voice, the named source of the work. Hidden Leo earns less than seen Leo, and that is not an ego problem; it is a temperament truth.</p>
+
+      <h3>How Leo earns</h3>
+      <p>A Leo Sun earns by being seen. Visibility is your currency. You build wealth in fields where personal presence, performance, and creative expression matter. The stage may be literal or metaphorical, but you do not earn well in hiding.</p><p>Your earning power lives in expression. Leadership roles, creative ventures, high-touch work where your name is on it. Leo Sun makes the best money when the work is unmistakably yours, signed, owned, and proud. Wealth follows your willingness to be the face of what you do.</p><p>The shadow is performance for its own sake. Leo can confuse applause with income, and chase recognition while quieter peers build the actual fortune. The work is being seen for what is real, not for what plays well.</p>
+
+      <h3>How Leo feels about money</h3>
+      <p>A Leo Moon feels money with pride. Generosity makes you feel alive. Giving feels like power, and the right luxury feels like love. Your nervous system is regulated by the experience of being celebrated, and money is one of the instruments by which you celebrate.</p><p>This wiring serves you when wealth is meant to be enjoyed. Leo Moon hosts well, gifts well, and lifts the people around them. The generosity is felt, returned, and often comes back as opportunity. Your warmth is magnetic.</p><p>The shadow is performance spending. Leo Moon can overgive to feel needed and overspend to look the part. The dinner you can't afford. The gift you regret. The healing is knowing your worth is intrinsic, not performed. You are already the gift.</p>
+
+      <h3>How Leo spends</h3>
+      <p>Venus in Leo spends out loud. Not because you are vain, but because cheap depresses you. A Leo Venus genuinely cannot enjoy what is shoddy or beneath her. You would rather have one beautiful thing than four mediocre ones, and you are right.</p><p>What you value is quality, drama, and visibility. The wardrobe people remember. The hotel that becomes a story. The gift that arrives with the right ribbon. Your spending reflects the conviction that pleasure is not optional and not embarrassing.</p><p>The shadow is performance spending. Venus in Leo can buy to be seen rather than buy what genuinely delights, and the difference is not always obvious in the moment. The discipline is asking whether the purchase still pleases you when nobody else is watching.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'If I'm generous enough, they'll love me.' They will use you. Generosity that wasn't asked for becomes a debt nobody can repay.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85">It shows up around earning as: <em>'If I really cared about the work, I wouldn't need to be paid this well.' Caring and being paid well are not in opposition. You are.</em></p>
+        <p style="margin-top:6px;font-size:.95em;opacity:.85">And around spending as: <em>'I shouldn't spend on visibility.' You should. You were built for it. Just not to prove anything to anyone but yourself.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section id="virgo" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#5C8B7A;color:#5C8B7A"></div>
+      <span class="eyebrow">Virgo</span>
+      <h2>The <em>refiner</em></h2>
+      <p class="sign-tagline">Built by precision and craft.</p>
+      <div class="sign-info">
+        Ruled by <strong>Mercury</strong>
+        <span class="dot"></span> Element: <strong>Earth</strong>
+        <span class="dot"></span> Modality: <strong>Mutable</strong>
+        <span class="dot"></span> Body: <strong>gut, digestive system</strong>
+      </div>
+
+      <p>Virgo is the sign of craft and service. Money for Virgo accrues quietly through skill, attention, and the kind of refinement most people never bother with. The catch: it has to be priced and shipped, not perfected indefinitely.</p>
+
+      <h3>How Virgo earns</h3>
+      <p>A Virgo Sun earns through precision. You make money where details matter, where systems need fixing, where craft is the difference between adequate and excellent. Virgo is the analyst, the editor, the healer, the artisan. Your work improves what passes through your hands.</p><p>Your earning power lives in service that compounds. Skilled trades, specialized knowledge, healthcare, editing, consulting, anything where depth of mastery beats breadth of pitch. Virgo Suns tend to be underpriced for years and suddenly very expensive once the reputation lands.</p><p>The shadow is perfectionism that bills nothing. Virgo can refine a project past the point where it earns, polishing for free what should have shipped and invoiced. The work is letting good enough be the standard for billing, even when the inner critic wants more.</p>
+
+      <h3>How Virgo feels about money</h3>
+      <p>A Virgo Moon feels money in the details. Your nervous system tracks every transaction. A four-dollar discrepancy can land harder than a four-hundred-dollar win, because imprecision feels unsafe. You sleep better with a spreadsheet open.</p><p>This wiring serves you in optimization. Virgo Moon catches errors others miss, finds money already in the budget, and knows exactly where every dollar lives. Your discipline is the asset most people don't have.</p><p>The shadow is financial anxiety even when you are doing well. Virgo Moon can be net positive and still feel late, behind, or wrong. The healing is adding a guilt-free category to the budget that exists purely for pleasure, and not auditing it. Your systems are meant to serve joy, not replace it.</p>
+
+      <h3>How Virgo spends</h3>
+      <p>Venus in Virgo spends on the useful. The thing that solves the problem. The well-organized closet. The supplement that works. The course that actually transferred to skill. Venus here values function as a form of beauty, and finds clutter genuinely painful.</p><p>What you value is craft and improvement. You will spend on the tool that earns its keep, the service that saves three hours a week, the therapist who actually moves something. The pleasure is in the upgrade.</p><p>The shadow is utility taken so far it forgets joy. Venus in Virgo can deny itself anything that is purely for delight, calling it indulgent. The discipline is permitted pleasure. Build a small monthly fund for things that justify themselves only by feeling good. They will pay for themselves another way.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'If I track everything carefully, nothing bad can happen.' Bad things happen anyway. The tracking is soothing a different fear.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85">It shows up around earning as: <em>'I'll raise my rates once the system is perfect.' The system is never perfect. The undercharging is the system.</em></p>
+        <p style="margin-top:6px;font-size:.95em;opacity:.85">And around spending as: <em>'I shouldn't spend on something just because it feels good.' You should. Pleasure is a real category, not a luxury.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section id="libra" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#B58CB3;color:#B58CB3"></div>
+      <span class="eyebrow">Libra</span>
+      <h2>The <em>partner</em></h2>
+      <p class="sign-tagline">Made in relation.</p>
+      <div class="sign-info">
+        Ruled by <strong>Venus</strong>
+        <span class="dot"></span> Element: <strong>Air</strong>
+        <span class="dot"></span> Modality: <strong>Cardinal</strong>
+        <span class="dot"></span> Body: <strong>kidneys, lower back, skin</strong>
+      </div>
+
+      <p>Libra is the sign of relation. Money for Libra is made through partnership, fairness, the agreement signed across the table. The work is asking for what is fair without first softening it to keep the room comfortable.</p>
+
+      <h3>How Libra earns</h3>
+      <p>A Libra Sun earns in partnership. You make money where relationships, fairness, and the meeting of two parties matter. Mediation, design, law, diplomacy, art, anything that requires a sense of proportion and an eye for what works between people. You see the deal before you see the dollar.</p><p>Your earning power lives in collaboration. Solo work tends to drain Libra Sun. The right business partner, agent, or co-founder multiplies what you can do alone. Wealth comes through joint ventures, smart contracts, and the ability to make the room feel balanced.</p><p>The shadow is indecision and people-pleasing. Libra can underprice to preserve the relationship, and split bills evenly when they ordered the salad. The discipline is remembering that fair includes you.</p>
+
+      <h3>How Libra feels about money</h3>
+      <p>A Libra Moon feels money in fairness. The emotional layer asks, every time money moves: is this even? When the math comes out balanced, you can rest. When it doesn't, you feel it before you can name it.</p><p>This wiring serves you in partnership and negotiation. Libra Moon reads the room, hears what isn't said, and knows what the other side needs to feel met. You build trust through fairness, and trust is the longest compounding asset in any business.</p><p>The shadow is conflict avoidance. Libra Moon can underprice itself to keep the peace, lend money that won't return, and discount what should have been billed in full. The discipline is remembering that fair includes you. The scale only balances when both sides are visible.</p>
+
+      <h3>How Libra spends</h3>
+      <p>Venus in Libra spends on beauty. Venus rules Libra, which means your taste is highly tuned and your eye for what is aesthetically right is rarely wrong. You will pay more for the well-designed version of any object, and the upgrade will feel like a relief, not a luxury.</p><p>What you value is harmony. The room that feels balanced. The wardrobe that holds together. The dinner where every detail matches. Your spending tends toward art, design, fashion, gatherings, and anything that produces visible grace.</p><p>The shadow is spending to keep the peace. Venus in Libra can pick up tabs to avoid awkwardness, agree to splits that were not fair, and undercharge to preserve relationships. The discipline is letting the financial transaction be honest, even when the dinner is friendly.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'I just want it to be fair' can quietly become 'I will overgive to keep the peace.' Fair includes you.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85">It shows up around earning as: <em>'If they don't bring it up, I won't either.' They are hoping you bring it up. That is the negotiation.</em></p>
+        <p style="margin-top:6px;font-size:.95em;opacity:.85">And around spending as: <em>'I'll pick this up, it's easier than asking.' The asking is the price. Pay it once, save a thousand small drains.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section id="scorpio" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#7A2440;color:#7A2440"></div>
+      <span class="eyebrow">Scorpio</span>
+      <h2>The <em>strategist</em></h2>
+      <p class="sign-tagline">Won quietly, behind closed doors.</p>
+      <div class="sign-info">
+        Ruled by <strong>Pluto (modern) / Mars (classical)</strong>
+        <span class="dot"></span> Element: <strong>Water</strong>
+        <span class="dot"></span> Modality: <strong>Fixed</strong>
+        <span class="dot"></span> Body: <strong>reproductive and eliminative systems</strong>
+      </div>
+
+      <p>Scorpio is the sign of what is shared, hidden, and transformed. Money for Scorpio runs through debt, taxes, investments, inheritances, and the unspoken financial currents in any relationship. Quiet power, deep waters.</p>
+
+      <h3>How Scorpio earns</h3>
+      <p>A Scorpio Sun earns in the depths. You build wealth where most people are afraid to look: debt, taxes, death, inheritance, hidden systems, joint finances, leverage. Scorpio is the sign of other people's money, and that is where your strategic mind earns its keep.</p><p>Your earning power lives in transformation. Real estate flips, private equity, restructuring, therapy, investigation, anything that takes a broken thing and rebuilds it. Scorpio Suns also do well in secretive industries: research, intelligence, anything where what you know is the asset.</p><p>The shadow is control that becomes isolation. Scorpio can hold so tightly to financial secrecy that nobody can help. The discipline is letting trusted advisors in, knowing that wealth scales with shared expertise, not just hidden expertise.</p>
+
+      <h3>How Scorpio feels about money</h3>
+      <p>A Scorpio Moon feels money in the depths. Your relationship to wealth is intense, private, and often hidden, even from people close to you. You know what you have. You know what you owe. You rarely tell anyone. Secrecy feels like safety.</p><p>This wiring serves you in strategy. Scorpio Moon thinks five moves ahead, sees the power dynamics in any deal, and is unafraid of taboo financial subjects. Debt, taxes, inheritance, the underbelly of any transaction, you understand it instinctively.</p><p>The shadow is isolation and control. Scorpio Moon can refuse help even when it would multiply the result, because letting anyone see the books feels like exposure. The healing is one trusted advisor. Not a circle. One person. Trust deepens through use.</p>
+
+      <h3>How Scorpio spends</h3>
+      <p>Venus in Scorpio spends on the powerful. Not on the obvious. On the thing with weight, history, intensity, hidden value. The vintage piece, the rare bottle, the under-the-radar property. Your spending is private, considered, and rarely impulsive.</p><p>What you value is depth. You will pay for the therapy, the investigative research, the experience that transforms something inside you. Venus in Scorpio is unafraid of expensive when expensive is genuinely worth it, and unwilling to pay even a small amount for what is hollow.</p><p>The shadow is spending as control. Venus in Scorpio can use money to create leverage in a relationship, hold dependents close, or fund a secret. The discipline is keeping the transactions clean. Money spent freely heals where money used strategically wounds.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'If I share what I have, it disappears.' It compounds. The fear of exposure is older than this lifetime. You can practice through it.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85">It shows up around earning as: <em>'If I tell anyone what I have, I lose it.' If you tell the right one person, you grow it. Trust is leverage.</em></p>
+        <p style="margin-top:6px;font-size:.95em;opacity:.85">And around spending as: <em>'If I spend on this, I have to spend on that to balance it.' No you don't. The exchange you're tracking is between you and yourself.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section id="sagittarius" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#6A4191;color:#6A4191"></div>
+      <span class="eyebrow">Sagittarius</span>
+      <h2>The <em>traveller</em></h2>
+      <p class="sign-tagline">Earned by going further than the room expected.</p>
+      <div class="sign-info">
+        Ruled by <strong>Jupiter</strong>
+        <span class="dot"></span> Element: <strong>Fire</strong>
+        <span class="dot"></span> Modality: <strong>Mutable</strong>
+        <span class="dot"></span> Body: <strong>hips, thighs, liver</strong>
+      </div>
+
+      <p>Sagittarius is the sign of the horizon. Money for Sagittarius arrives when you go further than the immediate room expected — physically, intellectually, or in scope. The wealth is in the reach.</p>
+
+      <h3>How Sagittarius earns</h3>
+      <p>A Sagittarius Sun earns by going wider. Your work is the long view, the foreign market, the cross-cultural insight, the publishable thought. Teaching, publishing, international work, travel, philosophy, anything that connects your local knowledge to a larger world.</p><p>Your earning power lives in scale. You earn best when the audience is many and the geography is wide. Sagittarius Suns make natural authors, professors, founders of cross-border ventures, and consultants whose ideas travel further than they do. Wealth follows your willingness to be public about a belief.</p><p>The shadow is overestimation. Sagittarius can promise more than it can deliver and call it faith. The work is grounding the vision in calendared deadlines and actual receipts.</p>
+
+      <h3>How Sagittarius feels about money</h3>
+      <p>A Sagittarius Moon feels money as freedom. Wealth is not the goal, the experiences it buys are. Travel, study, the open road, the next thing. Budgets feel like cages, and saving for the sake of saving feels like a kind of death.</p><p>This wiring serves you in optimism. Sagittarius Moon attracts opportunity by expecting it. You take the risks that more cautious wirings would decline, and many of them pay because you actually arrive at the door. The faith is generative.</p><p>The shadow is faith that becomes denial. Sagittarius Moon can book the trip before checking the balance, trust that the next income will arrive without earning it, and inflate the numbers in its own mind. The discipline is letting structure hold the dream. Both can exist.</p>
+
+      <h3>How Sagittarius spends</h3>
+      <p>Venus in Sagittarius spends on the road. Travel, education, books, courses, anything that opens a new horizon. The pleasure is in the expansion, not the object. Your spending is generous, optimistic, and often disproportionate to current income, because the experiences feel necessary.</p><p>What you value is freedom and learning. You will book the flight, take the course, fund the long retreat. The receipts may make your accountant wince and your future self grateful. The experiences become the asset.</p><p>The shadow is the trip you couldn't afford. Venus in Sagittarius can overestimate future income, run the credit card hot, and call it faith. The discipline is a dedicated experience fund. The freedom is still real. The interest stops compounding against you.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'It'll work out.' It does, more often than not. But 'I'll deal with it later' is not the same thing as faith.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85">It shows up around earning as: <em>'I'll earn it back later.' You will. But not by ignoring it now. The faith and the math both need tending.</em></p>
+        <p style="margin-top:6px;font-size:.95em;opacity:.85">And around spending as: <em>'Future me will pay for it.' Future you is the same you, with more debt. Pay now or pay later. Pay.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section id="capricorn" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#4B4B4B;color:#4B4B4B"></div>
+      <span class="eyebrow">Capricorn</span>
+      <h2>The <em>builder</em></h2>
+      <p class="sign-tagline">Built brick by brick, over the long horizon.</p>
+      <div class="sign-info">
+        Ruled by <strong>Saturn</strong>
+        <span class="dot"></span> Element: <strong>Earth</strong>
+        <span class="dot"></span> Modality: <strong>Cardinal</strong>
+        <span class="dot"></span> Body: <strong>bones, knees, teeth, skin</strong>
+      </div>
+
+      <p>Capricorn is the sign of structure. Money for Capricorn is built one careful step at a time, on infrastructure that outlasts the people who built it. The wealth here is patient, real, and earned.</p>
+
+      <h3>How Capricorn earns</h3>
+      <p>A Capricorn Sun earns through structure. Saturn rules you, which means you understand wealth as the long game. Career, reputation, institutions, and the slow accumulation of authority are where your money lives. You were born with a retirement plan.</p><p>Your earning power lives in mastery and time. The first decade of your career may pay less than your peers; the third pays disproportionately more. Capricorn wealth compounds because you keep showing up, building credibility, and refusing to chase fads. Your name becomes the asset.</p><p>The shadow is tying self-worth to net worth. Capricorn can work itself to exhaustion and still feel behind, because the goalpost moves every quarter. The discipline is separating who you are from what you have. The structure is meant to serve you, not the reverse.</p>
+
+      <h3>How Capricorn feels about money</h3>
+      <p>A Capricorn Moon feels money as proof. Your inner scoreboard runs on achievement, and net worth is one of the numbers it watches. When the balance is up, you feel competent. When it dips, you feel like you have failed as a person.</p><p>This wiring serves you in delayed gratification. Capricorn Moon can wait decades for a return that other wirings cannot wait six months for. The patience compounds. By midlife, the discipline becomes a quiet fortress.</p><p>The shadow is that the goalpost keeps moving. Capricorn Moon hits the milestone and immediately sets a new one. The number is never enough because the number was never the point. The healing is finding identity in something money cannot measure, so the wealth has somewhere to land.</p>
+
+      <h3>How Capricorn spends</h3>
+      <p>Venus in Capricorn spends on what lasts. Heritage pieces, real estate, tailored clothing, the items that look better in twenty years than they did on purchase day. Your spending is conservative, considered, and designed to outlive the purchase moment.</p><p>What you value is permanence and proof of care. The leather that ages well, the watch your grandchild will wear, the home that becomes the family seat. Venus in Capricorn understands that the most expensive option, calculated across decades, is often the cheapest one.</p><p>The shadow is austerity that calls itself wisdom. Venus in Capricorn can deny itself anything that doesn't justify itself through utility or longevity, and miss the small delights that make the rest of the building feel like a home, not a fortress. The discipline is permitting some pleasure to be temporary.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'I'll feel proud when I hit the next milestone.' You felt nothing at the last one. The milestone is not where the feeling lives.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85">It shows up around earning as: <em>'If I just work harder, the number will mean enough.' The number will never be enough. You weren't building for the number.</em></p>
+        <p style="margin-top:6px;font-size:.95em;opacity:.85">And around spending as: <em>'I don't need that, I have enough.' You have enough. You also have permission. They are not the same thing.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section id="aquarius" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#3E76B5;color:#3E76B5"></div>
+      <span class="eyebrow">Aquarius</span>
+      <h2>The <em>architect</em></h2>
+      <p class="sign-tagline">Designed for the future, not the room.</p>
+      <div class="sign-info">
+        Ruled by <strong>Uranus (modern) / Saturn (classical)</strong>
+        <span class="dot"></span> Element: <strong>Air</strong>
+        <span class="dot"></span> Modality: <strong>Fixed</strong>
+        <span class="dot"></span> Body: <strong>ankles, calves, circulation</strong>
+      </div>
+
+      <p>Aquarius is the sign of the future. Money for Aquarius shows up in patterns, systems, and ideas that look strange now and obvious in ten years. The work is staying in the room long enough for the world to catch up.</p>
+
+      <h3>How Aquarius earns</h3>
+      <p>An Aquarius Sun earns at the edge. You see what is about to happen, often years before anyone else does, and your wealth comes from being early. Technology, social movements, unconventional businesses, anything that transforms a system rather than serving the existing one.</p><p>Your earning power lives in innovation. You may build a small fortune in something nobody understands at the time. Aquarius Suns make natural founders, futurists, and operators of decentralized systems. The work feels lonely because the rest of the world catches up later.</p><p>The shadow is contrarianism for its own sake. Aquarius can refuse a perfectly good index fund because it is mainstream, and lose money chasing the unproven. The discipline is letting innovation sit alongside boring foundation, not in place of it.</p>
+
+      <h3>How Aquarius feels about money</h3>
+      <p>An Aquarius Moon feels money from a distance. The emotional layer is cooler, more analytical, and often detached from the immediate. You think about wealth in systems, generations, and broader patterns rather than tomorrow's grocery bill.</p><p>This wiring serves you in long-term thinking and unconventional choices. Aquarius Moon can hold an unpopular position long enough for the trend to validate it. You are unmoved by short-term volatility, which is exactly what builds compound returns.</p><p>The shadow is detachment that becomes avoidance. Aquarius Moon can intellectualize money so thoroughly it forgets to look at the actual balance. The discipline is regular embodied check-ins. Open the account. See the number. Feel something. The vision needs a body to be useful.</p>
+
+      <h3>How Aquarius spends</h3>
+      <p>Venus in Aquarius spends on the future. The technology that hasn't gone mainstream. The renewable home upgrade. The crowdfunding contribution to the thing that might change everything. Your spending reflects a belief that money is meant to vote for the world you want.</p><p>What you value is innovation and freedom. You will pay for tools that decentralize, services that liberate time, products that change a system. Conventional luxury bores you. The unconventional, the experimental, the weird, that is where your spending lights up.</p><p>The shadow is principle that outpaces income. Venus in Aquarius can fund the cause and forget to fund the retirement account. The discipline is voting with the boring account too. The mainstream is mainstream because it works, and you can innovate from a stable base.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'I'll feel it later.' If you don't feel it, you can't direct it. The distance was a defense, not a strategy.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85">It shows up around earning as: <em>'Index funds are for people without imagination.' Imagination is not the opposite of compound interest. Fund both.</em></p>
+        <p style="margin-top:6px;font-size:.95em;opacity:.85">And around spending as: <em>'I won't buy into the system.' You are in the system. The choice is participating awake or participating asleep.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section id="pisces" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#4FA89F;color:#4FA89F"></div>
+      <span class="eyebrow">Pisces</span>
+      <h2>The <em>permeable</em></h2>
+      <p class="sign-tagline">Felt before it can be priced.</p>
+      <div class="sign-info">
+        Ruled by <strong>Neptune (modern) / Jupiter (classical)</strong>
+        <span class="dot"></span> Element: <strong>Water</strong>
+        <span class="dot"></span> Modality: <strong>Mutable</strong>
+        <span class="dot"></span> Body: <strong>feet, lymphatic system</strong>
+      </div>
+
+      <p>Pisces is the sign of the ocean. Money for Pisces moves in tides — generous, intuitive, sometimes leaky. The work is putting structure around the gift so it can keep giving.</p>
+
+      <h3>How Pisces earns</h3>
+      <p>A Pisces Sun earns between worlds. You make money in spaces where intuition, imagination, and meaning are the work. Healing, art, music, spiritual practice, film, anything that holds emotion and gives it form. Your earnings can be uneven and your sense of money can be foggy.</p><p>Your earning power lives in attunement. You sense what people need before they ask, and that sensitivity is the entire product. Pisces Suns do unusually well in creative and helping professions, and unusually badly when forced into rigid corporate structures.</p><p>The shadow is financial fog. Pisces can avoid looking at the balance, merge personal and business accounts, and give money away to people who will not return it. The discipline is structure, set up once, never touched again, so your intuition has a frame to flow inside.</p>
+
+      <h3>How Pisces feels about money</h3>
+      <p>A Pisces Moon feels money in waves. Some days, abundance feels obvious and the future feels safe. Other days, the same balance feels like it is vanishing. Your relationship to wealth is fluid, intuitive, and porous to the emotional weather around you.</p><p>This wiring serves you in attunement. Pisces Moon senses when a deal is off, when a person is lying, when a market is about to shift. The intuition is real, and pays in money saved as much as money earned.</p><p>The shadow is dissolution. Pisces Moon can absorb other people's financial fog as if it were yours, pay for things that aren't yours to pay for, and avoid looking at the balance until the situation has gone soft. The discipline is structure outside yourself: automated savings, a financial advisor, the boring parts handled, so the intuition has a container to flow inside.</p>
+
+      <h3>How Pisces spends</h3>
+      <p>Venus in Pisces spends on meaning. The thing that moves you. The art, the music, the charity, the spiritual practice. Your spending is rarely rational by any objective standard, and that is the entire point. You buy what touches you.</p><p>What you value is the imaginal, the unseen, the felt. Books that change your inner life. Retreats that reset your nervous system. Art that lives in you for years. Venus in Pisces produces some of the most generous givers in the zodiac, and the giving often returns through unexpected channels.</p><p>The shadow is no boundaries. Venus in Pisces can give until the well is empty, fund people who will not return it, and dissolve personal finances into someone else's emergency. The discipline is the structural no. Generosity inside a container compounds. Generosity without one drains.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'If I don't look, it isn't real.' It is already real. Looking lets you respond. Not looking lets it grow.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85">It shows up around earning as: <em>'If I look at the balance, it will make things worse.' Looking is what makes things better. The fog clears with light.</em></p>
+        <p style="margin-top:6px;font-size:.95em;opacity:.85">And around spending as: <em>'What's a few dollars to me.' Everything, eventually. The small leaks are not small.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section class="signs-closing">
+    <div class="wrap">
+      <span class="eyebrow">Want it read for you</span>
+      <h2>The <em>Money Chart</em></h2>
+      <p>The reference above is a starting point. Your full chart has up to ten money-relevant placements stacked on top of each other, with the signs sometimes contradicting themselves and the houses bending them again. A Money Chart reads all of them together, for you specifically, in Luna Wilde's voice.</p>
+      <a class="btn btn-gold" href="money-chart.html">Request your Money Chart</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
+        <p>Personal finance, read through astrology. By Luna Wilde.</p>
+      </div>
+      <div class="foot-col"><h4>Explore</h4><a href="wheel.html">Wheel</a><a href="draw.html">Card</a><a href="quiz.html">Quiz</a><a href="shop.html">Atelier</a><a href="pendulum/">Pendulum</a><a href="calendar.html">Calendar</a><a href="archive.html">Archive</a><a href="sessions.html">Sessions</a><a href="courses.html">Academy</a><a href="about.html">Ethos</a><a href="money-mood.html">Money Mood</a></div>
+      <div class="foot-col"><h4>Club</h4><a href="https://moonandmoney.substack.com" target="_blank">Substack</a><a href="https://moonandmoney.substack.com/subscribe" target="_blank">Crescent Club</a><a href="fifth-moon.html">The Fifth Moon</a><a href="about.html">Circle <span class="soon">Soon</span></a><a href="about.html">Token <span class="soon">Soon</span></a></div>
+      <div class="foot-col"><h4>Follow</h4><a href="https://moonandmoney.substack.com" target="_blank">@moonmoney</a><a href="archive.html">Notes</a><a href="index.html">Newsletter</a></div>
+    </div>
+    <div class="foot-bottom">
+      <span>&copy; <span id="yr"></span> Moon &amp; Money &middot; Luna Wilde. All rights reserved.</span>
+      <span><a href="privacy.html" style="color:inherit;text-decoration:none;opacity:.85">Privacy</a></span>
+      <span>Built in rhythm with the moon &#9790;</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/zodiac.js"></script>
+<script>document.getElementById('yr').textContent = new Date().getFullYear();</script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
