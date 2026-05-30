@@ -1006,8 +1006,11 @@ footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gr
   font-family:'Cormorant Garamond', Georgia, serif;
   font-style:italic;
   font-size:7.5px;
-  fill:#E5C77B;
-  letter-spacing:0.4px;
+  /* Brand forest (locked palette) for high contrast against the gold
+     moon — reads like an engraved inscription on a coin instead of
+     disappearing into the gold-on-gold of the previous version. */
+  fill:#1F4F45;
+  letter-spacing:0.5px;
 }
 @keyframes moonCurveIn{
   from{opacity:0; transform:scale(.94)}
