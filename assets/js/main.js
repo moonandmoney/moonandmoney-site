@@ -439,13 +439,39 @@
 
       if (classes.length) document.body.classList.add.apply(document.body.classList, classes);
 
-      // If we're on the homepage, drop the whisper softly under the moon-readout.
+      // If we're on the homepage, render the whisper as an engraved
+      // arc curving over the top of the moon (no layout shift, since
+      // it sits absolutely positioned inside .moon-stage). Falls back
+      // to the flat under-moon line if the stage isn't present.
       if (whisper) {
-        var spot = document.querySelector('.moon-readout');
-        if (spot && !spot.querySelector('.sky-whisper')) {
-          var w = document.createElement('div');
-          w.className = 'sky-whisper'; w.textContent = whisper;
-          spot.appendChild(w);
+        var stage = document.querySelector('.moon-stage');
+        if (stage && !stage.querySelector('.moon-curve')) {
+          var ns = 'http://www.w3.org/2000/svg';
+          var svg = document.createElementNS(ns, 'svg');
+          svg.setAttribute('class', 'moon-curve');
+          svg.setAttribute('viewBox', '0 0 100 100');
+          svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+          svg.setAttribute('overflow', 'visible');
+          svg.setAttribute('aria-hidden', 'true');
+          // The text path arcs above the moon (radius 56 with peak at y=-4),
+          // overflowing the SVG viewBox upward so the engraved arc reads
+          // outside the moon's outline. textPath startOffset=50% with
+          // text-anchor=middle centres the phrase across the arc.
+          svg.innerHTML =
+            '<defs><path id="mm-moon-arc-top" d="M -2,52 A 56,56 0 0 1 102,52" fill="none"/></defs>' +
+            '<text class="moon-curve-text" dy="0">' +
+            '<textPath href="#mm-moon-arc-top" startOffset="50%" text-anchor="middle">' +
+            whisper +
+            '</textPath></text>';
+          stage.appendChild(svg);
+        } else {
+          // Fallback (non-homepage or stage missing): keep the old flat line.
+          var spot = document.querySelector('.moon-readout');
+          if (spot && !spot.querySelector('.sky-whisper')) {
+            var w = document.createElement('div');
+            w.className = 'sky-whisper'; w.textContent = whisper;
+            spot.appendChild(w);
+          }
         }
       }
     } catch (e) {}
