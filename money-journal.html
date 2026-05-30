@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Money Journal · Moon &amp; Money</title>
+<meta name="description" content="A contemplative money journal. Phase-aware prompts for noticing and slowly rewriting the money story you came in with. Private, on-device, no advice.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Money Journal · Moon &amp; Money">
+<meta property="og:description" content="A contemplative money journal. Phase-aware prompts for noticing and slowly rewriting the money story you came in with.">
+<meta property="og:site_name" content="Moon &amp; Money">
+<meta property="og:image" content="https://moonandmoney.ca/assets/og/social.png?v=20260530">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://moonandmoney.ca/assets/og/social.png?v=20260530">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/assets/og/apple-touch-icon.png"><meta name="theme-color" content="#070608"><meta name="apple-mobile-web-app-title" content="Moon & Money"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&family=Noto+Sans+Symbols+2&display=swap"><link rel="stylesheet" href="assets/css/styles.css">
+
+<style>
+  .mj-stage { padding: 16px 0 70px; }
+  .mj-phase-strip {
+    display: flex; justify-content: center; gap: 18px; align-items: center;
+    font-family: 'Jost', sans-serif; font-size: .76rem;
+    letter-spacing: .22em; text-transform: uppercase;
+    color: var(--mist); margin: 0 auto 28px; max-width: 720px;
+  }
+  .mj-phase-strip .glyph { font-family: 'Noto Sans Symbols 2', serif; font-size: 1.25rem; color: var(--gold-bright); }
+  .mj-phase-strip .sep { opacity: .35; }
+  .mj-prompt-card {
+    max-width: 720px; margin: 0 auto 26px;
+    background: linear-gradient(165deg, rgba(17,48,90,0.55), rgba(11,37,69,0.55));
+    border: 1px solid rgba(201,162,78,0.22);
+    border-radius: 8px;
+    padding: 28px 30px 26px;
+  }
+  .mj-prompt-card .eyebrow { display: block; text-align: center; margin-bottom: 14px; }
+  .mj-prompt-card h2 {
+    text-align: center;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(1.4rem, 3.2vw, 1.8rem);
+    font-weight: 500; color: var(--cream);
+    line-height: 1.35; margin: 0 0 18px;
+  }
+  .mj-follow {
+    list-style: none; padding: 0; margin: 0 0 8px;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-style: italic; font-size: 1.02rem; color: var(--mist);
+    line-height: 1.6; text-align: center;
+  }
+  .mj-follow li { margin: 6px 0; opacity: .9; }
+  .mj-another {
+    display: block; margin: 18px auto 0;
+    background: transparent;
+    border: 1px solid rgba(201,162,78,0.5);
+    color: var(--gold-bright);
+    font-family: 'Jost', sans-serif; font-size: .72rem;
+    letter-spacing: .22em; text-transform: uppercase;
+    padding: 9px 22px; border-radius: 999px;
+    cursor: pointer; transition: all .2s var(--ease);
+  }
+  .mj-another:hover { background: rgba(201,162,78,0.08); color: var(--cream); }
+
+  .mj-writing { max-width: 720px; margin: 0 auto 26px; }
+  .mj-writing .eyebrow { display: block; margin-bottom: 12px; }
+  .mj-writing textarea {
+    width: 100%;
+    min-height: 280px;
+    padding: 22px 24px;
+    background: rgba(11,37,69,0.35);
+    border: 1px solid rgba(201,162,78,0.18);
+    border-radius: 6px;
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.1rem; line-height: 1.7;
+    resize: vertical;
+    box-sizing: border-box;
+  }
+  .mj-writing textarea:focus { outline: none; border-color: rgba(229,199,123,0.45); }
+  .mj-writing textarea::placeholder { color: var(--mist); opacity: .55; font-style: italic; }
+  .mj-controls {
+    display: flex; align-items: center; gap: 12px;
+    margin-top: 12px; flex-wrap: wrap;
+  }
+  .mj-controls button {
+    background: transparent;
+    border: 1px solid rgba(201,162,78,0.4);
+    color: var(--mist);
+    font-family: 'Jost', sans-serif; font-size: .7rem;
+    letter-spacing: .2em; text-transform: uppercase;
+    padding: 7px 16px; border-radius: 999px;
+    cursor: pointer; transition: all .2s var(--ease);
+  }
+  .mj-controls button:hover { color: var(--gold-bright); border-color: var(--gold-bright); }
+  .mj-saved {
+    font-family: 'Jost', sans-serif; font-size: .7rem;
+    letter-spacing: .16em; text-transform: uppercase;
+    color: var(--mist); opacity: .55; margin-left: auto;
+  }
+  .mj-privacy {
+    margin-top: 16px;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-style: italic; font-size: .95rem; color: var(--mist);
+    opacity: .75; text-align: center; line-height: 1.55;
+  }
+
+  .mj-closing { max-width: 640px; margin: 40px auto 0; text-align: center; }
+  .mj-closing p {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-style: italic; font-size: 1.08rem; color: var(--parchment);
+    line-height: 1.65; margin: 0 0 14px;
+  }
+  .mj-disclaimer {
+    font-family: 'Cormorant Garamond', Georgia, serif !important;
+    font-style: italic !important;
+    font-size: .86rem !important; color: var(--mist) !important;
+    opacity: .65 !important; margin-top: 26px !important;
+  }
+</style>
+</head>
+<body>
+<canvas id="starfield"></canvas>
+<div class="nebula"></div>
+
+<header class="nav">
+  <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
+  <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li class="nav-dropdown" aria-expanded="false">
+      <button class="nav-trigger" type="button" aria-haspopup="true" aria-expanded="false">Moon Tools <span class="caret" aria-hidden="true">&#9662;</span></button>
+      <ul class="nav-submenu">
+        <li><a href="calendar.html">Calendar</a></li>
+        <li><a href="wheel.html">Wheel</a></li>
+        <li><a href="draw.html">Card</a></li>
+        <li><a href="pendulum/">Pendulum</a></li>
+        <li><a href="your-chart.html">Your Chart</a></li>
+        <li><a href="houses.html">Houses</a></li>
+      </ul>
+    </li>
+    <li class="nav-dropdown" aria-expanded="false">
+      <button class="nav-trigger" type="button" aria-haspopup="true" aria-expanded="false">Money Tools <span class="caret" aria-hidden="true">&#9662;</span></button>
+      <ul class="nav-submenu">
+        <li><a href="quiz.html">Quiz</a></li>
+        <li><a href="money-mood.html">Money Mood</a></li>
+        <li><a href="money-journal.html">Journal</a></li>
+      </ul>
+    </li>
+    <li><a href="shop.html">Atelier</a></li>
+    <li><a href="archive.html">Archive</a></li>
+    <li><a href="sessions.html">Sessions</a></li>
+    <li><a href="about.html">Ethos</a></li>
+    <li><a href="https://moonandmoney.substack.com/subscribe" target="_blank">Crescent Club</a></li>
+    <li><a class="nav-cta" href="money-chart.html">Money Chart</a></li>
+  </ul>
+</header>
+
+<main>
+  <section class="page-hero">
+    <div class="wrap">
+      <span class="eyebrow">Money Journal</span>
+      <h1>The money story <span class="gold">you came in with.</span></h1>
+      <p style="max-width:640px;margin:0 auto">A quiet practice for noticing it, naming it, and slowly choosing what to rewrite. One prompt at a time, paced to the Moon.</p>
+      <p style="margin:10px auto 0;max-width:520px;color:var(--mist);font-size:.85rem;font-style:italic;opacity:.78;text-align:center">For reflection and self-knowledge. Not financial, medical, or therapeutic advice.</p>
+    </div>
+  </section>
+
+  <section class="mj-stage">
+    <div class="wrap">
+
+      <div class="mj-phase-strip">
+        <span id="mjPhase">…</span>
+        <span class="sep">·</span>
+        <span class="glyph" id="mjGlyph"></span>
+        <span id="mjSign">…</span>
+      </div>
+
+      <div class="mj-prompt-card">
+        <span class="eyebrow">Today's prompt</span>
+        <h2 id="mjPromptMain">…</h2>
+        <ul class="mj-follow" id="mjPromptFollow"></ul>
+        <button class="mj-another" id="mjAnother" type="button">Another prompt</button>
+      </div>
+
+      <div class="mj-writing">
+        <span class="eyebrow">Your reflection</span>
+        <textarea id="mjText" placeholder="Begin. The first words don't have to be the right ones. The point is showing up."></textarea>
+        <div class="mj-controls">
+          <button id="mjCopy" type="button">Copy</button>
+          <button id="mjClear" type="button">Clear</button>
+          <span class="mj-saved" id="mjSaved"></span>
+        </div>
+        <p class="mj-privacy">Your writing stays on this device. Nothing is sent to a server. Close the tab and it persists. Clear it any time.</p>
+      </div>
+
+      <div class="mj-closing">
+        <p>The work is noticing, not fixing. The first version is just for you. It doesn't have to be true. It has to be honest.</p>
+        <p>Come back when the next prompt feels different.</p>
+        <p class="mj-disclaimer">For reflection and self-knowledge. Not financial, medical, or therapeutic advice.</p>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
+        <p>Personal finance, read through astrology. By Luna Wilde.</p>
+      </div>
+      <div class="foot-col"><h4>Explore</h4><a href="wheel.html">Wheel</a><a href="draw.html">Card</a><a href="quiz.html">Quiz</a><a href="shop.html">Atelier</a><a href="pendulum/">Pendulum</a><a href="calendar.html">Calendar</a><a href="archive.html">Archive</a><a href="sessions.html">Sessions</a><a href="courses.html">Academy</a><a href="about.html">Ethos</a><a href="money-mood.html">Money Mood</a><a href="money-journal.html">Journal</a></div>
+      <div class="foot-col"><h4>Club</h4><a href="https://moonandmoney.substack.com" target="_blank">Substack</a><a href="https://moonandmoney.substack.com/subscribe" target="_blank">Crescent Club</a><a href="fifth-moon.html">The Fifth Moon</a><a href="about.html">Circle <span class="soon">Soon</span></a><a href="about.html">Token <span class="soon">Soon</span></a></div>
+      <div class="foot-col"><h4>Follow</h4><a href="https://moonandmoney.substack.com" target="_blank">@moonmoney</a><a href="archive.html">Notes</a><a href="index.html">Newsletter</a></div>
+    </div>
+    <div class="foot-bottom">
+      <span>&copy; <span id="yr"></span> Moon &amp; Money &middot; Luna Wilde. All rights reserved.</span>
+      <span><a href="privacy.html" style="color:inherit;text-decoration:none;opacity:.85">Privacy</a></span>
+      <span>Built in rhythm with the moon &#9790;</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+<script>document.getElementById('yr').textContent = new Date().getFullYear();</script>
+
+<script>
+window.MJ_INGRESSES = [{"sign": "Capricorn", "t": "2025-12-20T04:52:35Z"}, {"sign": "Aquarius", "t": "2025-12-22T15:51:50Z"}, {"sign": "Pisces", "t": "2025-12-25T01:08:50Z"}, {"sign": "Aries", "t": "2025-12-27T08:01:48Z"}, {"sign": "Taurus", "t": "2025-12-29T11:57:21Z"}, {"sign": "Gemini", "t": "2025-12-31T13:13:05Z"}, {"sign": "Cancer", "t": "2026-01-02T13:09:00Z"}, {"sign": "Leo", "t": "2026-01-04T13:43:27Z"}, {"sign": "Virgo", "t": "2026-01-06T16:56:48Z"}, {"sign": "Libra", "t": "2026-01-09T00:05:48Z"}, {"sign": "Scorpio", "t": "2026-01-11T10:55:20Z"}, {"sign": "Sagittarius", "t": "2026-01-13T23:33:47Z"}, {"sign": "Capricorn", "t": "2026-01-16T11:47:09Z"}, {"sign": "Aquarius", "t": "2026-01-18T22:17:59Z"}, {"sign": "Pisces", "t": "2026-01-21T06:49:40Z"}, {"sign": "Aries", "t": "2026-01-23T13:25:41Z"}, {"sign": "Taurus", "t": "2026-01-25T18:05:19Z"}, {"sign": "Gemini", "t": "2026-01-27T20:55:01Z"}, {"sign": "Cancer", "t": "2026-01-29T22:31:42Z"}, {"sign": "Leo", "t": "2026-02-01T00:08:58Z"}, {"sign": "Virgo", "t": "2026-02-03T03:21:14Z"}, {"sign": "Libra", "t": "2026-02-05T09:32:32Z"}, {"sign": "Scorpio", "t": "2026-02-07T19:13:08Z"}, {"sign": "Sagittarius", "t": "2026-02-10T07:21:50Z"}, {"sign": "Capricorn", "t": "2026-02-12T19:44:22Z"}, {"sign": "Aquarius", "t": "2026-02-15T06:16:39Z"}, {"sign": "Pisces", "t": "2026-02-17T14:09:06Z"}, {"sign": "Aries", "t": "2026-02-19T19:39:06Z"}, {"sign": "Taurus", "t": "2026-02-21T23:30:56Z"}, {"sign": "Gemini", "t": "2026-02-24T02:28:53Z"}, {"sign": "Cancer", "t": "2026-02-26T05:11:07Z"}, {"sign": "Leo", "t": "2026-02-28T08:16:43Z"}, {"sign": "Virgo", "t": "2026-03-02T12:33:44Z"}, {"sign": "Libra", "t": "2026-03-04T18:55:47Z"}, {"sign": "Scorpio", "t": "2026-03-07T04:01:27Z"}, {"sign": "Sagittarius", "t": "2026-03-09T15:36:30Z"}, {"sign": "Capricorn", "t": "2026-03-12T04:07:07Z"}, {"sign": "Aquarius", "t": "2026-03-14T15:13:31Z"}, {"sign": "Pisces", "t": "2026-03-16T23:15:37Z"}, {"sign": "Aries", "t": "2026-03-19T04:03:00Z"}, {"sign": "Taurus", "t": "2026-03-21T06:35:07Z"}, {"sign": "Gemini", "t": "2026-03-23T08:18:41Z"}, {"sign": "Cancer", "t": "2026-03-25T10:32:57Z"}, {"sign": "Leo", "t": "2026-03-27T14:10:11Z"}, {"sign": "Virgo", "t": "2026-03-29T19:33:19Z"}, {"sign": "Libra", "t": "2026-04-01T02:50:46Z"}, {"sign": "Scorpio", "t": "2026-04-03T12:10:53Z"}, {"sign": "Sagittarius", "t": "2026-04-05T23:31:32Z"}, {"sign": "Capricorn", "t": "2026-04-08T12:04:18Z"}, {"sign": "Aquarius", "t": "2026-04-10T23:55:32Z"}, {"sign": "Pisces", "t": "2026-04-13T08:55:34Z"}, {"sign": "Aries", "t": "2026-04-15T14:03:57Z"}, {"sign": "Taurus", "t": "2026-04-17T15:57:48Z"}, {"sign": "Gemini", "t": "2026-04-19T16:17:38Z"}, {"sign": "Cancer", "t": "2026-04-21T17:00:16Z"}, {"sign": "Leo", "t": "2026-04-23T19:40:44Z"}, {"sign": "Virgo", "t": "2026-04-26T01:04:26Z"}, {"sign": "Libra", "t": "2026-04-28T09:02:44Z"}, {"sign": "Scorpio", "t": "2026-04-30T19:01:50Z"}, {"sign": "Sagittarius", "t": "2026-05-03T06:33:30Z"}, {"sign": "Capricorn", "t": "2026-05-05T19:06:07Z"}, {"sign": "Aquarius", "t": "2026-05-08T07:27:25Z"}, {"sign": "Pisces", "t": "2026-05-10T17:39:25Z"}, {"sign": "Aries", "t": "2026-05-13T00:03:41Z"}, {"sign": "Taurus", "t": "2026-05-15T02:31:09Z"}, {"sign": "Gemini", "t": "2026-05-17T02:23:02Z"}, {"sign": "Cancer", "t": "2026-05-19T01:46:05Z"}, {"sign": "Leo", "t": "2026-05-21T02:47:38Z"}, {"sign": "Virgo", "t": "2026-05-23T06:57:00Z"}, {"sign": "Libra", "t": "2026-05-25T14:34:09Z"}, {"sign": "Scorpio", "t": "2026-05-28T00:52:32Z"}, {"sign": "Sagittarius", "t": "2026-05-30T12:44:49Z"}, {"sign": "Capricorn", "t": "2026-06-02T01:19:15Z"}, {"sign": "Aquarius", "t": "2026-06-04T13:45:37Z"}, {"sign": "Pisces", "t": "2026-06-07T00:42:46Z"}, {"sign": "Aries", "t": "2026-06-09T08:33:20Z"}, {"sign": "Taurus", "t": "2026-06-11T12:28:09Z"}, {"sign": "Gemini", "t": "2026-06-13T13:06:02Z"}, {"sign": "Cancer", "t": "2026-06-15T12:14:15Z"}, {"sign": "Leo", "t": "2026-06-17T12:05:06Z"}, {"sign": "Virgo", "t": "2026-06-19T14:36:53Z"}, {"sign": "Libra", "t": "2026-06-21T20:54:55Z"}, {"sign": "Scorpio", "t": "2026-06-24T06:43:17Z"}, {"sign": "Sagittarius", "t": "2026-06-26T18:40:55Z"}, {"sign": "Capricorn", "t": "2026-06-29T07:18:36Z"}, {"sign": "Aquarius", "t": "2026-07-01T19:32:51Z"}, {"sign": "Pisces", "t": "2026-07-04T06:30:11Z"}, {"sign": "Aries", "t": "2026-07-06T15:07:04Z"}, {"sign": "Taurus", "t": "2026-07-08T20:30:44Z"}, {"sign": "Gemini", "t": "2026-07-10T22:41:37Z"}, {"sign": "Cancer", "t": "2026-07-12T22:46:29Z"}, {"sign": "Leo", "t": "2026-07-14T22:35:12Z"}, {"sign": "Virgo", "t": "2026-07-17T00:07:08Z"}, {"sign": "Libra", "t": "2026-07-19T04:56:34Z"}, {"sign": "Scorpio", "t": "2026-07-21T13:34:34Z"}, {"sign": "Sagittarius", "t": "2026-07-24T01:07:00Z"}, {"sign": "Capricorn", "t": "2026-07-26T13:44:18Z"}, {"sign": "Aquarius", "t": "2026-07-29T01:46:11Z"}, {"sign": "Pisces", "t": "2026-07-31T12:13:52Z"}, {"sign": "Aries", "t": "2026-08-02T20:36:47Z"}, {"sign": "Taurus", "t": "2026-08-05T02:35:25Z"}, {"sign": "Gemini", "t": "2026-08-07T06:07:47Z"}, {"sign": "Cancer", "t": "2026-08-09T07:45:41Z"}, {"sign": "Leo", "t": "2026-08-11T08:38:08Z"}, {"sign": "Virgo", "t": "2026-08-13T10:18:08Z"}, {"sign": "Libra", "t": "2026-08-15T14:19:43Z"}, {"sign": "Scorpio", "t": "2026-08-17T21:46:04Z"}, {"sign": "Sagittarius", "t": "2026-08-20T08:30:07Z"}, {"sign": "Capricorn", "t": "2026-08-22T20:59:07Z"}, {"sign": "Aquarius", "t": "2026-08-25T09:01:41Z"}, {"sign": "Pisces", "t": "2026-08-27T19:03:45Z"}, {"sign": "Aries", "t": "2026-08-30T02:37:47Z"}, {"sign": "Taurus", "t": "2026-09-01T08:01:18Z"}, {"sign": "Gemini", "t": "2026-09-03T11:47:16Z"}, {"sign": "Cancer", "t": "2026-09-05T14:30:26Z"}, {"sign": "Leo", "t": "2026-09-07T16:49:27Z"}, {"sign": "Virgo", "t": "2026-09-09T19:35:04Z"}, {"sign": "Libra", "t": "2026-09-11T23:51:43Z"}, {"sign": "Scorpio", "t": "2026-09-14T06:43:52Z"}, {"sign": "Sagittarius", "t": "2026-09-16T16:41:15Z"}, {"sign": "Capricorn", "t": "2026-09-19T04:54:52Z"}, {"sign": "Aquarius", "t": "2026-09-21T17:14:24Z"}, {"sign": "Pisces", "t": "2026-09-24T03:23:38Z"}, {"sign": "Aries", "t": "2026-09-26T10:23:06Z"}, {"sign": "Taurus", "t": "2026-09-28T14:40:03Z"}, {"sign": "Gemini", "t": "2026-09-30T17:26:02Z"}, {"sign": "Cancer", "t": "2026-10-02T19:54:06Z"}, {"sign": "Leo", "t": "2026-10-04T22:54:12Z"}, {"sign": "Virgo", "t": "2026-10-07T02:52:35Z"}, {"sign": "Libra", "t": "2026-10-09T08:10:33Z"}, {"sign": "Scorpio", "t": "2026-10-11T15:21:17Z"}, {"sign": "Sagittarius", "t": "2026-10-14T00:59:27Z"}, {"sign": "Capricorn", "t": "2026-10-16T12:57:02Z"}, {"sign": "Aquarius", "t": "2026-10-19T01:39:55Z"}, {"sign": "Pisces", "t": "2026-10-21T12:35:09Z"}, {"sign": "Aries", "t": "2026-10-23T19:53:32Z"}, {"sign": "Taurus", "t": "2026-10-25T23:34:40Z"}, {"sign": "Gemini", "t": "2026-10-28T01:01:53Z"}, {"sign": "Cancer", "t": "2026-10-30T02:05:34Z"}, {"sign": "Leo", "t": "2026-11-01T04:18:13Z"}, {"sign": "Virgo", "t": "2026-11-03T08:27:45Z"}, {"sign": "Libra", "t": "2026-11-05T14:38:19Z"}, {"sign": "Scorpio", "t": "2026-11-07T22:39:58Z"}, {"sign": "Sagittarius", "t": "2026-11-10T08:35:46Z"}, {"sign": "Capricorn", "t": "2026-11-12T20:27:17Z"}, {"sign": "Aquarius", "t": "2026-11-15T09:24:15Z"}, {"sign": "Pisces", "t": "2026-11-17T21:19:25Z"}, {"sign": "Aries", "t": "2026-11-20T05:52:12Z"}, {"sign": "Taurus", "t": "2026-11-22T10:09:42Z"}, {"sign": "Gemini", "t": "2026-11-24T11:09:40Z"}, {"sign": "Cancer", "t": "2026-11-26T10:51:09Z"}, {"sign": "Leo", "t": "2026-11-28T11:20:35Z"}, {"sign": "Virgo", "t": "2026-11-30T14:12:38Z"}, {"sign": "Libra", "t": "2026-12-02T20:03:53Z"}, {"sign": "Scorpio", "t": "2026-12-05T04:35:04Z"}, {"sign": "Sagittarius", "t": "2026-12-07T15:06:34Z"}, {"sign": "Capricorn", "t": "2026-12-10T03:08:40Z"}, {"sign": "Aquarius", "t": "2026-12-12T16:05:38Z"}, {"sign": "Pisces", "t": "2026-12-15T04:35:38Z"}, {"sign": "Aries", "t": "2026-12-17T14:34:21Z"}, {"sign": "Taurus", "t": "2026-12-19T20:29:42Z"}, {"sign": "Gemini", "t": "2026-12-21T22:27:07Z"}, {"sign": "Cancer", "t": "2026-12-23T21:58:23Z"}, {"sign": "Leo", "t": "2026-12-25T21:12:17Z"}, {"sign": "Virgo", "t": "2026-12-27T22:12:51Z"}, {"sign": "Libra", "t": "2026-12-30T02:26:41Z"}, {"sign": "Scorpio", "t": "2027-01-01T10:15:54Z"}, {"sign": "Sagittarius", "t": "2027-01-03T20:57:01Z"}];
+window.MJ_PROMPTS = {"New Moon": [{"q": "What money seed are you planting this cycle?", "f": ["Where did the wanting first start — yours, or somewhere else?", "What is one small thing you can do today that proves the seed is real?"]}, {"q": "Name a money pattern you inherited that you no longer want to carry.", "f": ["Whose voice does it sound like when it shows up?", "What would the version of you that doesn't carry it have done differently this week?"]}, {"q": "If money were never the obstacle, what would you begin tomorrow?", "f": ["Why is money the language you're using for what stops you?", "What would beginning look like before the money question is answered?"]}, {"q": "Write the first move, in one sentence. The move that everything else waits on.", "f": ["What have you been calling it instead of \"the move\"?", "What is the smallest possible version of it that still counts?"]}, {"q": "What story about money are you ready to stop telling yourself?", "f": ["When did you first hear it?", "What would replace it, if you let it?"]}], "Waxing Crescent": [{"q": "What is the small daily money habit that, repeated through this cycle, would quietly change everything?", "f": ["What stops you from doing it without thinking?", "What does the body do when you imagine doing it tomorrow morning?"]}, {"q": "Name one transfer, one cancellation, or one ask that you've been carrying as a someday-thing.", "f": ["What part of you keeps moving it to someday?", "What does the version of you that already did it look like?"]}, {"q": "What is one thing you spent on this week that surprised you? Sit with the surprise.", "f": ["What feeling was the spend trying to soothe?", "What would the same money have bought you, if you'd directed it on purpose?"]}, {"q": "What's the difference between what you say you value and what your bank statement says you value?", "f": ["When you notice the gap, what is the first thing you want to do? Hide, fix, or look more?", "If the statement were exactly right, what would it tell you?"]}, {"q": "Write a letter to the money you have right now. Just one paragraph.", "f": ["What tone did you use?", "If the money wrote back, what would it want you to know?"]}], "First Quarter": [{"q": "What's the financial move you've been avoiding? Describe the avoidance, not the move.", "f": ["What does the avoidance feel like in the body?", "What would change if you stopped pretending to consider it?"]}, {"q": "What number are you afraid to say out loud about money?", "f": ["Who would you be saying it to?", "Why does the number feel like a verdict instead of information?"]}, {"q": "Name the conversation you need to have about money this week.", "f": ["What is the worst case you're imagining?", "What is the most likely case, honestly?"]}, {"q": "What money decision is sitting on your desk, waiting for you to be ready?", "f": ["What is \"ready\" doing for you that the decision can't?", "If you had to make the call by Friday, what would the call be?"]}, {"q": "Where in your money life are you holding a position past its usefulness?", "f": ["What were you trying to protect when you took the position?", "What does releasing it cost, and what does keeping it cost?"]}], "Waxing Gibbous": [{"q": "The thing you started at the New Moon. Where is it now?", "f": ["What surprised you about doing it?", "What is one adjustment that would make the next two weeks go further?"]}, {"q": "What money habit is starting to take? Notice it before talking it out of yourself.", "f": ["What made it possible this cycle that wasn't possible last cycle?", "What is the small risk of naming it out loud?"]}, {"q": "What part of the money story you wrote at the New Moon is already coming true?", "f": ["What does it feel like to have written something that's coming true?", "What stops you from believing more of it?"]}, {"q": "What would it look like to spend the next two weeks tending, not starting?", "f": ["What are you tending?", "What does tending require that beginning didn't?"]}, {"q": "What is the boring, ordinary money move that you can keep doing while no one watches?", "f": ["Why does \"boring\" feel like a problem here?", "What would change if you treated boring as a financial superpower for a month?"]}], "Full Moon": [{"q": "Look at the last month's spending out loud. What story does it tell?", "f": ["What story are you embarrassed it tells?", "What story were you hoping it would tell?"]}, {"q": "What is working in your money life that you almost didn't believe in?", "f": ["When did you last say it out loud to yourself?", "What would change if you let yourself believe in it on purpose?"]}, {"q": "What money belief that you used to hold is no longer true for you?", "f": ["When did it stop being true?", "What replaced it, even quietly?"]}, {"q": "What did money give you this month that nothing else could have?", "f": ["What did money fail to give you this month that you wanted it to?", "What is the difference between those two lists telling you?"]}, {"q": "What needs to be seen clearly, even if it's uncomfortable to look at directly?", "f": ["What part of you wants to look away?", "What part of you, deeper than that, is asking you to stay?"]}], "Waning Gibbous": [{"q": "Of what you saw at the Full Moon, what is worth keeping?", "f": ["What does \"keep\" look like in practice this month?", "What would let you carry it forward without rebuilding it from scratch?"]}, {"q": "What expense is quietly costing you more than it gives you?", "f": ["What did you tell yourself the expense was for, originally?", "What would you do with the same money if it were freed?"]}, {"q": "What money story are you ready to release?", "f": ["What did it protect you from once?", "What is it costing you now that you no longer need protecting?"]}, {"q": "Name the subscription, the recurring charge, the slow leak. Write it down.", "f": ["Why has it been hard to look at?", "What is one small step toward closing it this week?"]}, {"q": "What conversation, deferred at the First Quarter, is now overdue?", "f": ["What changed in the last two weeks that makes it easier to have now?", "What would the version of you who has already had it be doing tomorrow?"]}], "Last Quarter": [{"q": "What is the cleanest cut you could make to your money life this week?", "f": ["What would make it cleaner than messier?", "What would clean look like a week from now?"]}, {"q": "What financial commitment have you outgrown?", "f": ["What is the kind way to step out of it?", "What is the unkind way, and how much faster would it be?"]}, {"q": "What money obligation are you carrying for someone else that they should be carrying?", "f": ["What does carrying it cost you, beyond the dollars?", "What does giving it back free up?"]}, {"q": "What is the kindest financial thing you could do for next month's self?", "f": ["What does the cruel thing look like by comparison?", "What would next month's self thank you for, specifically?"]}, {"q": "Where in your money life is a small change enough?", "f": ["Why have you been treating it like a big change?", "What is the smallest version of the change that still does the work?"]}], "Waning Crescent": [{"q": "What does rest look like for your money this week?", "f": ["What stops you from resting, beyond the money itself?", "What does a resting bank account look like, in your mind?"]}, {"q": "What needs to compost before you plant again?", "f": ["What is the difference between composting and avoiding?", "What is the first thing you'd plant once the soil is ready?"]}, {"q": "What part of this cycle is asking to be quiet, not solved?", "f": ["What happens if you let it be quiet for the next week?", "What might the quiet tell you that the solving can't?"]}, {"q": "Write a sentence to the version of you who will read this on the next New Moon.", "f": ["What do you want them to remember?", "What do you want them to forgive you for?"]}, {"q": "What is one thing you don't have to figure out this week?", "f": ["What does it feel like to admit you don't have to figure it out?", "What would that part of your life look like if you stopped trying to figure it out for the whole week?"]}]};
+</script>
+
+<script>
+(function () {
+  'use strict';
+
+  var ING = window.MJ_INGRESSES;
+  for (var i = 0; i < ING.length; i++) ING[i].ms = Date.parse(ING[i].t);
+
+  var SIGN_GLYPH = {
+    Aries:'\u2648', Taurus:'\u2649', Gemini:'\u264A', Cancer:'\u264B',
+    Leo:'\u264C', Virgo:'\u264D', Libra:'\u264E', Scorpio:'\u264F',
+    Sagittarius:'\u2650', Capricorn:'\u2651', Aquarius:'\u2652', Pisces:'\u2653'
+  };
+
+  function moonSignAt(ms) {
+    var s = ING[0].sign;
+    for (var i = 0; i < ING.length; i++) {
+      if (ING[i].ms <= ms) s = ING[i].sign; else break;
+    }
+    return s;
+  }
+
+  // Conway-style synodic phase 0..1 (0 = new, 0.5 = full)
+  function moonPhaseFraction(date) {
+    var synodic = 29.530588853;
+    var known = Date.UTC(2000, 0, 6, 18, 14); // known new moon
+    var days = (date.getTime() - known) / 86400000;
+    var age = days % synodic;
+    if (age < 0) age += synodic;
+    return age / synodic;
+  }
+
+  function phaseName(p) {
+    if (p < 0.03 || p > 0.97) return 'New Moon';
+    if (p < 0.22) return 'Waxing Crescent';
+    if (p < 0.28) return 'First Quarter';
+    if (p < 0.47) return 'Waxing Gibbous';
+    if (p < 0.53) return 'Full Moon';
+    if (p < 0.72) return 'Waning Gibbous';
+    if (p < 0.78) return 'Last Quarter';
+    return 'Waning Crescent';
+  }
+
+  var PROMPTS = window.MJ_PROMPTS;
+
+  var $phase = document.getElementById('mjPhase');
+  var $glyph = document.getElementById('mjGlyph');
+  var $sign = document.getElementById('mjSign');
+  var $main = document.getElementById('mjPromptMain');
+  var $follow = document.getElementById('mjPromptFollow');
+  var $another = document.getElementById('mjAnother');
+  var $text = document.getElementById('mjText');
+  var $copy = document.getElementById('mjCopy');
+  var $clear = document.getElementById('mjClear');
+  var $saved = document.getElementById('mjSaved');
+
+  var STORAGE_KEY = 'mm_journal_text_v1';
+  var PROMPT_KEY = 'mm_journal_prompt_index_v1';
+
+  var now = Date.now();
+  var phase = phaseName(moonPhaseFraction(new Date(now)));
+  var sign = moonSignAt(now);
+
+  $phase.textContent = phase;
+  $glyph.textContent = SIGN_GLYPH[sign] || '';
+  $sign.textContent = 'Moon in ' + sign;
+
+  function renderPrompt(idx) {
+    var list = PROMPTS[phase] || PROMPTS['Waxing Crescent'];
+    var p = list[idx % list.length];
+    $main.textContent = p.q;
+    $follow.innerHTML = p.f.map(function (q) { return '<li>' + q + '</li>'; }).join('');
+    try { localStorage.setItem(PROMPT_KEY, String(idx)); } catch (e) {}
+  }
+
+  var startIdx = 0;
+  try {
+    var saved = parseInt(localStorage.getItem(PROMPT_KEY) || '0', 10);
+    if (!isNaN(saved)) startIdx = saved;
+  } catch (e) {}
+  renderPrompt(startIdx);
+
+  $another.addEventListener('click', function () {
+    startIdx = (startIdx + 1);
+    renderPrompt(startIdx);
+  });
+
+  // ── Textarea autosave ──
+  try {
+    var existing = localStorage.getItem(STORAGE_KEY);
+    if (existing) $text.value = existing;
+  } catch (e) {}
+
+  var saveTimer = null;
+  function flagSaved() {
+    if ($saved) $saved.textContent = 'Saved on this device';
+  }
+  $text.addEventListener('input', function () {
+    if (saveTimer) clearTimeout(saveTimer);
+    saveTimer = setTimeout(function () {
+      try { localStorage.setItem(STORAGE_KEY, $text.value); flagSaved(); } catch (e) {}
+    }, 350);
+  });
+  if ($text.value) flagSaved();
+
+  $copy.addEventListener('click', function () {
+    var txt = $text.value;
+    if (!txt) return;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt).then(function () {
+        $copy.textContent = 'Copied';
+        setTimeout(function () { $copy.textContent = 'Copy'; }, 1400);
+      });
+    } else {
+      $text.select(); document.execCommand('copy');
+      $copy.textContent = 'Copied';
+      setTimeout(function () { $copy.textContent = 'Copy'; }, 1400);
+    }
+  });
+
+  $clear.addEventListener('click', function () {
+    if (!$text.value) return;
+    if (!confirm('Clear your writing from this device?')) return;
+    $text.value = '';
+    try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+    if ($saved) $saved.textContent = '';
+    $text.focus();
+  });
+})();
+</script>
+</body>
+</html>

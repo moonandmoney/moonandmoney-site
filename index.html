@@ -22,6 +22,64 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/assets/og/apple-touch-icon.png"><meta name="theme-color" content="#070608"><meta name="apple-mobile-web-app-title" content="Moon & Money"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&family=Noto+Sans+Symbols+2&display=swap"><link rel="stylesheet" href="assets/css/styles.css">
+
+<style>
+/* Today's Money Mood card (rendered into #todaysMood by today-mood.js) */
+.todays-mood { padding: 18px 0 30px; }
+.tm-card {
+  display: block; max-width: 640px; margin: 0 auto;
+  background: linear-gradient(165deg, rgba(17,48,90,0.55), rgba(11,37,69,0.55));
+  border: 1px solid rgba(201,162,78,0.25);
+  border-radius: 8px;
+  padding: 24px 28px 22px;
+  text-decoration: none; color: inherit;
+  opacity: 0; transform: translateY(8px);
+  transition: opacity .6s var(--ease), transform .6s var(--ease),
+              border-color .3s var(--ease), box-shadow .3s var(--ease);
+}
+.tm-card.in { opacity: 1; transform: none; }
+.tm-card:hover {
+  border-color: rgba(229,199,123,0.55);
+  box-shadow: 0 0 28px rgba(201,162,78,0.18);
+}
+.tm-date {
+  font-family: 'Jost', sans-serif; font-size: .72rem;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: var(--mist); text-align: center; margin-bottom: 14px;
+}
+.tm-glyph {
+  text-align: center;
+  font-family: 'Noto Sans Symbols 2', 'Cormorant Garamond', serif;
+  font-size: 3.6rem; line-height: 1; margin: 6px 0 10px;
+}
+.tm-card h3 {
+  text-align: center;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(1.6rem, 4vw, 2rem);
+  font-weight: 500; color: var(--cream);
+  margin: 0 0 6px;
+}
+.tm-card h3 em { color: var(--gold-bright); font-style: italic; }
+.tm-meta {
+  text-align: center;
+  font-family: 'Jost', sans-serif; font-size: .75rem;
+  letter-spacing: .2em; text-transform: uppercase;
+  margin: 0 0 16px; opacity: .9;
+}
+.tm-mood {
+  text-align: center;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic; font-size: 1.1rem; line-height: 1.55;
+  color: var(--parchment); margin: 0 auto 18px;
+  max-width: 520px;
+}
+.tm-cta {
+  display: block; text-align: center;
+  font-family: 'Jost', sans-serif; font-size: .72rem;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: var(--gold);
+}
+</style>
 </head>
 <body>
 <canvas id="starfield"></canvas>
@@ -48,6 +106,7 @@
       <ul class="nav-submenu">
         <li><a href="quiz.html">Quiz</a></li>
         <li><a href="money-mood.html">Money Mood</a></li>
+        <li><a href="money-journal.html">Journal</a></li>
       </ul>
     </li>
     <li><a href="shop.html">Atelier</a></li>
@@ -80,6 +139,18 @@
   </section>
 
   <div class="divider"></div>
+
+  <!-- 1.5 / TODAY'S MONEY MOOD — money side made visible the moment
+       visitors land. Computed from today's moon sign + rendered by
+       assets/js/today-mood.js. Links to the full Money Mood reference. -->
+  <section class="todays-mood">
+    <div class="wrap">
+      <div class="head center reveal">
+        <span class="eyebrow">Today's Money Mood</span>
+      </div>
+      <div id="todaysMood"></div>
+    </div>
+  </section>
 
   <!-- 2 / THE PREMISE — moved up to sit right after the Hero so the
        "what this is" lands before anything else. -->
@@ -216,7 +287,7 @@
         <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
         <p>Personal finance, read through astrology. By Luna Wilde.</p>
       </div>
-      <div class="foot-col"><h4>Explore</h4><a href="wheel.html">Wheel</a><a href="draw.html">Card</a><a href="quiz.html">Quiz</a><a href="shop.html">Atelier</a><a href="pendulum/">Pendulum</a><a href="calendar.html">Calendar</a><a href="archive.html">Archive</a><a href="sessions.html">Sessions</a><a href="courses.html">Academy</a><a href="about.html">Ethos</a><a href="money-mood.html">Money Mood</a></div>
+      <div class="foot-col"><h4>Explore</h4><a href="wheel.html">Wheel</a><a href="draw.html">Card</a><a href="quiz.html">Quiz</a><a href="shop.html">Atelier</a><a href="pendulum/">Pendulum</a><a href="calendar.html">Calendar</a><a href="archive.html">Archive</a><a href="sessions.html">Sessions</a><a href="courses.html">Academy</a><a href="about.html">Ethos</a><a href="money-mood.html">Money Mood</a><a href="money-journal.html">Journal</a></div>
       <div class="foot-col"><h4>Club</h4><a href="https://moonandmoney.substack.com" target="_blank">Substack</a><a href="https://moonandmoney.substack.com/subscribe" target="_blank">Crescent Club</a><a href="fifth-moon.html">The Fifth Moon</a><a href="about.html#circle">Circle <span class="soon">Soon</span></a><a href="about.html#token">Token <span class="soon">Soon</span></a></div>
       <div class="foot-col"><h4>Follow</h4><a href="https://moonandmoney.substack.com" target="_blank">@moonmoney</a><a href="archive.html">Notes</a><a href="https://moonandmoney.substack.com/subscribe" target="_blank">Newsletter</a></div>
     </div>
@@ -240,5 +311,6 @@
 <script src="assets/js/player.js"></script>
 <script src="assets/js/content.js"></script>
 <script src="assets/js/reader.js"></script>
+<script src="assets/js/today-mood.js"></script>
 </body>
 </html>
