@@ -102,6 +102,14 @@ const CATALOG = [
       el.addEventListener('click', () => {
         const item = CATALOG[+el.dataset.i];
         const url = (window.MM_CHECKOUT && window.MM_CHECKOUT[item.name]) || item.link || '';
+        // Greeting cards take a detour through the card-info modal so we
+        // can collect the recipient's name + email + the buyer's personal
+        // message, then forward to the Lemon Squeezy checkout with those
+        // values prefilled into LS custom fields (recipient_name,
+        // recipient_email, message). If there's no LS URL yet, fall back
+        // to the standard "preview" modal so the card still has somewhere
+        // graceful to land.
+        if (item.cat === 'Cards' && url) return openCardModal(item, url);
         if (url) openCheckout(url);
         else openPreview(item);
       });
@@ -173,5 +181,90 @@ function openPreview(p) {
       <a class="btn btn-gold" href="https://moonandmoney.substack.com/subscribe" target="_blank">Join the Crescent Club</a>
       <div><small data-close>Close ✦</small></div>
     </div>`;
+  m.classList.add('show');
+}
+
+/* Card modal — collects the recipient's name + email and the buyer's
+   personal message, then forwards to the Lemon Squeezy checkout with
+   those values prefilled into LS's checkout[custom][...] fields. The
+   webhook on chart-engine reads custom_data.recipient_name /
+   recipient_email / message and emails the card PDF to the recipient. */
+function openCardModal(item, checkoutUrl) {
+  let m = document.getElementById('mmCardModal');
+  if (!m) {
+    m = document.createElement('div');
+    m.id = 'mmCardModal';
+    m.className = 'wish';
+    document.body.appendChild(m);
+    m.addEventListener('click', e => {
+      if (e.target === m || e.target.closest('[data-close]')) m.classList.remove('show');
+    });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') m.classList.remove('show'); });
+  }
+  const thumb = item.prev
+    ? `<div class="preview-thumb">
+         <img src="assets/img/previews/${item.prev}" alt="${item.name} preview" loading="lazy">
+         <div class="wm"><span>MOON &amp; MONEY · PREVIEW</span><span>MOON &amp; MONEY · PREVIEW</span><span>MOON &amp; MONEY · PREVIEW</span></div>
+       </div>`
+    : '';
+  m.innerHTML = `<div class="preview-card cardform-card">
+      ${thumb}
+      <span class="eyebrow">${item.cat}</span>
+      <h2>${item.name}</h2>
+      <p>${item.desc}</p>
+      <form class="cardform" novalidate>
+        <label>
+          <span>Who's it for? <em>name</em></span>
+          <input type="text" name="recipient_name" required autocomplete="off"
+                 placeholder="Jamie" maxlength="60">
+        </label>
+        <label>
+          <span>Their <em>email</em></span>
+          <input type="email" name="recipient_email" required autocomplete="off"
+                 placeholder="jamie@example.com">
+        </label>
+        <label>
+          <span>A short message <em>(optional)</em></span>
+          <textarea name="message" maxlength="400" rows="3"
+                    placeholder="A line or two — what you'd write inside the card."></textarea>
+          <small class="cardform-count"><span data-count>0</span> / 400</small>
+        </label>
+        <p class="cardform-note">After you finish checkout, the card lands in your friend's
+        inbox with your message in the email and the card as a PDF attachment. You get a copy too.</p>
+        <button class="btn btn-gold cardform-send" type="submit">Continue to checkout →</button>
+        <div><small data-close>Cancel ✦</small></div>
+      </form>
+    </div>`;
+
+  const form = m.querySelector('.cardform');
+  const countEl = m.querySelector('[data-count]');
+  const ta = m.querySelector('textarea[name="message"]');
+  ta.addEventListener('input', () => { countEl.textContent = String(ta.value.length); });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const data = new FormData(form);
+    const rname = (data.get('recipient_name') || '').toString().trim();
+    const remail = (data.get('recipient_email') || '').toString().trim();
+    const msg = (data.get('message') || '').toString().trim();
+    // Light validation. The required attribute catches empty fields; the
+    // email pattern is the browser default. We only need to verify here
+    // before assembling the URL.
+    if (!rname || !remail) { form.reportValidity(); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(remail)) { form.reportValidity(); return; }
+    // Build the LS prefill URL. Lemon Squeezy accepts custom field values
+    // as checkout[custom][fieldKey]= in the query string. The field keys
+    // here MUST match the custom field identifiers configured on the LS
+    // product side (recipient_name / recipient_email / message).
+    const sep = checkoutUrl.indexOf('?') > -1 ? '&' : '?';
+    const params =
+      'checkout[custom][recipient_name]='  + encodeURIComponent(rname) +
+      '&checkout[custom][recipient_email]=' + encodeURIComponent(remail) +
+      '&checkout[custom][message]='        + encodeURIComponent(msg);
+    const finalUrl = checkoutUrl + sep + params;
+    m.classList.remove('show');
+    openCheckout(finalUrl);
+  });
+
   m.classList.add('show');
 }

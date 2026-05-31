@@ -577,6 +577,67 @@ footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gr
 }
 .preview-art .glyph-svg{width:62px;height:62px}
 .preview-art .zg{font-size:64px}
+
+/* ---------- Greeting card recipient form (cardform-card) ----------
+   When a buyer clicks one of the eight greeting cards in the shop, this
+   modal appears instead of going straight to LS. We collect the
+   recipient's name + email + the buyer's personal message, then forward
+   to the LS checkout with those values prefilled into LS custom fields. */
+.cardform-card { max-width: 520px; padding: 36px 32px 32px; }
+.cardform-card h2 { font-size: clamp(1.5rem, 3.2vw, 2.1rem); margin-bottom: 10px; }
+.cardform-card > p {
+  color: var(--mist); font-family: var(--serif); font-style: italic;
+  font-size: 1rem; line-height: 1.5; margin: 0 auto 22px; max-width: 420px;
+}
+.cardform {
+  display: flex; flex-direction: column; gap: 16px;
+  margin-top: 8px; text-align: left;
+}
+.cardform label {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.cardform label > span {
+  font-family: var(--display); font-size: .68rem; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--mist);
+}
+.cardform label > span em {
+  font-style: italic; text-transform: none; letter-spacing: .04em;
+  color: var(--gold-soft); margin-left: 4px; font-family: var(--serif);
+}
+.cardform input,
+.cardform textarea {
+  background: rgba(7,6,8,.55); border: 1px solid var(--line);
+  color: var(--parchment); border-radius: 6px;
+  padding: 13px 14px; font-family: var(--sans); font-size: 1rem;
+  -webkit-appearance: none; appearance: none;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.cardform input:focus,
+.cardform textarea:focus {
+  outline: none; border-color: var(--gold);
+  box-shadow: 0 0 0 2px rgba(201,162,78,.18);
+}
+.cardform textarea {
+  resize: vertical; min-height: 78px;
+  font-family: var(--serif); font-size: 1.02rem; line-height: 1.5;
+}
+.cardform-count {
+  text-align: right; color: var(--mist); opacity: .55;
+  font-family: var(--display); font-size: .62rem; letter-spacing: .2em;
+  margin-top: 2px;
+}
+.cardform-note {
+  color: var(--mist); font-family: var(--serif); font-style: italic;
+  font-size: .9rem; line-height: 1.5; text-align: center;
+  margin: 6px auto 4px; max-width: 380px;
+}
+.cardform .cardform-send { margin-top: 8px; align-self: center; }
+.cardform > div { text-align: center; margin-top: 8px; }
+@media (max-width: 560px) {
+  .cardform-card { padding: 28px 22px 24px; max-height: 92vh; }
+  .cardform { gap: 12px; }
+  .cardform input, .cardform textarea { padding: 12px 12px; font-size: .98rem; }
+}
 .preview-card h2{font-size:2rem;margin:14px 0 14px;color:var(--parchment);font-style:normal}
 .preview-card p{color:var(--mist);font-family:var(--serif);font-size:1.1rem;margin-bottom:18px}
 .preview-card .preview-soon{font-size:.95rem;color:var(--mist);opacity:.8;margin-bottom:28px}
