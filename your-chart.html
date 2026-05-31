@@ -192,6 +192,11 @@
     color: var(--mist); font-family: var(--serif); font-style: italic;
     font-size: 1rem; margin: 0 auto 16px; max-width: 380px;
   }
+  .yc-keepsake-actions {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    justify-content: center;
+  }
+  .yc-keepsake-actions .btn { min-width: 180px; }
   .yc-keepsake-modal {
     position: fixed; inset: 0; z-index: 80;
     background: rgba(7,6,8,.92);
@@ -363,15 +368,18 @@
           <button type="button" id="ycRedo">Draw another ✦</button>
         </div>
 
-        <!-- Keepsake email: visitors who want to remember these placements
-             hand over their email and receive a beautifully formatted
-             read of their chart in their inbox. Soft lead-magnet sat
-             above the harder Money Chart pitch. -->
+        <!-- Keepsake: visitors can take their chart with them — by email
+             (lead magnet — captures email) or as a downloadable PDF
+             (shareable; no email required). Both pull from the same
+             chart engine so the content matches. -->
         <div class="yc-keepsake">
-          <span class="eyebrow">Want to keep this</span>
-          <h3>Email me my <em>chart</em></h3>
-          <p>A beautifully formatted read of your placements, in your inbox to keep. Free.</p>
-          <button type="button" class="btn btn-ghost" id="ycKeepsakeOpen">Save your chart →</button>
+          <span class="eyebrow">Take your chart with you</span>
+          <h3>Save your <em>chart</em></h3>
+          <p>A beautifully formatted read of your placements — yours to keep, share, or print.</p>
+          <div class="yc-keepsake-actions">
+            <button type="button" class="btn btn-ghost" id="ycKeepsakePdf">Download as PDF ↓</button>
+            <button type="button" class="btn btn-ghost" id="ycKeepsakeOpen">Email it to me ✦</button>
+          </div>
         </div>
 
         <div class="yc-pitch">
@@ -1246,6 +1254,61 @@
      does anything when we have a full birth context (date + time + city)
      because the engine needs lat/lon/tz to recompute the chart. */
   const KEEPSAKE_URL = 'https://moonmoney-chart-engine.onrender.com/api/chart-keepsake';
+  const CHART_PDF_URL = 'https://moonmoney-chart-engine.onrender.com/api/chart-pdf';
+
+  /* ---- Download as PDF ---- */
+  const ksPdf = document.getElementById('ycKeepsakePdf');
+  if (ksPdf) {
+    ksPdf.addEventListener('click', async () => {
+      const ctx = window._mmChartCtx;
+      if (!ctx) {
+        // Without lat/lon/tz the engine can't recompute. Show a message
+        // in the existing error slot.
+        if (errEl) errEl.textContent = "Re-enter your birth date, time, and city above first — we need those to build the PDF.";
+        return;
+      }
+      const originalText = ksPdf.textContent;
+      ksPdf.disabled = true;
+      ksPdf.textContent = 'Building your PDF…';
+      try {
+        const r = await fetch(CHART_PDF_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            // The PDF endpoint accepts first_name (optional) — pull from
+            // a saved name if one's in localStorage, otherwise empty.
+            first_name: (function(){
+              try { const s = JSON.parse(localStorage.getItem('ycSaved') || '{}'); return (s.first_name || '').trim(); }
+              catch(e) { return ''; }
+            })(),
+            birth_date: ctx.dateStr,
+            birth_time: ctx.timeStr,
+            tz_name:    ctx.tz_name,
+            lat: ctx.lat, lon: ctx.lng,
+          }),
+        });
+        if (!r.ok) {
+          if (errEl) errEl.textContent = "Couldn't build the PDF right now. Try again in a moment.";
+          ksPdf.disabled = false;
+          ksPdf.textContent = originalText;
+          return;
+        }
+        const blob = await r.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'moon-and-money-chart.pdf';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 0);
+      } catch (e) {
+        if (errEl) errEl.textContent = "Network hiccup. Try again in a moment.";
+      } finally {
+        ksPdf.disabled = false;
+        ksPdf.textContent = originalText;
+      }
+    });
+  }
   const ksOpen   = document.getElementById('ycKeepsakeOpen');
   const ksModal  = document.getElementById('ycKeepsakeModal');
   const ksForm   = document.getElementById('ycKeepsakeForm');
