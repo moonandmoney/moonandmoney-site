@@ -173,6 +173,100 @@
   .yc-redo button:hover { color: var(--gold-bright); }
 
   /* the bottom money-chart CTA on the result */
+  /* Keepsake CTA + modal — free email-capture lead magnet */
+  .yc-keepsake {
+    text-align: center; margin: 40px auto 16px;
+    padding: 26px 24px; max-width: 520px;
+    background: rgba(11,37,69,.32);
+    border: 1px solid rgba(201,162,78,.20);
+    border-radius: 8px;
+  }
+  .yc-keepsake .eyebrow { color: var(--gold); margin-bottom: 6px; display: block; }
+  .yc-keepsake h3 {
+    font-family: Cormorant Garamond, Georgia, serif; font-weight: 500;
+    font-size: clamp(1.4rem, 3vw, 1.8rem); color: var(--cream);
+    margin: 0 0 8px;
+  }
+  .yc-keepsake h3 em { color: var(--gold-bright); font-style: italic; }
+  .yc-keepsake p {
+    color: var(--mist); font-family: var(--serif); font-style: italic;
+    font-size: 1rem; margin: 0 auto 16px; max-width: 380px;
+  }
+  .yc-keepsake-modal {
+    position: fixed; inset: 0; z-index: 80;
+    background: rgba(7,6,8,.92);
+    backdrop-filter: blur(8px);
+    display: none; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .yc-keepsake-modal.show { display: flex; }
+  .yc-keepsake-card {
+    max-width: 480px; width: 100%; padding: 36px 30px 28px;
+    background: linear-gradient(165deg, var(--ink-2), var(--obsidian));
+    border: 1px solid var(--gold-soft); border-radius: 10px;
+    box-shadow: 0 18px 50px -10px rgba(0,0,0,.8), 0 0 60px rgba(201,162,78,.12);
+    text-align: center; max-height: 92vh; overflow: auto;
+  }
+  .yc-keepsake-card .eyebrow { color: var(--gold); display: block; margin-bottom: 12px; }
+  .yc-keepsake-card h3 {
+    font-family: Cormorant Garamond, Georgia, serif; font-weight: 500;
+    font-size: clamp(1.5rem, 3.4vw, 1.9rem); color: var(--cream);
+    margin: 0 0 10px;
+  }
+  .yc-keepsake-card h3 em { color: var(--gold-bright); font-style: italic; }
+  .yc-keepsake-card > p {
+    color: var(--mist); font-family: var(--serif); font-style: italic;
+    font-size: .98rem; line-height: 1.5; margin: 0 auto 22px; max-width: 360px;
+  }
+  .yc-keepsake-form {
+    display: flex; flex-direction: column; gap: 14px; text-align: left;
+  }
+  .yc-keepsake-form label { display: flex; flex-direction: column; gap: 8px; }
+  .yc-keepsake-form label > span {
+    font-family: Jost, sans-serif; font-size: .66rem; letter-spacing: .22em;
+    text-transform: uppercase; color: var(--mist);
+  }
+  .yc-keepsake-form label > span em {
+    font-style: italic; text-transform: none; letter-spacing: .04em;
+    color: var(--gold-soft); margin-left: 4px; font-family: var(--serif);
+  }
+  .yc-keepsake-form input {
+    background: rgba(7,6,8,.55); border: 1px solid var(--line);
+    color: var(--parchment); border-radius: 6px;
+    padding: 13px 14px; font-family: var(--sans); font-size: 1rem;
+    transition: border-color .2s ease, box-shadow .2s ease;
+  }
+  .yc-keepsake-form input:focus {
+    outline: none; border-color: var(--gold);
+    box-shadow: 0 0 0 2px rgba(201,162,78,.18);
+  }
+  .yc-keepsake-fine {
+    text-align: center; color: var(--mist); font-size: .8rem;
+    font-style: italic; margin: 4px auto 2px; max-width: 320px;
+  }
+  .yc-keepsake-err {
+    text-align: center; color: #E89A88; font-size: .9rem;
+    min-height: 1.2em; margin: 2px 0;
+  }
+  .yc-keepsake-form .btn { margin-top: 6px; align-self: center; }
+  .yc-keepsake-cancel {
+    background: none; border: 0; cursor: pointer;
+    color: var(--mist); font-family: Jost, sans-serif;
+    font-size: .68rem; letter-spacing: .22em; text-transform: uppercase;
+    margin-top: 10px; padding: 4px 8px;
+  }
+  .yc-keepsake-cancel:hover { color: var(--gold-bright); }
+  .yc-keepsake-done { text-align: center; padding: 14px 0 8px; }
+  .yc-keepsake-done h4 {
+    font-family: Cormorant Garamond, Georgia, serif; font-weight: 500;
+    font-style: italic; font-size: 1.5rem; color: var(--gold-bright);
+    margin: 0 0 12px;
+  }
+  .yc-keepsake-done p {
+    color: var(--mist); font-family: var(--serif); font-style: italic;
+    font-size: 1rem; line-height: 1.5; margin: 0 auto 14px; max-width: 320px;
+  }
+
   .yc-pitch {
     max-width: 620px; margin: 40px auto 0;
     padding: clamp(26px, 4vw, 38px);
@@ -269,11 +363,50 @@
           <button type="button" id="ycRedo">Draw another ✦</button>
         </div>
 
+        <!-- Keepsake email: visitors who want to remember these placements
+             hand over their email and receive a beautifully formatted
+             read of their chart in their inbox. Soft lead-magnet sat
+             above the harder Money Chart pitch. -->
+        <div class="yc-keepsake">
+          <span class="eyebrow">Want to keep this</span>
+          <h3>Email me my <em>chart</em></h3>
+          <p>A beautifully formatted read of your placements, in your inbox to keep. Free.</p>
+          <button type="button" class="btn btn-ghost" id="ycKeepsakeOpen">Save your chart →</button>
+        </div>
+
         <div class="yc-pitch">
           <span class="eyebrow">Want this read for you</span>
           <h3>The <em>Money Chart</em> goes deeper</h3>
           <p>Your wheel above shows <em>where</em> the planets were. The Money Chart reads <em>what they mean</em> for how money actually moves through you. Eight pages, drawn from these placements.</p>
           <a class="btn btn-gold" href="money-chart.html">Order your Money Chart</a>
+        </div>
+      </div>
+
+      <!-- Email-capture modal for the chart keepsake. -->
+      <div class="yc-keepsake-modal" id="ycKeepsakeModal" aria-hidden="true">
+        <div class="yc-keepsake-card">
+          <span class="eyebrow">Your chart, in your inbox</span>
+          <h3>Email me my <em>read</em></h3>
+          <p>Sun, Moon, and Venus highlighted as the Money Chart triad — and every other placement below. A keepsake you can come back to.</p>
+          <form class="yc-keepsake-form" id="ycKeepsakeForm" novalidate>
+            <label>
+              <span>Your <em>email</em></span>
+              <input type="email" name="email" id="ycKeepsakeEmail" required autocomplete="email" placeholder="you@example.com">
+            </label>
+            <label>
+              <span>Your name <em>(optional)</em></span>
+              <input type="text" name="first_name" id="ycKeepsakeName" autocomplete="given-name" placeholder="Luna" maxlength="40">
+            </label>
+            <p class="yc-keepsake-fine">Sent once, from Moon &amp; Money. You can unsubscribe whenever.</p>
+            <div class="yc-keepsake-err" id="ycKeepsakeErr" aria-live="polite"></div>
+            <button type="submit" class="btn btn-gold" id="ycKeepsakeSend">Send it to me →</button>
+            <button type="button" class="yc-keepsake-cancel" id="ycKeepsakeCancel">Cancel ✦</button>
+          </form>
+          <div class="yc-keepsake-done" id="ycKeepsakeDone" hidden>
+            <h4>It's on its way ☾</h4>
+            <p>Check your inbox in a few minutes. If you don't see it, peek at your spam folder.</p>
+            <button type="button" class="yc-keepsake-cancel" id="ycKeepsakeClose">Close</button>
+          </div>
         </div>
       </div>
 
@@ -1094,12 +1227,106 @@
     wheelEl.innerHTML = buildSVG(chart);
     readEl.innerHTML = buildReadout(chart);
     wireReadoutClicks();
+    // Stash the birth context for the keepsake modal — it needs the
+    // same date / time / lat / lon to recompute the chart server-side.
+    window._mmChartCtx = (haveTime && geo) ? {
+      dateStr, timeStr, lat: geo.lat, lng: geo.lng,
+      tz_name: (Intl.DateTimeFormat().resolvedOptions().timeZone) || 'UTC',
+    } : null;
     // Remember the inputs locally (only if the visitor opted in).
     if (remember && remember.checked) saveCurrent();
     form.style.display = 'none';
     result.classList.add('show');
     setTimeout(() => result.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
   });
+
+  /* ---- Chart keepsake (email lead magnet) ----
+     Visitor hands over their email in exchange for a beautifully
+     formatted read of their chart, sent to their inbox. The button only
+     does anything when we have a full birth context (date + time + city)
+     because the engine needs lat/lon/tz to recompute the chart. */
+  const KEEPSAKE_URL = 'https://moonmoney-chart-engine.onrender.com/api/chart-keepsake';
+  const ksOpen   = document.getElementById('ycKeepsakeOpen');
+  const ksModal  = document.getElementById('ycKeepsakeModal');
+  const ksForm   = document.getElementById('ycKeepsakeForm');
+  const ksDone   = document.getElementById('ycKeepsakeDone');
+  const ksErr    = document.getElementById('ycKeepsakeErr');
+  const ksCancel = document.getElementById('ycKeepsakeCancel');
+  const ksClose  = document.getElementById('ycKeepsakeClose');
+  const ksEmail  = document.getElementById('ycKeepsakeEmail');
+  const ksName   = document.getElementById('ycKeepsakeName');
+  const ksSend   = document.getElementById('ycKeepsakeSend');
+  if (ksOpen && ksModal && ksForm) {
+    const showModal = (show) => {
+      ksModal.classList.toggle('show', show);
+      ksModal.setAttribute('aria-hidden', show ? 'false' : 'true');
+      if (show) setTimeout(() => ksEmail.focus(), 80);
+    };
+    ksOpen.addEventListener('click', () => {
+      // Reset to form view in case it was previously submitted.
+      ksDone.hidden = true;
+      ksForm.style.display = '';
+      ksErr.textContent = '';
+      if (!window._mmChartCtx) {
+        ksErr.textContent = "We need your birth date, time, and city to send the chart — re-enter those above first.";
+      }
+      showModal(true);
+    });
+    ksCancel.addEventListener('click', () => showModal(false));
+    ksClose.addEventListener('click', () => showModal(false));
+    ksModal.addEventListener('click', (e) => {
+      if (e.target === ksModal) showModal(false);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && ksModal.classList.contains('show')) showModal(false);
+    });
+    ksForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      ksErr.textContent = '';
+      const email = (ksEmail.value || '').trim();
+      const first_name = (ksName.value || '').trim();
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        ksErr.textContent = 'That email does not look quite right.';
+        return;
+      }
+      const ctx = window._mmChartCtx;
+      if (!ctx) {
+        ksErr.textContent = "Birth context missing — re-enter your details above.";
+        return;
+      }
+      ksSend.disabled = true;
+      ksSend.textContent = 'Sending…';
+      try {
+        const r = await fetch(KEEPSAKE_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email, first_name,
+            birth_date: ctx.dateStr,
+            birth_time: ctx.timeStr,
+            tz_name:    ctx.tz_name,
+            lat: ctx.lat, lon: ctx.lng,
+          }),
+        });
+        const data = await r.json().catch(() => ({}));
+        if (!r.ok || data.ok === false) {
+          ksErr.textContent = (data && data.reason === 'invalid_email')
+            ? 'That email does not look quite right.'
+            : 'Could not send the chart right now. Try again in a moment.';
+          ksSend.disabled = false;
+          ksSend.textContent = 'Send it to me →';
+          return;
+        }
+        // Success — swap form for the "on its way" message.
+        ksForm.style.display = 'none';
+        ksDone.hidden = false;
+      } catch (err) {
+        ksErr.textContent = 'Network hiccup. Try again in a moment.';
+        ksSend.disabled = false;
+        ksSend.textContent = 'Send it to me →';
+      }
+    });
+  }
 })();
 </script>
 
