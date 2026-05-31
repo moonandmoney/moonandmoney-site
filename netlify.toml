@@ -11,3 +11,11 @@
   from = "/rewards.html"
   to = "/fifth-moon.html"
   status = 301
+
+# Money Mood renamed to Sun Money so it sits cleanly in the Sun /
+# Moon / Venus triad. Preserve any inbound links + search engine
+# entries by redirecting the legacy URL.
+[[redirects]]
+  from = "/money-mood.html"
+  to = "/sun-money.html"
+  status = 301

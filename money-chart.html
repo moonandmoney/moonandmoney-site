@@ -42,9 +42,10 @@
     <li class="nav-dropdown" aria-expanded="false">
       <button class="nav-trigger" type="button" aria-haspopup="true" aria-expanded="false">Money Tools <span class="caret" aria-hidden="true">&#9662;</span></button>
       <ul class="nav-submenu">
+        <li><a href="sun-money.html">Sun Money</a></li>
+        <li><a href="moon-money.html">Moon Money</a></li>
+        <li><a href="venus-money.html">Venus Money</a></li>
         <li><a href="quiz.html">Quiz</a></li>
-        <li><a href="money-mood.html">Money Mood</a></li>
-        <li><a href="money-journal.html">Journal</a></li>
       </ul>
     </li>
     <li><a href="shop.html">Atelier</a></li>
@@ -219,8 +220,19 @@
           </fieldset>
         </div>
 
+        <div class="mc-gift" style="margin:14px 0 22px;text-align:center">
+          <label class="mc-check" style="cursor:pointer;display:inline-flex;align-items:center;gap:8px;font-family:var(--serif,Cormorant Garamond,Georgia,serif);font-size:.98rem;color:var(--mist)">
+            <input type="checkbox" id="mcGiftToggle" name="is_gift" value="yes">
+            <span>This is a gift for someone</span>
+          </label>
+          <p class="mc-gift-note" id="mcGiftNote" hidden style="margin:14px auto 0;max-width:520px;color:var(--mist);font-size:.88rem;font-style:italic;opacity:.85;line-height:1.6">
+            The chart is built for them, with the birth data above. The receipt comes to you (so they never see a price tag); a moon is added to your Fifth Moon card.
+          </p>
+        </div>
+
         <div class="mc-grid mc-deliver">
-          <label>Email (where the chart is delivered)<input type="email" name="email" required autocomplete="email"></label>
+          <label id="mcRecipientLabel">Email (where the chart is delivered)<input type="email" name="email" id="mcEmail" required autocomplete="email"></label>
+          <label id="mcGifterLabel" hidden>Your email (for the receipt and your Luna note)<input type="email" name="gifter_email" id="mcGifterEmail" autocomplete="email"></label>
         </div>
 
         <p class="mc-time-note" id="mcTimeNote" hidden>Noted. Without a birth time we use noon and the reading will flag where exact-time accuracy matters.</p>
@@ -250,7 +262,7 @@
         <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
         <p>Personal finance, read through astrology. By Luna Wilde.</p>
       </div>
-      <div class="foot-col"><h4>Explore</h4><a href="wheel.html">Wheel</a><a href="draw.html">Card</a><a href="quiz.html">Quiz</a><a href="money-chart.html">Money Chart</a><a href="shop.html">Atelier</a><a href="pendulum/">Pendulum</a><a href="calendar.html">Calendar</a><a href="archive.html">Archive</a><a href="about.html">Ethos</a><a href="money-mood.html">Money Mood</a><a href="money-journal.html">Journal</a></div>
+      <div class="foot-col"><h4>Explore</h4><a href="wheel.html">Wheel</a><a href="draw.html">Card</a><a href="quiz.html">Quiz</a><a href="money-chart.html">Money Chart</a><a href="shop.html">Atelier</a><a href="pendulum/">Pendulum</a><a href="calendar.html">Calendar</a><a href="archive.html">Archive</a><a href="about.html">Ethos</a><a href="sun-money.html">Sun Money</a><a href="money-journal.html">Journal</a></div>
       <div class="foot-col"><h4>Club</h4><a href="https://moonandmoney.substack.com" target="_blank">Substack</a><a href="https://moonandmoney.substack.com/subscribe" target="_blank">Crescent Club</a><a href="fifth-moon.html">The Fifth Moon</a><a href="about.html#circle">Circle <span class="soon">Soon</span></a><a href="about.html#token">Token <span class="soon">Soon</span></a></div>
       <div class="foot-col"><h4>Follow</h4><a href="https://moonandmoney.substack.com" target="_blank">@moonmoney</a><a href="archive.html">Notes</a><a href="index.html">Newsletter</a></div>
     </div>

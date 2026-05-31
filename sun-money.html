@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sun Money · Moon & Money</title>
+<meta name="description" content="How your Sun sign earns — the financial archetype of each of the twelve signs. Free teaching reference. By Luna Wilde at Moon & Money.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Sun Money · Moon & Money">
+<meta property="og:description" content="How your Sun sign earns — the financial archetype of each of the twelve signs. Free teaching reference. By Luna Wilde at Moon & Money.">
+<meta property="og:site_name" content="Moon &amp; Money">
+<meta property="og:image" content="https://moonandmoney.ca/assets/og/social.png?v=20260530">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://moonandmoney.ca/assets/og/social.png?v=20260530">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/assets/og/apple-touch-icon.png"><meta name="theme-color" content="#070608"><meta name="apple-mobile-web-app-title" content="Moon & Money"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&family=Noto+Sans+Symbols+2&display=swap"><link rel="stylesheet" href="assets/css/styles.css">
+
+<style>
+  /* Sun/Moon/Venus Money — shape mirrors the houses + sign-section pattern. */
+  .signs-toc {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(7,6,8,.92); backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(201,162,78,.18);
+    padding: 12px 0;
+  }
+  .signs-toc .wrap {
+    display: flex; flex-wrap: wrap; gap: 4px 12px;
+    justify-content: center; align-items: center;
+    font-family: Jost, sans-serif; font-size: .76rem;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--mist);
+  }
+  .signs-toc .toc-label { opacity: .55; margin-right: 8px; }
+  .signs-toc a {
+    color: var(--mist); text-decoration: none;
+    padding: 4px 6px; border-radius: 3px;
+    transition: color .2s, background .2s;
+  }
+  .signs-toc a:hover { color: var(--gold-bright); background: rgba(201,162,78,.06); }
+
+  .sign-section {
+    padding: 70px 0 40px;
+    border-top: 1px solid rgba(201,162,78,.10);
+  }
+  .sign-section:first-of-type { border-top: 0; }
+  .sign-section .wrap { max-width: 760px; }
+  .sign-stripe {
+    height: 4px; width: 80px;
+    margin: 0 auto 28px;
+    border-radius: 2px;
+    box-shadow: 0 0 24px 0 currentColor;
+    opacity: .85;
+  }
+  .sign-section .eyebrow {
+    display: block; text-align: center; margin-bottom: 10px;
+  }
+  .sign-section h2 {
+    text-align: center; margin: 0 0 8px;
+    font-family: Cormorant Garamond, Georgia, serif;
+    font-size: clamp(2rem, 5vw, 2.6rem);
+    font-weight: 500; color: var(--cream);
+    letter-spacing: .01em;
+  }
+  .sign-section h2 em { color: var(--gold-bright); font-style: italic; }
+  .sign-tagline {
+    text-align: center;
+    font-family: Cormorant Garamond, Georgia, serif;
+    font-style: italic; font-size: 1.15rem;
+    color: var(--gold); margin: 0 0 26px;
+    opacity: .9;
+  }
+  .sign-info {
+    text-align: center; margin: 0 auto 32px;
+    padding: 14px 22px;
+    background: rgba(11,37,69,.45);
+    border: 1px solid rgba(201,162,78,.18);
+    border-radius: 4px;
+    font-family: Jost, sans-serif; font-size: .88rem;
+    color: var(--mist); line-height: 1.7;
+    max-width: 640px;
+  }
+  .sign-info strong { color: var(--gold-bright); font-weight: 500; }
+  .sign-info .dot {
+    display: inline-block; width: 6px; height: 6px;
+    margin: 0 10px 1px; border-radius: 50%;
+    background: var(--gold); opacity: .5;
+    vertical-align: middle;
+  }
+  .sign-section h3 {
+    font-family: Jost, sans-serif;
+    font-size: .82rem; letter-spacing: .22em;
+    text-transform: uppercase; color: var(--gold);
+    margin: 30px 0 12px;
+    font-weight: 500;
+  }
+  .sign-section p {
+    color: var(--parchment); line-height: 1.75;
+    font-size: 1.02rem; margin: 0 0 16px;
+  }
+  .sign-section p em { color: var(--cream); }
+  .sign-example {
+    background: rgba(229,199,123,.05);
+    border-left: 2px solid rgba(229,199,123,.35);
+    padding: 18px 22px;
+    margin: 18px 0;
+    font-style: italic;
+  }
+  .sign-example em { color: var(--gold-bright); font-style: italic; font-weight: 500; }
+  .sign-back-top {
+    display: block; text-align: center;
+    margin-top: 24px;
+    font-family: Jost, sans-serif; font-size: .72rem;
+    letter-spacing: .22em; text-transform: uppercase;
+    color: var(--mist); opacity: .55;
+    text-decoration: none;
+    transition: opacity .2s, color .2s;
+  }
+  .sign-back-top:hover { opacity: 1; color: var(--gold-bright); }
+
+  .signs-closing {
+    padding: 70px 0 40px;
+    border-top: 1px solid rgba(201,162,78,.18);
+    text-align: center;
+  }
+  .signs-closing .wrap { max-width: 720px; }
+  .signs-closing h2 {
+    font-family: Cormorant Garamond, Georgia, serif;
+    font-size: 2rem; font-weight: 500; color: var(--cream);
+    margin: 0 0 14px;
+  }
+  .signs-closing h2 em { color: var(--gold-bright); font-style: italic; }
+  .signs-closing p {
+    color: var(--mist); line-height: 1.7;
+    font-size: 1.02rem; margin: 0 0 20px;
+  }
+
+  @media (max-width: 640px) {
+    .signs-toc .wrap { font-size: .68rem; gap: 2px 8px; }
+    .signs-toc .toc-label { display: none; }
+    .sign-section { padding: 50px 0 30px; }
+    .sign-info { font-size: .82rem; padding: 12px 16px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="starfield"></canvas>
+<div class="nebula"></div>
+
+<header class="nav">
+  <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
+  <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li class="nav-dropdown" aria-expanded="false">
+      <button class="nav-trigger" type="button" aria-haspopup="true" aria-expanded="false">Moon Tools <span class="caret" aria-hidden="true">&#9662;</span></button>
+      <ul class="nav-submenu">
+        <li><a href="calendar.html">Calendar</a></li>
+        <li><a href="wheel.html">Wheel</a></li>
+        <li><a href="draw.html">Card</a></li>
+        <li><a href="pendulum/">Pendulum</a></li>
+        <li><a href="your-chart.html">Your Chart</a></li>
+        <li><a href="houses.html">Houses</a></li>
+      </ul>
+    </li>
+    <li class="nav-dropdown" aria-expanded="false">
+      <button class="nav-trigger" type="button" aria-haspopup="true" aria-expanded="false">Money Tools <span class="caret" aria-hidden="true">&#9662;</span></button>
+      <ul class="nav-submenu">
+        <li><a href="sun-money.html">Sun Money</a></li>
+        <li><a href="moon-money.html">Moon Money</a></li>
+        <li><a href="venus-money.html">Venus Money</a></li>
+        <li><a href="quiz.html">Quiz</a></li>
+      </ul>
+    </li>
+    <li><a href="shop.html">Atelier</a></li>
+    <li><a href="archive.html">Archive</a></li>
+    <li><a href="sessions.html">Sessions</a></li>
+    <li><a href="about.html">Ethos</a></li>
+    <li><a href="https://moonandmoney.substack.com/subscribe" target="_blank">Crescent Club</a></li>
+    <li><a class="nav-cta" href="money-chart.html">Money Chart</a></li>
+  </ul>
+</header>
+
+<main>
+  <section class="page-hero" id="top">
+    <div class="wrap">
+      <span class="eyebrow">Reference &middot; Sun</span>
+      <h1><span class="gold">☉</span> Sun Money</h1>
+      <p style="max-width:640px;margin:0 auto">A teaching reference for how each Sun sign earns. Twelve archetypes, in plain English. One layer of the Money Chart's three-placement triad.</p>
+      <p style="margin:10px auto 0;max-width:520px;color:var(--mist);font-size:.85rem;font-style:italic;opacity:.78;text-align:center">For reflection and self-knowledge. Not financial or investment advice.</p>
+    </div>
+  </section>
+
+  <section class="money-triad">
+    <div class="wrap">
+      <p class="triad-intro">Your <em>Money Chart</em> reads three placements together to map how money actually moves through you.</p>
+      <div class="triad-grid">
+        <a class="triad-card is-current" href="sun-money.html">
+          <span class="triad-glyph">☉</span>
+          <h3>Sun Money</h3>
+          <p class="triad-line">How you <em>earn</em>. Your archetype, your work, the way you show up where money is made.</p>
+        </a>
+        <a class="triad-card" href="moon-money.html">
+          <span class="triad-glyph">☾</span>
+          <h3>Moon Money</h3>
+          <p class="triad-line">How you <em>feel</em> about money. The emotional currents under every decision, what you need to feel safe.</p>
+        </a>
+        <a class="triad-card" href="venus-money.html">
+          <span class="triad-glyph">♀</span>
+          <h3>Venus Money</h3>
+          <p class="triad-line">How you <em>spend</em>. Your values, your taste, what you say yes to, what beauty costs you.</p>
+        </a>
+      </div>
+      <p class="triad-pitch">The Money Chart reads all three for you, woven together &mdash; and delivers <strong>The Knot</strong> (the single deepest insight at the centre of your chart) plus a <strong>three-month astro overview</strong> of what the sky has next for your money. <a class="triad-link" href="money-chart.html">Order your Money Chart &rarr;</a></p>
+    </div>
+  </section>
+
+  <nav class="signs-toc" aria-label="Jump to a sign">
+    <div class="wrap">
+      <span class="toc-label">Jump to</span>
+      <a href="#aries">&#9800; ARI</a>
+      <a href="#taurus">&#9801; TAU</a>
+      <a href="#gemini">&#9802; GEM</a>
+      <a href="#cancer">&#9803; CAN</a>
+      <a href="#leo">&#9804; LEO</a>
+      <a href="#virgo">&#9805; VIR</a>
+      <a href="#libra">&#9806; LIB</a>
+      <a href="#scorpio">&#9807; SCO</a>
+      <a href="#sagittarius">&#9808; SAG</a>
+      <a href="#capricorn">&#9809; CAP</a>
+      <a href="#aquarius">&#9810; AQU</a>
+      <a href="#pisces">&#9811; PIS</a>
+    </div>
+  </nav>
+
+  <section id="aries" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#C8312E;color:#C8312E"></div>
+      <span class="eyebrow">Aries</span>
+      <h2>The <em>opener</em></h2>
+      <p class="sign-tagline">Earned by going first.</p>
+      <div class="sign-info">
+        Ruled by <strong>Mars</strong>
+        <span class="dot"></span> Element: <strong>Fire</strong>
+        <span class="dot"></span> Modality: <strong>Cardinal</strong>
+        <span class="dot"></span> Body: <strong>head and face</strong>
+      </div>
+
+      <p>Aries is the sign of the first move. With Aries somewhere in your chart, money rewards you for being the one who started, not the one who waited to be asked.</p>
+
+      <h3>How Aries earns</h3>
+      <p>An Aries Sun earns by going first. You see the opening before anyone else does, and your money comes from being willing to move while others are still thinking. Aries makes founders, fighters, and people who start things. The paycheck follows the courage.</p><p>Your earning power lives in initiation. You build wealth by launching, competing, and refusing to ask permission. The dollar amount may be smaller in the early years and disproportionate later, because compound returns favor those who start.</p><p>The shadow is speed without sequence. Aries can begin five things and finish none, leaving wealth on the table for someone slower and more patient. Pair every launch with a built-in pause. Your bravery is the asset. Your follow through is the multiplier.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'If I wait, I'll miss it.' Most opportunities recur. Impulse is not the same as instinct.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85"><em>'I'll figure out the details later.' You won't. The follow-through is half the asset.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section id="taurus" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#2F6B3E;color:#2F6B3E"></div>
+      <span class="eyebrow">Taurus</span>
+      <h2>The <em>holder</em></h2>
+      <p class="sign-tagline">Built by holding steady.</p>
+      <div class="sign-info">
+        Ruled by <strong>Venus</strong>
+        <span class="dot"></span> Element: <strong>Earth</strong>
+        <span class="dot"></span> Modality: <strong>Fixed</strong>
+        <span class="dot"></span> Body: <strong>throat, neck, vocal cords</strong>
+      </div>
+
+      <p>Taurus is the sign of money itself. Ruled by Venus, tied to the body and the earth, Taurus understands worth at a level most signs only theorise about. The work here is steady accumulation, and the trust that slow is not the same as small.</p>
+
+      <h3>How Taurus earns</h3>
+      <p>A Taurus Sun earns by holding. You build wealth the way oak trees grow: slowly, deeply, and in ways nobody notices until the canopy is already wide. Taurus is the sign of money itself, ruled by Venus, deeply tied to the material world. You understand value at a body level.</p><p>Your earning power lives in steady accumulation. Long careers. Real assets. Compounding. You may not chase the flashiest opportunity, and that is precisely why your account grows while flashier accounts deflate. Time is your ally.</p><p>The shadow is stubbornness. Taurus can hold a position past its usefulness and confuse comfort with safety. The discipline is to know when holding becomes hoarding, and when patience becomes paralysis. Your steadiness is the asset. Your willingness to release is what protects it.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'I'll feel safe once I have enough.' You won't. Enough was never a number. Safety is something you generate, not something the account gives you.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85"><em>'I should wait until conditions are perfect.' Conditions are never perfect. The waiting is the price you pay.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section id="gemini" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#B6A047;color:#B6A047"></div>
+      <span class="eyebrow">Gemini</span>
+      <h2>The <em>connector</em></h2>
+      <p class="sign-tagline">Gathered in many places at once.</p>
+      <div class="sign-info">
+        Ruled by <strong>Mercury</strong>
+        <span class="dot"></span> Element: <strong>Air</strong>
+        <span class="dot"></span> Modality: <strong>Mutable</strong>
+        <span class="dot"></span> Body: <strong>hands, arms, lungs</strong>
+      </div>
+
+      <p>Gemini is the sign of trade. Information, words, contacts, bridges — Gemini money flows wherever language and connection do, often through several streams at once.</p>
+
+      <h3>How Gemini earns</h3>
+      <p>A Gemini Sun earns through language. You think in connections, and you make money where ideas, words, and information move. Writing, teaching, brokering, translating, selling: any work that turns one thing into something a person can use. Mercury rules you, which means commerce is in your bones.</p><p>Your earning power lives in multiplicity. You may have several income streams running at once, and that scatter is not failure. It is the architecture. Gemini Sun wealth tends to grow through optionality, side projects, and the ability to pivot fast when the wind shifts.</p><p>The shadow is dispersion. Twelve half-built ideas earn less than one fully built one. Gemini Sun often knows more than the experts and earns less. The discipline is choosing one focus long enough for the compounding to begin.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'Once I've researched it, I'll feel sure.' You won't. Certainty comes from acting, not from reading more.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85"><em>'I'll be ready once I know enough.' You already know enough. The next move is execution, not more research.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section id="cancer" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#8FA3C7;color:#8FA3C7"></div>
+      <span class="eyebrow">Cancer</span>
+      <h2>The <em>nurturer</em></h2>
+      <p class="sign-tagline">Carried with care.</p>
+      <div class="sign-info">
+        Ruled by <strong>the Moon</strong>
+        <span class="dot"></span> Element: <strong>Water</strong>
+        <span class="dot"></span> Modality: <strong>Cardinal</strong>
+        <span class="dot"></span> Body: <strong>chest, stomach, breasts</strong>
+      </div>
+
+      <p>Cancer is the sign of what holds us. Money for Cancer is interlaced with safety, family, and the meaning of home. Care is the currency, and the work is letting it be paid for.</p>
+
+      <h3>How Cancer earns</h3>
+      <p>A Cancer Sun earns through care. Your work is taking something private, emotion, intuition, the wisdom of having lived, and making it available to others. You teach, hold, nurture, translate. Cancer earns by carrying what only the inner world can produce.</p><p>Your earning power lives in fields where presence is the product. Caregiving, coaching, counseling, teaching, hospitality, anything where the person you bring matters more than the technique. Cancer also has unusual luck with property and home, because the sign rules the foundation itself.</p><p>The shadow is that Cancer earnings feel like nurturing, not work. So you undercharge. You give it away because giving feels right. The healing isn't to harden. It is to recognize what you do is rare, and pricing it does not betray the care.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'I'll feel okay once the people I love are taken care of.' You cannot care for them out of a depleted account. You first, every time.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85"><em>You undercharge for the inner work because it doesn't feel like work to you. It feels like breathing. But it is the rarest thing you do.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section id="leo" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#D69343;color:#D69343"></div>
+      <span class="eyebrow">Leo</span>
+      <h2>The <em>presence</em></h2>
+      <p class="sign-tagline">Earned by being seen for what is real.</p>
+      <div class="sign-info">
+        Ruled by <strong>the Sun</strong>
+        <span class="dot"></span> Element: <strong>Fire</strong>
+        <span class="dot"></span> Modality: <strong>Fixed</strong>
+        <span class="dot"></span> Body: <strong>heart, spine, upper back</strong>
+      </div>
+
+      <p>Leo is the sign of expression. Money follows Leo's willingness to be the face, the voice, the named source of the work. Hidden Leo earns less than seen Leo, and that is not an ego problem; it is a temperament truth.</p>
+
+      <h3>How Leo earns</h3>
+      <p>A Leo Sun earns by being seen. Visibility is your currency. You build wealth in fields where personal presence, performance, and creative expression matter. The stage may be literal or metaphorical, but you do not earn well in hiding.</p><p>Your earning power lives in expression. Leadership roles, creative ventures, high-touch work where your name is on it. Leo Sun makes the best money when the work is unmistakably yours, signed, owned, and proud. Wealth follows your willingness to be the face of what you do.</p><p>The shadow is performance for its own sake. Leo can confuse applause with income, and chase recognition while quieter peers build the actual fortune. The work is being seen for what is real, not for what plays well.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'If I'm generous enough, they'll love me.' They will use you. Generosity that wasn't asked for becomes a debt nobody can repay.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85"><em>'If I really cared about the work, I wouldn't need to be paid this well.' Caring and being paid well are not in opposition. You are.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section id="virgo" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#5C8B7A;color:#5C8B7A"></div>
+      <span class="eyebrow">Virgo</span>
+      <h2>The <em>refiner</em></h2>
+      <p class="sign-tagline">Built by precision and craft.</p>
+      <div class="sign-info">
+        Ruled by <strong>Mercury</strong>
+        <span class="dot"></span> Element: <strong>Earth</strong>
+        <span class="dot"></span> Modality: <strong>Mutable</strong>
+        <span class="dot"></span> Body: <strong>gut, digestive system</strong>
+      </div>
+
+      <p>Virgo is the sign of craft and service. Money for Virgo accrues quietly through skill, attention, and the kind of refinement most people never bother with. The catch: it has to be priced and shipped, not perfected indefinitely.</p>
+
+      <h3>How Virgo earns</h3>
+      <p>A Virgo Sun earns through precision. You make money where details matter, where systems need fixing, where craft is the difference between adequate and excellent. Virgo is the analyst, the editor, the healer, the artisan. Your work improves what passes through your hands.</p><p>Your earning power lives in service that compounds. Skilled trades, specialized knowledge, healthcare, editing, consulting, anything where depth of mastery beats breadth of pitch. Virgo Suns tend to be underpriced for years and suddenly very expensive once the reputation lands.</p><p>The shadow is perfectionism that bills nothing. Virgo can refine a project past the point where it earns, polishing for free what should have shipped and invoiced. The work is letting good enough be the standard for billing, even when the inner critic wants more.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'If I track everything carefully, nothing bad can happen.' Bad things happen anyway. The tracking is soothing a different fear.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85"><em>'I'll raise my rates once the system is perfect.' The system is never perfect. The undercharging is the system.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section id="libra" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#B58CB3;color:#B58CB3"></div>
+      <span class="eyebrow">Libra</span>
+      <h2>The <em>partner</em></h2>
+      <p class="sign-tagline">Made in relation.</p>
+      <div class="sign-info">
+        Ruled by <strong>Venus</strong>
+        <span class="dot"></span> Element: <strong>Air</strong>
+        <span class="dot"></span> Modality: <strong>Cardinal</strong>
+        <span class="dot"></span> Body: <strong>kidneys, lower back, skin</strong>
+      </div>
+
+      <p>Libra is the sign of relation. Money for Libra is made through partnership, fairness, the agreement signed across the table. The work is asking for what is fair without first softening it to keep the room comfortable.</p>
+
+      <h3>How Libra earns</h3>
+      <p>A Libra Sun earns in partnership. You make money where relationships, fairness, and the meeting of two parties matter. Mediation, design, law, diplomacy, art, anything that requires a sense of proportion and an eye for what works between people. You see the deal before you see the dollar.</p><p>Your earning power lives in collaboration. Solo work tends to drain Libra Sun. The right business partner, agent, or co-founder multiplies what you can do alone. Wealth comes through joint ventures, smart contracts, and the ability to make the room feel balanced.</p><p>The shadow is indecision and people-pleasing. Libra can underprice to preserve the relationship, and split bills evenly when they ordered the salad. The discipline is remembering that fair includes you.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'I just want it to be fair' can quietly become 'I will overgive to keep the peace.' Fair includes you.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85"><em>'If they don't bring it up, I won't either.' They are hoping you bring it up. That is the negotiation.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section id="scorpio" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#7A2440;color:#7A2440"></div>
+      <span class="eyebrow">Scorpio</span>
+      <h2>The <em>strategist</em></h2>
+      <p class="sign-tagline">Won quietly, behind closed doors.</p>
+      <div class="sign-info">
+        Ruled by <strong>Pluto (modern) / Mars (classical)</strong>
+        <span class="dot"></span> Element: <strong>Water</strong>
+        <span class="dot"></span> Modality: <strong>Fixed</strong>
+        <span class="dot"></span> Body: <strong>reproductive and eliminative systems</strong>
+      </div>
+
+      <p>Scorpio is the sign of what is shared, hidden, and transformed. Money for Scorpio runs through debt, taxes, investments, inheritances, and the unspoken financial currents in any relationship. Quiet power, deep waters.</p>
+
+      <h3>How Scorpio earns</h3>
+      <p>A Scorpio Sun earns in the depths. You build wealth where most people are afraid to look: debt, taxes, death, inheritance, hidden systems, joint finances, leverage. Scorpio is the sign of other people's money, and that is where your strategic mind earns its keep.</p><p>Your earning power lives in transformation. Real estate flips, private equity, restructuring, therapy, investigation, anything that takes a broken thing and rebuilds it. Scorpio Suns also do well in secretive industries: research, intelligence, anything where what you know is the asset.</p><p>The shadow is control that becomes isolation. Scorpio can hold so tightly to financial secrecy that nobody can help. The discipline is letting trusted advisors in, knowing that wealth scales with shared expertise, not just hidden expertise.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'If I share what I have, it disappears.' It compounds. The fear of exposure is older than this lifetime. You can practice through it.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85"><em>'If I tell anyone what I have, I lose it.' If you tell the right one person, you grow it. Trust is leverage.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section id="sagittarius" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#6A4191;color:#6A4191"></div>
+      <span class="eyebrow">Sagittarius</span>
+      <h2>The <em>traveller</em></h2>
+      <p class="sign-tagline">Earned by going further than the room expected.</p>
+      <div class="sign-info">
+        Ruled by <strong>Jupiter</strong>
+        <span class="dot"></span> Element: <strong>Fire</strong>
+        <span class="dot"></span> Modality: <strong>Mutable</strong>
+        <span class="dot"></span> Body: <strong>hips, thighs, liver</strong>
+      </div>
+
+      <p>Sagittarius is the sign of the horizon. Money for Sagittarius arrives when you go further than the immediate room expected — physically, intellectually, or in scope. The wealth is in the reach.</p>
+
+      <h3>How Sagittarius earns</h3>
+      <p>A Sagittarius Sun earns by going wider. Your work is the long view, the foreign market, the cross-cultural insight, the publishable thought. Teaching, publishing, international work, travel, philosophy, anything that connects your local knowledge to a larger world.</p><p>Your earning power lives in scale. You earn best when the audience is many and the geography is wide. Sagittarius Suns make natural authors, professors, founders of cross-border ventures, and consultants whose ideas travel further than they do. Wealth follows your willingness to be public about a belief.</p><p>The shadow is overestimation. Sagittarius can promise more than it can deliver and call it faith. The work is grounding the vision in calendared deadlines and actual receipts.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'It'll work out.' It does, more often than not. But 'I'll deal with it later' is not the same thing as faith.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85"><em>'I'll earn it back later.' You will. But not by ignoring it now. The faith and the math both need tending.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section id="capricorn" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#4B4B4B;color:#4B4B4B"></div>
+      <span class="eyebrow">Capricorn</span>
+      <h2>The <em>builder</em></h2>
+      <p class="sign-tagline">Built brick by brick, over the long horizon.</p>
+      <div class="sign-info">
+        Ruled by <strong>Saturn</strong>
+        <span class="dot"></span> Element: <strong>Earth</strong>
+        <span class="dot"></span> Modality: <strong>Cardinal</strong>
+        <span class="dot"></span> Body: <strong>bones, knees, teeth, skin</strong>
+      </div>
+
+      <p>Capricorn is the sign of structure. Money for Capricorn is built one careful step at a time, on infrastructure that outlasts the people who built it. The wealth here is patient, real, and earned.</p>
+
+      <h3>How Capricorn earns</h3>
+      <p>A Capricorn Sun earns through structure. Saturn rules you, which means you understand wealth as the long game. Career, reputation, institutions, and the slow accumulation of authority are where your money lives. You were born with a retirement plan.</p><p>Your earning power lives in mastery and time. The first decade of your career may pay less than your peers; the third pays disproportionately more. Capricorn wealth compounds because you keep showing up, building credibility, and refusing to chase fads. Your name becomes the asset.</p><p>The shadow is tying self-worth to net worth. Capricorn can work itself to exhaustion and still feel behind, because the goalpost moves every quarter. The discipline is separating who you are from what you have. The structure is meant to serve you, not the reverse.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'I'll feel proud when I hit the next milestone.' You felt nothing at the last one. The milestone is not where the feeling lives.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85"><em>'If I just work harder, the number will mean enough.' The number will never be enough. You weren't building for the number.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section id="aquarius" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#3E76B5;color:#3E76B5"></div>
+      <span class="eyebrow">Aquarius</span>
+      <h2>The <em>architect</em></h2>
+      <p class="sign-tagline">Designed for the future, not the room.</p>
+      <div class="sign-info">
+        Ruled by <strong>Uranus (modern) / Saturn (classical)</strong>
+        <span class="dot"></span> Element: <strong>Air</strong>
+        <span class="dot"></span> Modality: <strong>Fixed</strong>
+        <span class="dot"></span> Body: <strong>ankles, calves, circulation</strong>
+      </div>
+
+      <p>Aquarius is the sign of the future. Money for Aquarius shows up in patterns, systems, and ideas that look strange now and obvious in ten years. The work is staying in the room long enough for the world to catch up.</p>
+
+      <h3>How Aquarius earns</h3>
+      <p>An Aquarius Sun earns at the edge. You see what is about to happen, often years before anyone else does, and your wealth comes from being early. Technology, social movements, unconventional businesses, anything that transforms a system rather than serving the existing one.</p><p>Your earning power lives in innovation. You may build a small fortune in something nobody understands at the time. Aquarius Suns make natural founders, futurists, and operators of decentralized systems. The work feels lonely because the rest of the world catches up later.</p><p>The shadow is contrarianism for its own sake. Aquarius can refuse a perfectly good index fund because it is mainstream, and lose money chasing the unproven. The discipline is letting innovation sit alongside boring foundation, not in place of it.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'I'll feel it later.' If you don't feel it, you can't direct it. The distance was a defense, not a strategy.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85"><em>'Index funds are for people without imagination.' Imagination is not the opposite of compound interest. Fund both.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section id="pisces" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#4FA89F;color:#4FA89F"></div>
+      <span class="eyebrow">Pisces</span>
+      <h2>The <em>permeable</em></h2>
+      <p class="sign-tagline">Felt before it can be priced.</p>
+      <div class="sign-info">
+        Ruled by <strong>Neptune (modern) / Jupiter (classical)</strong>
+        <span class="dot"></span> Element: <strong>Water</strong>
+        <span class="dot"></span> Modality: <strong>Mutable</strong>
+        <span class="dot"></span> Body: <strong>feet, lymphatic system</strong>
+      </div>
+
+      <p>Pisces is the sign of the ocean. Money for Pisces moves in tides — generous, intuitive, sometimes leaky. The work is putting structure around the gift so it can keep giving.</p>
+
+      <h3>How Pisces earns</h3>
+      <p>A Pisces Sun earns between worlds. You make money in spaces where intuition, imagination, and meaning are the work. Healing, art, music, spiritual practice, film, anything that holds emotion and gives it form. Your earnings can be uneven and your sense of money can be foggy.</p><p>Your earning power lives in attunement. You sense what people need before they ask, and that sensitivity is the entire product. Pisces Suns do unusually well in creative and helping professions, and unusually badly when forced into rigid corporate structures.</p><p>The shadow is financial fog. Pisces can avoid looking at the balance, merge personal and business accounts, and give money away to people who will not return it. The discipline is structure, set up once, never touched again, so your intuition has a frame to flow inside.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'If I don't look, it isn't real.' It is already real. Looking lets you respond. Not looking lets it grow.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85"><em>'If I look at the balance, it will make things worse.' Looking is what makes things better. The fog clears with light.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section class="signs-closing">
+    <div class="wrap">
+      <span class="eyebrow">Want it read for you</span>
+      <h2>Your full <em>Money Chart</em> reads all three together</h2>
+      <p>Sun, Moon, and Venus woven into one personal reading, plus <strong>The Knot</strong> at the centre of your chart and a <strong>three-month astro overview</strong> of what the sky has next for your money.</p>
+      <a class="btn btn-gold" href="money-chart.html">Order your Money Chart</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
+        <p>Personal finance, read through astrology. By Luna Wilde.</p>
+      </div>
+      <div class="foot-col"><h4>Explore</h4><a href="wheel.html">Wheel</a><a href="draw.html">Card</a><a href="quiz.html">Quiz</a><a href="your-chart.html">Your Chart</a><a href="houses.html">Houses</a><a href="sun-money.html">Sun Money</a><a href="moon-money.html">Moon Money</a><a href="venus-money.html">Venus Money</a><a href="shop.html">Atelier</a><a href="calendar.html">Calendar</a><a href="archive.html">Archive</a><a href="about.html">Ethos</a></div>
+      <div class="foot-col"><h4>Club</h4><a href="https://moonandmoney.substack.com" target="_blank">Substack</a><a href="https://moonandmoney.substack.com/subscribe" target="_blank">Crescent Club</a><a href="fifth-moon.html">The Fifth Moon</a><a href="sessions.html">Sessions</a></div>
+      <div class="foot-col"><h4>Follow</h4><a href="https://moonandmoney.substack.com" target="_blank">@moonmoney</a><a href="archive.html">Notes</a><a href="index.html">Newsletter</a></div>
+    </div>
+    <div class="foot-bottom">
+      <span>&copy; <span id="yr"></span> Moon &amp; Money &middot; Luna Wilde. All rights reserved.</span>
+      <span><a href="privacy.html" style="color:inherit;text-decoration:none;opacity:.85">Privacy</a></span>
+      <span>Built in rhythm with the moon &#9790;</span>
+    </div>
+    <p class="foot-legal" style="text-align:center;font-family:Cormorant Garamond,Georgia,serif;font-style:italic;font-size:.82rem;opacity:.55;color:#a89fb4;margin:14px 0 0 0;letter-spacing:.02em">For reflection and self-knowledge. Not financial or investment advice.</p>
+  </div>
+</footer>
+
+<div id="mmPlayer" data-welcome="assets/audio/invocation.mp3"></div>
+
+<script src="assets/js/zodiac.js"></script>
+<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/player.js"></script>
+</body>
+</html>

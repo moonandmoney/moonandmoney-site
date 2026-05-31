@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Venus Money · Moon & Money</title>
+<meta name="description" content="How your Venus sign spends — values, taste, and the spending pattern of each of the twelve signs. Free teaching reference.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Venus Money · Moon & Money">
+<meta property="og:description" content="How your Venus sign spends — values, taste, and the spending pattern of each of the twelve signs. Free teaching reference.">
+<meta property="og:site_name" content="Moon &amp; Money">
+<meta property="og:image" content="https://moonandmoney.ca/assets/og/social.png?v=20260530">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://moonandmoney.ca/assets/og/social.png?v=20260530">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/assets/og/apple-touch-icon.png"><meta name="theme-color" content="#070608"><meta name="apple-mobile-web-app-title" content="Moon & Money"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&family=Noto+Sans+Symbols+2&display=swap"><link rel="stylesheet" href="assets/css/styles.css">
+
+<style>
+  /* Sun/Moon/Venus Money — shape mirrors the houses + sign-section pattern. */
+  .signs-toc {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(7,6,8,.92); backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(201,162,78,.18);
+    padding: 12px 0;
+  }
+  .signs-toc .wrap {
+    display: flex; flex-wrap: wrap; gap: 4px 12px;
+    justify-content: center; align-items: center;
+    font-family: Jost, sans-serif; font-size: .76rem;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--mist);
+  }
+  .signs-toc .toc-label { opacity: .55; margin-right: 8px; }
+  .signs-toc a {
+    color: var(--mist); text-decoration: none;
+    padding: 4px 6px; border-radius: 3px;
+    transition: color .2s, background .2s;
+  }
+  .signs-toc a:hover { color: var(--gold-bright); background: rgba(201,162,78,.06); }
+
+  .sign-section {
+    padding: 70px 0 40px;
+    border-top: 1px solid rgba(201,162,78,.10);
+  }
+  .sign-section:first-of-type { border-top: 0; }
+  .sign-section .wrap { max-width: 760px; }
+  .sign-stripe {
+    height: 4px; width: 80px;
+    margin: 0 auto 28px;
+    border-radius: 2px;
+    box-shadow: 0 0 24px 0 currentColor;
+    opacity: .85;
+  }
+  .sign-section .eyebrow {
+    display: block; text-align: center; margin-bottom: 10px;
+  }
+  .sign-section h2 {
+    text-align: center; margin: 0 0 8px;
+    font-family: Cormorant Garamond, Georgia, serif;
+    font-size: clamp(2rem, 5vw, 2.6rem);
+    font-weight: 500; color: var(--cream);
+    letter-spacing: .01em;
+  }
+  .sign-section h2 em { color: var(--gold-bright); font-style: italic; }
+  .sign-tagline {
+    text-align: center;
+    font-family: Cormorant Garamond, Georgia, serif;
+    font-style: italic; font-size: 1.15rem;
+    color: var(--gold); margin: 0 0 26px;
+    opacity: .9;
+  }
+  .sign-info {
+    text-align: center; margin: 0 auto 32px;
+    padding: 14px 22px;
+    background: rgba(11,37,69,.45);
+    border: 1px solid rgba(201,162,78,.18);
+    border-radius: 4px;
+    font-family: Jost, sans-serif; font-size: .88rem;
+    color: var(--mist); line-height: 1.7;
+    max-width: 640px;
+  }
+  .sign-info strong { color: var(--gold-bright); font-weight: 500; }
+  .sign-info .dot {
+    display: inline-block; width: 6px; height: 6px;
+    margin: 0 10px 1px; border-radius: 50%;
+    background: var(--gold); opacity: .5;
+    vertical-align: middle;
+  }
+  .sign-section h3 {
+    font-family: Jost, sans-serif;
+    font-size: .82rem; letter-spacing: .22em;
+    text-transform: uppercase; color: var(--gold);
+    margin: 30px 0 12px;
+    font-weight: 500;
+  }
+  .sign-section p {
+    color: var(--parchment); line-height: 1.75;
+    font-size: 1.02rem; margin: 0 0 16px;
+  }
+  .sign-section p em { color: var(--cream); }
+  .sign-example {
+    background: rgba(229,199,123,.05);
+    border-left: 2px solid rgba(229,199,123,.35);
+    padding: 18px 22px;
+    margin: 18px 0;
+    font-style: italic;
+  }
+  .sign-example em { color: var(--gold-bright); font-style: italic; font-weight: 500; }
+  .sign-back-top {
+    display: block; text-align: center;
+    margin-top: 24px;
+    font-family: Jost, sans-serif; font-size: .72rem;
+    letter-spacing: .22em; text-transform: uppercase;
+    color: var(--mist); opacity: .55;
+    text-decoration: none;
+    transition: opacity .2s, color .2s;
+  }
+  .sign-back-top:hover { opacity: 1; color: var(--gold-bright); }
+
+  .signs-closing {
+    padding: 70px 0 40px;
+    border-top: 1px solid rgba(201,162,78,.18);
+    text-align: center;
+  }
+  .signs-closing .wrap { max-width: 720px; }
+  .signs-closing h2 {
+    font-family: Cormorant Garamond, Georgia, serif;
+    font-size: 2rem; font-weight: 500; color: var(--cream);
+    margin: 0 0 14px;
+  }
+  .signs-closing h2 em { color: var(--gold-bright); font-style: italic; }
+  .signs-closing p {
+    color: var(--mist); line-height: 1.7;
+    font-size: 1.02rem; margin: 0 0 20px;
+  }
+
+  @media (max-width: 640px) {
+    .signs-toc .wrap { font-size: .68rem; gap: 2px 8px; }
+    .signs-toc .toc-label { display: none; }
+    .sign-section { padding: 50px 0 30px; }
+    .sign-info { font-size: .82rem; padding: 12px 16px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="starfield"></canvas>
+<div class="nebula"></div>
+
+<header class="nav">
+  <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
+  <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li class="nav-dropdown" aria-expanded="false">
+      <button class="nav-trigger" type="button" aria-haspopup="true" aria-expanded="false">Moon Tools <span class="caret" aria-hidden="true">&#9662;</span></button>
+      <ul class="nav-submenu">
+        <li><a href="calendar.html">Calendar</a></li>
+        <li><a href="wheel.html">Wheel</a></li>
+        <li><a href="draw.html">Card</a></li>
+        <li><a href="pendulum/">Pendulum</a></li>
+        <li><a href="your-chart.html">Your Chart</a></li>
+        <li><a href="houses.html">Houses</a></li>
+      </ul>
+    </li>
+    <li class="nav-dropdown" aria-expanded="false">
+      <button class="nav-trigger" type="button" aria-haspopup="true" aria-expanded="false">Money Tools <span class="caret" aria-hidden="true">&#9662;</span></button>
+      <ul class="nav-submenu">
+        <li><a href="sun-money.html">Sun Money</a></li>
+        <li><a href="moon-money.html">Moon Money</a></li>
+        <li><a href="venus-money.html">Venus Money</a></li>
+        <li><a href="quiz.html">Quiz</a></li>
+      </ul>
+    </li>
+    <li><a href="shop.html">Atelier</a></li>
+    <li><a href="archive.html">Archive</a></li>
+    <li><a href="sessions.html">Sessions</a></li>
+    <li><a href="about.html">Ethos</a></li>
+    <li><a href="https://moonandmoney.substack.com/subscribe" target="_blank">Crescent Club</a></li>
+    <li><a class="nav-cta" href="money-chart.html">Money Chart</a></li>
+  </ul>
+</header>
+
+<main>
+  <section class="page-hero" id="top">
+    <div class="wrap">
+      <span class="eyebrow">Reference &middot; Venus</span>
+      <h1><span class="gold">♀</span> Venus Money</h1>
+      <p style="max-width:640px;margin:0 auto">A teaching reference for how each Venus sign spends. Values, taste, and what makes you say yes. One layer of the Money Chart's three-placement triad.</p>
+      <p style="margin:10px auto 0;max-width:520px;color:var(--mist);font-size:.85rem;font-style:italic;opacity:.78;text-align:center">For reflection and self-knowledge. Not financial or investment advice.</p>
+    </div>
+  </section>
+
+  <section class="money-triad">
+    <div class="wrap">
+      <p class="triad-intro">Your <em>Money Chart</em> reads three placements together to map how money actually moves through you.</p>
+      <div class="triad-grid">
+        <a class="triad-card" href="sun-money.html">
+          <span class="triad-glyph">☉</span>
+          <h3>Sun Money</h3>
+          <p class="triad-line">How you <em>earn</em>. Your archetype, your work, the way you show up where money is made.</p>
+        </a>
+        <a class="triad-card" href="moon-money.html">
+          <span class="triad-glyph">☾</span>
+          <h3>Moon Money</h3>
+          <p class="triad-line">How you <em>feel</em> about money. The emotional currents under every decision, what you need to feel safe.</p>
+        </a>
+        <a class="triad-card is-current" href="venus-money.html">
+          <span class="triad-glyph">♀</span>
+          <h3>Venus Money</h3>
+          <p class="triad-line">How you <em>spend</em>. Your values, your taste, what you say yes to, what beauty costs you.</p>
+        </a>
+      </div>
+      <p class="triad-pitch">The Money Chart reads all three for you, woven together &mdash; and delivers <strong>The Knot</strong> (the single deepest insight at the centre of your chart) plus a <strong>three-month astro overview</strong> of what the sky has next for your money. <a class="triad-link" href="money-chart.html">Order your Money Chart &rarr;</a></p>
+    </div>
+  </section>
+
+  <nav class="signs-toc" aria-label="Jump to a sign">
+    <div class="wrap">
+      <span class="toc-label">Jump to</span>
+      <a href="#aries">&#9800; ARI</a>
+      <a href="#taurus">&#9801; TAU</a>
+      <a href="#gemini">&#9802; GEM</a>
+      <a href="#cancer">&#9803; CAN</a>
+      <a href="#leo">&#9804; LEO</a>
+      <a href="#virgo">&#9805; VIR</a>
+      <a href="#libra">&#9806; LIB</a>
+      <a href="#scorpio">&#9807; SCO</a>
+      <a href="#sagittarius">&#9808; SAG</a>
+      <a href="#capricorn">&#9809; CAP</a>
+      <a href="#aquarius">&#9810; AQU</a>
+      <a href="#pisces">&#9811; PIS</a>
+    </div>
+  </nav>
+
+  <section id="aries" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#C8312E;color:#C8312E"></div>
+      <span class="eyebrow">Aries</span>
+      <h2>The <em>opener</em></h2>
+      <p class="sign-tagline">Spent as Aries Venus.</p>
+      <div class="sign-info">
+        Ruled by <strong>Mars</strong>
+        <span class="dot"></span> Element: <strong>Fire</strong>
+        <span class="dot"></span> Modality: <strong>Cardinal</strong>
+        <span class="dot"></span> Body: <strong>head and face</strong>
+      </div>
+
+      <p>Aries is the sign of the first move. With Aries somewhere in your chart, money rewards you for being the one who started, not the one who waited to be asked.</p>
+
+      <h3>How Aries spends</h3>
+      <p>Venus in Aries spends on impulse. You see it, you want it, you buy it. The pleasure is in the decisiveness as much as the object. Venus here loves what is new, bold, and slightly risky, and finds patient deliberation exhausting.</p><p>What you value is excitement. The thing that moves you to spend is usually the thing that promises to keep you alive, awake, and in motion. Sports gear, travel, anything that gets the heart up. Spending feels like permission to be a person.</p><p>The shadow is the impulse without the audit. Venus in Aries can wake up to four purchases it doesn't remember authorizing, and feel embarrassed rather than curious. The discipline is one designated impulse fund. The fire still gets its outlet. The rent stays paid.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'If I wait, I'll miss it.' Most opportunities recur. Impulse is not the same as instinct.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85"><em>'I deserve this, I worked hard.' Maybe you did. The question is whether you want this. Deserve and want are different transactions.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section id="taurus" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#2F6B3E;color:#2F6B3E"></div>
+      <span class="eyebrow">Taurus</span>
+      <h2>The <em>holder</em></h2>
+      <p class="sign-tagline">Spent as Taurus Venus.</p>
+      <div class="sign-info">
+        Ruled by <strong>Venus</strong>
+        <span class="dot"></span> Element: <strong>Earth</strong>
+        <span class="dot"></span> Modality: <strong>Fixed</strong>
+        <span class="dot"></span> Body: <strong>throat, neck, vocal cords</strong>
+      </div>
+
+      <p>Taurus is the sign of money itself. Ruled by Venus, tied to the body and the earth, Taurus understands worth at a level most signs only theorise about. The work here is steady accumulation, and the trust that slow is not the same as small.</p>
+
+      <h3>How Taurus spends</h3>
+      <p>Venus in Taurus spends on the real. You want the well-made thing, the natural fiber, the hand-built piece, the meal that took time. Venus is at home in Taurus, which means your taste is unusually accurate and your patience for what is fake or cheap is unusually low.</p><p>What you value is quality that lasts. The cashmere over the synthetic. The land over the lease. The single excellent piece of furniture over four acceptable ones. You spend more per item than most people and own less, and that math works in your favor over time.</p><p>The shadow is comfort that crept past the budget. Venus in Taurus can treat itself daily and lose track of the cumulative weight. The discipline is naming the difference between investment and indulgence, and protecting one with the other.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'I'll feel safe once I have enough.' You won't. Enough was never a number. Safety is something you generate, not something the account gives you.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85"><em>'I'll just enjoy this one little thing.' There are six little things a week. The cumulative is the budget.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section id="gemini" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#B6A047;color:#B6A047"></div>
+      <span class="eyebrow">Gemini</span>
+      <h2>The <em>connector</em></h2>
+      <p class="sign-tagline">Spent as Gemini Venus.</p>
+      <div class="sign-info">
+        Ruled by <strong>Mercury</strong>
+        <span class="dot"></span> Element: <strong>Air</strong>
+        <span class="dot"></span> Modality: <strong>Mutable</strong>
+        <span class="dot"></span> Body: <strong>hands, arms, lungs</strong>
+      </div>
+
+      <p>Gemini is the sign of trade. Information, words, contacts, bridges — Gemini money flows wherever language and connection do, often through several streams at once.</p>
+
+      <h3>How Gemini spends</h3>
+      <p>Venus in Gemini spends on the new. The latest book, the next class, the novel restaurant, the gadget you saw in a podcast. Your spending reflects a curious mind, and your closet, shelf, or subscription list reflects a person trying many things at once.</p><p>What you value is variety. The five things instead of the one. Spending is connected to learning, conversation, and the pleasure of having options. Books, courses, devices, anything that opens a door.</p><p>The shadow is novelty without depth. Venus in Gemini can buy the course and not finish it, subscribe to ten things and use three. The discipline is one rule: nothing new until the current one has been completed or released. The mind stays curious. The clutter stops compounding.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'Once I've researched it, I'll feel sure.' You won't. Certainty comes from acting, not from reading more.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85"><em>'This is the one I'll actually finish.' You said that about the last four. Finish first, buy second.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section id="cancer" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#8FA3C7;color:#8FA3C7"></div>
+      <span class="eyebrow">Cancer</span>
+      <h2>The <em>nurturer</em></h2>
+      <p class="sign-tagline">Spent as Cancer Venus.</p>
+      <div class="sign-info">
+        Ruled by <strong>the Moon</strong>
+        <span class="dot"></span> Element: <strong>Water</strong>
+        <span class="dot"></span> Modality: <strong>Cardinal</strong>
+        <span class="dot"></span> Body: <strong>chest, stomach, breasts</strong>
+      </div>
+
+      <p>Cancer is the sign of what holds us. Money for Cancer is interlaced with safety, family, and the meaning of home. Care is the currency, and the work is letting it be paid for.</p>
+
+      <h3>How Cancer spends</h3>
+      <p>Venus in Cancer spends on home. The food, the bed, the things that make the kitchen smell right. Your spending is rooted in the body, the household, and the people you take care of. Gifts come easily, and the gifts are always the right ones.</p><p>What you value is nourishment. You will spend on a slow-cooked dinner before you spend on a logo. You will pay for the school you trust before you upgrade the car. The wealth is meant to feed people, not to perform.</p><p>The shadow is over-giving until the well runs dry. Venus in Cancer can send money to family members who never return it, treat dinners for people who do not reciprocate, and end the month wondering where it all went. The discipline is generosity that includes you in the receiving.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'I'll feel okay once the people I love are taken care of.' You cannot care for them out of a depleted account. You first, every time.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85"><em>'If I don't bring something, I'll be a burden.' You are not a burden. The gift was never the price of admission.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section id="leo" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#D69343;color:#D69343"></div>
+      <span class="eyebrow">Leo</span>
+      <h2>The <em>presence</em></h2>
+      <p class="sign-tagline">Spent as Leo Venus.</p>
+      <div class="sign-info">
+        Ruled by <strong>the Sun</strong>
+        <span class="dot"></span> Element: <strong>Fire</strong>
+        <span class="dot"></span> Modality: <strong>Fixed</strong>
+        <span class="dot"></span> Body: <strong>heart, spine, upper back</strong>
+      </div>
+
+      <p>Leo is the sign of expression. Money follows Leo's willingness to be the face, the voice, the named source of the work. Hidden Leo earns less than seen Leo, and that is not an ego problem; it is a temperament truth.</p>
+
+      <h3>How Leo spends</h3>
+      <p>Venus in Leo spends out loud. Not because you are vain, but because cheap depresses you. A Leo Venus genuinely cannot enjoy what is shoddy or beneath her. You would rather have one beautiful thing than four mediocre ones, and you are right.</p><p>What you value is quality, drama, and visibility. The wardrobe people remember. The hotel that becomes a story. The gift that arrives with the right ribbon. Your spending reflects the conviction that pleasure is not optional and not embarrassing.</p><p>The shadow is performance spending. Venus in Leo can buy to be seen rather than buy what genuinely delights, and the difference is not always obvious in the moment. The discipline is asking whether the purchase still pleases you when nobody else is watching.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'If I'm generous enough, they'll love me.' They will use you. Generosity that wasn't asked for becomes a debt nobody can repay.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85"><em>'I shouldn't spend on visibility.' You should. You were built for it. Just not to prove anything to anyone but yourself.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section id="virgo" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#5C8B7A;color:#5C8B7A"></div>
+      <span class="eyebrow">Virgo</span>
+      <h2>The <em>refiner</em></h2>
+      <p class="sign-tagline">Spent as Virgo Venus.</p>
+      <div class="sign-info">
+        Ruled by <strong>Mercury</strong>
+        <span class="dot"></span> Element: <strong>Earth</strong>
+        <span class="dot"></span> Modality: <strong>Mutable</strong>
+        <span class="dot"></span> Body: <strong>gut, digestive system</strong>
+      </div>
+
+      <p>Virgo is the sign of craft and service. Money for Virgo accrues quietly through skill, attention, and the kind of refinement most people never bother with. The catch: it has to be priced and shipped, not perfected indefinitely.</p>
+
+      <h3>How Virgo spends</h3>
+      <p>Venus in Virgo spends on the useful. The thing that solves the problem. The well-organized closet. The supplement that works. The course that actually transferred to skill. Venus here values function as a form of beauty, and finds clutter genuinely painful.</p><p>What you value is craft and improvement. You will spend on the tool that earns its keep, the service that saves three hours a week, the therapist who actually moves something. The pleasure is in the upgrade.</p><p>The shadow is utility taken so far it forgets joy. Venus in Virgo can deny itself anything that is purely for delight, calling it indulgent. The discipline is permitted pleasure. Build a small monthly fund for things that justify themselves only by feeling good. They will pay for themselves another way.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'If I track everything carefully, nothing bad can happen.' Bad things happen anyway. The tracking is soothing a different fear.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85"><em>'I shouldn't spend on something just because it feels good.' You should. Pleasure is a real category, not a luxury.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section id="libra" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#B58CB3;color:#B58CB3"></div>
+      <span class="eyebrow">Libra</span>
+      <h2>The <em>partner</em></h2>
+      <p class="sign-tagline">Spent as Libra Venus.</p>
+      <div class="sign-info">
+        Ruled by <strong>Venus</strong>
+        <span class="dot"></span> Element: <strong>Air</strong>
+        <span class="dot"></span> Modality: <strong>Cardinal</strong>
+        <span class="dot"></span> Body: <strong>kidneys, lower back, skin</strong>
+      </div>
+
+      <p>Libra is the sign of relation. Money for Libra is made through partnership, fairness, the agreement signed across the table. The work is asking for what is fair without first softening it to keep the room comfortable.</p>
+
+      <h3>How Libra spends</h3>
+      <p>Venus in Libra spends on beauty. Venus rules Libra, which means your taste is highly tuned and your eye for what is aesthetically right is rarely wrong. You will pay more for the well-designed version of any object, and the upgrade will feel like a relief, not a luxury.</p><p>What you value is harmony. The room that feels balanced. The wardrobe that holds together. The dinner where every detail matches. Your spending tends toward art, design, fashion, gatherings, and anything that produces visible grace.</p><p>The shadow is spending to keep the peace. Venus in Libra can pick up tabs to avoid awkwardness, agree to splits that were not fair, and undercharge to preserve relationships. The discipline is letting the financial transaction be honest, even when the dinner is friendly.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'I just want it to be fair' can quietly become 'I will overgive to keep the peace.' Fair includes you.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85"><em>'I'll pick this up, it's easier than asking.' The asking is the price. Pay it once, save a thousand small drains.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section id="scorpio" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#7A2440;color:#7A2440"></div>
+      <span class="eyebrow">Scorpio</span>
+      <h2>The <em>strategist</em></h2>
+      <p class="sign-tagline">Spent as Scorpio Venus.</p>
+      <div class="sign-info">
+        Ruled by <strong>Pluto (modern) / Mars (classical)</strong>
+        <span class="dot"></span> Element: <strong>Water</strong>
+        <span class="dot"></span> Modality: <strong>Fixed</strong>
+        <span class="dot"></span> Body: <strong>reproductive and eliminative systems</strong>
+      </div>
+
+      <p>Scorpio is the sign of what is shared, hidden, and transformed. Money for Scorpio runs through debt, taxes, investments, inheritances, and the unspoken financial currents in any relationship. Quiet power, deep waters.</p>
+
+      <h3>How Scorpio spends</h3>
+      <p>Venus in Scorpio spends on the powerful. Not on the obvious. On the thing with weight, history, intensity, hidden value. The vintage piece, the rare bottle, the under-the-radar property. Your spending is private, considered, and rarely impulsive.</p><p>What you value is depth. You will pay for the therapy, the investigative research, the experience that transforms something inside you. Venus in Scorpio is unafraid of expensive when expensive is genuinely worth it, and unwilling to pay even a small amount for what is hollow.</p><p>The shadow is spending as control. Venus in Scorpio can use money to create leverage in a relationship, hold dependents close, or fund a secret. The discipline is keeping the transactions clean. Money spent freely heals where money used strategically wounds.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'If I share what I have, it disappears.' It compounds. The fear of exposure is older than this lifetime. You can practice through it.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85"><em>'If I spend on this, I have to spend on that to balance it.' No you don't. The exchange you're tracking is between you and yourself.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section id="sagittarius" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#6A4191;color:#6A4191"></div>
+      <span class="eyebrow">Sagittarius</span>
+      <h2>The <em>traveller</em></h2>
+      <p class="sign-tagline">Spent as Sagittarius Venus.</p>
+      <div class="sign-info">
+        Ruled by <strong>Jupiter</strong>
+        <span class="dot"></span> Element: <strong>Fire</strong>
+        <span class="dot"></span> Modality: <strong>Mutable</strong>
+        <span class="dot"></span> Body: <strong>hips, thighs, liver</strong>
+      </div>
+
+      <p>Sagittarius is the sign of the horizon. Money for Sagittarius arrives when you go further than the immediate room expected — physically, intellectually, or in scope. The wealth is in the reach.</p>
+
+      <h3>How Sagittarius spends</h3>
+      <p>Venus in Sagittarius spends on the road. Travel, education, books, courses, anything that opens a new horizon. The pleasure is in the expansion, not the object. Your spending is generous, optimistic, and often disproportionate to current income, because the experiences feel necessary.</p><p>What you value is freedom and learning. You will book the flight, take the course, fund the long retreat. The receipts may make your accountant wince and your future self grateful. The experiences become the asset.</p><p>The shadow is the trip you couldn't afford. Venus in Sagittarius can overestimate future income, run the credit card hot, and call it faith. The discipline is a dedicated experience fund. The freedom is still real. The interest stops compounding against you.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'It'll work out.' It does, more often than not. But 'I'll deal with it later' is not the same thing as faith.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85"><em>'Future me will pay for it.' Future you is the same you, with more debt. Pay now or pay later. Pay.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section id="capricorn" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#4B4B4B;color:#4B4B4B"></div>
+      <span class="eyebrow">Capricorn</span>
+      <h2>The <em>builder</em></h2>
+      <p class="sign-tagline">Spent as Capricorn Venus.</p>
+      <div class="sign-info">
+        Ruled by <strong>Saturn</strong>
+        <span class="dot"></span> Element: <strong>Earth</strong>
+        <span class="dot"></span> Modality: <strong>Cardinal</strong>
+        <span class="dot"></span> Body: <strong>bones, knees, teeth, skin</strong>
+      </div>
+
+      <p>Capricorn is the sign of structure. Money for Capricorn is built one careful step at a time, on infrastructure that outlasts the people who built it. The wealth here is patient, real, and earned.</p>
+
+      <h3>How Capricorn spends</h3>
+      <p>Venus in Capricorn spends on what lasts. Heritage pieces, real estate, tailored clothing, the items that look better in twenty years than they did on purchase day. Your spending is conservative, considered, and designed to outlive the purchase moment.</p><p>What you value is permanence and proof of care. The leather that ages well, the watch your grandchild will wear, the home that becomes the family seat. Venus in Capricorn understands that the most expensive option, calculated across decades, is often the cheapest one.</p><p>The shadow is austerity that calls itself wisdom. Venus in Capricorn can deny itself anything that doesn't justify itself through utility or longevity, and miss the small delights that make the rest of the building feel like a home, not a fortress. The discipline is permitting some pleasure to be temporary.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'I'll feel proud when I hit the next milestone.' You felt nothing at the last one. The milestone is not where the feeling lives.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85"><em>'I don't need that, I have enough.' You have enough. You also have permission. They are not the same thing.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section id="aquarius" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#3E76B5;color:#3E76B5"></div>
+      <span class="eyebrow">Aquarius</span>
+      <h2>The <em>architect</em></h2>
+      <p class="sign-tagline">Spent as Aquarius Venus.</p>
+      <div class="sign-info">
+        Ruled by <strong>Uranus (modern) / Saturn (classical)</strong>
+        <span class="dot"></span> Element: <strong>Air</strong>
+        <span class="dot"></span> Modality: <strong>Fixed</strong>
+        <span class="dot"></span> Body: <strong>ankles, calves, circulation</strong>
+      </div>
+
+      <p>Aquarius is the sign of the future. Money for Aquarius shows up in patterns, systems, and ideas that look strange now and obvious in ten years. The work is staying in the room long enough for the world to catch up.</p>
+
+      <h3>How Aquarius spends</h3>
+      <p>Venus in Aquarius spends on the future. The technology that hasn't gone mainstream. The renewable home upgrade. The crowdfunding contribution to the thing that might change everything. Your spending reflects a belief that money is meant to vote for the world you want.</p><p>What you value is innovation and freedom. You will pay for tools that decentralize, services that liberate time, products that change a system. Conventional luxury bores you. The unconventional, the experimental, the weird, that is where your spending lights up.</p><p>The shadow is principle that outpaces income. Venus in Aquarius can fund the cause and forget to fund the retirement account. The discipline is voting with the boring account too. The mainstream is mainstream because it works, and you can innovate from a stable base.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'I'll feel it later.' If you don't feel it, you can't direct it. The distance was a defense, not a strategy.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85"><em>'I won't buy into the system.' You are in the system. The choice is participating awake or participating asleep.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section id="pisces" class="sign-section">
+    <div class="wrap">
+      <div class="sign-stripe" style="background:#4FA89F;color:#4FA89F"></div>
+      <span class="eyebrow">Pisces</span>
+      <h2>The <em>permeable</em></h2>
+      <p class="sign-tagline">Spent as Pisces Venus.</p>
+      <div class="sign-info">
+        Ruled by <strong>Neptune (modern) / Jupiter (classical)</strong>
+        <span class="dot"></span> Element: <strong>Water</strong>
+        <span class="dot"></span> Modality: <strong>Mutable</strong>
+        <span class="dot"></span> Body: <strong>feet, lymphatic system</strong>
+      </div>
+
+      <p>Pisces is the sign of the ocean. Money for Pisces moves in tides — generous, intuitive, sometimes leaky. The work is putting structure around the gift so it can keep giving.</p>
+
+      <h3>How Pisces spends</h3>
+      <p>Venus in Pisces spends on meaning. The thing that moves you. The art, the music, the charity, the spiritual practice. Your spending is rarely rational by any objective standard, and that is the entire point. You buy what touches you.</p><p>What you value is the imaginal, the unseen, the felt. Books that change your inner life. Retreats that reset your nervous system. Art that lives in you for years. Venus in Pisces produces some of the most generous givers in the zodiac, and the giving often returns through unexpected channels.</p><p>The shadow is no boundaries. Venus in Pisces can give until the well is empty, fund people who will not return it, and dissolve personal finances into someone else's emergency. The discipline is the structural no. Generosity inside a container compounds. Generosity without one drains.</p>
+
+      <div class="sign-example">
+        <p><em>The quiet lie.</em> 'If I don't look, it isn't real.' It is already real. Looking lets you respond. Not looking lets it grow.</p>
+        <p style="margin-top:10px;font-size:.95em;opacity:.85"><em>'What's a few dollars to me.' Everything, eventually. The small leaks are not small.</em></p>
+      </div>
+
+      <a class="sign-back-top" href="#top">↑ Back to top</a>
+    </div>
+  </section>
+
+  <section class="signs-closing">
+    <div class="wrap">
+      <span class="eyebrow">Want it read for you</span>
+      <h2>Your full <em>Money Chart</em> reads all three together</h2>
+      <p>Sun, Moon, and Venus woven into one personal reading, plus <strong>The Knot</strong> at the centre of your chart and a <strong>three-month astro overview</strong> of what the sky has next for your money.</p>
+      <a class="btn btn-gold" href="money-chart.html">Order your Money Chart</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
+        <p>Personal finance, read through astrology. By Luna Wilde.</p>
+      </div>
+      <div class="foot-col"><h4>Explore</h4><a href="wheel.html">Wheel</a><a href="draw.html">Card</a><a href="quiz.html">Quiz</a><a href="your-chart.html">Your Chart</a><a href="houses.html">Houses</a><a href="sun-money.html">Sun Money</a><a href="moon-money.html">Moon Money</a><a href="venus-money.html">Venus Money</a><a href="shop.html">Atelier</a><a href="calendar.html">Calendar</a><a href="archive.html">Archive</a><a href="about.html">Ethos</a></div>
+      <div class="foot-col"><h4>Club</h4><a href="https://moonandmoney.substack.com" target="_blank">Substack</a><a href="https://moonandmoney.substack.com/subscribe" target="_blank">Crescent Club</a><a href="fifth-moon.html">The Fifth Moon</a><a href="sessions.html">Sessions</a></div>
+      <div class="foot-col"><h4>Follow</h4><a href="https://moonandmoney.substack.com" target="_blank">@moonmoney</a><a href="archive.html">Notes</a><a href="index.html">Newsletter</a></div>
+    </div>
+    <div class="foot-bottom">
+      <span>&copy; <span id="yr"></span> Moon &amp; Money &middot; Luna Wilde. All rights reserved.</span>
+      <span><a href="privacy.html" style="color:inherit;text-decoration:none;opacity:.85">Privacy</a></span>
+      <span>Built in rhythm with the moon &#9790;</span>
+    </div>
+    <p class="foot-legal" style="text-align:center;font-family:Cormorant Garamond,Georgia,serif;font-style:italic;font-size:.82rem;opacity:.55;color:#a89fb4;margin:14px 0 0 0;letter-spacing:.02em">For reflection and self-knowledge. Not financial or investment advice.</p>
+  </div>
+</footer>
+
+<div id="mmPlayer" data-welcome="assets/audio/invocation.mp3"></div>
+
+<script src="assets/js/zodiac.js"></script>
+<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/player.js"></script>
+</body>
+</html>

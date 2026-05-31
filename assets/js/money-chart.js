@@ -24,16 +24,44 @@ window.MM_CHART_CHECKOUT = {
   const form = document.getElementById('mcForm');
   if (!form) return;
 
-  const tiersWrap = document.getElementById('mcTiers');
-  const tierField = document.getElementById('mcTierField');
-  const priceLine = document.getElementById('mcPriceLine');
-  const people    = Array.prototype.slice.call(document.querySelectorAll('.mc-person'));
-  const timeNote  = document.getElementById('mcTimeNote');
-  const doneEl    = document.getElementById('mcDone');
+  const tiersWrap   = document.getElementById('mcTiers');
+  const tierField   = document.getElementById('mcTierField');
+  const priceLine   = document.getElementById('mcPriceLine');
+  const people      = Array.prototype.slice.call(document.querySelectorAll('.mc-person'));
+  const timeNote    = document.getElementById('mcTimeNote');
+  const doneEl      = document.getElementById('mcDone');
+  const giftToggle  = document.getElementById('mcGiftToggle');
+  const giftNote    = document.getElementById('mcGiftNote');
+  const recipLabel  = document.getElementById('mcRecipientLabel');
+  const gifterLabel = document.getElementById('mcGifterLabel');
+  const gifterEmail = document.getElementById('mcGifterEmail');
   let tier = 'individual';
+
+  // Captured so the recipient-email label can flip wording when the gift
+  // toggle flips, without rewriting the whole <label> element.
+  const RECIP_NORMAL = 'Email (where the chart is delivered)';
+  const RECIP_GIFT   = 'Their email (where the reading will land)';
 
   function track(name, detail) {
     try { if (window.gtag) window.gtag('event', name, detail || {}); } catch (e) {}
+  }
+
+  function updatePriceLine() {
+    const cfg = TIERS[tier];
+    if (giftToggle && giftToggle.checked) {
+      const fd = new FormData(form);
+      const rn = (fd.get('p1_first') || '').trim();
+      const re = (fd.get('email') || '').trim();
+      if (rn && re) {
+        priceLine.textContent = cfg.label + ' · ' + cfg.price + ' · ' + rn + "'s reading, sent to " + re;
+      } else if (rn) {
+        priceLine.textContent = cfg.label + ' · ' + cfg.price + ' · ' + rn + "'s reading, sent to their inbox";
+      } else {
+        priceLine.textContent = cfg.label + ' · ' + cfg.price + ' · sent to their inbox';
+      }
+    } else {
+      priceLine.textContent = cfg.label + ' · ' + cfg.price + ' · sent to your inbox';
+    }
   }
 
   function applyTier(t) {
@@ -54,7 +82,22 @@ window.MM_CHART_CHECKOUT = {
         inp.required = show && (inp.name.indexOf('_first') > -1 || inp.name.indexOf('_birthdate') > -1 || inp.name.indexOf('_location') > -1);
       });
     });
-    priceLine.textContent = cfg.label + ' · ' + cfg.price + ' · sent to your inbox';
+    updatePriceLine();
+  }
+
+  function applyGiftMode() {
+    if (!giftToggle) return;
+    const on = giftToggle.checked;
+    // The label's first text node holds the visible string; swap it without
+    // disturbing the <input> child (preserves event bindings + DOM identity).
+    if (recipLabel && recipLabel.firstChild) {
+      recipLabel.firstChild.nodeValue = on ? RECIP_GIFT : RECIP_NORMAL;
+    }
+    if (gifterLabel) gifterLabel.hidden = !on;
+    if (gifterEmail) gifterEmail.required = on;
+    if (giftNote) giftNote.hidden = !on;
+    updatePriceLine();
+    track('money_chart_gift_toggled', { on: on });
   }
 
   tiersWrap.addEventListener('click', e => {
@@ -71,6 +114,19 @@ window.MM_CHART_CHECKOUT = {
   });
   applyTier('individual');
   track('money_chart_intake_started', { source: document.referrer || 'direct' });
+
+  if (giftToggle) {
+    giftToggle.addEventListener('change', applyGiftMode);
+  }
+
+  // Reactive priceline: as the recipient first name + email get typed, the
+  // priceline reflects what the gifter is buying ("Amelia's reading, sent
+  // to amelia@..."). Clarity at the moment of confirming the gift.
+  form.addEventListener('input', e => {
+    if (!giftToggle || !giftToggle.checked) return;
+    const n = e.target && e.target.name;
+    if (n === 'p1_first' || n === 'email') updatePriceLine();
+  });
 
   // "I don't know my birth time" → disable time, show caveat
   form.addEventListener('change', e => {
@@ -115,11 +171,29 @@ window.MM_CHART_CHECKOUT = {
       custom.partner_birth_time_known = p2Unknown ? 'no' : 'yes';
       custom.partner_city            = d.p2_location || '';
     }
+
+    // Gift routing. The chart is for the RECIPIENT (whose data is in p1_*
+    // and p2_*), but the GIFTER pays. So we point checkout[email] at the
+    // gifter — LS bills + receipts go to them, recipient never sees a
+    // price tag — and we carry the recipient email + is_gift flag through
+    // custom_data so the engine knows where to deliver the chart and to
+    // fire the gifter confirmation + recipient follow-up.
+    var isGift = d.is_gift === 'yes' && (d.gifter_email || '').trim() !== '';
+    var checkoutEmail;
+    if (isGift) {
+      checkoutEmail = (d.gifter_email || '').trim();
+      custom.is_gift         = 'yes';
+      custom.gifter_email    = checkoutEmail;
+      custom.recipient_email = (d.email || '').trim();
+    } else {
+      checkoutEmail = d.email || '';
+    }
+
     var parts = [];
     Object.keys(custom).forEach(function (k) {
       if (custom[k] !== '') parts.push('checkout[custom][' + k + ']=' + encodeURIComponent(custom[k]));
     });
-    if (d.email) parts.push('checkout[email]=' + encodeURIComponent(d.email));
+    if (checkoutEmail) parts.push('checkout[email]=' + encodeURIComponent(checkoutEmail));
     return base + (base.indexOf('?') > -1 ? '&' : '?') + parts.join('&');
   }
 
@@ -137,7 +211,7 @@ window.MM_CHART_CHECKOUT = {
         // Hand off to Lemon Squeezy checkout with the birth data attached.
         // Same-tab redirect (not window.open) so popup blockers can't
         // swallow it after the async capture.
-        track('money_chart_checkout_opened', { tier: tier });
+        track('money_chart_checkout_opened', { tier: tier, is_gift: data.is_gift === 'yes' });
         window.location.href = buildCheckoutUrl(base, data, tier);
       } else {
         // No checkout wired for this tier yet (e.g. Pairs pre-launch):

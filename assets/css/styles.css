@@ -1012,6 +1012,88 @@ footer{border-top:1px solid var(--line);padding:80px 0 50px;background:linear-gr
   fill:#1F4F45;
   letter-spacing:0.5px;
 }
+
+/* ============================================================
+   MONEY TRIAD — Sun / Moon / Venus
+   The intro block that sits on each of the three Money pages
+   (Sun Money, Moon Money, Venus Money), framing the page as one
+   third of the Money Chart's three-placement triad. The card for
+   the page the visitor is currently on gets .is-current.
+   ============================================================ */
+.money-triad {
+  padding: 30px 0 50px;
+  border-top: 1px solid rgba(201,162,78,.10);
+  border-bottom: 1px solid rgba(201,162,78,.10);
+}
+.money-triad .wrap { max-width: 920px; }
+.money-triad .triad-intro {
+  text-align: center; color: var(--mist);
+  font-family: var(--serif); font-size: 1.05rem;
+  font-style: italic; max-width: 640px; margin: 0 auto 28px;
+}
+.money-triad .triad-intro em { color: var(--cream); }
+.triad-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.triad-card {
+  display: block; padding: 22px 20px 24px;
+  text-align: center; text-decoration: none;
+  background: rgba(11,37,69,.30);
+  border: 1px solid rgba(201,162,78,.22);
+  border-radius: 8px;
+  transition: transform .25s, border-color .25s, background .25s;
+}
+.triad-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(201,162,78,.45);
+  background: rgba(11,37,69,.50);
+}
+.triad-card.is-current {
+  border-color: rgba(229,199,123,.65);
+  background: rgba(201,162,78,.08);
+  box-shadow: 0 0 30px -8px rgba(229,199,123,.25);
+}
+.triad-glyph {
+  display: block; font-size: 2rem; color: var(--gold-bright);
+  margin-bottom: 8px; line-height: 1;
+  font-family: 'Apple Symbols','Segoe UI Symbol','Noto Sans Symbols 2','DejaVu Sans',serif;
+}
+.triad-card h3 {
+  font-family: Cormorant Garamond, Georgia, serif;
+  font-size: 1.3rem; font-weight: 500;
+  color: var(--cream); margin: 0 0 8px;
+}
+.triad-card.is-current h3 { color: var(--gold-bright); }
+.triad-line {
+  color: var(--mist); font-size: .9rem; line-height: 1.5; margin: 0;
+}
+.triad-line em { color: var(--cream); font-style: italic; }
+.money-triad .triad-pitch {
+  text-align: center; color: var(--mist);
+  font-family: var(--serif); font-size: .95rem;
+  line-height: 1.65; max-width: 640px; margin: 28px auto 0;
+}
+.triad-pitch em { color: var(--cream); font-style: italic; }
+.triad-pitch strong {
+  color: var(--gold-bright); font-weight: 500;
+}
+.triad-link {
+  display: inline-block; margin-top: 6px;
+  color: var(--gold-bright);
+  font-family: var(--display);
+  font-size: .76rem; letter-spacing: .22em;
+  text-transform: uppercase; text-decoration: none;
+  border-bottom: 1px solid rgba(201,162,78,.4);
+  padding-bottom: 1px;
+}
+.triad-link:hover { border-bottom-color: var(--gold-bright); }
+@media (max-width: 720px) {
+  .triad-grid { grid-template-columns: 1fr; gap: 10px; }
+  .triad-card { padding: 16px 18px 18px; }
+  .money-triad .triad-intro { font-size: .96rem; }
+  .money-triad .triad-pitch { font-size: .9rem; }
+}
 @keyframes moonCurveIn{
   from{opacity:0; transform:scale(.94)}
   to  {opacity:.95; transform:scale(1)}

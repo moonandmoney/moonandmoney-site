@@ -54,7 +54,7 @@
     var dateStr = date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
 
     root.innerHTML =
-      '<a href="money-mood.html#' + slug + '" class="tm-card reveal">' +
+      '<a href="sun-money.html#' + slug + '" class="tm-card reveal">' +
         '<div class="tm-date">' + dateStr + '</div>' +
         '<div class="tm-glyph" style="color:' + col + ';text-shadow:0 0 22px ' + col + 'aa">' + s.glyph + '</div>' +
         '<h3>Moon in <em>' + sign + '</em></h3>' +
