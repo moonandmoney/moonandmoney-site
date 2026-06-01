@@ -2,13 +2,23 @@
    MOON & MONEY — Seasonal Forecast page
    ------------------------------------------------------------
    Pre-launch state until 2026-06-21 (the June Solstice).
-   On launch day, the subscribe buttons activate. The one-off
-   button stays active for the first 14 days of each season,
-   then dims until the next equinox or solstice opens it again.
+   On launch day, the intake form (#sfRequest) is revealed and
+   the Annual / One-off card CTAs become tier-pickers that
+   scroll to the form.
 
-   The "notify me when orders open" email-capture form is always
-   active. Posts to Netlify Forms (the site already collects
-   form submissions there — no separate backend needed).
+   Form submit captures the birth data, posts a backup record
+   to Netlify Forms, then redirects to the matching Lemon
+   Squeezy checkout URL with the birth data carried as
+   checkout[custom][...] params. The engine reads those params
+   on webhook receipt and seeds the subscriber row.
+
+   The one-off button stays disabled outside the 14-day window
+   after each equinox or solstice; the annual subscription
+   stays available year-round once launched.
+
+   The "notify me when orders open" email-capture form is
+   always active pre-launch (no backend needed — posts to
+   Netlify Forms).
    ============================================================ */
 
 /* Lemon Squeezy checkout URLs for the two subscription products.
@@ -72,6 +82,12 @@ window.MM_SEASONAL_CHECKOUT = {
     spring: 'Spring', summer: 'Summer', autumn: 'Autumn', winter: 'Winter',
   };
 
+  // Tier display labels for the price-line under the submit button.
+  const TIER_LABELS = {
+    annual: { name: 'Annual practice', price: '$108 / year' },
+    oneoff: { name: 'This season',     price: '$36' },
+  };
+
   function daysSince(isoDate, now) {
     return Math.floor((now - new Date(isoDate + 'T00:00:00Z')) / 86400000);
   }
@@ -107,7 +123,161 @@ window.MM_SEASONAL_CHECKOUT = {
     try { if (window.gtag) window.gtag('event', name, detail || {}); } catch (e) {}
   }
 
-  // ── State: enable / disable subscribe CTAs based on launch + window ──
+  // ── Intake form ────────────────────────────────────────────────────────
+  // Lives in section #sfRequest. Hidden pre-launch. Mirrors the
+  // money-chart intake pattern: tier picker → birth data + email →
+  // Netlify Forms backup → redirect to LS with custom data.
+
+  const form        = document.getElementById('sfForm');
+  const tiersWrap   = document.getElementById('sfTiers');
+  const tierField   = document.getElementById('sfTierField');
+  const priceLine   = document.getElementById('sfPriceLine');
+  const timeNote    = document.getElementById('sfTimeNote');
+  const doneEl      = document.getElementById('sfDone');
+  const sectionEl   = document.getElementById('sfRequest');
+  let currentTier = 'annual';
+
+  function updatePriceLine() {
+    if (!priceLine) return;
+    const cfg = TIER_LABELS[currentTier] || TIER_LABELS.annual;
+    let oneOffSeason = '';
+    if (currentTier === 'oneoff') {
+      const cur = currentSeason(new Date());
+      if (cur) oneOffSeason = ' · ' + SEASON_DISPLAY[cur[1]];
+    }
+    priceLine.textContent = cfg.name + oneOffSeason + ' · ' + cfg.price + ' · sent to your inbox';
+  }
+
+  function applyTier(t) {
+    if (t !== 'annual' && t !== 'oneoff') t = 'annual';
+    currentTier = t;
+    if (tierField) tierField.value = t;
+    if (tiersWrap) {
+      const buttons = tiersWrap.querySelectorAll('.mc-tier');
+      for (let i = 0; i < buttons.length; i++) {
+        const b = buttons[i];
+        const on = b.dataset.tier === t;
+        b.classList.toggle('active', on);
+        b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      }
+    }
+    updatePriceLine();
+  }
+
+  function scrollToForm() {
+    if (!sectionEl) return;
+    sectionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function encode(data) {
+    return Object.keys(data).map(function (k) {
+      return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]);
+    }).join('&');
+  }
+
+  // Build the Lemon Squeezy checkout URL carrying the birth data as
+  // custom data. LS passes checkout[custom][...] params through to the
+  // subscription/order webhook (meta.custom_data), where the chart
+  // engine reads them to seed the subscriber row. No birth time given
+  // (the "I don't know" box) defaults to noon, matching the caveat
+  // shown on the page.
+  function buildCheckoutUrl(base, d, t) {
+    const timeUnknown = (d.time_unknown === 'yes' || !d.birth_time);
+    const birthTime = timeUnknown ? '12:00' : d.birth_time;
+    const custom = {
+      first_name:       d.first_name || '',
+      birth_date:       d.birth_date || '',
+      birth_time:       birthTime,
+      birth_time_known: timeUnknown ? 'no' : 'yes',
+      city:             d.city || '',
+      tier:             t,
+    };
+    const parts = [];
+    Object.keys(custom).forEach(function (k) {
+      if (custom[k] !== '') parts.push('checkout[custom][' + k + ']=' + encodeURIComponent(custom[k]));
+    });
+    if (d.email) parts.push('checkout[email]=' + encodeURIComponent(d.email));
+    return base + (base.indexOf('?') > -1 ? '&' : '?') + parts.join('&');
+  }
+
+  function tierCheckoutUrl(t) {
+    const checkout = window.MM_SEASONAL_CHECKOUT || {};
+    if (t === 'annual') return checkout.annual || '';
+    if (t === 'oneoff') {
+      const cur = currentSeason(new Date());
+      if (!cur) return '';
+      return (checkout.one_off && checkout.one_off[cur[1]]) || '';
+    }
+    return '';
+  }
+
+  function wireIntake() {
+    if (!form) return;
+
+    // Tier picker inside the form
+    if (tiersWrap) {
+      tiersWrap.addEventListener('click', function (e) {
+        const b = e.target.closest('.mc-tier');
+        if (!b) return;
+        applyTier(b.dataset.tier);
+        track('seasonal_intake_tier_selected', { tier: b.dataset.tier });
+      });
+    }
+
+    // "I don't know my birth time" → disable time, show caveat
+    form.addEventListener('change', function (e) {
+      if (e.target.classList && e.target.classList.contains('mc-unknown')) {
+        const fs = e.target.closest('.mc-person');
+        const timeInput = fs ? fs.querySelector('input[type="time"]') : null;
+        if (timeInput) {
+          timeInput.disabled = e.target.checked;
+          if (e.target.checked) timeInput.value = '';
+        }
+        if (timeNote) timeNote.hidden = !form.querySelector('.mc-unknown:checked');
+      }
+    });
+
+    // Submit → Netlify Forms backup capture, then LS redirect.
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const honey = form.querySelector('[name="bot-field"]');
+      if (honey && honey.value) return;
+
+      const fd = new FormData(form);
+      const data = {};
+      fd.forEach(function (v, k) { data[k] = v; });
+
+      const base = tierCheckoutUrl(currentTier);
+
+      const finish = function () {
+        if (base) {
+          track('seasonal_checkout_opened', { tier: currentTier });
+          window.location.href = buildCheckoutUrl(base, data, currentTier);
+        } else {
+          // No checkout URL for this tier yet (e.g. LS product not created
+          // or one-off window closed mid-submit). Capture the intake and
+          // show the confirmation note so the lead isn't lost.
+          track('seasonal_request_received', { tier: currentTier });
+          form.hidden = true;
+          if (doneEl) {
+            doneEl.hidden = false;
+            doneEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }
+      };
+
+      // Backup record to Netlify Forms first; redirect regardless of result.
+      fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: encode(data),
+      }).then(finish).catch(finish);
+    });
+
+    applyTier('annual');
+  }
+
+  // ── Launch state: enable cards + reveal the intake form ────────────────
   function applyLaunchState() {
     const now = new Date();
     const launched = now >= LAUNCH_AT_UTC;
@@ -117,6 +287,9 @@ window.MM_SEASONAL_CHECKOUT = {
     const annualBtn = document.querySelector('.sf-cta-annual');
     const oneOffBtn = document.querySelector('.sf-cta-oneoff');
 
+    // Reveal the intake form once launched.
+    if (sectionEl) sectionEl.hidden = !launched;
+
     if (annualBtn) {
       if (launched && checkout.annual) {
         annualBtn.disabled = false;
@@ -124,8 +297,9 @@ window.MM_SEASONAL_CHECKOUT = {
         annualBtn.style.cursor = '';
         annualBtn.textContent = 'Subscribe · $108 / year';
         annualBtn.onclick = function () {
-          track('seasonal_annual_click', {});
-          window.location.href = checkout.annual;
+          track('seasonal_annual_card_click', {});
+          applyTier('annual');
+          scrollToForm();
         };
       } else if (launched && !checkout.annual) {
         annualBtn.textContent = 'Opening soon';
@@ -147,8 +321,9 @@ window.MM_SEASONAL_CHECKOUT = {
         oneOffBtn.style.cursor = '';
         oneOffBtn.textContent = 'Buy this ' + SEASON_DISPLAY[seasonLabel] + ' reading · $36';
         oneOffBtn.onclick = function () {
-          track('seasonal_oneoff_click', { season: seasonLabel });
-          window.location.href = oneOffUrl;
+          track('seasonal_oneoff_card_click', { season: seasonLabel });
+          applyTier('oneoff');
+          scrollToForm();
         };
       } else if (oneOffOpen && !oneOffUrl) {
         oneOffBtn.textContent = 'Opening soon';
@@ -169,35 +344,28 @@ window.MM_SEASONAL_CHECKOUT = {
     }
   }
 
-  // ── Notify-me email form ──
+  // ── Notify-me email form (pre-launch only) ─────────────────────────────
   function wireNotifyForm() {
-    const form = document.getElementById('sfNotifyForm');
-    const done = document.getElementById('sfNotifyDone');
-    if (!form) return;
+    const nf = document.getElementById('sfNotifyForm');
+    const nfDone = document.getElementById('sfNotifyDone');
+    if (!nf) return;
 
-    function encode(data) {
-      return Object.keys(data).map(function (k) {
-        return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]);
-      }).join('&');
-    }
-
-    form.addEventListener('submit', function (e) {
+    nf.addEventListener('submit', function (e) {
       e.preventDefault();
-      // Honeypot
-      const honey = form.querySelector('[name="bot-field"]');
+      const honey = nf.querySelector('[name="bot-field"]');
       if (honey && honey.value) return;
 
-      const fd = new FormData(form);
+      const fd = new FormData(nf);
       const data = {};
       fd.forEach(function (v, k) { data[k] = v; });
 
       track('seasonal_notify_submit', { source: document.referrer || 'direct' });
 
       const reveal = function () {
-        form.hidden = true;
-        if (done) {
-          done.hidden = false;
-          done.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        nf.hidden = true;
+        if (nfDone) {
+          nfDone.hidden = false;
+          nfDone.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
       };
 
@@ -210,15 +378,16 @@ window.MM_SEASONAL_CHECKOUT = {
   }
 
   // ── Boot ──
-  document.addEventListener('DOMContentLoaded', function () {
+  function boot() {
+    wireIntake();
     applyLaunchState();
     wireNotifyForm();
     track('seasonal_page_view', { source: document.referrer || 'direct' });
-  });
+  }
 
-  // Already-loaded case (script may run after DOMContentLoaded)
-  if (document.readyState !== 'loading') {
-    applyLaunchState();
-    wireNotifyForm();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
   }
 })();
