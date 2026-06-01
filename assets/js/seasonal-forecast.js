@@ -22,8 +22,19 @@
    the same custom-data fields the engine reads (first_name,
    birth_date, birth_time, birth_time_known, city). */
 window.MM_SEASONAL_CHECKOUT = {
-  annual:  '',   // $108/year — paste LS subscription checkout URL here
-  one_off: '',   // $36 one-off — paste LS product checkout URL here
+  // $108/year public annual subscription
+  annual:           'https://moonandmoney.lemonsqueezy.com/checkout/buy/e0b351f6-d984-4542-ac8c-1b2ddc9d645e',
+  // $54/year Crescent Member version — used WITH a 100%-off perk code in year 1
+  annual_crescent:  'https://moonandmoney.lemonsqueezy.com/checkout/buy/1e5f6640-709e-43e3-8dab-cf06e3d2ecc4',
+  // $36 one-off per season. The page picks the right URL based on which
+  // season's 14-day window is currently open. Each is its own LS product
+  // so the customer's receipt names the season specifically.
+  one_off: {
+    spring: 'https://moonandmoney.lemonsqueezy.com/checkout/buy/03add570-31f9-4778-bcbd-c15315fdd8ec',
+    summer: 'https://moonandmoney.lemonsqueezy.com/checkout/buy/b7bf55f8-546a-4852-b216-9bf4cb4c6014',
+    autumn: 'https://moonandmoney.lemonsqueezy.com/checkout/buy/f58205cb-22a3-400c-a136-303cdfec8ee4',
+    winter: 'https://moonandmoney.lemonsqueezy.com/checkout/buy/d99853ba-47d2-4cd2-9d57-360cb2f49efe',
+  },
 };
 
 (function () {
@@ -36,28 +47,60 @@ window.MM_SEASONAL_CHECKOUT = {
   const LAUNCH_AT_UTC = new Date('2026-06-21T11:00:00Z');
 
   // True equinox/solstice dates for 2026-2028, mirrored from the engine's
-  // subscription.py _SEASON_TABLE. Used to decide whether the one-off
-  // 14-day window is currently open. Extend when 2029 approaches.
+  // subscription.py _SEASON_TABLE. Each entry is [iso_date, season_label].
+  // The label matches the keys in MM_SEASONAL_CHECKOUT.one_off so we can
+  // look up the right one-off URL during that season's 14-day window.
+  // Extend when 2029 approaches; keep in sync with the engine table.
   const SEASONS = [
-    '2026-03-20', '2026-06-21', '2026-09-22', '2026-12-21',
-    '2027-03-20', '2027-06-21', '2027-09-23', '2027-12-22',
-    '2028-03-20', '2028-06-20', '2028-09-22', '2028-12-21',
+    ['2026-03-20', 'spring'],
+    ['2026-06-21', 'summer'],
+    ['2026-09-22', 'autumn'],
+    ['2026-12-21', 'winter'],
+    ['2027-03-20', 'spring'],
+    ['2027-06-21', 'summer'],
+    ['2027-09-23', 'autumn'],
+    ['2027-12-22', 'winter'],
+    ['2028-03-20', 'spring'],
+    ['2028-06-20', 'summer'],
+    ['2028-09-22', 'autumn'],
+    ['2028-12-21', 'winter'],
   ];
   const ONE_OFF_WINDOW_DAYS = 14;
+
+  // Pretty-cased label for the current season, for button text.
+  const SEASON_DISPLAY = {
+    spring: 'Spring', summer: 'Summer', autumn: 'Autumn', winter: 'Winter',
+  };
 
   function daysSince(isoDate, now) {
     return Math.floor((now - new Date(isoDate + 'T00:00:00Z')) / 86400000);
   }
 
-  function isOneOffWindowOpen(now) {
-    // The most recent season that's already passed, plus 14d
+  function currentSeason(now) {
+    // Returns [iso, label] of the most recent equinox/solstice that has
+    // passed, or null if we're before the table's first entry.
     let recent = null;
     for (let i = 0; i < SEASONS.length; i++) {
-      if (new Date(SEASONS[i] + 'T00:00:00Z') <= now) recent = SEASONS[i];
+      const entry = SEASONS[i];
+      if (new Date(entry[0] + 'T00:00:00Z') <= now) recent = entry;
       else break;
     }
-    if (!recent) return false;
-    return daysSince(recent, now) < ONE_OFF_WINDOW_DAYS;
+    return recent;
+  }
+
+  function nextSeason(now) {
+    // Returns [iso, label] of the next upcoming equinox/solstice.
+    for (let i = 0; i < SEASONS.length; i++) {
+      const entry = SEASONS[i];
+      if (new Date(entry[0] + 'T00:00:00Z') > now) return entry;
+    }
+    return null;
+  }
+
+  function isOneOffWindowOpen(now) {
+    const cur = currentSeason(now);
+    if (!cur) return false;
+    return daysSince(cur[0], now) < ONE_OFF_WINDOW_DAYS;
   }
 
   function track(name, detail) {
@@ -93,20 +136,33 @@ window.MM_SEASONAL_CHECKOUT = {
     }
 
     if (oneOffBtn) {
-      if (oneOffOpen && checkout.one_off) {
+      const cur = currentSeason(now);
+      const seasonLabel = cur ? cur[1] : null;
+      const oneOffUrl = (checkout.one_off && seasonLabel)
+        ? checkout.one_off[seasonLabel] : '';
+
+      if (oneOffOpen && oneOffUrl) {
         oneOffBtn.disabled = false;
         oneOffBtn.style.opacity = '';
         oneOffBtn.style.cursor = '';
-        oneOffBtn.textContent = 'Buy this season · $36';
+        oneOffBtn.textContent = 'Buy this ' + SEASON_DISPLAY[seasonLabel] + ' reading · $36';
         oneOffBtn.onclick = function () {
-          track('seasonal_oneoff_click', {});
-          window.location.href = checkout.one_off;
+          track('seasonal_oneoff_click', { season: seasonLabel });
+          window.location.href = oneOffUrl;
         };
-      } else if (oneOffOpen && !checkout.one_off) {
+      } else if (oneOffOpen && !oneOffUrl) {
         oneOffBtn.textContent = 'Opening soon';
       } else if (launched) {
-        // Past launch but outside the window for this season
-        oneOffBtn.textContent = 'Window closed until next season';
+        // Past launch but outside the window for this season — point them
+        // at the next opening
+        const nxt = nextSeason(now);
+        if (nxt) {
+          const nxtMonth = new Date(nxt[0] + 'T00:00:00Z').toLocaleDateString(
+            'en-US', { month: 'long', day: 'numeric' });
+          oneOffBtn.textContent = 'Window opens ' + nxtMonth;
+        } else {
+          oneOffBtn.textContent = 'Window closed until next season';
+        }
       } else {
         oneOffBtn.textContent = 'Opens June 21';
       }
