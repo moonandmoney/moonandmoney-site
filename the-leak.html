@@ -313,7 +313,7 @@
     <h1 class="leak-h1 leak-reveal leak-d2">The Leak</h1>
     <div class="leak-lesson-tag leak-reveal leak-d2" id="leakHeroTag">Coming on the New Moon</div>
     <div class="leak-phase leak-reveal leak-d3" id="leakHeroPhase">June 14&nbsp;·&nbsp;Look</div>
-    <p class="leak-deck leak-reveal leak-d3" id="leakHeroDeck">A free four-lesson money course, drawn against the lunar cycle. The doors open with the New Moon. Most money advice starts with a budget. This one starts with a look.</p>
+    <p class="leak-deck leak-reveal leak-d3" id="leakHeroDeck">A four-lesson money course, one per lunar phase. Lesson One is free. The rest live inside the Crescent Club.</p>
 
     <!-- AUDIO: wire the Luna-voice file into <source src> when the clone is ready. -->
     <div class="leak-audio leak-reveal leak-d4" id="leakAudioBox" style="display:none">
@@ -387,7 +387,7 @@
       </svg>
     </div>
     <h2>Keep the lesson. Get the next three.</h2>
-    <p>The full four-lesson cycle lives inside the Crescent Club on Substack.</p>
+    <p>Inside the Crescent Club on Substack. $9 a month or $108 a year.</p>
     <a class="leak-capture-btn" href="https://moonandmoney.substack.com/subscribe" target="_blank" rel="noopener">
       Join the Crescent Club on Substack
     </a>
@@ -467,7 +467,8 @@
         if (live) live.style.display = 'block';
         if (tag)   tag.textContent   = 'Lesson One';
         if (phase) phase.innerHTML   = 'New Moon&nbsp;·&nbsp;Look';
-        if (deck)  deck.textContent  = 'A free taste of the four-lesson money course. Most money advice starts with a budget. This one starts with a look.';
+        // deck text stays the same pre- and post-launch — it tells the truth
+        // about the course in both states. No JS update needed.
         if (audioBox) audioBox.style.display = '';
       } else {
         if (soon) soon.style.display = 'block';
