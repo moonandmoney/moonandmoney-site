@@ -80,10 +80,6 @@
   }
   footer .foot-col a:hover{color:var(--leak-stroke-gold) !important;}
 
-  /* Push the hero down so the moon clears the (non-fixed but tall) nav
-     and reads as the first content element with breathing room. */
-  .leak-hero{padding-top:130px;}
-
   /* Coming-soon vs launched states. The coming-soon block is the default
      visible state (so the page is still useful if JS fails to load). JS
      swaps to the launched block on/after New Moon June 14, 2026. */
@@ -131,7 +127,9 @@
   }
 
   /* ---- HERO ---- */
-  .leak-hero{padding:70px 0 24px; text-align:center;}
+  /* 130px top clears the site nav band so the moon SVG reads as the
+     first content element with breathing room. */
+  .leak-hero{padding:130px 0 24px; text-align:center;}
   .leak-brand-strip{font-size:12px; margin-bottom:42px;}
   .leak-moon-stage{height:104px; display:flex; align-items:center; justify-content:center; margin-bottom:30px;}
   .leak-moon{animation:leak-breathe 7s ease-in-out infinite;}
@@ -412,7 +410,7 @@
         <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
         <p>Personal finance, read through astrology. By Luna Wilde.</p>
       </div>
-      <div class="foot-col"><h4>Explore</h4><a href="wheel.html">Wheel</a><a href="draw.html">Card</a><a href="quiz.html">Quiz</a><a href="money-chart.html">Money Chart</a><a href="seasonal-forecast.html">Seasonal Forecast</a><a href="the-leak.html">The Leak</a><a href="shop.html">Atelier</a><a href="pendulum/">Pendulum</a><a href="calendar.html">Calendar</a><a href="archive.html">Archive</a><a href="about.html">Ethos</a></div>
+      <div class="foot-col"><h4>Explore</h4><a href="wheel.html">Wheel</a><a href="draw.html">Card</a><a href="quiz.html">Quiz</a><a href="money-chart.html">Money Chart</a><a href="seasonal-forecast.html">Seasonal Forecast</a><a href="the-leak.html">The Leak &middot; Mini Course</a><a href="shop.html">Atelier</a><a href="pendulum/">Pendulum</a><a href="calendar.html">Calendar</a><a href="archive.html">Archive</a><a href="about.html">Ethos</a></div>
       <div class="foot-col"><h4>Club</h4><a href="https://moonandmoney.substack.com" target="_blank">Substack</a><a href="https://moonandmoney.substack.com/subscribe" target="_blank">Crescent Club</a><a href="fifth-moon.html">The Fifth Moon</a><a href="about.html#circle">Circle <span class="soon">Soon</span></a></div>
       <div class="foot-col"><h4>Follow</h4><a href="https://moonandmoney.substack.com" target="_blank">@moonmoney</a><a href="archive.html">Notes</a><a href="index.html">Newsletter</a></div>
     </div>
