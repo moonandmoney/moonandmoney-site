@@ -452,7 +452,12 @@
     // ── State toggle ──
     function applyLaunchState() {
       var now = new Date();
-      var launched = now >= LAUNCH_AT_UTC;
+      // Preview override: ?preview=launched lets Laura (and anyone with
+      // the URL) see the post-launch design without waiting for June 14.
+      // Harmless if leaked — the lesson is meant to be public on launch,
+      // and the form-to-Substack button is the same either way.
+      var previewParam = new URLSearchParams(window.location.search).get('preview');
+      var launched = previewParam === 'launched' || now >= LAUNCH_AT_UTC;
       var soon     = document.getElementById('leakComingSoon');
       var live     = document.getElementById('leakLaunched');
       var tag      = document.getElementById('leakHeroTag');
