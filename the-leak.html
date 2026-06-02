@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Leak · Lesson One — Moon &amp; Money</title>
+<meta name="description" content="A free taste of the four-lesson money course. Most money advice starts with a budget. This one starts with a look.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Moon &amp; Money">
+<meta property="og:title" content="The Leak · Lesson One — Moon &amp; Money">
+<meta property="og:description" content="A free four-lesson money course. Most money advice starts with a budget. This one starts with a look. Lesson One free; Lessons Two through Four inside the Crescent Club.">
+<meta property="og:image" content="https://moonandmoney.ca/assets/og/social.png?v=20260601">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://moonandmoney.ca/assets/og/social.png?v=20260601">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/assets/og/apple-touch-icon.png">
+<meta name="theme-color" content="#FCF7F1">
+<meta name="apple-mobile-web-app-title" content="Moon & Money">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&family=Noto+Sans+Symbols+2&display=swap">
+<link rel="stylesheet" href="assets/css/styles.css">
+
+<style>
+  /* ─────────────────────────────────────────────────────────────────────
+     The Leak — Lesson One — page-specific styling.
+     This page is a CREAM READING EXPERIENCE wrapped in the standard
+     site nav and footer. The page-scoped variables below are
+     intentionally different names from the site's :root vars (--obsidian
+     / --parchment etc.) so they coexist without collision. The site
+     CSS keeps the nav and footer; the inline rules below override body
+     colors so the lesson reads cream-on-navy instead of dark cosmic.
+     ───────────────────────────────────────────────────────────────────── */
+  :root{
+    --leak-cream:#FCF7F1; --leak-navy:#0C2345; --leak-forest:#1E4D3A;
+    --leak-gold:#C9A24E; --leak-stroke-gold:#E5C77B;
+    --leak-mint:#E8EFE0; --leak-grey:#5D6D7E;
+    --leak-serif:'Cormorant Garamond', Georgia, serif;
+    --leak-sans:'Jost', system-ui, sans-serif;
+  }
+
+  /* Reset the dark cosmic body to a cream reading body for this page. */
+  body{
+    background:var(--leak-cream) !important;
+    color:var(--leak-navy) !important;
+    font-family:var(--leak-serif);
+    font-size:21px;
+    line-height:1.62;
+    overflow-x:hidden;
+  }
+  /* Suppress the dark cosmic visuals — this page is a reading sanctuary. */
+  #starfield, .nebula{display:none !important;}
+
+  /* The site nav is styled for dark cosmic pages (light text, transparent
+     background). On this cream page it would vanish, so we give it a solid
+     dark navy band of its own at the top. The footer below already has its
+     own dark band by default — only the nav needs this override. */
+  header.nav{
+    background:var(--leak-navy) !important;
+    border-bottom:1px solid rgba(229,199,123,.25);
+  }
+
+  .leak-wrap{max-width:660px; margin:0 auto; padding:0 28px;}
+
+  .leak-eyebrow, .leak-label, .leak-brand-strip{
+    font-family:var(--leak-sans); font-weight:500;
+    letter-spacing:.28em; text-transform:uppercase; color:var(--leak-gold);
+  }
+
+  /* ---- HERO ---- */
+  .leak-hero{padding:70px 0 24px; text-align:center;}
+  .leak-brand-strip{font-size:12px; margin-bottom:42px;}
+  .leak-moon-stage{height:104px; display:flex; align-items:center; justify-content:center; margin-bottom:30px;}
+  .leak-moon{animation:leak-breathe 7s ease-in-out infinite;}
+  @keyframes leak-breathe{
+    0%,100%{transform:scale(1); opacity:.92;}
+    50%{transform:scale(1.06); opacity:1;}
+  }
+  .leak-star{animation:leak-twinkle 4s ease-in-out infinite;}
+  .leak-star.s2{animation-delay:1.3s;} .leak-star.s3{animation-delay:2.4s;} .leak-star.s4{animation-delay:.7s;}
+  @keyframes leak-twinkle{0%,100%{opacity:.35;}50%{opacity:1;}}
+
+  .leak-h1{
+    font-family:var(--leak-serif);
+    font-weight:600; font-size:64px; line-height:.98; letter-spacing:.01em;
+    margin:6px 0 0; color:var(--leak-navy);
+  }
+  .leak-lesson-tag{
+    font-family:var(--leak-serif); font-style:italic; color:var(--leak-forest);
+    font-size:30px; margin-top:8px;
+  }
+  .leak-phase{ color:var(--leak-gold); font-style:italic; font-size:19px; margin-top:14px;}
+  .leak-deck{
+    font-style:italic; color:var(--leak-navy); font-size:21px;
+    max-width:430px; margin:26px auto 0; line-height:1.5;
+  }
+
+  .leak-divider{display:flex; align-items:center; justify-content:center; gap:14px; margin:54px 0;}
+  .leak-divider .line{height:1px; width:84px; background:var(--leak-gold); opacity:.8;}
+  .leak-divider .dot{width:4px; height:4px; border-radius:50%; background:var(--leak-gold);}
+
+  /* ---- AUDIO ---- */
+  .leak-audio{
+    margin:40px auto 0; max-width:560px;
+    background:#fff; border:1px solid var(--leak-stroke-gold);
+    border-radius:2px; padding:18px 22px;
+    display:flex; align-items:center; gap:16px;
+    box-shadow:0 1px 0 rgba(201,162,78,.18);
+  }
+  .leak-audio .play{
+    flex:none; width:44px; height:44px; border-radius:50%;
+    border:1.5px solid var(--leak-gold); background:transparent; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; transition:.25s;
+  }
+  .leak-audio .play:hover{background:var(--leak-gold);}
+  .leak-audio .meta{font-family:var(--leak-sans); font-size:13px; letter-spacing:.04em; color:var(--leak-grey);}
+  .leak-audio .meta strong{display:block; font-weight:500; color:var(--leak-navy); letter-spacing:.16em; text-transform:uppercase; font-size:11px; margin-bottom:3px;}
+
+  /* ---- BODY ---- */
+  .leak-body{padding:8px 0 40px;}
+  .leak-body p{margin:0 0 24px; color:var(--leak-navy);}
+  .leak-eyebrow{font-size:12px; display:block; margin:48px 0 14px;}
+  .leak-lead-first::first-letter{
+    font-size:62px; line-height:.7; float:left; color:var(--leak-gold);
+    padding:8px 12px 0 0; font-weight:600;
+  }
+
+  .leak-exercise{
+    background:var(--leak-mint); border:1px solid var(--leak-stroke-gold);
+    border-left:4px solid var(--leak-gold); padding:30px 32px; margin:44px 0;
+  }
+  .leak-exercise .leak-label{color:var(--leak-gold); font-size:11.5px; display:block; margin-bottom:14px;}
+  .leak-exercise p{font-style:italic; margin-bottom:0;}
+  .leak-exercise textarea{
+    width:100%; margin-top:20px; min-height:120px; resize:vertical;
+    background:rgba(255,255,255,.7); border:1px solid var(--leak-stroke-gold); border-radius:2px;
+    padding:14px 16px; font-family:var(--leak-serif); font-size:18px; color:var(--leak-navy); line-height:1.5;
+  }
+  .leak-exercise textarea:focus{outline:none; border-color:var(--leak-gold); background:#fff;}
+  .leak-note-priv{font-family:var(--leak-sans); font-size:11px; letter-spacing:.05em; color:var(--leak-grey); margin-top:10px; font-style:normal;}
+
+  .leak-reflection{font-style:italic; font-size:23px; color:var(--leak-navy); line-height:1.5;}
+  .leak-close-line{font-style:italic; font-size:24px; line-height:1.45;}
+
+  /* ---- CAPTURE ---- */
+  .leak-capture{
+    background:var(--leak-navy); color:var(--leak-cream); border-radius:2px;
+    padding:54px 40px; margin:64px 0 0; text-align:center;
+  }
+  .leak-capture .leak-moon-mini{margin-bottom:20px;}
+  .leak-capture h2{font-weight:500; font-size:34px; line-height:1.1; margin-bottom:14px; color:var(--leak-cream);}
+  .leak-capture p{font-style:italic; color:var(--leak-stroke-gold); font-size:19px; margin-bottom:30px;}
+  .leak-capture form{display:flex; gap:10px; max-width:440px; margin:0 auto; flex-wrap:wrap;}
+  .leak-capture input{
+    flex:1 1 220px; padding:15px 18px; border:1px solid var(--leak-gold);
+    background:transparent; color:var(--leak-cream); font-family:var(--leak-serif); font-size:18px; border-radius:2px;
+  }
+  .leak-capture input::placeholder{color:rgba(252,247,241,.55);}
+  .leak-capture input:focus{outline:none; border-color:var(--leak-stroke-gold);}
+  .leak-capture button{
+    flex:0 0 auto; padding:15px 30px; border:none; cursor:pointer;
+    background:var(--leak-gold); color:var(--leak-navy);
+    font-family:var(--leak-sans); font-weight:500; letter-spacing:.14em; text-transform:uppercase; font-size:13px;
+    border-radius:2px; transition:.25s;
+  }
+  .leak-capture button:hover{background:var(--leak-stroke-gold);}
+  .leak-capture .leak-micro{font-family:var(--leak-sans); font-style:normal; font-size:11px; letter-spacing:.05em; color:rgba(252,247,241,.5); margin:18px 0 0;}
+  .leak-capture .leak-download{
+    display:inline-block; margin-top:26px; color:var(--leak-cream); font-style:italic; font-size:17px;
+    border-bottom:1px solid var(--leak-gold); padding-bottom:2px; text-decoration:none;
+  }
+  .leak-capture .leak-download:hover{color:var(--leak-stroke-gold);}
+
+  /* ---- The small page-end disclaimer band (the site footer follows below) ---- */
+  .leak-coda{text-align:center; padding:50px 0 60px;}
+  .leak-coda .sig{font-family:var(--leak-serif); font-style:italic; font-size:22px; color:var(--leak-navy);}
+  .leak-coda .tag{font-family:var(--leak-serif); font-style:italic; color:var(--leak-gold); font-size:16px; margin-top:6px;}
+  .leak-coda .disclaimer{font-family:var(--leak-sans); font-size:11px; line-height:1.6; letter-spacing:.03em; color:var(--leak-grey); max-width:480px; margin:30px auto 0;}
+
+  .leak-reveal{opacity:0; transform:translateY(14px); animation:leak-rise .9s ease forwards;}
+  @keyframes leak-rise{to{opacity:1; transform:none;}}
+  .leak-d1{animation-delay:.15s;} .leak-d2{animation-delay:.35s;} .leak-d3{animation-delay:.55s;} .leak-d4{animation-delay:.75s;}
+
+  @media(max-width:600px){
+    body{font-size:19px;}
+    .leak-h1{font-size:46px;}
+    .leak-lesson-tag{font-size:25px;}
+    .leak-capture{padding:42px 24px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
+  <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li class="nav-dropdown" aria-expanded="false">
+      <button class="nav-trigger" type="button" aria-haspopup="true" aria-expanded="false">Moon Tools <span class="caret" aria-hidden="true">&#9662;</span></button>
+      <ul class="nav-submenu">
+        <li><a href="calendar.html">Calendar</a></li>
+        <li><a href="wheel.html">Wheel</a></li>
+        <li><a href="draw.html">Card</a></li>
+        <li><a href="pendulum/">Pendulum</a></li>
+        <li><a href="your-chart.html">Your Chart</a></li>
+        <li><a href="houses.html">Houses</a></li>
+      </ul>
+    </li>
+    <li class="nav-dropdown" aria-expanded="false">
+      <button class="nav-trigger" type="button" aria-haspopup="true" aria-expanded="false">Money Tools <span class="caret" aria-hidden="true">&#9662;</span></button>
+      <ul class="nav-submenu">
+        <li><a href="sun-money.html">Sun Money</a></li>
+        <li><a href="moon-money.html">Moon Money</a></li>
+        <li><a href="venus-money.html">Venus Money</a></li>
+        <li><a href="seasonal-forecast.html">Seasonal Forecast</a></li>
+        <li><a href="the-leak.html" aria-current="page">The Leak</a></li>
+        <li><a href="quiz.html">Quiz</a></li>
+      </ul>
+    </li>
+    <li><a href="shop.html">Atelier</a></li>
+    <li><a href="archive.html">Archive</a></li>
+    <li><a href="about.html">Ethos</a></li>
+    <li><a href="https://moonandmoney.substack.com/subscribe" target="_blank">Crescent Club</a></li>
+    <li><a class="nav-cta" href="money-chart.html">Money Chart</a></li>
+  </ul>
+</header>
+
+<!-- ─── THE LEAK · LESSON ONE — cream reading hero ─── -->
+<section class="leak-hero">
+  <div class="leak-wrap">
+    <div class="leak-brand-strip leak-reveal leak-d1">Moon &amp; Money</div>
+
+    <div class="leak-moon-stage leak-reveal leak-d1">
+      <svg class="leak-moon" width="120" height="80" viewBox="0 0 120 80" aria-hidden="true">
+        <defs><mask id="leak-mhero">
+          <rect width="120" height="80" fill="#fff"/>
+          <circle cx="68" cy="40" r="24" fill="#000"/>
+        </mask></defs>
+        <circle class="leak-star s1" cx="20" cy="22" r="1.6" fill="#C9A24E"/>
+        <circle class="leak-star s2" cx="34" cy="56" r="1.1" fill="#C9A24E"/>
+        <circle class="leak-star s3" cx="96" cy="20" r="1.6" fill="#C9A24E"/>
+        <circle class="leak-star s4" cx="104" cy="52" r="1.1" fill="#C9A24E"/>
+        <!-- waning crescent (brand rule): lit on the left, opens to the right -->
+        <circle cx="58" cy="40" r="26" fill="#C9A24E" mask="url(#leak-mhero)"/>
+      </svg>
+    </div>
+
+    <h1 class="leak-h1 leak-reveal leak-d2">The Leak</h1>
+    <div class="leak-lesson-tag leak-reveal leak-d2">Lesson One</div>
+    <div class="leak-phase leak-reveal leak-d3">New Moon&nbsp;·&nbsp;Look</div>
+    <p class="leak-deck leak-reveal leak-d3">A free taste of the four-lesson money course. Most money advice starts with a budget. This one starts with a look.</p>
+
+    <!-- AUDIO: wire the Luna-voice file into <source src> when the clone is ready. -->
+    <div class="leak-audio leak-reveal leak-d4">
+      <button class="play" id="leakPlayBtn" aria-label="Play audio reading">
+        <svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 2 L14 8 L3 14 Z" fill="#C9A24E"/></svg>
+      </button>
+      <div class="meta"><strong>Read to you</strong>Press play — let Luna read this lesson aloud.</div>
+      <audio id="leakAudio" preload="none">
+        <!-- <source src="/assets/audio/the-leak-lesson-1.mp3" type="audio/mpeg"> -->
+      </audio>
+    </div>
+  </div>
+</section>
+
+<div class="leak-wrap">
+  <div class="leak-divider"><span class="line"></span><span class="dot"></span><span class="line"></span></div>
+</div>
+
+<main class="leak-wrap leak-body">
+  <p class="leak-lead-first">The New Moon is the dark of the cycle. Nothing has sprouted yet. It is the moment for planting, and the first thing you plant here is honesty.</p>
+  <p>So before we touch a budget, a goal, or a single &ldquo;should,&rdquo; we do the one thing almost nobody does: we look.</p>
+
+  <span class="leak-eyebrow">The Teaching</span>
+  <p>You cannot change what you refuse to see. Most people manage their money by feel, by the vague sense of &ldquo;I think I&rsquo;m okay&rdquo; or &ldquo;I think I overspent,&rdquo; and that fog is exactly where the leaks live. A leak survives by not being looked at. The moment you see it clearly, it loses most of its power, before you have changed a single habit.</p>
+  <p>This is also the skeptic&rsquo;s doorway. You do not need astrology, affirmations, or a money mindset to do this lesson. You need thirty days of transactions and the willingness to read them. It is data, not belief.</p>
+
+  <div class="leak-exercise">
+    <span class="leak-label">The Exercise</span>
+    <p>Pull the last thirty days from every account you spend out of: the chequing account, the credit card, the tap-to-pay, the one you forget about. Read every line. Do not categorize, do not total, do not judge, and above all do not fix anything yet. Just read it the way you would read a stranger&rsquo;s diary: with curiosity, not a verdict. Notice what surprises you.</p>
+    <textarea placeholder="What surprised you? Write it here…"></textarea>
+    <p class="leak-note-priv">Private to you. Nothing you type here is saved or sent anywhere.</p>
+  </div>
+
+  <span class="leak-eyebrow">Reflection</span>
+  <p class="leak-reflection">What did I expect to see, and what did I actually see? Where was the gap between the two the widest?</p>
+
+  <span class="leak-eyebrow">The Close</span>
+  <p class="leak-close-line">You are not behind. You are not bad with money. You are someone who just turned the light on. That is the whole job this week.</p>
+
+  <!-- CAPTURE: routes to Substack subscribe (free signup → Substack upsells to paid Crescent Club). -->
+  <div class="leak-capture">
+    <div class="leak-moon-mini">
+      <svg width="56" height="40" viewBox="0 0 56 40" aria-hidden="true">
+        <defs><mask id="leak-mmini">
+          <rect width="56" height="40" fill="#fff"/>
+          <circle cx="33" cy="20" r="12" fill="#000"/>
+        </mask></defs>
+        <!-- waning crescent (brand rule): lit on the left, opens to the right -->
+        <circle cx="27" cy="20" r="13" fill="#C9A24E" mask="url(#leak-mmini)"/>
+      </svg>
+    </div>
+    <h2>Keep the lesson. Get the next three.</h2>
+    <p>The full four-lesson cycle lives inside the Crescent Club.</p>
+    <form id="leakCaptureForm" onsubmit="return false;">
+      <input type="email" id="leakEmail" placeholder="Your email" required>
+      <button type="submit">Join the Crescent Club</button>
+    </form>
+    <p class="leak-micro">A new cycle begins every New Moon. Founding members join free for their first year.</p>
+    <a class="leak-download" href="/downloads/the-leak-lesson-1.pdf" download>Or download Lesson One as a keepsake PDF</a>
+  </div>
+</main>
+
+<section class="leak-coda">
+  <div class="leak-wrap">
+    <div class="leak-divider"><span class="line"></span><span class="dot"></span><span class="line"></span></div>
+    <div class="sig">Moon &amp; Money</div>
+    <div class="tag">Where the Moon meets your money.</div>
+    <p class="disclaimer">This lesson is for education and self-reflection only. It is not financial advice. Always consult a qualified financial professional for personal financial decisions.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
+        <p>Personal finance, read through astrology. By Luna Wilde.</p>
+      </div>
+      <div class="foot-col"><h4>Explore</h4><a href="wheel.html">Wheel</a><a href="draw.html">Card</a><a href="quiz.html">Quiz</a><a href="money-chart.html">Money Chart</a><a href="seasonal-forecast.html">Seasonal Forecast</a><a href="the-leak.html">The Leak</a><a href="shop.html">Atelier</a><a href="pendulum/">Pendulum</a><a href="calendar.html">Calendar</a><a href="archive.html">Archive</a><a href="about.html">Ethos</a></div>
+      <div class="foot-col"><h4>Club</h4><a href="https://moonandmoney.substack.com" target="_blank">Substack</a><a href="https://moonandmoney.substack.com/subscribe" target="_blank">Crescent Club</a><a href="fifth-moon.html">The Fifth Moon</a><a href="about.html#circle">Circle <span class="soon">Soon</span></a></div>
+      <div class="foot-col"><h4>Follow</h4><a href="https://moonandmoney.substack.com" target="_blank">@moonmoney</a><a href="archive.html">Notes</a><a href="index.html">Newsletter</a></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="yr"></span> Moon &amp; Money · Luna Wilde. All rights reserved.</span>
+      <span><a href="privacy.html" style="color:inherit;text-decoration:none;opacity:.85">Privacy</a></span>
+      <span>Built in rhythm with the moon ☾</span>
+    </div>
+    <p class="foot-legal" style="text-align:center;font-family:Cormorant Garamond,Georgia,serif;font-style:italic;font-size:.82rem;opacity:.55;color:#a89fb4;margin:14px 0 0 0;letter-spacing:.02em">For reflection and self-knowledge. Not financial or investment advice.</p>
+  </div>
+</footer>
+
+<script src="assets/js/zodiac.js"></script>
+<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+<script src="assets/js/main.js"></script>
+
+<script>
+  /* The Leak — page-local JS for audio + capture.
+     Email capture routes to Substack subscribe with email pre-filled.
+     Substack handles the free-vs-paid choice from there; new paid
+     Crescent Club subscribers receive the welcome email that asks for
+     their birth data so Laura can prepare their year-1 seasonal charts.
+     (See ~/Downloads/MoonAndMoney_CrescentClub_WelcomeKit_2026-06-01.pdf
+     for the perks copy + welcome email template.) */
+  (function () {
+    var btn = document.getElementById('leakPlayBtn');
+    var audio = document.getElementById('leakAudio');
+    if (btn) {
+      btn.addEventListener('click', function () {
+        if (!audio.querySelector('source')) {
+          btn.style.opacity = .5;
+          btn.setAttribute('aria-label', 'Audio coming soon');
+          return;
+        }
+        if (audio.paused) {
+          audio.play();
+          btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 14 14"><rect x="2" y="1" width="3.5" height="12" fill="#C9A24E"/><rect x="8.5" y="1" width="3.5" height="12" fill="#C9A24E"/></svg>';
+        } else {
+          audio.pause();
+          btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 2 L14 8 L3 14 Z" fill="#C9A24E"/></svg>';
+        }
+      });
+    }
+
+    var form = document.getElementById('leakCaptureForm');
+    if (form) {
+      form.addEventListener('submit', function () {
+        var email = document.getElementById('leakEmail').value;
+        try { if (window.gtag) window.gtag('event', 'leak_capture_submit', { source: document.referrer || 'direct' }); } catch (e) {}
+        if (email) {
+          window.location.href = 'https://moonandmoney.substack.com/subscribe?email=' + encodeURIComponent(email);
+        }
+      });
+    }
+  })();
+</script>
+</body>
+</html>
