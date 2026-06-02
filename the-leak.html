@@ -57,13 +57,71 @@
   #starfield, .nebula{display:none !important;}
 
   /* The site nav is styled for dark cosmic pages (light text, transparent
-     background). On this cream page it would vanish, so we give it a solid
-     dark navy band of its own at the top. The footer below already has its
-     own dark band by default — only the nav needs this override. */
+     background). On this cream page both the nav and the footer need a
+     navy band of their own so all the text reads cleanly. */
   header.nav{
     background:var(--leak-navy) !important;
     border-bottom:1px solid rgba(229,199,123,.25);
   }
+  /* The cream body extends to the footer area, which left the standard
+     dark site footer reading as a faint grey ghost. Force navy here so
+     all the Explore / Club / Follow columns are clearly readable. */
+  footer{
+    background:var(--leak-navy) !important;
+    color:var(--leak-cream) !important;
+  }
+  footer .brand,
+  footer .foot-col a,
+  footer .foot-bottom,
+  footer .foot-bottom a,
+  footer .foot-brand p,
+  footer h4{
+    color:var(--leak-cream) !important;
+  }
+  footer .foot-col a:hover{color:var(--leak-stroke-gold) !important;}
+
+  /* Push the hero down so the moon clears the (non-fixed but tall) nav
+     and reads as the first content element with breathing room. */
+  .leak-hero{padding-top:130px;}
+
+  /* Coming-soon vs launched states. The coming-soon block is the default
+     visible state (so the page is still useful if JS fails to load). JS
+     swaps to the launched block on/after New Moon June 14, 2026. */
+  .leak-coming-soon{display:block;}
+  .leak-launched{display:none;}
+  .leak-soon-box{
+    background:var(--leak-mint); border:1px solid var(--leak-stroke-gold);
+    border-left:4px solid var(--leak-gold); padding:34px 36px; margin:40px auto 0;
+    text-align:center; max-width:540px;
+  }
+  .leak-soon-box h2{font-weight:500; font-size:28px; line-height:1.2; color:var(--leak-navy); margin-bottom:10px;}
+  .leak-soon-box p{font-style:italic; color:var(--leak-forest); font-size:17px; margin-bottom:22px;}
+  .leak-soon-box form{display:flex; gap:8px; max-width:380px; margin:0 auto; flex-wrap:wrap;}
+  .leak-soon-box input{
+    flex:1 1 200px; padding:13px 16px; border:1px solid var(--leak-gold);
+    background:#fff; color:var(--leak-navy); font-family:var(--leak-serif);
+    font-size:16px; border-radius:2px;
+  }
+  .leak-soon-box button{
+    flex:0 0 auto; padding:13px 22px; border:none; cursor:pointer;
+    background:var(--leak-gold); color:var(--leak-navy);
+    font-family:var(--leak-sans); font-weight:500; letter-spacing:.14em;
+    text-transform:uppercase; font-size:12px; border-radius:2px; transition:.25s;
+  }
+  .leak-soon-box button:hover{background:var(--leak-stroke-gold);}
+  .leak-soon-done{
+    margin-top:30px; font-style:italic; color:var(--leak-gold); font-size:18px;
+  }
+
+  /* Post-launch CTA: a single button (no email field) routing to Substack. */
+  .leak-capture-btn{
+    display:inline-block; margin-top:8px; padding:15px 32px;
+    background:var(--leak-gold); color:var(--leak-navy);
+    font-family:var(--leak-sans); font-weight:500; letter-spacing:.14em;
+    text-transform:uppercase; font-size:13px; border-radius:2px;
+    text-decoration:none; transition:.25s;
+  }
+  .leak-capture-btn:hover{background:var(--leak-stroke-gold);}
 
   .leak-wrap{max-width:660px; margin:0 auto; padding:0 28px;}
 
@@ -232,9 +290,10 @@
 </header>
 
 <!-- ─── THE LEAK · LESSON ONE — cream reading hero ─── -->
+<!-- The brand-strip eyebrow that originally sat at the very top is removed —
+     the nav above already carries the MOON & MONEY wordmark. -->
 <section class="leak-hero">
   <div class="leak-wrap">
-    <div class="leak-brand-strip leak-reveal leak-d1">Moon &amp; Money</div>
 
     <div class="leak-moon-stage leak-reveal leak-d1">
       <svg class="leak-moon" width="120" height="80" viewBox="0 0 120 80" aria-hidden="true">
@@ -252,12 +311,12 @@
     </div>
 
     <h1 class="leak-h1 leak-reveal leak-d2">The Leak</h1>
-    <div class="leak-lesson-tag leak-reveal leak-d2">Lesson One</div>
-    <div class="leak-phase leak-reveal leak-d3">New Moon&nbsp;·&nbsp;Look</div>
-    <p class="leak-deck leak-reveal leak-d3">A free taste of the four-lesson money course. Most money advice starts with a budget. This one starts with a look.</p>
+    <div class="leak-lesson-tag leak-reveal leak-d2" id="leakHeroTag">Coming on the New Moon</div>
+    <div class="leak-phase leak-reveal leak-d3" id="leakHeroPhase">June 14&nbsp;·&nbsp;Look</div>
+    <p class="leak-deck leak-reveal leak-d3" id="leakHeroDeck">A free four-lesson money course, drawn against the lunar cycle. The doors open with the New Moon. Most money advice starts with a budget. This one starts with a look.</p>
 
     <!-- AUDIO: wire the Luna-voice file into <source src> when the clone is ready. -->
-    <div class="leak-audio leak-reveal leak-d4">
+    <div class="leak-audio leak-reveal leak-d4" id="leakAudioBox" style="display:none">
       <button class="play" id="leakPlayBtn" aria-label="Play audio reading">
         <svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 2 L14 8 L3 14 Z" fill="#C9A24E"/></svg>
       </button>
@@ -273,7 +332,26 @@
   <div class="leak-divider"><span class="line"></span><span class="dot"></span><span class="line"></span></div>
 </div>
 
-<main class="leak-wrap leak-body">
+<!-- ─── COMING-SOON STATE (visible before 2026-06-14) ─── -->
+<section class="leak-coming-soon leak-wrap" id="leakComingSoon">
+  <div class="leak-soon-box">
+    <h2>The first cycle opens with the New Moon</h2>
+    <p>June 14, 2026. Be told the moment it opens.</p>
+    <form id="leakNotifyForm" name="the-leak-notify" method="POST"
+          data-netlify="true" netlify-honeypot="bot-field">
+      <input type="hidden" name="form-name" value="the-leak-notify">
+      <p hidden><label>Skip: <input name="bot-field"></label></p>
+      <input type="email" name="email" placeholder="Your email" required autocomplete="email">
+      <button type="submit">Tell me</button>
+    </form>
+    <div class="leak-soon-done" id="leakNotifyDone" hidden>
+      Held. I will write the day the door opens.
+    </div>
+  </div>
+</section>
+
+<!-- ─── LAUNCHED STATE (visible on/after 2026-06-14) ─── -->
+<main class="leak-launched leak-wrap leak-body" id="leakLaunched">
   <p class="leak-lead-first">The New Moon is the dark of the cycle. Nothing has sprouted yet. It is the moment for planting, and the first thing you plant here is honesty.</p>
   <p>So before we touch a budget, a goal, or a single &ldquo;should,&rdquo; we do the one thing almost nobody does: we look.</p>
 
@@ -294,7 +372,9 @@
   <span class="leak-eyebrow">The Close</span>
   <p class="leak-close-line">You are not behind. You are not bad with money. You are someone who just turned the light on. That is the whole job this week.</p>
 
-  <!-- CAPTURE: routes to Substack subscribe (free signup → Substack upsells to paid Crescent Club). -->
+  <!-- CAPTURE: single button → Substack. No email field here — the lesson
+       and the next three lessons live on Substack, so we send the reader
+       straight there to subscribe (free or paid Crescent Club). -->
   <div class="leak-capture">
     <div class="leak-moon-mini">
       <svg width="56" height="40" viewBox="0 0 56 40" aria-hidden="true">
@@ -307,11 +387,10 @@
       </svg>
     </div>
     <h2>Keep the lesson. Get the next three.</h2>
-    <p>The full four-lesson cycle lives inside the Crescent Club.</p>
-    <form id="leakCaptureForm" onsubmit="return false;">
-      <input type="email" id="leakEmail" placeholder="Your email" required>
-      <button type="submit">Join the Crescent Club</button>
-    </form>
+    <p>The full four-lesson cycle lives inside the Crescent Club on Substack.</p>
+    <a class="leak-capture-btn" href="https://moonandmoney.substack.com/subscribe" target="_blank" rel="noopener">
+      Join the Crescent Club on Substack
+    </a>
     <p class="leak-micro">A new cycle begins every New Moon. Founding members join free for their first year.</p>
     <a class="leak-download" href="/downloads/the-leak-lesson-1.pdf" download>Or download Lesson One as a keepsake PDF</a>
   </div>
@@ -351,17 +430,57 @@
 <script src="assets/js/main.js"></script>
 
 <script>
-  /* The Leak — page-local JS for audio + capture.
-     Email capture routes to Substack subscribe with email pre-filled.
-     Substack handles the free-vs-paid choice from there; new paid
-     Crescent Club subscribers receive the welcome email that asks for
-     their birth data so Laura can prepare their year-1 seasonal charts.
-     (See ~/Downloads/MoonAndMoney_CrescentClub_WelcomeKit_2026-06-01.pdf
-     for the perks copy + welcome email template.) */
+  /* The Leak — page-local JS.
+     Two states: coming-soon (before 2026-06-14) and launched (on/after).
+     Pre-launch shows a notify-me capture (posts to Netlify Forms). Post
+     launch reveals the full lesson body and a single Substack button (no
+     email field — the lessons live on Substack, so we send the reader
+     straight there). The day the New Moon rises, the page flips itself.
+
+     See ~/Downloads/MoonAndMoney_CrescentClub_WelcomeKit_2026-06-01.pdf
+     for the welcome email + the Crescent Club year-1 perk code flow. */
   (function () {
-    var btn = document.getElementById('leakPlayBtn');
-    var audio = document.getElementById('leakAudio');
-    if (btn) {
+    'use strict';
+
+    // New Moon at 24° Gemini, June 14, 2026, 7:54pm PT. We use the morning
+    // of June 14 in UTC so the page is "live" for the whole launch day
+    // worldwide, matching the seasonal-forecast launch pattern.
+    var LAUNCH_AT_UTC = new Date('2026-06-14T11:00:00Z');
+
+    function track(name, detail) {
+      try { if (window.gtag) window.gtag('event', name, detail || {}); } catch (e) {}
+    }
+
+    // ── State toggle ──
+    function applyLaunchState() {
+      var now = new Date();
+      var launched = now >= LAUNCH_AT_UTC;
+      var soon     = document.getElementById('leakComingSoon');
+      var live     = document.getElementById('leakLaunched');
+      var tag      = document.getElementById('leakHeroTag');
+      var phase    = document.getElementById('leakHeroPhase');
+      var deck     = document.getElementById('leakHeroDeck');
+      var audioBox = document.getElementById('leakAudioBox');
+
+      if (launched) {
+        if (soon) soon.style.display = 'none';
+        if (live) live.style.display = 'block';
+        if (tag)   tag.textContent   = 'Lesson One';
+        if (phase) phase.innerHTML   = 'New Moon&nbsp;·&nbsp;Look';
+        if (deck)  deck.textContent  = 'A free taste of the four-lesson money course. Most money advice starts with a budget. This one starts with a look.';
+        if (audioBox) audioBox.style.display = '';
+      } else {
+        if (soon) soon.style.display = 'block';
+        if (live) live.style.display = 'none';
+        if (audioBox) audioBox.style.display = 'none';
+      }
+    }
+
+    // ── Audio (post-launch only) ──
+    function wireAudio() {
+      var btn = document.getElementById('leakPlayBtn');
+      var audio = document.getElementById('leakAudio');
+      if (!btn || !audio) return;
       btn.addEventListener('click', function () {
         if (!audio.querySelector('source')) {
           btn.style.opacity = .5;
@@ -378,15 +497,51 @@
       });
     }
 
-    var form = document.getElementById('leakCaptureForm');
-    if (form) {
-      form.addEventListener('submit', function () {
-        var email = document.getElementById('leakEmail').value;
-        try { if (window.gtag) window.gtag('event', 'leak_capture_submit', { source: document.referrer || 'direct' }); } catch (e) {}
-        if (email) {
-          window.location.href = 'https://moonandmoney.substack.com/subscribe?email=' + encodeURIComponent(email);
-        }
+    // ── Notify-me capture (pre-launch only). Posts to Netlify Forms; the
+    //    form is also declared with data-netlify="true" so Netlify auto-
+    //    detects it on deploy and creates the submission collection. ──
+    function wireNotify() {
+      var form = document.getElementById('leakNotifyForm');
+      var done = document.getElementById('leakNotifyDone');
+      if (!form) return;
+
+      function encode(data) {
+        return Object.keys(data).map(function (k) {
+          return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]);
+        }).join('&');
+      }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var honey = form.querySelector('[name="bot-field"]');
+        if (honey && honey.value) return;
+        var fd = new FormData(form);
+        var data = {};
+        fd.forEach(function (v, k) { data[k] = v; });
+        track('leak_notify_submit', { source: document.referrer || 'direct' });
+        var reveal = function () {
+          form.style.display = 'none';
+          if (done) done.hidden = false;
+        };
+        fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: encode(data),
+        }).then(reveal).catch(reveal);
       });
+    }
+
+    // ── Boot ──
+    function boot() {
+      applyLaunchState();
+      wireAudio();
+      wireNotify();
+      track('leak_page_view', { source: document.referrer || 'direct' });
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', boot);
+    } else {
+      boot();
     }
   })();
 </script>
