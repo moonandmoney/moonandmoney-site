@@ -79,20 +79,40 @@
     color:var(--card-gold-soft); opacity:.7; margin-bottom:28px;
   }
 
-  /* Stage holds both faces; 5×7 ratio matches the print PDF cards */
-  .stage{ position:relative; width:min(380px, 92vw); aspect-ratio:5/7; perspective:1600px; }
+  /* Stage holds both faces; 5×7 ratio matches the print PDF cards.
+     transform-style:preserve-3d so the cover swing has real depth,
+     and the perspective bumped up a touch for a more luxurious arc. */
+  .stage{ position:relative; width:min(380px, 92vw); aspect-ratio:5/7;
+    perspective:2200px; transform-style:preserve-3d; }
   .face{ position:absolute; inset:0; border-radius:6px; overflow:hidden;
     box-shadow:0 30px 70px rgba(0,0,0,.55); }
+
+  /* Sparkle layer: a canvas overlay where the gold-particle burst fires
+     when the cover opens. Sits above the cover (z:5) so particles read
+     against the navy stage. Pointer-events off so it never eats clicks. */
+  .sparkles{ position:absolute; inset:0; z-index:5;
+    pointer-events:none; border-radius:6px; }
 
   /* ─── COVER (navy Deco) ─── */
   .cover{
     background:var(--card-navy); z-index:3;
-    transition:transform 2.6s cubic-bezier(.45,.02,.2,1), opacity 1s ease 1.8s;
-    transform-origin:left center; backface-visibility:hidden;
+    /* Default transform sets the parallax baseline at 0/0/0 so the
+       parallax JS can apply rotateX/rotateY without fighting CSS. */
+    transform:rotateX(0) rotateY(0) translateZ(0);
+    transition:transform 2.8s cubic-bezier(.42,0,.18,1), opacity 1s ease 2s;
+    transform-origin:left center;
+    transform-style:preserve-3d; backface-visibility:hidden;
     cursor:pointer; box-shadow:0 30px 70px rgba(0,0,0,.55);
+    will-change:transform;
   }
-  .cover.open{ transform:rotateY(-118deg); opacity:0;
-    box-shadow:-30px 30px 60px rgba(0,0,0,.4); }
+  /* Parallax mode: faster, springier transition so the cover follows the
+     cursor responsively. JS adds .parallax when not yet opened. */
+  .cover.parallax{ transition:transform .35s cubic-bezier(.22,1,.36,1); }
+  /* Open: rotate AND push the cover toward the viewer in Z — gives the
+     swing real perspective depth instead of a flat hinge motion. */
+  .cover.open{ transform:rotateY(-122deg) translateZ(110px); opacity:0;
+    transition:transform 2.8s cubic-bezier(.42,0,.18,1), opacity 1s ease 2s;
+    box-shadow:-40px 40px 70px rgba(0,0,0,.5); }
   .cover .stars span{ position:absolute; background:var(--card-gold-soft); border-radius:50%; opacity:.65; }
 
   .foil{ position:absolute; inset:0; z-index:4; pointer-events:none; overflow:hidden; border-radius:6px; }
@@ -190,7 +210,14 @@
   .interior.show .zone-bottom > *:nth-child(2){ animation-delay:2.15s; }
   @keyframes rise{ to{ opacity:1; transform:translateY(0);} }
 
-  .top-moon{ display:block; }
+  /* Persistent ambient glow on the interior top crescent — slow breath
+     of light so the interior feels "lit" once the card opens, not static. */
+  .top-moon{ display:block; filter:drop-shadow(0 0 0 rgba(201,162,78,0));
+    animation:moon-breathe 6s ease-in-out infinite; }
+  @keyframes moon-breathe{
+    0%, 100%{ filter:drop-shadow(0 0 2px rgba(201,162,78,.18)); }
+    50%     { filter:drop-shadow(0 0 9px rgba(201,162,78,.55)); }
+  }
   .int-tagline{ font-style:italic; color:var(--card-forest); font-size:15px; }
   .glyph{ font-family:'Noto Sans Symbols 2','Jost',serif; font-size:46px; color:var(--card-gold);
     line-height:1; }
@@ -272,6 +299,9 @@
 
   <div class="stage" id="stage">
 
+    <!-- Sparkle layer: gold particle burst fires from JS on cover open. -->
+    <canvas class="sparkles" id="sparkles"></canvas>
+
     <!-- INTERIOR (cream) -->
     <div class="face interior" id="interior">
       <div class="int-frame"></div><div class="int-frame2"></div>
@@ -329,6 +359,7 @@
   </div>
 
   <div class="card-actions">
+    <button id="soundBtn" type="button" aria-pressed="false">SOUND ON</button>
     <button id="replayBtn" type="button">REPLAY</button>
     <a id="downloadPdf" href="#" download hidden>DOWNLOAD AS PDF</a>
     <a id="senderShop" href="shop.html">SEND ONE OF YOUR OWN</a>
@@ -514,23 +545,156 @@
       }
     })();
 
-    // ── Open / replay wiring ──
-    const cover = document.getElementById('cover');
+    // ── Open / replay wiring + animation upgrades ──
+    const cover    = document.getElementById('cover');
     const interior = document.getElementById('interior');
+    const stage    = document.getElementById('stage');
+    const sparkCv  = document.getElementById('sparkles');
+    const soundBtn = document.getElementById('soundBtn');
 
+    /* MOUSE PARALLAX
+       Before the card opens, the cover subtly tilts toward the cursor /
+       finger. ~6deg max rotation, springy transition. Disabled once the
+       card is opened (the open animation has its own transform timeline). */
+    let parallaxActive = true;
+    cover.classList.add('parallax');  // engage springy transition
+    function onParallax(e) {
+      if (!parallaxActive) return;
+      const r = stage.getBoundingClientRect();
+      const pt = e.touches ? e.touches[0] : e;
+      const cx = (pt.clientX - r.left) / r.width  - 0.5;   // -0.5 .. 0.5
+      const cy = (pt.clientY - r.top)  / r.height - 0.5;
+      const rotY = (-cx * 12).toFixed(2);   // tilt right when cursor on right
+      const rotX = ( cy *  8).toFixed(2);   // tilt down when cursor down
+      cover.style.transform = 'rotateX(' + rotX + 'deg) rotateY(' + rotY + 'deg) translateZ(0)';
+    }
+    function onParallaxLeave() {
+      if (!parallaxActive) return;
+      cover.style.transform = '';   // back to baseline (CSS default)
+    }
+    stage.addEventListener('mousemove', onParallax);
+    stage.addEventListener('touchmove', onParallax, { passive: true });
+    stage.addEventListener('mouseleave', onParallaxLeave);
+    stage.addEventListener('touchend', onParallaxLeave);
+
+    /* SPARKLE BURST
+       On cover open, fire ~28 gold particles from the moon position.
+       Particles arc outward with gravity + fade. Pure 2D canvas, no
+       libraries, sub-millisecond per frame. */
+    function fireSparkles() {
+      const ctx = sparkCv.getContext('2d');
+      const dpr = window.devicePixelRatio || 1;
+      const w = stage.clientWidth, h = stage.clientHeight;
+      sparkCv.width  = w * dpr;
+      sparkCv.height = h * dpr;
+      sparkCv.style.width  = w + 'px';
+      sparkCv.style.height = h + 'px';
+      ctx.scale(dpr, dpr);
+      // Origin = center of the cover's crescent (roughly card center).
+      const ox = w / 2, oy = h / 2 - 10;
+      const N = 32;
+      const particles = [];
+      for (let i = 0; i < N; i++) {
+        const ang = (Math.PI * 2) * (i / N) + (Math.random() - .5) * .4;
+        const speed = 1.4 + Math.random() * 2.6;
+        particles.push({
+          x: ox, y: oy,
+          vx: Math.cos(ang) * speed,
+          vy: Math.sin(ang) * speed - 1.4,   // initial upward bias
+          r: 1.2 + Math.random() * 1.6,
+          life: 0,
+          ttl: 70 + Math.random() * 50,
+        });
+      }
+      let frame = 0;
+      function tick() {
+        frame++;
+        ctx.clearRect(0, 0, w, h);
+        let alive = 0;
+        for (const p of particles) {
+          if (p.life >= p.ttl) continue;
+          p.life++;
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.06;        // gravity
+          p.vx *= 0.99;        // air drag
+          p.vy *= 0.995;
+          const t = p.life / p.ttl;
+          const alpha = (1 - t) * 0.9;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r * (1 - t * 0.4), 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(216,184,113,' + alpha + ')';
+          ctx.fill();
+          alive++;
+        }
+        if (alive) requestAnimationFrame(tick);
+        else ctx.clearRect(0, 0, w, h);
+      }
+      requestAnimationFrame(tick);
+    }
+
+    /* CHIME (opt-in)
+       A short gold bell tone synthesized via Web Audio — no MP3 asset
+       needed, works on every browser. Off by default; user toggles on
+       with the SOUND button. */
+    let soundOn = false;
+    let audioCtx = null;
+    function playChime() {
+      if (!soundOn) return;
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        // Two-note shimmer: a soft fifth (A5 over E5) that fades in 1.2s.
+        const now = audioCtx.currentTime;
+        [659.25, 880.00].forEach(function (freq, i) {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0, now + i * 0.05);
+          gain.gain.linearRampToValueAtTime(0.12, now + i * 0.05 + 0.04);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.05 + 1.3);
+          osc.connect(gain).connect(audioCtx.destination);
+          osc.start(now + i * 0.05);
+          osc.stop(now + i * 0.05 + 1.4);
+        });
+      } catch (e) { /* ignore — audio not supported */ }
+    }
+    soundBtn.addEventListener('click', function () {
+      soundOn = !soundOn;
+      soundBtn.setAttribute('aria-pressed', soundOn ? 'true' : 'false');
+      soundBtn.textContent = soundOn ? 'SOUND OFF' : 'SOUND ON';
+      // First click should resume audio context (user-gesture requirement).
+      if (soundOn && audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    });
+
+    /* OPEN + REPLAY */
     function open() {
       if (cover.classList.contains('open')) return;
+      // Disengage parallax + reset cover transform so the open animation
+      // starts from a known baseline (not from a parallax-tilted state).
+      parallaxActive = false;
+      cover.style.transform = '';
+      cover.classList.remove('parallax');
       // Reveal interior up front so it sits behind the cover as it swings.
       interior.classList.add('show');
       cover.classList.add('open');
+      // Tiny delay so sparkles fire ~as the cover starts moving away.
+      setTimeout(fireSparkles, 250);
+      playChime();
     }
     cover.addEventListener('click', open);
 
     document.getElementById('replayBtn').addEventListener('click', function () {
       cover.classList.remove('open');
       interior.classList.remove('show');
+      cover.style.transform = '';
       // Force a layout pass so the next open() animates from scratch.
       void cover.offsetWidth;
+      // Re-engage parallax for the next "open" interaction.
+      parallaxActive = true;
+      cover.classList.add('parallax');
     });
     /* analytics beacon now lives inside renderCard() since occasion is
        only resolved there (could be from URL params OR engine fetch). */
