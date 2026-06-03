@@ -150,8 +150,11 @@
   .cover.open .cover-hint{ opacity:0; transition:opacity .4s; }
 
   /* ─── INTERIOR (cream) ─── */
+  /* Tight vertical padding so longer brand bodies (Aries especially)
+     fit inside the 5:7 frame without the delivery date being clipped
+     by overflow:hidden on the .face. */
   .interior{ background:var(--card-cream); z-index:1; display:flex; flex-direction:column;
-    padding:40px 34px; opacity:1; }
+    padding:28px 30px 22px 30px; opacity:1; }
   .int-frame{ position:absolute; inset:13px; border:1.1px solid var(--card-gold); border-radius:2px; }
   .int-frame2{ position:absolute; inset:18px; border:.6px solid var(--card-gold); border-radius:1px; }
   .int-corner{ position:absolute; width:22px; height:22px; border:1.4px solid var(--card-gold); z-index:2; }
@@ -164,9 +167,9 @@
     align-items:center; text-align:center; width:100%; }
   .zone-top, .zone-mid, .zone-bottom{ display:flex; flex-direction:column; align-items:center;
     width:100%; }
-  .zone-top{ gap:10px; }
-  .zone-mid{ gap:14px; justify-content:center; flex:1; padding:18px 0; }
-  .zone-bottom{ gap:14px; }
+  .zone-top{ gap:8px; }
+  .zone-mid{ gap:12px; justify-content:center; flex:1; padding:8px 0; }
+  .zone-bottom{ gap:10px; }
 
   /* Staggered reveal across zone children once cover opens */
   .zone-top > *, .zone-mid > *, .zone-bottom > *{ opacity:0; transform:translateY(10px); }
@@ -201,9 +204,9 @@
   .divider b{ width:3.5px; height:3.5px; border-radius:50%; background:var(--card-gold); }
   .divider-soft i{ opacity:.55; width:30px; }
   .divider-soft b{ opacity:.55; }
-  .title{ font-family:var(--card-serif); font-weight:600; color:var(--card-navy-text); font-size:24px; }
-  .body{ font-style:italic; color:var(--card-forest); font-size:15px; line-height:1.6; max-width:255px; }
-  .closing{ font-style:italic; color:var(--card-navy-text); font-size:13.5px; }
+  .title{ font-family:var(--card-serif); font-weight:600; color:var(--card-navy-text); font-size:23px; }
+  .body{ font-style:italic; color:var(--card-forest); font-size:14.5px; line-height:1.5; max-width:265px; }
+  .closing{ font-style:italic; color:var(--card-navy-text); font-size:13px; }
   .delivered-line{ font-family:var(--card-serif); font-style:italic; color:var(--card-gold-deep);
     font-size:11px; letter-spacing:.04em; }
   .footer-int{ font-family:var(--card-sans); color:var(--card-gold); font-size:8px;
