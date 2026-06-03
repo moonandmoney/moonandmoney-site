@@ -393,23 +393,27 @@
     'new-chapter-scorpio': { pdf: '/downloads/cards/HappyDivorce_Scorpio.pdf', title: 'A New Chapter.' },
   };
 
-  (function () {
-    'use strict';
+  // Engine API base. The /card-data endpoint returns the recipient/sender/
+  // message data for a card by its unique token (set on the URL as ?id=).
+  const ENGINE_BASE = 'https://moonmoney-chart-engine.onrender.com';
 
-    const params = new URLSearchParams(window.location.search);
-    const occasionKey = (params.get('occasion') || 'birthday-aries').toLowerCase();
+  function setIf(id, value) {
+    const el = document.getElementById(id);
+    if (el && value != null && value !== '') el.textContent = value;
+  }
+
+  /* Fill the card from the resolved fields. Same code path whether the
+     fields came from URL params (preview/test URLs like ?to=Laura) or
+     from the engine /card-data response (real purchases with ?id=TOKEN). */
+  function renderCard(fields) {
+    const occasionKey = (fields.occasion || 'birthday-aries').toLowerCase();
     const v = CARD_VARIANTS[occasionKey] || CARD_VARIANTS['birthday-aries'];
 
-    // ── Fill the interior content from variant + URL params ──
-    const toName = (params.get('to') || 'you').trim();
-    const fromName = (params.get('from') || '').trim();
-    const customMessage = (params.get('message') || '').trim();
-    const sentISO = params.get('sent') || '';
-
-    function setIf(id, value) {
-      const el = document.getElementById(id);
-      if (el && value != null && value !== '') el.textContent = value;
-    }
+    const toName = (fields.recipient_name || 'you').trim();
+    const fromName = (fields.sender_name || '').trim();
+    const customMessage = (fields.message || '').trim();
+    const sentISO = fields.sent || '';
+    const sentEpoch = fields.sent_at || null;  // engine returns epoch seconds
 
     setIf('intToName', toName);
     setIf('intTitle', v.title);
@@ -421,24 +425,79 @@
     setIf('coverOccasion', v.coverOccasion);
     setIf('coverTagline', v.coverTagline);
 
-    // Sent-date formatting (defaults to today)
-    const sent = sentISO ? new Date(sentISO + 'T00:00:00') : new Date();
+    let sent;
+    if (sentEpoch) {
+      sent = new Date(sentEpoch * 1000);
+    } else if (sentISO) {
+      sent = new Date(sentISO + 'T00:00:00');
+    } else {
+      sent = new Date();
+    }
     if (!isNaN(sent.getTime())) {
       const fmt = sent.toLocaleDateString('en-US', { day:'numeric', month:'long', year:'numeric' });
       setIf('intDelivered', 'Delivered ' + fmt + (fromName ? '  ·  from ' + fromName : ''));
     }
 
-    // Update meta line above the card
     if (fromName) {
       document.getElementById('cardMeta').textContent =
         'A card from ' + fromName + '  ·  Moon & Money';
     }
 
-    // Wire the PDF download (only show if the variant has one)
     if (v.pdf) {
       const dl = document.getElementById('downloadPdf');
       dl.href = v.pdf;
       dl.hidden = false;
+    }
+
+    // Stash for replay analytics
+    try {
+      if (window.gtag) {
+        window.gtag('event', 'card_opened',
+          { occasion: occasionKey, has_from: !!fromName, has_token: !!fields._fromToken });
+      }
+    } catch (e) {}
+  }
+
+  function renderError(msg) {
+    document.getElementById('cardMeta').textContent = msg || 'Card not found.';
+    // Disable open animation; just show a quiet "not found" state.
+    const cover = document.getElementById('cover');
+    cover.style.pointerEvents = 'none';
+    setIf('coverOccasion', 'CARD NOT FOUND');
+    setIf('coverTagline', 'This link may have expired or never existed.');
+  }
+
+  (function () {
+    'use strict';
+
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('id');
+
+    if (token) {
+      // Real purchase flow: fetch the card data from the engine by token.
+      fetch(ENGINE_BASE + '/card-data?id=' + encodeURIComponent(token))
+        .then(function (r) {
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          return r.json();
+        })
+        .then(function (data) {
+          data._fromToken = true;
+          renderCard(data);
+        })
+        .catch(function (err) {
+          console.error('card-data fetch failed:', err);
+          renderError('We could not load this card.');
+        });
+    } else {
+      // Preview flow: build fields from URL params (for test URLs like
+      // /card?to=Laura&from=Luna&occasion=birthday-aries&message=...).
+      renderCard({
+        occasion:       params.get('occasion') || 'birthday-aries',
+        recipient_name: params.get('to') || 'you',
+        sender_name:    params.get('from') || '',
+        message:        params.get('message') || '',
+        sent:           params.get('sent') || '',
+      });
     }
 
     // ── Scatter fine gold stars on the cover ──
@@ -473,13 +532,8 @@
       // Force a layout pass so the next open() animates from scratch.
       void cover.offsetWidth;
     });
-
-    // ── Simple analytics beacon ──
-    try {
-      if (window.gtag) {
-        window.gtag('event', 'card_opened', { occasion: occasionKey, has_from: !!fromName });
-      }
-    } catch (e) {}
+    /* analytics beacon now lives inside renderCard() since occasion is
+       only resolved there (could be from URL params OR engine fetch). */
   })();
 </script>
 </body>
