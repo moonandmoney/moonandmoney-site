@@ -277,11 +277,25 @@ window.MM_SEASONAL_CHECKOUT = {
     applyTier('annual');
   }
 
+  // ── Preview bypass for owner testing pre-launch ────────────────────────
+  // When the URL contains ?preview=mm-laura, the gate is bypassed and the
+  // form unlocks regardless of the launch date. Used by Laura to smoke-
+  // test the full subscription pipeline (intake form → LS → engine →
+  // delivery email) before the public June 21 launch. Low-risk: a stranger
+  // who guesses the token could only complete a real-priced purchase,
+  // which the engine handles like any normal order.
+  function isPreviewMode() {
+    try {
+      return new URLSearchParams(window.location.search).get('preview') === 'mm-laura';
+    } catch (e) { return false; }
+  }
+
   // ── Launch state: enable cards + reveal the intake form ────────────────
   function applyLaunchState() {
     const now = new Date();
-    const launched = now >= LAUNCH_AT_UTC;
-    const oneOffOpen = launched && isOneOffWindowOpen(now);
+    const preview = isPreviewMode();
+    const launched = (now >= LAUNCH_AT_UTC) || preview;
+    const oneOffOpen = launched && (isOneOffWindowOpen(now) || preview);
 
     const checkout = window.MM_SEASONAL_CHECKOUT || {};
     const annualBtn = document.querySelector('.sf-cta-annual');
