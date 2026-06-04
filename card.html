@@ -418,6 +418,11 @@ pintrk('page');
        anniversary, new-home, new-job, sorry
   */
   const CARD_VARIANTS = {
+    // ── Birthdays (12 zodiac signs) ───────────────────────────────────────
+    // Aries Birthday has the full custom animated design. The other 11
+    // birthdays use the PDF-fallback render: cover opens, recipient name +
+    // custom message render in the interior, PDF download button appears.
+    // Custom animated copy for the remaining 11 ships as a Phase-2 polish.
     'birthday-aries': {
       coverOccasion: 'HAPPY BIRTHDAY',
       coverTagline: 'A little fire for your year ahead.',
@@ -428,16 +433,38 @@ pintrk('page');
       closing: "Light it. We’re watching.",
       pdf: null,
     },
-    /* PDF-only variants (animated design coming later — for now,
-       the card opens with a fallback note + the PDF download). */
-    'saturn-return':       { pdf: '/downloads/cards/SaturnReturn.pdf',     title: 'Saturn Return' },
-    'mercury-retrograde':  { pdf: '/downloads/cards/MercuryRetrograde.pdf',title: 'Mercury Retrograde' },
-    'new-year-moon':       { pdf: '/downloads/cards/NewYear_Moon.pdf',     title: 'New Year Moon' },
-    'new-baby':            { pdf: '/downloads/cards/NewBabyMoon.pdf',      title: 'New Baby Moon' },
-    'birthday-leo':        { pdf: '/downloads/cards/Birthday_Leo.pdf',     title: 'Happy Birthday, Leo.' },
-    'birthday-taurus':     { pdf: '/downloads/cards/Birthday_Taurus.pdf',  title: 'Happy Birthday, Taurus.' },
-    'congrats-capricorn':  { pdf: '/downloads/cards/Congrats_Capricorn.pdf', title: 'Congratulations.' },
-    'new-chapter-scorpio': { pdf: '/downloads/cards/HappyDivorce_Scorpio.pdf', title: 'A New Chapter.' },
+    'birthday-taurus':       { pdf: '/downloads/cards/Birthday_Taurus.pdf',       title: 'Happy Birthday, Taurus.' },
+    'birthday-gemini':       { pdf: '/downloads/cards/Birthday_Gemini.pdf',       title: 'Happy Birthday, Gemini.' },
+    'birthday-cancer':       { pdf: '/downloads/cards/Birthday_Cancer.pdf',       title: 'Happy Birthday, Cancer.' },
+    'birthday-leo':          { pdf: '/downloads/cards/Birthday_Leo.pdf',          title: 'Happy Birthday, Leo.' },
+    'birthday-virgo':        { pdf: '/downloads/cards/Birthday_Virgo.pdf',        title: 'Happy Birthday, Virgo.' },
+    'birthday-libra':        { pdf: '/downloads/cards/Birthday_Libra.pdf',        title: 'Happy Birthday, Libra.' },
+    'birthday-scorpio':      { pdf: '/downloads/cards/Birthday_Scorpio.pdf',      title: 'Happy Birthday, Scorpio.' },
+    'birthday-sagittarius':  { pdf: '/downloads/cards/Birthday_Sagittarius.pdf',  title: 'Happy Birthday, Sagittarius.' },
+    'birthday-capricorn':    { pdf: '/downloads/cards/Birthday_Capricorn.pdf',    title: 'Happy Birthday, Capricorn.' },
+    'birthday-aquarius':     { pdf: '/downloads/cards/Birthday_Aquarius.pdf',     title: 'Happy Birthday, Aquarius.' },
+    'birthday-pisces':       { pdf: '/downloads/cards/Birthday_Pisces.pdf',       title: 'Happy Birthday, Pisces.' },
+
+    // ── Occasions (13) ────────────────────────────────────────────────────
+    'saturn-return':              { pdf: '/downloads/cards/SaturnReturn.pdf',       title: 'Saturn Return' },
+    'mercury-retrograde':         { pdf: '/downloads/cards/MercuryRetrograde.pdf',  title: 'Mercury Retrograde' },
+    'new-year-moon':              { pdf: '/downloads/cards/NewYear_Moon.pdf',       title: 'New Year Moon' },
+    'capricorn-congratulations':  { pdf: '/downloads/cards/Congrats_Capricorn.pdf', title: 'Capricorn Congratulations' },
+    'scorpio-new-chapter':        { pdf: '/downloads/cards/HappyDivorce_Scorpio.pdf', title: 'A New Chapter, Scorpio.' },
+    'venus-anniversary':          { pdf: '/downloads/cards/Anniversary_Venus.pdf',  title: 'Venus Anniversary' },
+    'libra-engagement':           { pdf: '/downloads/cards/Engagement_Libra.pdf',   title: 'Libra Engagement' },
+    'virgo-get-well':             { pdf: '/downloads/cards/GetWell_Virgo.pdf',      title: 'Get Well, Virgo.' },
+    'sun-graduation':             { pdf: '/downloads/cards/Graduation_Sun.pdf',     title: 'Sun Graduation' },
+    'cancer-new-baby':            { pdf: '/downloads/cards/NewBaby_Cancer.pdf',     title: 'A New Little Moon.' },
+    'cancer-new-home':            { pdf: '/downloads/cards/NewHome_Cancer.pdf',     title: 'A New Home, Cancer.' },
+    'wedding-moon':               { pdf: '/downloads/cards/Wedding_Moon.pdf',       title: 'Wedding Moon' },
+    'sympathy-moon':              { pdf: '/downloads/cards/Sympathy_Moon.pdf',      title: 'Sympathy Moon' },
+
+    // ── Legacy occasion keys (pre-2026-06-04 URLs already in customer
+    //    inboxes still resolve). Each points at the canonical card above.
+    'congrats-capricorn':  { pdf: '/downloads/cards/Congrats_Capricorn.pdf',     title: 'Capricorn Congratulations' },
+    'new-chapter-scorpio': { pdf: '/downloads/cards/HappyDivorce_Scorpio.pdf',   title: 'A New Chapter, Scorpio.' },
+    'new-baby':            { pdf: '/downloads/cards/NewBaby_Cancer.pdf',         title: 'A New Little Moon.' },
   };
 
   // Engine API base. The /card-data endpoint returns the recipient/sender/

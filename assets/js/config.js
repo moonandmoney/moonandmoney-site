@@ -37,15 +37,42 @@ window.MM_CHECKOUT = {
   // ---- Calendar ----
   "Lunar Money Calendar 2026":    "https://moonandmoney.lemonsqueezy.com/checkout/buy/414e1146-5686-43a9-86c3-6ea290d5a57b",
 
-  // ---- Cards ---- (no LS products yet — these stay as previews)
-  "Saturn Return Card": "",
-  "Mercury Retrograde Card": "",
-  "New Year Moon Card": "",
-  "New Baby Card": "",
-  "Leo Birthday Card": "",
-  "Taurus Birthday Card": "",
+  // ---- Cards ---- ($7 each, animated viewer + PDF download)
+  // Paste each Lemon Squeezy checkout URL between the quotes once the LS
+  // product is created. Empty "" keeps the storefront preview hidden.
+  // Variant naming MUST match the engine's CARD_CATALOG keys (suffix
+  // " Card" is stripped by the engine, so "Aries Birthday Card" → "aries
+  // birthday" → routes to Birthday_Aries.pdf).
+  //
+  // Birthdays (12 zodiac signs)
+  "Aries Birthday Card":            "",
+  "Taurus Birthday Card":           "",
+  "Gemini Birthday Card":           "",
+  "Cancer Birthday Card":           "",
+  "Leo Birthday Card":              "",
+  "Virgo Birthday Card":            "",
+  "Libra Birthday Card":            "",
+  "Scorpio Birthday Card":          "",
+  "Sagittarius Birthday Card":      "",
+  "Capricorn Birthday Card":        "",
+  "Aquarius Birthday Card":         "",
+  "Pisces Birthday Card":           "",
+  // Occasions (13)
+  "Saturn Return Card":             "",
+  "Mercury Retrograde Card":        "",
+  "New Year Moon Card":             "",
   "Capricorn Congratulations Card": "",
-  "Scorpio New Chapter Card": "",
+  "Scorpio New Chapter Card":       "",
+  "Venus Anniversary Card":         "",
+  "Libra Engagement Card":          "",
+  "Virgo Get Well Card":            "",
+  "Sun Graduation Card":            "",
+  "Cancer New Baby Card":           "",
+  "Cancer New Home Card":           "",
+  "Wedding Moon Card":              "",
+  "Sympathy Moon Card":             "",
+  // Legacy alias (resolves via CARD_CATALOG to Cancer New Baby)
+  "New Baby Card":                  "",
 
   // ---- Atelier Notes (free pieces, kept quiet at the tail) ----
   "Moon & Money Glyphs":          "https://moonandmoney.lemonsqueezy.com/checkout/buy/a4619c2a-4184-4d4e-805b-ce4d8c1ef9c1"
@@ -87,15 +114,37 @@ window.MM_PRICES = {
   // Calendar
   "Lunar Money Calendar 2026":    "Free",
 
-  // Cards — no LS product yet, stay as "preview only" with no price label
-  "Saturn Return Card":             "",
-  "Mercury Retrograde Card":        "",
-  "New Year Moon Card":             "",
-  "New Baby Card":                  "",
-  "Leo Birthday Card":              "",
-  "Taurus Birthday Card":           "",
-  "Capricorn Congratulations Card": "",
-  "Scorpio New Chapter Card":       "",
+  // Cards — $7 standard tier. Empty string keeps the price chip hidden
+  // on the storefront until the matching MM_CHECKOUT URL is filled in.
+  // Birthdays (12)
+  "Aries Birthday Card":            "$7",
+  "Taurus Birthday Card":           "$7",
+  "Gemini Birthday Card":           "$7",
+  "Cancer Birthday Card":           "$7",
+  "Leo Birthday Card":              "$7",
+  "Virgo Birthday Card":            "$7",
+  "Libra Birthday Card":            "$7",
+  "Scorpio Birthday Card":          "$7",
+  "Sagittarius Birthday Card":      "$7",
+  "Capricorn Birthday Card":        "$7",
+  "Aquarius Birthday Card":         "$7",
+  "Pisces Birthday Card":           "$7",
+  // Occasions (13)
+  "Saturn Return Card":             "$7",
+  "Mercury Retrograde Card":        "$7",
+  "New Year Moon Card":             "$7",
+  "Capricorn Congratulations Card": "$7",
+  "Scorpio New Chapter Card":       "$7",
+  "Venus Anniversary Card":         "$7",
+  "Libra Engagement Card":          "$7",
+  "Virgo Get Well Card":            "$7",
+  "Sun Graduation Card":            "$7",
+  "Cancer New Baby Card":           "$7",
+  "Cancer New Home Card":           "$7",
+  "Wedding Moon Card":              "$7",
+  "Sympathy Moon Card":             "$7",
+  // Legacy alias
+  "New Baby Card":                  "$7",
 
   // Atelier Notes
   "Moon & Money Glyphs":          "Free",
