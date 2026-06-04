@@ -38,41 +38,40 @@ window.MM_CHECKOUT = {
   "Lunar Money Calendar 2026":    "https://moonandmoney.lemonsqueezy.com/checkout/buy/414e1146-5686-43a9-86c3-6ea290d5a57b",
 
   // ---- Cards ---- ($7 each, animated viewer + PDF download)
-  // Paste each Lemon Squeezy checkout URL between the quotes once the LS
-  // product is created. Empty "" keeps the storefront preview hidden.
-  // Variant naming MUST match the engine's CARD_CATALOG keys (suffix
-  // " Card" is stripped by the engine, so "Aries Birthday Card" → "aries
-  // birthday" → routes to Birthday_Aries.pdf).
+  // 25 LS checkout URLs added 2026-06-04. The card_pipeline +
+  // animated_card_pipeline catalogs carry aliases for Laura's actual LS
+  // product names ("Aqu Birthday", "Cancaer Birth", etc.) so routing
+  // works even before the LS-side names are tidied.
   //
   // Birthdays (12 zodiac signs)
-  "Aries Birthday Card":            "",
-  "Taurus Birthday Card":           "",
-  "Gemini Birthday Card":           "",
-  "Cancer Birthday Card":           "",
-  "Leo Birthday Card":              "",
-  "Virgo Birthday Card":            "",
-  "Libra Birthday Card":            "",
-  "Scorpio Birthday Card":          "",
-  "Sagittarius Birthday Card":      "",
-  "Capricorn Birthday Card":        "",
-  "Aquarius Birthday Card":         "",
-  "Pisces Birthday Card":           "",
+  "Aries Birthday Card":            "https://moonandmoney.lemonsqueezy.com/checkout/buy/fa0697bd-bd7e-4ea0-909c-dbdb2849f80b",
+  "Taurus Birthday Card":           "https://moonandmoney.lemonsqueezy.com/checkout/buy/c527bdf0-f048-490e-8ce9-0d8304993e67",
+  "Gemini Birthday Card":           "https://moonandmoney.lemonsqueezy.com/checkout/buy/f2ed495b-eac2-473a-a90c-968908be1694",
+  "Cancer Birthday Card":           "https://moonandmoney.lemonsqueezy.com/checkout/buy/437ef2ee-9c48-4c23-b7db-4b575fbb382a",
+  "Leo Birthday Card":              "https://moonandmoney.lemonsqueezy.com/checkout/buy/1462bfdb-b3fa-41a7-8c5d-40e559ac8560",
+  "Virgo Birthday Card":            "https://moonandmoney.lemonsqueezy.com/checkout/buy/c4740098-4a79-4626-beef-75353565ffec",
+  "Libra Birthday Card":            "https://moonandmoney.lemonsqueezy.com/checkout/buy/6a978631-0c14-4a2e-869b-7680c9a5ce5a",
+  "Scorpio Birthday Card":          "https://moonandmoney.lemonsqueezy.com/checkout/buy/4a240050-5169-4b27-bbc5-914a0aae6722",
+  "Sagittarius Birthday Card":      "https://moonandmoney.lemonsqueezy.com/checkout/buy/fefbd753-7f7f-469d-9f73-84cf1ce9d2d9",
+  "Capricorn Birthday Card":        "https://moonandmoney.lemonsqueezy.com/checkout/buy/cabfb284-ffd4-40a0-a8e0-706c2993d4ab",
+  "Aquarius Birthday Card":         "https://moonandmoney.lemonsqueezy.com/checkout/buy/50a4ae92-dbfa-4f56-8c5a-19864cbd8f0e",
+  "Pisces Birthday Card":           "https://moonandmoney.lemonsqueezy.com/checkout/buy/7075af26-42ea-43a6-9c81-dfca6905e5ed",
   // Occasions (13)
-  "Saturn Return Card":             "",
-  "Mercury Retrograde Card":        "",
-  "New Year Moon Card":             "",
-  "Capricorn Congratulations Card": "",
-  "Scorpio New Chapter Card":       "",
-  "Venus Anniversary Card":         "",
-  "Libra Engagement Card":          "",
-  "Virgo Get Well Card":            "",
-  "Sun Graduation Card":            "",
-  "Cancer New Baby Card":           "",
-  "Cancer New Home Card":           "",
-  "Wedding Moon Card":              "",
-  "Sympathy Moon Card":             "",
+  "Saturn Return Card":             "https://moonandmoney.lemonsqueezy.com/checkout/buy/062b4ffb-a64c-43a1-80c8-84ca90042fff",
+  "Mercury Retrograde Card":        "https://moonandmoney.lemonsqueezy.com/checkout/buy/99441095-6636-4519-9f4f-490e60cc5001",
+  "New Year Moon Card":             "https://moonandmoney.lemonsqueezy.com/checkout/buy/8a6330a6-b52c-4ea0-835d-3a0a5982b361",
+  "Capricorn Congratulations Card": "https://moonandmoney.lemonsqueezy.com/checkout/buy/25bc8885-656e-4c81-bfa0-1f9146685ba8",
+  "Scorpio New Chapter Card":       "https://moonandmoney.lemonsqueezy.com/checkout/buy/0e782d45-d50b-4506-be9d-faaaece21e0a",
+  "Venus Anniversary Card":         "https://moonandmoney.lemonsqueezy.com/checkout/buy/c3d7eace-8b8a-4b57-9c5c-18c30b5aee49",
+  "Libra Engagement Card":          "https://moonandmoney.lemonsqueezy.com/checkout/buy/6a2e74eb-77cb-43b1-a1b1-9cfba8054d47",
+  "Virgo Get Well Card":            "https://moonandmoney.lemonsqueezy.com/checkout/buy/07fcbda8-56c5-4379-b645-735126b165ca",
+  "Sun Graduation Card":            "https://moonandmoney.lemonsqueezy.com/checkout/buy/e85800db-34d1-47e3-b372-9707c7196859",
+  "Cancer New Baby Card":           "https://moonandmoney.lemonsqueezy.com/checkout/buy/7be3948d-2e0f-4e36-8943-21d6000e3fb2",
+  "Cancer New Home Card":           "https://moonandmoney.lemonsqueezy.com/checkout/buy/842689ce-db39-4b68-86e7-ad383b67b26b",
+  "Wedding Moon Card":              "https://moonandmoney.lemonsqueezy.com/checkout/buy/6e2036d6-932b-40b8-8a62-e2dd3dd431cf",
+  "Sympathy Moon Card":             "https://moonandmoney.lemonsqueezy.com/checkout/buy/7747cea8-77cb-4758-880a-ffe3b251791a",
   // Legacy alias (resolves via CARD_CATALOG to Cancer New Baby)
-  "New Baby Card":                  "",
+  "New Baby Card":                  "https://moonandmoney.lemonsqueezy.com/checkout/buy/7be3948d-2e0f-4e36-8943-21d6000e3fb2",
 
   // ---- Atelier Notes (free pieces, kept quiet at the tail) ----
   "Moon & Money Glyphs":          "https://moonandmoney.lemonsqueezy.com/checkout/buy/a4619c2a-4184-4d4e-805b-ce4d8c1ef9c1"
