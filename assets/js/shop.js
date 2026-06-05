@@ -281,8 +281,12 @@ function openCardModal(item, checkoutUrl) {
       '&checkout[custom][recipient_email]=' + encodeURIComponent(remail) +
       '&checkout[custom][message]='        + encodeURIComponent(msg);
     const finalUrl = checkoutUrl + sep + params;
-    m.classList.remove('show');
+    // Open LS first, then close the modal after a short beat so the
+    // buyer never sees a blank interim state if LS takes a moment to
+    // mount its overlay. Laura 2026-06-04: she experienced this as
+    // "kicked out of the payment screen".
     openCheckout(finalUrl);
+    setTimeout(function () { m.classList.remove('show'); }, 600);
   });
 
   m.classList.add('show');

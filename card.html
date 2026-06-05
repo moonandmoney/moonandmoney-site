@@ -234,7 +234,6 @@
   .interior.show .zone-mid > *:nth-child(3){ animation-delay:.45s; }
   .interior.show .zone-mid > *:nth-child(4){ animation-delay:.5s; }
   .interior.show .zone-mid > *:nth-child(5){ animation-delay:.55s; }
-  .interior.show .zone-mid > *:nth-child(6){ animation-delay:.6s; }
   .interior.show .zone-bottom > *:nth-child(1){ animation-delay:.55s; }
   .interior.show .zone-bottom > *:nth-child(2){ animation-delay:2.15s; }
   @keyframes rise{ to{ opacity:1; transform:translateY(0);} }
@@ -266,10 +265,16 @@
      after Laura's Hamed card overflowed at 14.5px / 1.5. */
   .body{ font-style:italic; color:var(--card-forest); font-size:13px; line-height:1.45; max-width:270px; }
   .closing{ font-style:italic; color:var(--card-navy-text); font-size:13px; }
-  /* Three-star cluster below the closing line (Laura 2026-06-04). */
-  .closing-stars{ display:flex; gap:11px; justify-content:center;
-    color:var(--card-gold); font-family:'Noto Sans Symbols 2','Cormorant Garamond',serif;
-    font-size:11px; opacity:.75; margin-top:6px; letter-spacing:.06em; }
+  /* Magic stars hovering off the upper-right of the last word of the
+     closing — small, light, like a wish escaping (Laura 2026-06-04). */
+  .closing-wrap{ position:relative; display:inline-block; }
+  .magic-stars{ position:absolute; top:-7px; right:-14px;
+    color:var(--card-gold); opacity:.78;
+    font-family:'Noto Sans Symbols 2','Cormorant Garamond',serif;
+    font-size:8px; line-height:1; letter-spacing:2px;
+    pointer-events:none; }
+  .magic-stars .star-a{ font-size:9px; }
+  .magic-stars .star-b{ font-size:6.5px; vertical-align:super; opacity:.85; }
   .delivered-line{ font-family:var(--card-serif); font-style:italic; color:var(--card-gold-deep);
     font-size:11px; letter-spacing:.04em; }
   .footer-int{ font-family:var(--card-sans); color:var(--card-gold); font-size:8px;
@@ -381,8 +386,10 @@ pintrk('page');
           <div class="divider"><i></i><b></b><i></i></div>
           <div class="title" id="intTitle">Happy Birthday, Aries.</div>
           <p class="body" id="intBody">The fire that starts everything? That&rsquo;s you. Today is your year zero, first to move, first to speak, first to ask for more. Spend on something bold. Your accountant won&rsquo;t get it. You will.</p>
-          <div class="closing" id="intClosing">Light it. We&rsquo;re watching.</div>
-          <div class="closing-stars" aria-hidden="true">&#10022; &#10022; &#10022;</div>
+          <div class="closing-wrap">
+            <div class="closing" id="intClosing">Light it. We&rsquo;re watching.</div>
+            <span class="magic-stars" aria-hidden="true"><span class="star-a">&#10022;</span><span class="star-b">&#10022;</span></span>
+          </div>
           <div class="divider divider-soft"><i></i><b></b><i></i></div>
         </div>
 
