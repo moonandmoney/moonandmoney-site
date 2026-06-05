@@ -86,6 +86,17 @@ window.MM_CHECKOUT = {
    this is the display label. Keep them in sync.
    ============================================================ */
 window.MM_PRICES = {
+  // Start Here (email-gated free)
+  "Moon Sign Money Blueprint":         "Free",
+
+  // The Money Chart — flagship birth-chart reading
+  "The Money Chart · Individual":      "$55",
+  "The Money Chart · Pairs":           "$77",
+
+  // Seasonal Forecast — quarterly chart-based money read
+  "Seasonal Forecast · Annual":        "$108 / yr",
+  "Seasonal Forecast · One Season":    "$36",
+
   // Moon Sign Money Guides — $3.99 each
   "Aries Moon Money Guide":       "$3.99",
   "Taurus Moon Money Guide":      "$3.99",

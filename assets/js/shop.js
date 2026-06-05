@@ -6,6 +6,62 @@
    add a `price` and re-enable in the card template when ready.
    ============================================================ */
 const CATALOG = [
+  // ════════════════════════════════════════════════════════════════════
+  // STOREFRONT ORDER IS THE FUNNEL. From free lead-magnet at the top
+  // down to free Atelier notes at the tail. Restructured 2026-06-04:
+  //   1. Start Here  — free Blueprint, email-gated, brings new visitors
+  //                    onto the Crescent Club list
+  //   2. Money Chart — flagship one-off reading, the destination Pinterest
+  //                    pins funnel toward
+  //   3. Seasonal    — recurring premium, highest LTV product
+  //   4. Cards       — low-friction gift-giving moment, every recipient
+  //                    becomes brand-aware
+  //   5. Sign Guides — $3.99 entry-level discovery
+  //   6. Bundles     — Element collections + Library
+  //   7. Calendar    — free brand utility, year-round
+  //   8. Atelier     — quiet free tail
+  // ════════════════════════════════════════════════════════════════════
+
+  // ---- Start Here (free, email-gated) ----
+  {
+    cat:'Start Here', tag:'start', glyph:'moon',
+    name:'Moon Sign Money Blueprint',
+    desc:'Your free guide to how your Moon sign earns, spends, and self-sabotages with money. Thirteen pages, drawn for the moon. Just your email gets it to you.',
+    kind:'blueprint',
+    badge:'Free',
+    prev:'blueprint.png',
+  },
+
+  // ---- The Money Chart (flagship reading) ----
+  {
+    cat:'The Money Chart', tag:'chart', glyph:'moon',
+    name:'The Money Chart · Individual',
+    desc:'Eight pages drawn from your birth chart, on how money actually moves through you. Three currents, one knot, one vein. Not a forecast — a mirror.',
+    kind:'page', link:'money-chart.html',
+    badge:'Flagship',
+  },
+  {
+    cat:'The Money Chart', tag:'chart', glyph:'moon',
+    name:'The Money Chart · Pairs',
+    desc:'The money dynamic between any two people. Friends, siblings, partners. Twelve pages, drawn for the two of you.',
+    kind:'page', link:'money-chart.html#pairs',
+  },
+
+  // ---- Seasonal Forecast (recurring premium) ----
+  {
+    cat:'Seasonal Forecast', tag:'seasonal', glyph:'moon',
+    name:'Seasonal Forecast · Annual',
+    desc:'Four personalised three-month money reads a year, delivered on each equinox and solstice. The sky moving against your chart, season by season. $108/year.',
+    kind:'page', link:'seasonal-forecast.html',
+    badge:'Subscription',
+  },
+  {
+    cat:'Seasonal Forecast', tag:'seasonal', glyph:'moon',
+    name:'Seasonal Forecast · One Season',
+    desc:'A single season’s reading. The door opens for two weeks after each equinox or solstice; first reading ships that same day. $36.',
+    kind:'page', link:'seasonal-forecast.html',
+  },
+
   // ---- Moon Sign Money Guides ----
   ...[
     ['Aries','Fire in the account. Income aligned to the boldest money nature in the zodiac.'],
@@ -92,10 +148,18 @@ const CATALOG = [
     const price = priceFor(p.name);
     const isPreviewOnly = price === '';
     const isFree = price === 'Free';
-    const buttonLabel = isPreviewOnly ? 'Preview' : (isFree ? 'Get it' : 'Order');
-    const footHTML = isPreviewOnly
-      ? `<button class="buy" data-i="${i}">${buttonLabel}</button>`
-      : `<span class="price">${price}</span><button class="buy" data-i="${i}">${buttonLabel}</button>`;
+    // kind-aware button label: the funnel-front items each have their
+    // own verb that reads better than 'Order' or 'Preview'.
+    let buttonLabel;
+    if (p.kind === 'blueprint')  buttonLabel = 'Get the Blueprint';
+    else if (p.kind === 'page')  buttonLabel = 'Read more';
+    else if (isPreviewOnly)      buttonLabel = 'Preview';
+    else if (isFree)             buttonLabel = 'Get it';
+    else                         buttonLabel = 'Order';
+    const showPrice = !isPreviewOnly && p.kind !== 'blueprint';
+    const footHTML = showPrice
+      ? `<span class="price">${price}</span><button class="buy" data-i="${i}">${buttonLabel}</button>`
+      : `<button class="buy" data-i="${i}">${buttonLabel}</button>`;
     return `
     <article class="product reveal" data-i="${i}">
       <div class="cover">
@@ -120,6 +184,17 @@ const CATALOG = [
     grid.querySelectorAll('[data-i]').forEach(el => {
       el.addEventListener('click', () => {
         const item = CATALOG[+el.dataset.i];
+        // kind-driven routing for the funnel-front items.
+        //   'blueprint' → email-capture modal, downloads the PDF and
+        //                 subscribes the buyer to the Crescent Club.
+        //   'page'      → same-tab navigation to a dedicated product
+        //                 page (Money Chart, Seasonal Forecast). LS
+        //                 checkout lives on those pages already.
+        if (item.kind === 'blueprint') return openBlueprintModal(item);
+        if (item.kind === 'page' && item.link) {
+          window.location.href = item.link;
+          return;
+        }
         const url = (window.MM_CHECKOUT && window.MM_CHECKOUT[item.name]) || item.link || '';
         // Greeting cards take a detour through the card-info modal so we
         // can collect the recipient's name + email + the buyer's personal
@@ -287,6 +362,97 @@ function openCardModal(item, checkoutUrl) {
     // "kicked out of the payment screen".
     openCheckout(finalUrl);
     setTimeout(function () { m.classList.remove('show'); }, 600);
+  });
+
+  m.classList.add('show');
+}
+
+/* Email-gated free download for the Moon Sign Money Blueprint.
+   Mirrors the card modal's structure (reuses the .wish + .cardform-*
+   styles so the visual feel is consistent). On submit:
+     1. Subscribe the buyer to Substack with their email pre-filled.
+     2. Trigger the Blueprint PDF download from the same click event
+        (browsers require a user-gesture for download to fire reliably).
+     3. Show a brief confirmation, then close the modal. */
+function openBlueprintModal(item) {
+  let m = document.getElementById('mmBlueprintModal');
+  if (!m) {
+    m = document.createElement('div');
+    m.id = 'mmBlueprintModal';
+    m.className = 'wish';
+    document.body.appendChild(m);
+    m.addEventListener('click', e => {
+      if (e.target === m || e.target.closest('[data-close]')) m.classList.remove('show');
+    });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') m.classList.remove('show'); });
+  }
+  const thumb = item.prev
+    ? `<div class="preview-thumb">
+         <img src="assets/img/previews/${item.prev}" alt="${item.name} preview" loading="lazy">
+         <div class="wm"><span>MOON &amp; MONEY · PREVIEW</span><span>MOON &amp; MONEY · PREVIEW</span><span>MOON &amp; MONEY · PREVIEW</span></div>
+       </div>`
+    : '';
+  m.innerHTML = `<div class="preview-card cardform-card">
+      ${thumb}
+      <span class="eyebrow">${item.cat} · Free</span>
+      <h2>${item.name}</h2>
+      <p>${item.desc}</p>
+      <form class="cardform" novalidate>
+        <label>
+          <span>Your <em>first name</em></span>
+          <input type="text" name="first_name" required autocomplete="given-name"
+                 placeholder="Laura" maxlength="40">
+        </label>
+        <label>
+          <span>Your <em>email</em></span>
+          <input type="email" name="email" required autocomplete="email"
+                 placeholder="laura@example.com">
+        </label>
+        <p class="cardform-note">Email IS the price. You will be added to the free Friday Crescent Club letter; unsubscribe anytime, no hard feelings.</p>
+        <button class="btn btn-gold cardform-send" type="submit">Send me the Blueprint →</button>
+        <div><small data-close>Cancel ✦</small></div>
+      </form>
+    </div>`;
+
+  const form = m.querySelector('.cardform');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const data = new FormData(form);
+    const firstName = (data.get('first_name') || '').toString().trim();
+    const email = (data.get('email') || '').toString().trim();
+    if (!firstName || !email) { form.reportValidity(); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { form.reportValidity(); return; }
+
+    // 1. Substack subscribe in a new tab, email + first name carried over.
+    //    Substack honors ?email= and ?first_name= on the subscribe URL,
+    //    so the form on their side opens pre-filled and the user just
+    //    confirms.
+    const subUrl = 'https://moonandmoney.substack.com/subscribe'
+      + '?email=' + encodeURIComponent(email)
+      + '&first_name=' + encodeURIComponent(firstName)
+      + '&utm_source=moonandmoney.ca'
+      + '&utm_medium=blueprint_gate'
+      + '&utm_campaign=blueprint';
+    window.open(subUrl, '_blank', 'noopener');
+
+    // 2. Trigger the PDF download from this same user gesture. Without
+    //    this happening synchronously inside the submit handler, Safari
+    //    and some Chrome configs block the programmatic download.
+    const a = document.createElement('a');
+    a.href = '/assets/gift/MoonSign_Money_Blueprint.pdf';
+    a.download = 'MoonSign_Money_Blueprint.pdf';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    // 3. Replace the form with a confirmation, auto-close after a beat.
+    form.innerHTML = `
+      <p class="cardform-success" style="text-align:center;font-family:var(--serif);font-style:italic;font-size:1.15rem;color:var(--gold);line-height:1.55;padding:20px 0">
+        Your Blueprint is downloading ✦<br><br>
+        Confirm your Crescent Club subscription in the new tab.<br>
+        We will see you Friday.
+      </p>`;
+    setTimeout(() => m.classList.remove('show'), 6000);
   });
 
   m.classList.add('show');
