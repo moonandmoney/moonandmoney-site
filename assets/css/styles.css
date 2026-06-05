@@ -147,29 +147,42 @@ section{padding:clamp(70px,11vw,140px) 0}
 .btn-ghost:hover{border-color:var(--gold);color:var(--gold-bright);box-shadow:var(--glow-gold)}
 
 /* ---------- The Aurora — slow rippling curtains of light ---------- */
-/* Aurora veil — rebuilt 2026-06-05 as a single fixed div with stacked
-   radial gradients on top of the page. No mask, no blur filter, no
-   mix-blend-mode (those three together were the scroll-disappear
-   cause earlier). Pure GPU-cheap transforms + opacity. The existing
-   JS sweep cycle in main.js keeps fading it in for ~26s every few
-   minutes — same brand intention, fraction of the compositor cost. */
+/* Aurora veil — rebuilt 2026-06-05 (second pass after first rebuild
+   was 'too sad / can barely see it'). Visible at all times now, no
+   sweep-cycle gating. Two stacked fixed layers cross-drift at
+   different speeds for the ribbon-like northern-lights motion;
+   colors saturated up enough to read against the dark navy without
+   needing mix-blend-mode (which was half of the scroll-disappear
+   bug). Pure transform-only animation, GPU-cheap. */
 .aurora-veil{
-  position:fixed; left:0; top:0; right:0; height:62vh;
+  position:fixed; left:0; top:0; right:0; height:70vh;
   z-index:0; pointer-events:none;
-  opacity:0;
-  transition:opacity 5s ease;
+  opacity:1;
   background:
-    radial-gradient(ellipse 70% 100% at 22% -10%,  rgba( 80,200,170,.16), transparent 60%),
-    radial-gradient(ellipse 60% 100% at 75% -10%,  rgba(140,160,230,.12), transparent 60%),
-    radial-gradient(ellipse 90% 70%  at 50%  10%,  rgba( 70,210,180,.08), transparent 70%);
+    radial-gradient(ellipse 55% 100% at 18% -10%,  rgba( 80,220,170,.42), transparent 62%),
+    radial-gradient(ellipse 65% 95%  at 78% -8%,   rgba(140,180,240,.32), transparent 64%),
+    radial-gradient(ellipse 85% 70%  at 50%  6%,   rgba( 70,225,180,.22), transparent 70%);
   transform:translateZ(0);
-  animation:auroraDrift 38s ease-in-out infinite;
+  animation:auroraDriftA 32s ease-in-out infinite;
 }
-.aurora-veil.on{ opacity:.62; }
-.aurora-veil > span{ display:none; } /* legacy children no-op; main.js still mounts them */
-@keyframes auroraDrift{
-  0%,100% { transform:translate3d(-2%, 0, 0); }
-  50%     { transform:translate3d( 2%, 0, 0); }
+.aurora-veil::after{
+  content:''; position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse 50% 80% at 35% -5%, rgba(170,140,230,.28), transparent 65%),
+    radial-gradient(ellipse 60% 85% at 70%  0%, rgba(100,210,200,.24), transparent 65%);
+  transform:translateZ(0);
+  animation:auroraDriftB 47s ease-in-out infinite;
+  mix-blend-mode:lighten;
+}
+.aurora-veil.on{ opacity:1; }  /* legacy class — main.js still toggles it */
+.aurora-veil > span{ display:none; } /* legacy children no-op */
+@keyframes auroraDriftA{
+  0%,100% { transform:translate3d(-3%, 0, 0); }
+  50%     { transform:translate3d( 3%, 0, 0); }
+}
+@keyframes auroraDriftB{
+  0%,100% { transform:translate3d( 4%, 0, 0); }
+  50%     { transform:translate3d(-4%, 0, 0); }
 }
 .aurora-veil.on{opacity:.62}
 /* each span is a tall sheet, light fading upward, feathered into
