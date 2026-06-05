@@ -145,7 +145,9 @@
   .crescent .ring{ position:absolute; inset:-1px; border-radius:50%; border:1px solid rgba(201,162,78,.5); }
   .crescent .bite{ position:absolute; inset:0; border-radius:50%; background:var(--card-navy);
     transform:translateX(26px);
-    transition:transform 2.4s cubic-bezier(.45,.02,.2,1), opacity 2.4s ease; }
+    /* Bite transition slowed 2.4s → 5s so the full → crescent moon
+       reads as a real beat, not a blink. Laura 2026-06-04. */
+    transition:transform 5s cubic-bezier(.45,.02,.2,1), opacity 5s ease; }
   /* "Full moon" state — bite fully retracted off the disk. JS adds .full
      on first load and again on replay, then removes it after a beat, so
      the bite slides into the crescent position via the existing 2.4s
@@ -577,18 +579,19 @@ pintrk('page');
 
     /* Full moon → crescent animation on first page load. The .crescent
        starts in .full state (bite retracted) so the moon reads as a
-       complete gold disk; after a beat the .full class lifts and the
-       existing 2.4s bite transition forms the crescent. Replay re-runs
-       the same beat so the moon greets the recipient each time. */
+       complete gold disk; the .full class holds for ~1.2s so the
+       recipient registers the full moon before the 5s bite transition
+       slides into crescent shape. Replay re-runs the same beat so the
+       moon greets the recipient each time the card is reopened. */
     const crescentEl = document.querySelector('.cover .crescent');
-    function playMoonGreeting(initialDelayMs) {
+    function playMoonGreeting(holdMs) {
       if (!crescentEl) return;
       crescentEl.classList.add('full');
       void crescentEl.offsetWidth;  // commit the "full" frame
       setTimeout(function () { crescentEl.classList.remove('full'); },
-                 initialDelayMs == null ? 250 : initialDelayMs);
+                 holdMs == null ? 1200 : holdMs);
     }
-    playMoonGreeting(350);
+    playMoonGreeting(1200);
 
     // ── Scatter fine gold stars on the cover ──
     (function scatterStars() {
@@ -739,8 +742,8 @@ pintrk('page');
       // Wait for the cover fade-in (.55s) to land before forming the
       // crescent — otherwise the bite transition runs behind a fading-
       // in cover and the moon is already in crescent shape by the time
-      // the recipient can see it. Laura 2026-06-04 caught this.
-      setTimeout(function () { playMoonGreeting(150); }, 600);
+      // the recipient can see it. Laura 2026-06-04.
+      setTimeout(function () { playMoonGreeting(1200); }, 600);
     });
     /* analytics beacon now lives inside renderCard() since occasion is
        only resolved there (could be from URL params OR engine fetch). */
