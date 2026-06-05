@@ -180,26 +180,15 @@ section{padding:clamp(70px,11vw,140px) 0}
        first-on / 80s hold / 35s off cycle, fading via the new 9s
        opacity transition for naturalism. */
 .aurora-veil{
-  position:fixed; left:0; top:0; width:100%; height:75vh;
-  z-index:0; pointer-events:none;
-  opacity:.22;
-  overflow:hidden;
-  transform:translateZ(0);
-  transition:opacity 9s ease;
-  /* Five-stop fade with a slight angle so the bottom edge is not a
-     perfect horizontal line. */
-  -webkit-mask-image:linear-gradient(177deg,
-    #000 0, #000 36%,
-    rgba(0,0,0,.85) 54%,
-    rgba(0,0,0,.50) 72%,
-    rgba(0,0,0,.18) 88%,
-    transparent 100%);
-          mask-image:linear-gradient(177deg,
-    #000 0, #000 36%,
-    rgba(0,0,0,.85) 54%,
-    rgba(0,0,0,.50) 72%,
-    rgba(0,0,0,.18) 88%,
-    transparent 100%);
+  /* Aurora hidden while Laura decides between (A) real-image
+     aurora backdrop and (B) drop aurora entirely. After eight
+     passes of CSS gradients we kept producing variations of
+     blobs / UFOs / lines / pale washes because that is what
+     radial-gradient and repeating-mask can produce — not real
+     northern-lights curtains. Keeping the markup, animations,
+     and JS sweep cycle in place so either path can re-enable
+     instantly. */
+  display:none !important;
 }
 .aurora-veil.on{ opacity:1; }
 .aurora-veil > span{
