@@ -79,23 +79,32 @@
     color:var(--card-gold-soft); opacity:.7; margin-bottom:28px;
   }
 
-  /* Stage holds both faces; 5×7 ratio matches the print PDF cards.
-     The drop-shadow filters create a soft gold halo that radiates out
-     from the card silhouette. Two layers: an inner warmer glow + an
-     outer softer halo, so the card reads as backlit / candlelit on
-     the navy stage (Laura 2026-06-04). The halo respects the card's
-     rounded-rectangle shape and breathes slowly to feel lit, not
-     pasted on. */
+  /* Stage holds both faces; 5×7 ratio matches the print PDF cards. */
   .stage{ position:relative; width:min(380px, 92vw); aspect-ratio:5/7;
-    perspective:2200px; transform-style:preserve-3d;
-    filter:drop-shadow(0 0 32px rgba(216,184,113,.36))
-           drop-shadow(0 0 70px rgba(201,162,78,.22));
-    animation:stage-breathe 7s ease-in-out infinite; }
-  @keyframes stage-breathe{
-    0%, 100%{ filter:drop-shadow(0 0 28px rgba(216,184,113,.32))
-                     drop-shadow(0 0 64px rgba(201,162,78,.18)); }
-    50%     { filter:drop-shadow(0 0 40px rgba(216,184,113,.42))
-                     drop-shadow(0 0 84px rgba(201,162,78,.26)); }
+    perspective:2200px; transform-style:preserve-3d; z-index:1; }
+
+  /* Gold halo behind the card. The drop-shadow filter approach earlier
+     wasn't rendering on the live page (Laura 2026-06-04: "Dont see any
+     glow at all"). Replaced with a real radial-gradient element living
+     behind the stage. Sits at z-index 0; stage at z-index 1. Breathes
+     slowly so the card reads as candlelit. */
+  .stage-wrap{ position:relative; display:flex; justify-content:center; align-items:center;
+    margin:0 auto; }
+  .halo{ position:absolute; top:50%; left:50%;
+    width:140%; height:140%;
+    transform:translate(-50%, -50%);
+    z-index:0; pointer-events:none; border-radius:50%;
+    background:radial-gradient(ellipse at center,
+      rgba(245,228,178,.55) 0%,
+      rgba(216,184,113,.45) 20%,
+      rgba(201,162,78,.25) 40%,
+      rgba(201,162,78,.10) 60%,
+      transparent 80%);
+    filter:blur(8px);
+    animation:halo-breathe 7s ease-in-out infinite; }
+  @keyframes halo-breathe{
+    0%, 100%{ opacity:.85; transform:translate(-50%, -50%) scale(.96); }
+    50%     { opacity:1;   transform:translate(-50%, -50%) scale(1.06); }
   }
   .face{ position:absolute; inset:0; border-radius:6px; overflow:hidden;
     box-shadow:0 30px 70px rgba(0,0,0,.55); }
@@ -225,6 +234,7 @@
   .interior.show .zone-mid > *:nth-child(3){ animation-delay:.45s; }
   .interior.show .zone-mid > *:nth-child(4){ animation-delay:.5s; }
   .interior.show .zone-mid > *:nth-child(5){ animation-delay:.55s; }
+  .interior.show .zone-mid > *:nth-child(6){ animation-delay:.6s; }
   .interior.show .zone-bottom > *:nth-child(1){ animation-delay:.55s; }
   .interior.show .zone-bottom > *:nth-child(2){ animation-delay:2.15s; }
   @keyframes rise{ to{ opacity:1; transform:translateY(0);} }
@@ -256,6 +266,10 @@
      after Laura's Hamed card overflowed at 14.5px / 1.5. */
   .body{ font-style:italic; color:var(--card-forest); font-size:13px; line-height:1.45; max-width:270px; }
   .closing{ font-style:italic; color:var(--card-navy-text); font-size:13px; }
+  /* Three-star cluster below the closing line (Laura 2026-06-04). */
+  .closing-stars{ display:flex; gap:11px; justify-content:center;
+    color:var(--card-gold); font-family:'Noto Sans Symbols 2','Cormorant Garamond',serif;
+    font-size:11px; opacity:.75; margin-top:6px; letter-spacing:.06em; }
   .delivered-line{ font-family:var(--card-serif); font-style:italic; color:var(--card-gold-deep);
     font-size:11px; letter-spacing:.04em; }
   .footer-int{ font-family:var(--card-sans); color:var(--card-gold); font-size:8px;
@@ -335,6 +349,8 @@ pintrk('page');
 <div class="card-page">
   <div class="card-meta" id="cardMeta">A card from the Moon &amp; Money atelier</div>
 
+  <div class="stage-wrap">
+  <div class="halo" aria-hidden="true"></div>
   <div class="stage" id="stage">
 
     <!-- Sparkle layer: gold particle burst fires from JS on cover open. -->
@@ -366,6 +382,7 @@ pintrk('page');
           <div class="title" id="intTitle">Happy Birthday, Aries.</div>
           <p class="body" id="intBody">The fire that starts everything? That&rsquo;s you. Today is your year zero, first to move, first to speak, first to ask for more. Spend on something bold. Your accountant won&rsquo;t get it. You will.</p>
           <div class="closing" id="intClosing">Light it. We&rsquo;re watching.</div>
+          <div class="closing-stars" aria-hidden="true">&#10022; &#10022; &#10022;</div>
           <div class="divider divider-soft"><i></i><b></b><i></i></div>
         </div>
 
@@ -399,6 +416,7 @@ pintrk('page');
       <div class="cover-hint">TAP TO OPEN</div>
     </div>
   </div>
+  </div><!-- /.stage-wrap -->
 
   <div class="card-actions">
     <button id="soundBtn" type="button" aria-pressed="false">SOUND ON</button>
@@ -460,7 +478,7 @@ pintrk('page');
       pdf: null,
     },
     'birthday-taurus':       { pdf: '/downloads/cards/Birthday_Taurus.pdf',       title: 'Happy Birthday, Taurus.',       glyph: '♉︎', tagline: '— happy birthday —', coverOccasion: 'HAPPY BIRTHDAY', coverTagline: 'For the one who builds wealth like oak trees grow.' },
-    'birthday-gemini':       { pdf: '/downloads/cards/Birthday_Gemini.pdf',       title: 'Happy Birthday, Gemini.',       glyph: '♊︎', tagline: '— happy birthday —', coverOccasion: 'HAPPY BIRTHDAY', coverTagline: 'For the year of stories ahead.' },
+    'birthday-gemini':       { pdf: '/downloads/cards/Birthday_Gemini.pdf',       title: 'Happy Birthday, Gemini.',       glyph: '♊︎', tagline: '— happy birthday —', coverOccasion: 'HAPPY BIRTHDAY', coverTagline: 'For the year of stories ahead.', closing: 'Light it. Make the wish.' },
     'birthday-cancer':       { pdf: '/downloads/cards/Birthday_Cancer.pdf',       title: 'Happy Birthday, Cancer.',       glyph: '♋︎', tagline: '— happy birthday —', coverOccasion: 'HAPPY BIRTHDAY', coverTagline: 'When the moon comes home to your sky.' },
     'birthday-leo':          { pdf: '/downloads/cards/Birthday_Leo.pdf',          title: 'Happy Birthday, Leo.',          glyph: '♌︎', tagline: '— happy birthday —', coverOccasion: 'HAPPY BIRTHDAY', coverTagline: 'When the sun returns to its own house.' },
     'birthday-virgo':        { pdf: '/downloads/cards/Birthday_Virgo.pdf',        title: 'Happy Birthday, Virgo.',        glyph: '♍︎', tagline: '— happy birthday —', coverOccasion: 'HAPPY BIRTHDAY', coverTagline: 'For the careful eye on the year ahead.' },
@@ -606,9 +624,13 @@ pintrk('page');
        then strip it and let the 2.4s bite transition form the
        crescent in view. Replay does NOT call this — it relies on the
        natural transition fired when .cover.open is removed. */
+    /* Hold the full moon for ~2.6s on first load so the recipient has
+       a real beat to register it before the bite forms the crescent.
+       1.2s wasn't enough (Laura 2026-06-04: "Moon at the start still
+       comes in so so fast"). */
     const crescentEl = document.querySelector('.cover .crescent');
     if (crescentEl) {
-      setTimeout(function () { crescentEl.classList.remove('full'); }, 1200);
+      setTimeout(function () { crescentEl.classList.remove('full'); }, 2600);
     }
 
     // ── Scatter fine gold stars on the cover ──
