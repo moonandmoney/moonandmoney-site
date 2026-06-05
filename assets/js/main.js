@@ -716,7 +716,10 @@
     }
   }
 
-  /* ---- The Aurora: drifts gently across the sky now and then ---- */
+  /* ---- The Aurora: dominant baseline visible at low opacity, brightens
+     up for natural-feeling cycles (Laura 2026-06-05). First brightening
+     lands ~1 minute after page load — gives the visitor a moment of the
+     baseline aurora first, then the "wave" comes through. */
   if (!reduced) (function aurora() {
     const veil = document.createElement('div');
     veil.className = 'aurora-veil';
@@ -725,10 +728,19 @@
 
     function sweep() {
       veil.classList.add('on');
-      setTimeout(() => veil.classList.remove('on'), 26000); // dances for ~26s
-      setTimeout(sweep, (140 + Math.random() * 130) * 1000); // returns every ~2.3–4.5 min
+      // Visible-bright period: 70–95s. The 9s opacity transition on
+      // the veil itself means the fade-in and fade-out are gradual,
+      // never an abrupt on/off.
+      const onMs = 70000 + Math.random() * 25000;
+      setTimeout(() => veil.classList.remove('on'), onMs);
+      // Dim baseline period: 30–55s before the next bright wave.
+      const offMs = 30000 + Math.random() * 25000;
+      setTimeout(sweep, onMs + offMs);
     }
-    setTimeout(sweep, 9000 + Math.random() * 9000); // first one 9–18s in
+    // First bright wave lands ~55–75s in. Before that the baseline
+    // aurora is already visible at opacity .22, so the page is never
+    // completely without the sky.
+    setTimeout(sweep, 55000 + Math.random() * 20000);
   })();
 
   /* ---- Newsletter: send to Substack + deliver the free welcome gift ---- */

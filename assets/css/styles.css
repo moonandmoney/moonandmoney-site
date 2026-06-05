@@ -161,27 +161,45 @@ section{padding:clamp(70px,11vw,140px) 0}
    the ribbons actually move instead of drifting glacially. The
    ribbon-translate keyframe also sped up (70/92/116s → 38/48/62s).
    Visible at all times (opacity:1, no sweep-cycle gating). */
-/* Aurora veil — pass 5, 2026-06-05. Laura's note after pass 4:
-   'looks awful. the bottom is like so straight and cut off. and
-   the page is moving so quickly it's not being graceful.'
-   Two real fixes:
-     1. Container shrunk from 100vh to 56vh and the bottom of the
-        mask gradient brought way up (transparent kicks in at 55%
-        and is fully gone by 78%). The aurora now lives only in
-        the top portion of the viewport and dissolves cleanly into
-        the page beneath instead of cutting off at the page fold.
-     2. Animation periods nearly doubled from the previous pass so
-        the motion is slow and graceful. Sway 30/42/55s, rise
-        21/27/33s, ribbon 60/75/95s. The mask stripes were also
-        widened from 3%-19% to 4%-26% so the curtain folds are
-        broader and less strobe-y. */
+/* Aurora veil — pass 6, 2026-06-05. Laura's note after pass 5:
+   'getting way better. can it go down the page more, like 3/4
+   not just the top quarter. pink and purple should be accents,
+   mainly green. bottom less straight / less totally even. and
+   have it cycle on and off so it's there but not nonstop.'
+   This matches real aurora: dominant green oxygen wash with pink
+   and purple as higher-altitude accents, an irregular bottom edge
+   that dissolves into the sky, and natural fade in/out periods.
+   Implementation:
+     - height 56vh → 75vh so the aurora reaches further down.
+     - mask is a five-stop gradient at 177deg (slight 3° tilt) so
+       the bottom is feathered AND not perfectly horizontal.
+     - each of the three ribbons now ends at a different vertical
+       position, so the overall bottom edge is uneven by design.
+     - opacity baseline drops to .22 (faint always-there presence)
+       and main.js sweep cycle (separate commit) bumps to ~1 min
+       first-on / 80s hold / 35s off cycle, fading via the new 9s
+       opacity transition for naturalism. */
 .aurora-veil{
-  position:fixed; left:0; top:0; width:100%; height:56vh;
+  position:fixed; left:0; top:0; width:100%; height:75vh;
   z-index:0; pointer-events:none;
-  opacity:1; overflow:hidden;
+  opacity:.22;
+  overflow:hidden;
   transform:translateZ(0);
-  -webkit-mask-image:linear-gradient(to bottom, #000 0, #000 38%, rgba(0,0,0,.5) 55%, transparent 78%);
-          mask-image:linear-gradient(to bottom, #000 0, #000 38%, rgba(0,0,0,.5) 55%, transparent 78%);
+  transition:opacity 9s ease;
+  /* Five-stop fade with a slight angle so the bottom edge is not a
+     perfect horizontal line. */
+  -webkit-mask-image:linear-gradient(177deg,
+    #000 0, #000 36%,
+    rgba(0,0,0,.85) 54%,
+    rgba(0,0,0,.50) 72%,
+    rgba(0,0,0,.18) 88%,
+    transparent 100%);
+          mask-image:linear-gradient(177deg,
+    #000 0, #000 36%,
+    rgba(0,0,0,.85) 54%,
+    rgba(0,0,0,.50) 72%,
+    rgba(0,0,0,.18) 88%,
+    transparent 100%);
 }
 .aurora-veil.on{ opacity:1; }
 .aurora-veil > span{
@@ -202,46 +220,47 @@ section{padding:clamp(70px,11vw,140px) 0}
   will-change:transform;
 }
 
-/* Layer 1 — green into cyan */
+/* Layer 1 — MAIN GREEN. Tallest, brightest, dominant. */
 .aurora-veil > span:nth-child(1){
+  top:-8%; height:96%;
   background-image:linear-gradient(to top,
     rgba( 54,200,144,0) 4%,
-    rgba( 54,220,160,.58) 28%,
-    rgba(104,230,180,.42) 50%,
-    rgba(140,180,230,.24) 72%,
-    rgba(140,170,226,0) 92%);
+    rgba( 60,230,160,.72) 26%,
+    rgba(110,240,180,.58) 50%,
+    rgba(160,230,210,.30) 72%,
+    rgba(180,220,235,0) 92%);
   animation:auroraSway 30s ease-in-out infinite,
             auroraRise 21s ease-in-out infinite,
             auroraRibbon 60s linear infinite;
 }
 
-/* Layer 2 — lavender into pink */
+/* Layer 2 — PINK accent. Shorter, dimmer, ends higher than the
+   green so the bottom edge of the aurora is uneven. */
 .aurora-veil > span:nth-child(2){
-  top:-3%;
+  top:4%; height:74%;
   background-image:linear-gradient(to top,
-    rgba(170,130,235,0) 6%,
-    rgba(190,130,230,.42) 30%,
-    rgba(230,140,210,.46) 54%,
-    rgba(255,160,220,.28) 76%,
-    rgba(255,180,225,0) 93%);
+    rgba(190,130,230,0) 6%,
+    rgba(220,140,210,.34) 32%,
+    rgba(255,160,220,.30) 62%,
+    rgba(255,180,225,0) 92%);
   animation:auroraSway 42s ease-in-out infinite reverse,
             auroraRise 27s ease-in-out infinite,
             auroraRibbon 75s linear infinite reverse;
-  opacity:.82;
+  opacity:.55;
 }
 
-/* Layer 3 — mint into teal */
+/* Layer 3 — PURPLE accent. Different bottom again. */
 .aurora-veil > span:nth-child(3){
-  top:3%;
+  top:-2%; height:84%;
   background-image:linear-gradient(to top,
-    rgba( 70,214,180,0) 8%,
-    rgba( 90,225,190,.36) 34%,
-    rgba(132,200,232,.26) 58%,
-    rgba( 70,214,180,0) 90%);
+    rgba(150,100,220,0) 8%,
+    rgba(180,130,240,.28) 32%,
+    rgba(200,140,235,.30) 58%,
+    rgba(190,150,225,0) 88%);
   animation:auroraSway 55s ease-in-out infinite,
             auroraRise 33s ease-in-out infinite,
             auroraRibbon 95s linear infinite;
-  opacity:.7;
+  opacity:.48;
 }
 
 /* Sway: very gentle skew + slight translate so the curtain folds drift. */
