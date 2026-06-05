@@ -370,7 +370,16 @@ section{padding:clamp(70px,11vw,140px) 0}
 .emblem-sub{font-family:var(--display);font-size:.62rem;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);z-index:1}
 
 /* ---------- Pillars ---------- */
+/* 3-column by default (homepage I/II/III). When the same .pillars
+   container holds exactly 4 children — like the Ethos page's four
+   movements — switch to 4 columns so nothing wraps to a half-empty
+   second row. At narrower viewports the 4-up layout collapses to a
+   clean 2×2 grid instead of 2+2 misaligned with 3+1. Laura 2026-06-04. */
 .pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.pillars:has(> :nth-child(4):last-child){grid-template-columns:repeat(4,1fr);gap:20px}
+@media (max-width:980px){
+  .pillars:has(> :nth-child(4):last-child){grid-template-columns:repeat(2,1fr)}
+}
 .pillar{
   padding:40px 32px;border:1px solid var(--line);border-radius:6px;
   background:linear-gradient(180deg,rgba(28,25,36,.6),rgba(7,6,8,.4));
