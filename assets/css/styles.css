@@ -98,7 +98,11 @@ section{padding:clamp(70px,11vw,140px) 0}
   border-bottom:1px solid transparent;
 }
 .nav.scrolled{
-  background:rgba(7,6,8,.78);backdrop-filter:blur(16px);
+  /* Dropped backdrop-filter:blur(16px) (2026-06-04). The compounding
+     blur cost on every scroll frame was the second-most-likely cause
+     of desktop scroll judder. Slightly more opaque background keeps
+     the nav legible without paying the blur cost. */
+  background:rgba(7,6,8,.92);
   padding:14px clamp(20px,4vw,46px);border-bottom:1px solid var(--line);
 }
 .brand{font-family:var(--display);font-size:1.18rem;letter-spacing:.22em;color:var(--parchment);display:flex;align-items:center;gap:.55rem}
@@ -138,11 +142,15 @@ section{padding:clamp(70px,11vw,140px) 0}
 
 /* ---------- The Aurora — slow rippling curtains of light ---------- */
 .aurora-veil{
-  position:fixed;left:0;top:0;width:100%;height:100vh;z-index:1;overflow:hidden;
-  pointer-events:none;opacity:0;mix-blend-mode:screen;
-  filter:blur(20px) saturate(1.2);
+  position:fixed;left:0;top:0;width:100%;height:100vh;z-index:0;overflow:hidden;
+  pointer-events:none;opacity:0;
+  /* Dropped mix-blend-mode:screen and filter:blur(20px) (Laura 2026-06-04).
+     Together with position:fixed they were causing Chrome desktop's
+     compositor to fail to repaint content on reverse-scroll, which read
+     as "all text disappears when I scroll up". The aurora still drifts
+     and dissolves; it just composites without the GPU blend hazard. */
+  isolation:isolate;
   transition:opacity 5s ease;
-  /* dissolve softly into the page rather than ending in a hard band */
   -webkit-mask-image:linear-gradient(to bottom,#000 0,#000 52%,rgba(0,0,0,.45) 74%,transparent 96%);
   mask-image:linear-gradient(to bottom,#000 0,#000 52%,rgba(0,0,0,.45) 74%,transparent 96%);
 }
