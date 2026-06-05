@@ -115,14 +115,17 @@
     box-shadow:-40px 40px 70px rgba(0,0,0,.5); }
   .cover .stars span{ position:absolute; background:var(--card-gold-soft); border-radius:50%; opacity:.65; }
 
+  /* Foil sheen: a thin gold band that drifts across the cover. Kept very
+     low opacity (used to be .22 and read as a "white blob" — 2026-06-04
+     Laura). Now barely-there: hints at metallic finish without screaming. */
   .foil{ position:absolute; inset:0; z-index:4; pointer-events:none; overflow:hidden; border-radius:6px; }
   .foil::before{ content:""; position:absolute; top:-60%; left:-30%;
-    width:40%; height:220%;
+    width:28%; height:220%;
     background:linear-gradient(105deg, transparent 0%, rgba(232,210,150,.0) 35%,
-      rgba(245,228,178,.22) 50%, rgba(232,210,150,.0) 65%, transparent 100%);
-    transform:rotate(8deg); filter:blur(2px);
-    animation:sweep 6.5s ease-in-out infinite; }
-  @keyframes sweep{ 0%{ left:-40%; } 55%{ left:120%; } 100%{ left:120%; } }
+      rgba(245,228,178,.07) 50%, rgba(232,210,150,.0) 65%, transparent 100%);
+    transform:rotate(8deg); filter:blur(3px);
+    animation:sweep 11s ease-in-out infinite; }
+  @keyframes sweep{ 0%{ left:-40%; } 60%{ left:120%; } 100%{ left:120%; } }
   .cover.open .foil{ opacity:0; transition:opacity .5s; }
 
   .frame-outer{ position:absolute; inset:14px; border:1px solid var(--card-forest); border-radius:3px; }
@@ -607,8 +610,11 @@ pintrk('page');
       const pt = e.touches ? e.touches[0] : e;
       const cx = (pt.clientX - r.left) / r.width  - 0.5;   // -0.5 .. 0.5
       const cy = (pt.clientY - r.top)  / r.height - 0.5;
-      const rotY = (-cx * 12).toFixed(2);   // tilt right when cursor on right
-      const rotX = ( cy *  8).toFixed(2);   // tilt down when cursor down
+      // Dialed down 2026-06-04 (was 12 / 8) — the larger tilt was pushing
+      // the cream interior out from behind the cover edge, reading as a
+      // "white blob" on hover. Subtle tilt only.
+      const rotY = (-cx * 4).toFixed(2);    // tilt right when cursor on right
+      const rotX = ( cy * 3).toFixed(2);    // tilt down when cursor down
       cover.style.transform = 'rotateX(' + rotX + 'deg) rotateY(' + rotY + 'deg) translateZ(0)';
     }
     function onParallaxLeave() {
