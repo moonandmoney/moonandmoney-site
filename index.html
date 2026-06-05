@@ -327,6 +327,13 @@ pintrk('page');
   document.getElementById('yr').textContent=new Date().getFullYear();
   document.querySelectorAll('.sigil[data-glyph]').forEach(s=>{s.innerHTML=window.ZODIAC.svg(s.dataset.glyph);});
 </script>
+<!-- GSAP + ScrollTrigger. Loaded sync before main.js so the reveal system
+     can pick up GSAP if it's available; main.js falls back to the legacy
+     IntersectionObserver if either script is missing. Sync loading
+     preserves the existing execution order with player.js / content.js /
+     reader.js / today-mood.js that follow main.js. -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <script src="assets/js/main.js"></script>
 <script src="assets/js/player.js"></script>
 <script src="assets/js/content.js"></script>

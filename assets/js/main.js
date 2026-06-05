@@ -77,11 +77,51 @@
     });
   });
 
-  /* ---- Scroll reveal ---- */
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-  }, { threshold: 0.12 });
-  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  /* ---- Scroll reveal ----
+     Uses GSAP ScrollTrigger when GSAP is loaded on the page, falls back
+     to IntersectionObserver otherwise. GSAP gives proper easing, batched
+     stagger, and no double-fire on reverse-scroll (which was the homepage
+     "all text disappears" failure mode 2026-06-04). The fallback keeps
+     reveals working on pages that haven't yet shipped GSAP. */
+  (function setupReveal() {
+    const items = document.querySelectorAll('.reveal');
+    if (!items.length) return;
+
+    if (window.gsap && window.ScrollTrigger) {
+      gsap.registerPlugin(ScrollTrigger);
+      // Pin the start state via inline gsap.set so the CSS opacity:0
+      // baseline is reinforced even if the page CSS evolves.
+      gsap.set('.reveal', { opacity: 0, y: 38 });
+      ScrollTrigger.batch('.reveal', {
+        start: 'top 88%',
+        once: true,
+        onEnter: (batch) => gsap.to(batch, {
+          opacity: 1, y: 0, duration: 1, ease: 'power3.out',
+          stagger: 0.08, overwrite: 'auto',
+          onComplete: () => batch.forEach(el => el.classList.add('in')),
+        }),
+      });
+      return;
+    }
+
+    // Legacy IntersectionObserver fallback (used on pages without GSAP).
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.12 });
+    items.forEach(el => io.observe(el));
+  })();
+
+  // Belt-and-suspenders safety net: if GSAP's CDN ever fails to load on
+  // a page that expected it, after a generous delay flip everything to
+  // visible so the page is never permanently blank. This will not fire
+  // when GSAP loads normally (the gsap.set above runs first).
+  setTimeout(() => {
+    if (!window.gsap) {
+      document.documentElement.classList.add('no-gsap');
+    }
+  }, 1200);
 
   /* ---- Cursor glow ----
      mousemove fires hundreds of times a second on desktop. The old code
