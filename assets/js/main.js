@@ -123,6 +123,51 @@
     }
   }, 1200);
 
+  /* ---- Homepage hero choreography (GSAP timeline) ----
+     Only fires on pages that have .hero-inner (homepage). Overrides
+     the legacy CSS 'rise' animation when GSAP is loaded, so the hero
+     children come in as a staggered sequence with real easing curves
+     instead of one flat fade. Reduced-motion users get an immediate
+     reveal (no animation) instead of a delayed surprise. */
+  if (window.gsap) {
+    const heroInner = document.querySelector('.hero-inner');
+    if (heroInner) {
+      // Kill the CSS 'rise' animation so GSAP fully owns the hero state.
+      gsap.set(heroInner, { animation: 'none', clearProps: 'animation', opacity: 1, y: 0 });
+      const children = ['.moon-stage', '.moon-readout', '.hero-inner h1', '.hero-inner .hero-tag', '.hero-inner .hero-actions'];
+      const present = children.filter(sel => document.querySelector(sel));
+
+      if (reduced) {
+        // Respect prefers-reduced-motion: show everything immediately.
+        gsap.set(present, { opacity: 1, y: 0 });
+      } else {
+        // Start hidden so the timeline reveals each in turn.
+        gsap.set(present, { opacity: 0, y: 22 });
+        const tl = gsap.timeline({ delay: 0.25 });
+        tl.to('.moon-stage',                { opacity: 1, y: 0, duration: 1.1, ease: 'power3.out' }, 0)
+          .to('.moon-readout',              { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, 0.35)
+          .to('.hero-inner h1',             { opacity: 1, y: 0, duration: 1.0, ease: 'power3.out' }, 0.45)
+          .to('.hero-inner .hero-tag',      { opacity: 1, y: 0, duration: 0.9, ease: 'power2.out' }, 0.75)
+          .to('.hero-inner .hero-actions',  { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, 1.05);
+
+        // Scroll cue: drifts in last and floats away as soon as the
+        // user actually scrolls (ScrollTrigger fades it on first
+        // meaningful scroll, so it never overlaps with content below).
+        const cue = document.querySelector('.scroll-cue');
+        if (cue) {
+          gsap.fromTo(cue, { opacity: 0, y: -8 },
+            { opacity: 1, y: 0, duration: 0.6, delay: 1.7, ease: 'power2.out' });
+          if (window.ScrollTrigger) {
+            ScrollTrigger.create({
+              start: 100, end: 200,
+              onUpdate: (self) => gsap.to(cue, { opacity: 1 - self.progress, duration: 0.2, overwrite: 'auto' }),
+            });
+          }
+        }
+      }
+    }
+  }
+
   /* ---- Cursor glow ----
      mousemove fires hundreds of times a second on desktop. The old code
      wrote .left / .top per event, which triggers layout on a 520x520
