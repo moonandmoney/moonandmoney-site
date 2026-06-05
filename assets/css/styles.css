@@ -222,15 +222,24 @@ section{padding:clamp(70px,11vw,140px) 0}
   will-change:transform, filter;
 }
 
-/* Layer 1 — MAIN GREEN. Tallest, brightest, dominant. */
+/* Layer 1 — MAIN GREEN. Tallest, brightest, dominant. The vertical
+   linear-gradient handles the top-to-bottom color wash; two narrow
+   radial-gradients layered on top create the bright 'glow-streak'
+   cores you see in the iOS Aurora wallpaper (Laura's reference).
+   The heavy filter:blur on the parent span smooths the radial cores
+   into soft luminous wisps rather than hard bright lines. */
 .aurora-veil > span:nth-child(1){
   top:-8%; height:96%;
-  background-image:linear-gradient(to top,
-    rgba( 54,200,144,0) 4%,
-    rgba( 60,230,160,.72) 26%,
-    rgba(110,240,180,.58) 50%,
-    rgba(160,230,210,.30) 72%,
-    rgba(180,220,235,0) 92%);
+  background-image:
+    radial-gradient(ellipse 8% 60% at 22% 35%, rgba(160,255,200,.55), transparent 75%),
+    radial-gradient(ellipse 10% 70% at 58% 28%, rgba(140,250,200,.50), transparent 75%),
+    radial-gradient(ellipse 7% 55% at 78% 38%, rgba(170,255,210,.45), transparent 75%),
+    linear-gradient(to top,
+      rgba( 54,200,144,0) 4%,
+      rgba( 60,230,160,.62) 26%,
+      rgba(110,240,180,.50) 50%,
+      rgba(160,230,210,.26) 72%,
+      rgba(180,220,235,0) 92%);
   animation:auroraSway 30s ease-in-out infinite,
             auroraRise 21s ease-in-out infinite;
 }
@@ -239,11 +248,14 @@ section{padding:clamp(70px,11vw,140px) 0}
    green so the bottom edge of the aurora is uneven. */
 .aurora-veil > span:nth-child(2){
   top:4%; height:74%;
-  background-image:linear-gradient(to top,
-    rgba(190,130,230,0) 6%,
-    rgba(220,140,210,.34) 32%,
-    rgba(255,160,220,.30) 62%,
-    rgba(255,180,225,0) 92%);
+  background-image:
+    radial-gradient(ellipse 9% 55% at 35% 30%, rgba(255,200,235,.40), transparent 78%),
+    radial-gradient(ellipse 7% 50% at 70% 40%, rgba(255,180,225,.35), transparent 78%),
+    linear-gradient(to top,
+      rgba(190,130,230,0) 6%,
+      rgba(220,140,210,.30) 32%,
+      rgba(255,160,220,.28) 62%,
+      rgba(255,180,225,0) 92%);
   animation:auroraSway 42s ease-in-out infinite reverse,
             auroraRise 27s ease-in-out infinite;
   opacity:.55;
@@ -252,14 +264,17 @@ section{padding:clamp(70px,11vw,140px) 0}
 /* Layer 3 — PURPLE accent. Different bottom again. */
 .aurora-veil > span:nth-child(3){
   top:-2%; height:84%;
-  background-image:linear-gradient(to top,
-    rgba(150,100,220,0) 8%,
-    rgba(180,130,240,.28) 32%,
-    rgba(200,140,235,.30) 58%,
-    rgba(190,150,225,0) 88%);
+  background-image:
+    radial-gradient(ellipse 8% 58% at 15% 40%, rgba(210,170,255,.38), transparent 78%),
+    radial-gradient(ellipse 9% 55% at 88% 32%, rgba(195,160,245,.34), transparent 78%),
+    linear-gradient(to top,
+      rgba(150,100,220,0) 8%,
+      rgba(180,130,240,.26) 32%,
+      rgba(200,140,235,.28) 58%,
+      rgba(190,150,225,0) 88%);
   animation:auroraSway 55s ease-in-out infinite,
             auroraRise 33s ease-in-out infinite;
-  opacity:.48;
+  opacity:.50;
 }
 
 /* Sway: very gentle skew + slight translate so the curtain folds drift. */
