@@ -209,15 +209,17 @@ section{padding:clamp(70px,11vw,140px) 0}
   background-size:100% 240%;
   background-repeat:no-repeat;
   mix-blend-mode:screen;
-  -webkit-mask:repeating-linear-gradient(95deg,
-    transparent 0 4%, rgba(0,0,0,.55) 8%, #000 11% 14%,
-    rgba(0,0,0,.55) 18%, transparent 22% 26%);
-          mask:repeating-linear-gradient(95deg,
-    transparent 0 4%, rgba(0,0,0,.55) 8%, #000 11% 14%,
-    rgba(0,0,0,.55) 18%, transparent 22% 26%);
-  -webkit-mask-size:300% 100%;
-          mask-size:300% 100%;
-  will-change:transform;
+  /* Mask removed 2026-06-05 (was repeating-linear-gradient creating
+     hard vertical bands that read as 'lines' instead of curtains —
+     the original aurora hid those edges with filter:blur(20px) on
+     the fixed parent, which was half the scroll-bug ingredient).
+     Replacement: a hefty filter:blur on the SPAN (not the fixed
+     parent) softens the gradient washes into cloud-like aurora
+     waves. Children of a fixed parent compositing with blur is
+     cheap; only the fixed-root combination caused the earlier
+     reverse-scroll failure. */
+  filter:blur(22px);
+  will-change:transform, filter;
 }
 
 /* Layer 1 — MAIN GREEN. Tallest, brightest, dominant. */
@@ -230,8 +232,7 @@ section{padding:clamp(70px,11vw,140px) 0}
     rgba(160,230,210,.30) 72%,
     rgba(180,220,235,0) 92%);
   animation:auroraSway 30s ease-in-out infinite,
-            auroraRise 21s ease-in-out infinite,
-            auroraRibbon 60s linear infinite;
+            auroraRise 21s ease-in-out infinite;
 }
 
 /* Layer 2 — PINK accent. Shorter, dimmer, ends higher than the
@@ -244,8 +245,7 @@ section{padding:clamp(70px,11vw,140px) 0}
     rgba(255,160,220,.30) 62%,
     rgba(255,180,225,0) 92%);
   animation:auroraSway 42s ease-in-out infinite reverse,
-            auroraRise 27s ease-in-out infinite,
-            auroraRibbon 75s linear infinite reverse;
+            auroraRise 27s ease-in-out infinite;
   opacity:.55;
 }
 
@@ -258,8 +258,7 @@ section{padding:clamp(70px,11vw,140px) 0}
     rgba(200,140,235,.30) 58%,
     rgba(190,150,225,0) 88%);
   animation:auroraSway 55s ease-in-out infinite,
-            auroraRise 33s ease-in-out infinite,
-            auroraRibbon 95s linear infinite;
+            auroraRise 33s ease-in-out infinite;
   opacity:.48;
 }
 
@@ -278,12 +277,9 @@ section{padding:clamp(70px,11vw,140px) 0}
   0%,100%{background-position:50% 4%}
   50%    {background-position:50% 52%}
 }
-/* The curtain folds drift sideways via mask position. Slow now so the
-   curtain reads as drifting, not strobing. */
-@keyframes auroraRibbon{
-  0%  {-webkit-mask-position:0% 0;mask-position:0% 0}
-  100%{-webkit-mask-position:100% 0;mask-position:100% 0}
-}
+/* auroraRibbon (mask-position drift) removed 2026-06-05 with the mask
+   itself. The sway + rise + soft cloud blur give enough natural
+   motion that the explicit ribbon drift isn't needed anymore. */
 
 @media (prefers-reduced-motion:reduce){
   .aurora-veil > span{ animation:none; }
