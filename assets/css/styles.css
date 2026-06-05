@@ -190,13 +190,22 @@ section{padding:clamp(70px,11vw,140px) 0}
 .aurora-veil{
   position:fixed; left:0; top:0; width:100%; height:78vh;
   z-index:0; pointer-events:none;
-  opacity:.62;
   overflow:hidden;
   transform:translateZ(0);
-  transition:opacity 9s ease;
-  background:url('../img/aurora.png') center top / cover no-repeat;
-  background-size:160% auto;
-  animation:auroraDrift 90s ease-in-out infinite alternate;
+  background:url('../img/aurora.png') center top no-repeat;
+  background-size:150% auto;
+  /* Four stacked animations at different periods so they never sync.
+     Combined effect: the curtains drift sideways, bob vertically, grow
+     and shrink in scale, and pulse in brightness — Laura 2026-06-05
+     called this 'smaller build-up then bigger dancing movement and
+     fade in and out of brightness'. None of the four conflicts (each
+     targets a different property), all are GPU-cheap because the
+     underlying composite is a static bitmap. */
+  animation:
+    auroraDrift     90s ease-in-out infinite alternate,
+    auroraBob       41s ease-in-out infinite,
+    auroraScale     34s ease-in-out infinite,
+    auroraBreathe   22s ease-in-out infinite;
   -webkit-mask-image:linear-gradient(177deg,
     #000 0, #000 40%,
     rgba(0,0,0,.85) 56%,
@@ -210,11 +219,23 @@ section{padding:clamp(70px,11vw,140px) 0}
     rgba(0,0,0,.18) 88%,
     transparent 100%);
 }
-.aurora-veil.on{ opacity:1; }
+.aurora-veil.on{}  /* legacy class — opacity now driven by auroraBreathe */
 .aurora-veil > span{ display:none; }
 @keyframes auroraDrift{
-  0%   { background-position:-8% top; }
-  100% { background-position:108% top; }
+  0%   { background-position-x:-8%; }
+  100% { background-position-x:108%; }
+}
+@keyframes auroraBob{
+  0%, 100% { background-position-y:0%; }
+  50%      { background-position-y:7%; }
+}
+@keyframes auroraScale{
+  0%, 100% { background-size:140% auto; }
+  50%      { background-size:178% auto; }
+}
+@keyframes auroraBreathe{
+  0%, 100% { opacity:.42; }
+  50%      { opacity:.85; }
 }
 .aurora-veil.on{ opacity:1; }
 /* Legacy span ribbon rules removed 2026-06-05 — the aurora is now a
