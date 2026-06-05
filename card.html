@@ -96,23 +96,17 @@
   /* ─── COVER (navy Deco) ─── */
   .cover{
     background:var(--card-navy); z-index:3;
-    /* Default transform sets the parallax baseline at 0/0/0 so the
-       parallax JS can apply rotateX/rotateY without fighting CSS. */
-    transform:rotateX(0) rotateY(0) translateZ(0);
-    transition:transform 2.8s cubic-bezier(.42,0,.18,1), opacity 1s ease 2s;
-    transform-origin:left center;
-    transform-style:preserve-3d; backface-visibility:hidden;
+    transform:translateZ(0);
+    transition:opacity .55s ease, transform .55s ease;
     cursor:pointer; box-shadow:0 30px 70px rgba(0,0,0,.55);
-    will-change:transform;
+    will-change:opacity, transform;
   }
-  /* Parallax mode: faster, springier transition so the cover follows the
-     cursor responsively. JS adds .parallax when not yet opened. */
-  .cover.parallax{ transition:transform .35s cubic-bezier(.22,1,.36,1); }
-  /* Open: rotate AND push the cover toward the viewer in Z — gives the
-     swing real perspective depth instead of a flat hinge motion. */
-  .cover.open{ transform:rotateY(-122deg) translateZ(110px); opacity:0;
-    transition:transform 2.8s cubic-bezier(.42,0,.18,1), opacity 1s ease 2s;
-    box-shadow:-40px 40px 70px rgba(0,0,0,.5); }
+  /* Parallax baseline retained as a no-op so legacy JS doesn't fight CSS. */
+  .cover.parallax{ transition:opacity .55s ease, transform .55s ease; }
+  /* Open: clean crossfade out, with a tiny scale-up to suggest lift.
+     No 3D rotation (was reading as "robotic" and leaving the cream
+     interior visible mid-animation, which Laura flagged 2026-06-04). */
+  .cover.open{ opacity:0; transform:translateZ(0) scale(1.02); pointer-events:none; }
   .cover .stars span{ position:absolute; background:var(--card-gold-soft); border-radius:50%; opacity:.65; }
 
   /* Foil sheen: a thin gold band that drifts across the cover. Kept very
@@ -194,22 +188,25 @@
   .zone-mid{ gap:12px; justify-content:center; flex:1; padding:8px 0; }
   .zone-bottom{ gap:10px; }
 
-  /* Staggered reveal across zone children once cover opens */
-  .zone-top > *, .zone-mid > *, .zone-bottom > *{ opacity:0; transform:translateY(10px); }
+  /* Quick reveal across zone children once cover opens. Was a 2.45s
+     staggered cascade — too slow, made the card look empty for too long
+     mid-animation (2026-06-04). Now content arrives in under a second
+     total, gentle stagger only. */
+  .zone-top > *, .zone-mid > *, .zone-bottom > *{ opacity:0; transform:translateY(6px); }
   .interior.show .zone-top > *,
   .interior.show .zone-mid > *,
-  .interior.show .zone-bottom > *{ animation:rise .9s ease forwards; }
-  .interior.show .zone-top > *:nth-child(1){ animation-delay:.5s; }
-  .interior.show .zone-top > *:nth-child(2){ animation-delay:.65s; }
-  .interior.show .zone-top > *:nth-child(3){ animation-delay:.8s; }
-  .interior.show .zone-top > *:nth-child(4){ animation-delay:.95s; }
-  .interior.show .zone-top > *:nth-child(5){ animation-delay:1.1s; }
-  .interior.show .zone-mid > *:nth-child(1){ animation-delay:1.25s; }
-  .interior.show .zone-mid > *:nth-child(2){ animation-delay:1.4s; }
-  .interior.show .zone-mid > *:nth-child(3){ animation-delay:1.55s; }
-  .interior.show .zone-mid > *:nth-child(4){ animation-delay:1.7s; }
-  .interior.show .zone-mid > *:nth-child(5){ animation-delay:1.85s; }
-  .interior.show .zone-bottom > *:nth-child(1){ animation-delay:2s; }
+  .interior.show .zone-bottom > *{ animation:rise .5s ease forwards; }
+  .interior.show .zone-top > *:nth-child(1){ animation-delay:.15s; }
+  .interior.show .zone-top > *:nth-child(2){ animation-delay:.2s; }
+  .interior.show .zone-top > *:nth-child(3){ animation-delay:.25s; }
+  .interior.show .zone-top > *:nth-child(4){ animation-delay:.3s; }
+  .interior.show .zone-top > *:nth-child(5){ animation-delay:.35s; }
+  .interior.show .zone-mid > *:nth-child(1){ animation-delay:.35s; }
+  .interior.show .zone-mid > *:nth-child(2){ animation-delay:.4s; }
+  .interior.show .zone-mid > *:nth-child(3){ animation-delay:.45s; }
+  .interior.show .zone-mid > *:nth-child(4){ animation-delay:.5s; }
+  .interior.show .zone-mid > *:nth-child(5){ animation-delay:.55s; }
+  .interior.show .zone-bottom > *:nth-child(1){ animation-delay:.55s; }
   .interior.show .zone-bottom > *:nth-child(2){ animation-delay:2.15s; }
   @keyframes rise{ to{ opacity:1; transform:translateY(0);} }
 
@@ -436,17 +433,17 @@ pintrk('page');
       closing: "Light it. We’re watching.",
       pdf: null,
     },
-    'birthday-taurus':       { pdf: '/downloads/cards/Birthday_Taurus.pdf',       title: 'Happy Birthday, Taurus.' },
-    'birthday-gemini':       { pdf: '/downloads/cards/Birthday_Gemini.pdf',       title: 'Happy Birthday, Gemini.' },
-    'birthday-cancer':       { pdf: '/downloads/cards/Birthday_Cancer.pdf',       title: 'Happy Birthday, Cancer.' },
-    'birthday-leo':          { pdf: '/downloads/cards/Birthday_Leo.pdf',          title: 'Happy Birthday, Leo.' },
-    'birthday-virgo':        { pdf: '/downloads/cards/Birthday_Virgo.pdf',        title: 'Happy Birthday, Virgo.' },
-    'birthday-libra':        { pdf: '/downloads/cards/Birthday_Libra.pdf',        title: 'Happy Birthday, Libra.' },
-    'birthday-scorpio':      { pdf: '/downloads/cards/Birthday_Scorpio.pdf',      title: 'Happy Birthday, Scorpio.' },
-    'birthday-sagittarius':  { pdf: '/downloads/cards/Birthday_Sagittarius.pdf',  title: 'Happy Birthday, Sagittarius.' },
-    'birthday-capricorn':    { pdf: '/downloads/cards/Birthday_Capricorn.pdf',    title: 'Happy Birthday, Capricorn.' },
-    'birthday-aquarius':     { pdf: '/downloads/cards/Birthday_Aquarius.pdf',     title: 'Happy Birthday, Aquarius.' },
-    'birthday-pisces':       { pdf: '/downloads/cards/Birthday_Pisces.pdf',       title: 'Happy Birthday, Pisces.' },
+    'birthday-taurus':       { pdf: '/downloads/cards/Birthday_Taurus.pdf',       title: 'Happy Birthday, Taurus.',       glyph: '♉︎', tagline: '— happy birthday —', coverOccasion: 'HAPPY BIRTHDAY', coverTagline: 'For the one who builds wealth like oak trees grow.' },
+    'birthday-gemini':       { pdf: '/downloads/cards/Birthday_Gemini.pdf',       title: 'Happy Birthday, Gemini.',       glyph: '♊︎', tagline: '— happy birthday —', coverOccasion: 'HAPPY BIRTHDAY', coverTagline: 'For the year of stories ahead.' },
+    'birthday-cancer':       { pdf: '/downloads/cards/Birthday_Cancer.pdf',       title: 'Happy Birthday, Cancer.',       glyph: '♋︎', tagline: '— happy birthday —', coverOccasion: 'HAPPY BIRTHDAY', coverTagline: 'When the moon comes home to your sky.' },
+    'birthday-leo':          { pdf: '/downloads/cards/Birthday_Leo.pdf',          title: 'Happy Birthday, Leo.',          glyph: '♌︎', tagline: '— happy birthday —', coverOccasion: 'HAPPY BIRTHDAY', coverTagline: 'When the sun returns to its own house.' },
+    'birthday-virgo':        { pdf: '/downloads/cards/Birthday_Virgo.pdf',        title: 'Happy Birthday, Virgo.',        glyph: '♍︎', tagline: '— happy birthday —', coverOccasion: 'HAPPY BIRTHDAY', coverTagline: 'For the careful eye on the year ahead.' },
+    'birthday-libra':        { pdf: '/downloads/cards/Birthday_Libra.pdf',        title: 'Happy Birthday, Libra.',        glyph: '♎︎', tagline: '— happy birthday —', coverOccasion: 'HAPPY BIRTHDAY', coverTagline: 'When the scales arrive at balance.' },
+    'birthday-scorpio':      { pdf: '/downloads/cards/Birthday_Scorpio.pdf',      title: 'Happy Birthday, Scorpio.',      glyph: '♏︎', tagline: '— happy birthday —', coverOccasion: 'HAPPY BIRTHDAY', coverTagline: 'For the year the depths turn over again.' },
+    'birthday-sagittarius':  { pdf: '/downloads/cards/Birthday_Sagittarius.pdf',  title: 'Happy Birthday, Sagittarius.',  glyph: '♐︎', tagline: '— happy birthday —', coverOccasion: 'HAPPY BIRTHDAY', coverTagline: 'For the arrow lifting toward its next aim.' },
+    'birthday-capricorn':    { pdf: '/downloads/cards/Birthday_Capricorn.pdf',    title: 'Happy Birthday, Capricorn.',    glyph: '♑︎', tagline: '— happy birthday —', coverOccasion: 'HAPPY BIRTHDAY', coverTagline: 'For the climb that resumes from a new step.' },
+    'birthday-aquarius':     { pdf: '/downloads/cards/Birthday_Aquarius.pdf',     title: 'Happy Birthday, Aquarius.',     glyph: '♒︎', tagline: '— happy birthday —', coverOccasion: 'HAPPY BIRTHDAY', coverTagline: 'For the year the future moves toward you.' },
+    'birthday-pisces':       { pdf: '/downloads/cards/Birthday_Pisces.pdf',       title: 'Happy Birthday, Pisces.',       glyph: '♓︎', tagline: '— happy birthday —', coverOccasion: 'HAPPY BIRTHDAY', coverTagline: 'When the tide returns to its own shore.' },
 
     // ── Occasions (13) ────────────────────────────────────────────────────
     'saturn-return':              { pdf: '/downloads/cards/SaturnReturn.pdf',       title: 'Saturn Return' },
