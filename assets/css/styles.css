@@ -147,86 +147,109 @@ section{padding:clamp(70px,11vw,140px) 0}
 .btn-ghost:hover{border-color:var(--gold);color:var(--gold-bright);box-shadow:var(--glow-gold)}
 
 /* ---------- The Aurora — slow rippling curtains of light ---------- */
-/* Aurora veil — pass 3, 2026-06-05. Laura: 'they need to be dancing.
-   green, pink and purple eloquently moving through the stars.'
-   Rebuilt as three colored ribbons (green-teal, pink, purple), each
-   on its own translateX + skewX + scaleY dance animation at a
-   different period so they cross past each other and never sync.
-   Reuses the three <span> children main.js already mounts on
-   .aurora-veil. No filter:blur on the fixed parent (that was the
-   scroll-bug cause); each ribbon is a soft radial-gradient column
-   that fades to transparent at its own edges, so the ribbon feels
-   diffuse without the GPU cost. mix-blend-mode:lighten on each
-   ribbon stacks the colors additively without affecting the parent
-   compositor. */
+/* Aurora veil — pass 4, 2026-06-05. Laura: 'I liked how they were
+   before, just don't want them to move glitchy or so slow.'
+   Restored the original curtain-mask look (vertical rays of light)
+   with the original layered color washes (green→cyan, lavender→pink,
+   mint→teal), but with the two ingredients that caused the scroll-
+   disappear bug stripped out:
+     - filter:blur(20px) on the fixed parent — gone.
+     - mix-blend-mode:screen on the fixed root — gone (moved to the
+       children spans only so the parent doesn't impose a blend across
+       the page).
+   Animation periods cut roughly in half (38/52/66s → 20/28/36s) so
+   the ribbons actually move instead of drifting glacially. The
+   ribbon-translate keyframe also sped up (70/92/116s → 38/48/62s).
+   Visible at all times (opacity:1, no sweep-cycle gating). */
 .aurora-veil{
-  position:fixed; left:0; top:0; right:0; height:78vh;
+  position:fixed; left:0; top:0; width:100%; height:100vh;
   z-index:0; pointer-events:none;
   opacity:1; overflow:hidden;
   transform:translateZ(0);
+  -webkit-mask-image:linear-gradient(to bottom, #000 0, #000 52%, rgba(0,0,0,.45) 74%, transparent 96%);
+          mask-image:linear-gradient(to bottom, #000 0, #000 52%, rgba(0,0,0,.45) 74%, transparent 96%);
 }
 .aurora-veil.on{ opacity:1; }
 .aurora-veil > span{
   display:block;
-  position:absolute; top:-15%; height:100%;
-  pointer-events:none;
-  border-radius:50%;
-  mix-blend-mode:lighten;
-  transform-origin:50% 100%;
-  will-change:transform, opacity;
+  position:absolute; left:-30%; width:160%; top:-8%; height:84%;
+  transform-origin:50% 0;
+  background-size:100% 240%;
+  background-repeat:no-repeat;
+  mix-blend-mode:screen;
+  -webkit-mask:repeating-linear-gradient(95deg,
+    transparent 0 3%, rgba(0,0,0,.55) 6%, #000 8% 10.5%,
+    rgba(0,0,0,.55) 13%, transparent 16% 19%);
+          mask:repeating-linear-gradient(95deg,
+    transparent 0 3%, rgba(0,0,0,.55) 6%, #000 8% 10.5%,
+    rgba(0,0,0,.55) 13%, transparent 16% 19%);
+  -webkit-mask-size:300% 100%;
+          mask-size:300% 100%;
+  will-change:transform;
 }
 
-/* Green ribbon — left third */
+/* Layer 1 — green into cyan */
 .aurora-veil > span:nth-child(1){
-  left:-5%; width:42vw;
-  background:radial-gradient(ellipse 45% 75% at 50% 50%,
-    rgba( 80,255,170,.62) 0%,
-    rgba(110,230,190,.42) 25%,
-    rgba(140,200,220,.22) 55%,
-    transparent 82%);
-  animation:ribbonDanceA 22s ease-in-out infinite;
+  height:88%;
+  background-image:linear-gradient(to top,
+    rgba( 54,200,144,0) 4%,
+    rgba( 54,220,160,.6) 28%,
+    rgba(104,230,180,.45) 50%,
+    rgba(140,180,230,.26) 72%,
+    rgba(140,170,226,0) 92%);
+  animation:auroraSway 20s ease-in-out infinite,
+            auroraRise 14s ease-in-out infinite,
+            auroraRibbon 38s linear infinite;
 }
 
-/* Pink ribbon — middle */
+/* Layer 2 — lavender into pink */
 .aurora-veil > span:nth-child(2){
-  left:28%; width:38vw;
-  background:radial-gradient(ellipse 45% 72% at 50% 45%,
-    rgba(255,140,210,.55) 0%,
-    rgba(230,130,210,.40) 28%,
-    rgba(200,140,220,.20) 56%,
-    transparent 82%);
-  animation:ribbonDanceB 28s ease-in-out infinite;
+  top:-3%; height:80%;
+  background-image:linear-gradient(to top,
+    rgba(170,130,235,0) 6%,
+    rgba(190,130,230,.42) 30%,
+    rgba(230,140,210,.46) 54%,
+    rgba(255,160,220,.28) 76%,
+    rgba(255,180,225,0) 93%);
+  animation:auroraSway 28s ease-in-out infinite reverse,
+            auroraRise 18s ease-in-out infinite,
+            auroraRibbon 48s linear infinite reverse;
+  opacity:.82;
 }
 
-/* Purple ribbon — right third */
+/* Layer 3 — mint into teal */
 .aurora-veil > span:nth-child(3){
-  left:55%; width:46vw;
-  background:radial-gradient(ellipse 45% 78% at 50% 52%,
-    rgba(180,130,240,.55) 0%,
-    rgba(150,120,225,.40) 25%,
-    rgba(130,140,225,.20) 55%,
-    transparent 82%);
-  animation:ribbonDanceC 35s ease-in-out infinite;
+  top:3%; height:72%;
+  background-image:linear-gradient(to top,
+    rgba( 70,214,180,0) 8%,
+    rgba( 90,225,190,.38) 34%,
+    rgba(132,200,232,.28) 58%,
+    rgba( 70,214,180,0) 90%);
+  animation:auroraSway 36s ease-in-out infinite,
+            auroraRise 22s ease-in-out infinite,
+            auroraRibbon 62s linear infinite;
+  opacity:.7;
 }
 
-@keyframes ribbonDanceA{
-  0%   { transform:translateX(-6%) skewX(-10deg) scaleY(1.00); opacity:.85; }
-  25%  { transform:translateX( 4%) skewX(  6deg) scaleY(1.10); opacity:1; }
-  50%  { transform:translateX(10%) skewX( 12deg) scaleY( .92); opacity:.78; }
-  75%  { transform:translateX( 2%) skewX( -2deg) scaleY(1.06); opacity:.95; }
-  100% { transform:translateX(-6%) skewX(-10deg) scaleY(1.00); opacity:.85; }
+/* Sway: small skew + slight translate so the curtain folds drift. */
+@keyframes auroraSway{
+  0%  {transform:translateX(-7%) skewX(-5deg)   scaleY(.97)}
+  18% {transform:translateX(-3%) skewX(-1.5deg) scaleY(1.03)}
+  37% {transform:translateX(2%)  skewX(2.5deg)  scaleY(1)}
+  54% {transform:translateX(5%)  skewX(4.5deg)  scaleY(1.06)}
+  71% {transform:translateX(2%)  skewX(1deg)    scaleY(1.01)}
+  87% {transform:translateX(-3%) skewX(-3deg)   scaleY(1.04)}
+  100%{transform:translateX(-7%) skewX(-5deg)   scaleY(.97)}
 }
-@keyframes ribbonDanceB{
-  0%   { transform:translateX( 5%) skewX(  8deg) scaleY(1.05); opacity:.88; }
-  30%  { transform:translateX(-6%) skewX( -6deg) scaleY( .94); opacity:1; }
-  60%  { transform:translateX( 9%) skewX( 10deg) scaleY(1.12); opacity:.75; }
-  100% { transform:translateX( 5%) skewX(  8deg) scaleY(1.05); opacity:.88; }
+/* Light breathing up and down inside each ribbon. */
+@keyframes auroraRise{
+  0%,100%{background-position:50% 4%}
+  50%    {background-position:50% 52%}
 }
-@keyframes ribbonDanceC{
-  0%   { transform:translateX(-9%) skewX( -7deg) scaleY( .98); opacity:.78; }
-  35%  { transform:translateX( 7%) skewX(  9deg) scaleY(1.12); opacity:1; }
-  68%  { transform:translateX( 2%) skewX(  3deg) scaleY( .94); opacity:.88; }
-  100% { transform:translateX(-9%) skewX( -7deg) scaleY( .98); opacity:.78; }
+/* The curtain folds drift sideways via mask position. */
+@keyframes auroraRibbon{
+  0%  {-webkit-mask-position:0% 0;mask-position:0% 0}
+  100%{-webkit-mask-position:100% 0;mask-position:100% 0}
 }
 
 @media (prefers-reduced-motion:reduce){
