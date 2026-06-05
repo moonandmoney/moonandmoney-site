@@ -122,8 +122,11 @@
   .corner.bl{ bottom:9px; left:9px; border-right:none; border-top:none; }
   .corner.br{ bottom:9px; right:9px; border-left:none; border-top:none; }
 
+  /* Extra bottom padding (was 46px, now 68px) so the MOON & MONEY
+     footer line sits clear of the inner gold frame and the tap-hint
+     band. Laura 2026-06-04: the footer was reading as "on the border". */
   .cover-inner{ position:absolute; inset:0; display:flex; flex-direction:column;
-    align-items:center; text-align:center; padding:46px 30px; }
+    align-items:center; text-align:center; padding:46px 30px 68px 30px; }
   .wordmark{ font-family:var(--card-sans); color:var(--card-gold); font-size:13px;
     letter-spacing:.42em; font-weight:500; text-indent:.42em; }
   .wm-divider{ display:flex; align-items:center; gap:7px; margin:11px 0 0; }
@@ -143,6 +146,12 @@
   .crescent .bite{ position:absolute; inset:0; border-radius:50%; background:var(--card-navy);
     transform:translateX(26px);
     transition:transform 2.4s cubic-bezier(.45,.02,.2,1), opacity 2.4s ease; }
+  /* "Full moon" state — bite fully retracted off the disk. JS adds .full
+     on first load and again on replay, then removes it after a beat, so
+     the bite slides into the crescent position via the existing 2.4s
+     transition. The opening sequence (.cover.open) then slides the bite
+     back off, completing the full → crescent → full visual arc. */
+  .crescent.full .bite{ transform:translateX(132px); opacity:0; }
   .cover.open .crescent .bite{ transform:translateX(132px); opacity:0; }
   .cover.open .crescent .disk{ box-shadow:0 0 38px 6px rgba(216,184,113,.45); }
 
@@ -566,6 +575,21 @@ pintrk('page');
       });
     }
 
+    /* Full moon → crescent animation on first page load. The .crescent
+       starts in .full state (bite retracted) so the moon reads as a
+       complete gold disk; after a beat the .full class lifts and the
+       existing 2.4s bite transition forms the crescent. Replay re-runs
+       the same beat so the moon greets the recipient each time. */
+    const crescentEl = document.querySelector('.cover .crescent');
+    function playMoonGreeting(initialDelayMs) {
+      if (!crescentEl) return;
+      crescentEl.classList.add('full');
+      void crescentEl.offsetWidth;  // commit the "full" frame
+      setTimeout(function () { crescentEl.classList.remove('full'); },
+                 initialDelayMs == null ? 250 : initialDelayMs);
+    }
+    playMoonGreeting(350);
+
     // ── Scatter fine gold stars on the cover ──
     (function scatterStars() {
       const s = document.getElementById('stars');
@@ -712,6 +736,11 @@ pintrk('page');
       // Re-engage parallax for the next "open" interaction.
       parallaxActive = true;
       cover.classList.add('parallax');
+      // Wait for the cover fade-in (.55s) to land before forming the
+      // crescent — otherwise the bite transition runs behind a fading-
+      // in cover and the moon is already in crescent shape by the time
+      // the recipient can see it. Laura 2026-06-04 caught this.
+      setTimeout(function () { playMoonGreeting(150); }, 600);
     });
     /* analytics beacon now lives inside renderCard() since occasion is
        only resolved there (could be from URL params OR engine fetch). */
