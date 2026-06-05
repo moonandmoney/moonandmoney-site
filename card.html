@@ -145,9 +145,9 @@
   .crescent .ring{ position:absolute; inset:-1px; border-radius:50%; border:1px solid rgba(201,162,78,.5); }
   .crescent .bite{ position:absolute; inset:0; border-radius:50%; background:var(--card-navy);
     transform:translateX(26px);
-    /* Bite transition slowed 2.4s → 5s so the full → crescent moon
-       reads as a real beat, not a blink. Laura 2026-06-04. */
-    transition:transform 5s cubic-bezier(.45,.02,.2,1), opacity 5s ease; }
+    /* 2.4s is the timing Laura had previously described as "beautiful"
+       on replay. Restored 2026-06-04 after overcorrecting to 5s. */
+    transition:transform 2.4s cubic-bezier(.45,.02,.2,1), opacity 2.4s ease; }
   /* "Full moon" state — bite fully retracted off the disk. JS adds .full
      on first load and again on replay, then removes it after a beat, so
      the bite slides into the crescent position via the existing 2.4s
@@ -367,7 +367,11 @@ pintrk('page');
       <span class="corner bl"></span><span class="corner br"></span>
       <div class="cover-inner">
         <div class="moon-wrap">
-          <div class="crescent"><div class="disk"></div><div class="ring"></div><div class="bite"></div></div>
+          <!-- .full starts the bite off-disk so the moon reads as a
+               complete gold disk at page load; JS removes .full after
+               a 1.2s hold and the natural 2.4s bite transition forms
+               the crescent. -->
+          <div class="crescent full"><div class="disk"></div><div class="ring"></div><div class="bite"></div></div>
         </div>
         <div class="occasion" id="coverOccasion">HAPPY BIRTHDAY</div>
         <div class="tagline" id="coverTagline">A little fire for your year ahead.</div>
@@ -577,21 +581,16 @@ pintrk('page');
       });
     }
 
-    /* Full moon → crescent animation on first page load. The .crescent
-       starts in .full state (bite retracted) so the moon reads as a
-       complete gold disk; the .full class holds for ~1.2s so the
-       recipient registers the full moon before the 5s bite transition
-       slides into crescent shape. Replay re-runs the same beat so the
-       moon greets the recipient each time the card is reopened. */
+    /* Full moon → crescent on first page load. The HTML ships the
+       crescent with .full so the moon reads as a complete gold disk
+       at page load. Hold .full briefly so the recipient registers it,
+       then strip it and let the 2.4s bite transition form the
+       crescent in view. Replay does NOT call this — it relies on the
+       natural transition fired when .cover.open is removed. */
     const crescentEl = document.querySelector('.cover .crescent');
-    function playMoonGreeting(holdMs) {
-      if (!crescentEl) return;
-      crescentEl.classList.add('full');
-      void crescentEl.offsetWidth;  // commit the "full" frame
-      setTimeout(function () { crescentEl.classList.remove('full'); },
-                 holdMs == null ? 1200 : holdMs);
+    if (crescentEl) {
+      setTimeout(function () { crescentEl.classList.remove('full'); }, 1200);
     }
-    playMoonGreeting(1200);
 
     // ── Scatter fine gold stars on the cover ──
     (function scatterStars() {
@@ -739,11 +738,12 @@ pintrk('page');
       // Re-engage parallax for the next "open" interaction.
       parallaxActive = true;
       cover.classList.add('parallax');
-      // Wait for the cover fade-in (.55s) to land before forming the
-      // crescent — otherwise the bite transition runs behind a fading-
-      // in cover and the moon is already in crescent shape by the time
-      // the recipient can see it. Laura 2026-06-04.
-      setTimeout(function () { playMoonGreeting(1200); }, 600);
+      // Replay: do NOT call playMoonGreeting here. When .cover.open is
+      // removed, the bite's natural 2.4s transition takes it from the
+      // open-state position (off-disk, opacity 0) back to the default
+      // crescent position. That IS the smooth full → crescent beat
+      // Laura described as "beautiful". Layering playMoonGreeting on
+      // top was snapping the bite back to "full" mid-transition.
     });
     /* analytics beacon now lives inside renderCard() since occasion is
        only resolved there (could be from URL params OR engine fetch). */
