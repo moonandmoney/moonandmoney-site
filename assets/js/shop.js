@@ -39,15 +39,34 @@ const CATALOG = [
   // ---- Calendar ----
   { cat:'Calendar', glyph:'calendar', name:'Lunar Money Calendar 2026', desc:'Every moon phase of the year, paired with the money move it favours. Your year, timed to the sky.', link:'', badge:'2026', prev:'calendar.png' },
 
-  // ---- Cards ----
-  { cat:'Cards', glyph:'Capricorn',  name:'Saturn Return Card', desc:'For the friend crossing the great threshold. Quiet, considered encouragement.', link:'', prev:'card-saturn.png' },
-  { cat:'Cards', glyph:'Gemini',     name:'Mercury Retrograde Card', desc:'A knowing card for the astrologically literate. Send it before the static.', link:'', prev:'card-mercury.png' },
-  { cat:'Cards', glyph:'moon',       name:'New Year Moon Card', desc:'Begin the year by the moon, not only the calendar.', link:'', prev:'card-newyear.png' },
-  { cat:'Cards', glyph:'Cancer',     name:'New Baby Card', desc:'Welcome the new arrival with a considered, celestial note.', link:'', prev:'card-baby.png' },
-  { cat:'Cards', glyph:'Leo',        name:'Leo Birthday Card', desc:'For the Leo, on their solar return.', link:'', prev:'card-leo.png' },
-  { cat:'Cards', glyph:'Taurus',     name:'Taurus Birthday Card', desc:'Grounded, luxe and a little indulgent, like the Taurus it is for.', link:'', prev:'card-taurus.png' },
-  { cat:'Cards', glyph:'Capricorn',  name:'Capricorn Congratulations Card', desc:'For the Capricorn who, of course, achieved the thing.', link:'', prev:'card-capricorn.png' },
-  { cat:'Cards', glyph:'Scorpio',    name:'Scorpio New Chapter Card', desc:'Renewal, not ruin. A bold card for a powerful new beginning.', link:'', prev:'card-scorpio.png' },
+  // ---- Cards (Birthdays) ----
+  { cat:'Cards', glyph:'Aries',       name:'Aries Birthday Card',        desc:'For the Aries, returning to their first spark. A little fire for the year ahead.',         link:'', prev:'card-aries.png' },
+  { cat:'Cards', glyph:'Taurus',      name:'Taurus Birthday Card',       desc:'Grounded, luxe and a little indulgent, like the Taurus it is for.',                       link:'', prev:'card-taurus.png' },
+  { cat:'Cards', glyph:'Gemini',      name:'Gemini Birthday Card',       desc:'For the Gemini, on their year of stories. The air shifts; the conversations begin.',     link:'', prev:'card-gemini.png' },
+  { cat:'Cards', glyph:'Cancer',      name:'Cancer Birthday Card',       desc:'For the Cancer, when the moon comes home to their sky.',                                 link:'', prev:'card-cancer.png' },
+  { cat:'Cards', glyph:'Leo',         name:'Leo Birthday Card',          desc:'For the Leo, on their solar return.',                                                    link:'', prev:'card-leo.png' },
+  { cat:'Cards', glyph:'Virgo',       name:'Virgo Birthday Card',        desc:'For the Virgo, in the year their careful eye turns toward what comes next.',             link:'', prev:'card-virgo.png' },
+  { cat:'Cards', glyph:'Libra',       name:'Libra Birthday Card',        desc:'For the Libra, when the scales arrive at balance.',                                      link:'', prev:'card-libra.png' },
+  { cat:'Cards', glyph:'Scorpio',     name:'Scorpio Birthday Card',      desc:'For the Scorpio, on the year the depths turn over again.',                               link:'', prev:'card-scorpio-bday.png' },
+  { cat:'Cards', glyph:'Sagittarius', name:'Sagittarius Birthday Card',  desc:'For the Sagittarius, when the arrow lifts for its next aim.',                            link:'', prev:'card-sagittarius.png' },
+  { cat:'Cards', glyph:'Capricorn',   name:'Capricorn Birthday Card',    desc:'For the Capricorn, as the climb resumes from a new step.',                               link:'', prev:'card-capricorn-bday.png' },
+  { cat:'Cards', glyph:'Aquarius',    name:'Aquarius Birthday Card',     desc:'For the Aquarius, on the year the future moves toward them.',                            link:'', prev:'card-aquarius.png' },
+  { cat:'Cards', glyph:'Pisces',      name:'Pisces Birthday Card',       desc:'For the Pisces, when the tide returns to its own shore.',                                link:'', prev:'card-pisces.png' },
+
+  // ---- Cards (Occasions) ----
+  { cat:'Cards', glyph:'Capricorn',   name:'Saturn Return Card',         desc:'For the friend crossing the great threshold. Quiet, considered encouragement.',         link:'', prev:'card-saturn.png' },
+  { cat:'Cards', glyph:'Gemini',      name:'Mercury Retrograde Card',    desc:'A knowing card for the astrologically literate. Send it before the static.',            link:'', prev:'card-mercury.png' },
+  { cat:'Cards', glyph:'moon',        name:'New Year Moon Card',         desc:'Begin the year by the moon, not only the calendar.',                                    link:'', prev:'card-newyear.png' },
+  { cat:'Cards', glyph:'Capricorn',   name:'Capricorn Congratulations Card', desc:'For the Capricorn who, of course, achieved the thing.',                            link:'', prev:'card-capricorn.png' },
+  { cat:'Cards', glyph:'Scorpio',     name:'Scorpio New Chapter Card',   desc:'Renewal, not ruin. A bold card for a powerful new beginning.',                          link:'', prev:'card-scorpio.png' },
+  { cat:'Cards', glyph:'Venus',       name:'Venus Anniversary Card',     desc:'For the love that keeps choosing itself. An anniversary card with weight.',             link:'', prev:'card-anniversary.png' },
+  { cat:'Cards', glyph:'Libra',       name:'Libra Engagement Card',      desc:'For the partnership made official. Considered, generous, on-brand for the moment.',     link:'', prev:'card-engagement.png' },
+  { cat:'Cards', glyph:'Virgo',       name:'Virgo Get Well Card',        desc:'For the careful repair, in its own time. Without pressure, with care.',                  link:'', prev:'card-getwell.png' },
+  { cat:'Cards', glyph:'Sun',         name:'Sun Graduation Card',        desc:'For the work made visible at last. A graduation card with real weight.',                link:'', prev:'card-graduation.png' },
+  { cat:'Cards', glyph:'Cancer',      name:'Cancer New Baby Card',       desc:'A new little moon arriving. Welcome the new arrival with a considered, celestial note.', link:'', prev:'card-baby.png' },
+  { cat:'Cards', glyph:'Cancer',      name:'Cancer New Home Card',       desc:'The threshold crossed, the door closed quietly. A housewarming card from the moon.',    link:'', prev:'card-newhome.png' },
+  { cat:'Cards', glyph:'moon',        name:'Wedding Moon Card',          desc:'The vow under the changing sky. A wedding card from the lunar atelier.',                link:'', prev:'card-wedding.png' },
+  { cat:'Cards', glyph:'moon',        name:'Sympathy Moon Card',         desc:'The quiet that holds you in loss. A sympathy card without empty cheer.',                link:'', prev:'card-sympathy.png' },
 
   // ---- Atelier Notes (quiet free pieces at the tail of the catalogue) ----
   { cat:'Atelier Notes', glyph:'moon',     name:'Moon & Money Glyphs',     desc:'A small set of glyphs used in the Moon & Money house. A free download from the studio, for your notebooks, your screens, your own correspondence.', link:'', badge:'Free', prev:'glyphs.png' }
