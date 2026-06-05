@@ -83,28 +83,28 @@
   .stage{ position:relative; width:min(380px, 92vw); aspect-ratio:5/7;
     perspective:2200px; transform-style:preserve-3d; z-index:1; }
 
-  /* Gold halo behind the card. The drop-shadow filter approach earlier
-     wasn't rendering on the live page (Laura 2026-06-04: "Dont see any
-     glow at all"). Replaced with a real radial-gradient element living
-     behind the stage. Sits at z-index 0; stage at z-index 1. Breathes
-     slowly so the card reads as candlelit. */
+  /* Gold halo behind the card — rebuilt 2026-06-05 as a box-shadow that
+     respects the card's rounded-rectangle silhouette (not an elliptical
+     yellow blob). Three soft layers stacked: inner warmth, mid glow,
+     far candlelight. Reads as backlit / candlelit without the previous
+     filter:blur cost. Subtle breath only — no aggressive scale.
+     Laura 2026-06-04 → "the glow looks awful". */
   .stage-wrap{ position:relative; display:flex; justify-content:center; align-items:center;
     margin:0 auto; }
-  .halo{ position:absolute; top:50%; left:50%;
-    width:140%; height:140%;
-    transform:translate(-50%, -50%);
-    z-index:0; pointer-events:none; border-radius:50%;
-    background:radial-gradient(ellipse at center,
-      rgba(245,228,178,.55) 0%,
-      rgba(216,184,113,.45) 20%,
-      rgba(201,162,78,.25) 40%,
-      rgba(201,162,78,.10) 60%,
-      transparent 80%);
-    filter:blur(8px);
-    animation:halo-breathe 7s ease-in-out infinite; }
+  .halo{
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    border-radius:6px;
+    pointer-events:none; z-index:0; background:transparent;
+    box-shadow:
+      0 0 40px 2px rgba(216,184,113,.18),
+      0 0 90px 10px rgba(201,162,78,.12),
+      0 0 180px 30px rgba(201,162,78,.06);
+    animation:halo-breathe 9s ease-in-out infinite;
+  }
   @keyframes halo-breathe{
-    0%, 100%{ opacity:.85; transform:translate(-50%, -50%) scale(.96); }
-    50%     { opacity:1;   transform:translate(-50%, -50%) scale(1.06); }
+    0%, 100%{ opacity:.85; }
+    50%     { opacity:1; }
   }
   .face{ position:absolute; inset:0; border-radius:6px; overflow:hidden;
     box-shadow:0 30px 70px rgba(0,0,0,.55); }

@@ -147,91 +147,43 @@ section{padding:clamp(70px,11vw,140px) 0}
 .btn-ghost:hover{border-color:var(--gold);color:var(--gold-bright);box-shadow:var(--glow-gold)}
 
 /* ---------- The Aurora — slow rippling curtains of light ---------- */
+/* Aurora veil — rebuilt 2026-06-05 as a single fixed div with stacked
+   radial gradients on top of the page. No mask, no blur filter, no
+   mix-blend-mode (those three together were the scroll-disappear
+   cause earlier). Pure GPU-cheap transforms + opacity. The existing
+   JS sweep cycle in main.js keeps fading it in for ~26s every few
+   minutes — same brand intention, fraction of the compositor cost. */
 .aurora-veil{
-  /* Disabled in CSS entirely 2026-06-04. Even after stripping
-     mix-blend-mode and the blur filter, the layered animations + mask
-     + position:fixed combination was still tanking scroll perf and
-     producing 'text disappears on reverse-scroll' on the homepage.
-     Aurora is decorative; we'll rebuild it properly with GSAP later.
-     Leaving the JS that mounts the element in place so the rollback
-     path is clean — the element just has nothing to render. */
-  display:none !important;
+  position:fixed; left:0; top:0; right:0; height:62vh;
+  z-index:0; pointer-events:none;
+  opacity:0;
+  transition:opacity 5s ease;
+  background:
+    radial-gradient(ellipse 70% 100% at 22% -10%,  rgba( 80,200,170,.16), transparent 60%),
+    radial-gradient(ellipse 60% 100% at 75% -10%,  rgba(140,160,230,.12), transparent 60%),
+    radial-gradient(ellipse 90% 70%  at 50%  10%,  rgba( 70,210,180,.08), transparent 70%);
+  transform:translateZ(0);
+  animation:auroraDrift 38s ease-in-out infinite;
+}
+.aurora-veil.on{ opacity:.62; }
+.aurora-veil > span{ display:none; } /* legacy children no-op; main.js still mounts them */
+@keyframes auroraDrift{
+  0%,100% { transform:translate3d(-2%, 0, 0); }
+  50%     { transform:translate3d( 2%, 0, 0); }
 }
 .aurora-veil.on{opacity:.62}
 /* each span is a tall sheet, light fading upward, feathered into
    wispy near-vertical rays by a soft repeating mask = curtain look */
-.aurora-veil span{
-  position:absolute;left:-30%;width:160%;top:-8%;height:84%;
-  transform-origin:50% 0;
-  background-size:100% 240%;
-  background-repeat:no-repeat;
-  -webkit-mask:repeating-linear-gradient(95deg,
-    transparent 0 3%, rgba(0,0,0,.55) 6%, #000 8% 10.5%,
-    rgba(0,0,0,.55) 13%, transparent 16% 19%);
-  mask:repeating-linear-gradient(95deg,
-    transparent 0 3%, rgba(0,0,0,.55) 6%, #000 8% 10.5%,
-    rgba(0,0,0,.55) 13%, transparent 16% 19%);
-  -webkit-mask-size:300% 100%;mask-size:300% 100%;
-  will-change:transform;
-}
-.aurora-veil span:nth-child(1){
-  height:88%;
-  background-image:linear-gradient(to top,
-    rgba(54,200,144,0) 4%,
-    rgba(54,200,144,.5) 28%,
-    rgba(104,226,172,.4) 50%,
-    rgba(140,170,226,.24) 72%,
-    rgba(140,170,226,0) 92%);
-  animation:auroraSway 38s ease-in-out infinite,
-            auroraRise 24s ease-in-out infinite,
-            auroraRibbon 70s linear infinite;
-}
-.aurora-veil span:nth-child(2){
-  top:-3%;height:80%;
-  background-image:linear-gradient(to top,
-    rgba(120,108,222,0) 6%,
-    rgba(120,108,222,.34) 30%,
-    rgba(76,212,168,.38) 54%,
-    rgba(206,150,214,.22) 76%,
-    rgba(206,150,214,0) 93%);
-  animation:auroraSway 52s ease-in-out infinite reverse,
-            auroraRise 32s ease-in-out infinite,
-            auroraRibbon 92s linear infinite reverse;
-  opacity:.78;
-}
-.aurora-veil span:nth-child(3){
-  top:3%;height:70%;
-  background-image:linear-gradient(to top,
-    rgba(70,214,180,0) 8%,
-    rgba(70,214,180,.3) 34%,
-    rgba(132,160,232,.22) 58%,
-    rgba(70,214,180,0) 90%);
-  animation:auroraSway 66s ease-in-out infinite,
-            auroraRise 44s ease-in-out infinite,
-            auroraRibbon 116s linear infinite;
-  opacity:.55;
-}
+/* Legacy span rules removed 2026-06-05. The single-element rebuild above
+   replaced them; the children are display:none no-ops to keep JS that
+   still mounts them quiet. */
 /* gentle, organic undulation — small skew, soft breathing, many
    steps so it never snaps or repeats obviously */
-@keyframes auroraSway{
-  0%  {transform:translateX(-7%) skewX(-5deg)   scaleY(.97)}
-  18% {transform:translateX(-3%) skewX(-1.5deg) scaleY(1.03)}
-  37% {transform:translateX(2%)  skewX(2.5deg)  scaleY(1)}
-  54% {transform:translateX(5%)  skewX(4.5deg)  scaleY(1.06)}
-  71% {transform:translateX(2%)  skewX(1deg)    scaleY(1.01)}
-  87% {transform:translateX(-3%) skewX(-3deg)   scaleY(1.04)}
-  100%{transform:translateX(-7%) skewX(-5deg)   scaleY(.97)}
-}
-@keyframes auroraRise{           /* light breathing slowly up the rays */
-  0%,100%{background-position:50% 4%}
-  50%    {background-position:50% 52%}
-}
-@keyframes auroraRibbon{         /* the curtain folds drifting sideways */
-  0%  {-webkit-mask-position:0% 0;mask-position:0% 0}
-  100%{-webkit-mask-position:100% 0;mask-position:100% 0}
-}
+/* Legacy aurora keyframes removed 2026-06-05 (auroraSway / auroraRise /
+   auroraRibbon). The single auroraDrift keyframe in the rebuilt block
+   above replaces them. */
 @media (prefers-reduced-motion:reduce){
-  .aurora-veil span{animation:none}
+  .aurora-veil{animation:none}
 }
 /* ---------- Hero ---------- */
 .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px}
