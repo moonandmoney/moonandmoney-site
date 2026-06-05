@@ -109,18 +109,10 @@
   .cover.open{ opacity:0; transform:translateZ(0) scale(1.02); pointer-events:none; }
   .cover .stars span{ position:absolute; background:var(--card-gold-soft); border-radius:50%; opacity:.65; }
 
-  /* Foil sheen: a thin gold band that drifts across the cover. Kept very
-     low opacity (used to be .22 and read as a "white blob" — 2026-06-04
-     Laura). Now barely-there: hints at metallic finish without screaming. */
-  .foil{ position:absolute; inset:0; z-index:4; pointer-events:none; overflow:hidden; border-radius:6px; }
-  .foil::before{ content:""; position:absolute; top:-60%; left:-30%;
-    width:28%; height:220%;
-    background:linear-gradient(105deg, transparent 0%, rgba(232,210,150,.0) 35%,
-      rgba(245,228,178,.07) 50%, rgba(232,210,150,.0) 65%, transparent 100%);
-    transform:rotate(8deg); filter:blur(3px);
-    animation:sweep 11s ease-in-out infinite; }
-  @keyframes sweep{ 0%{ left:-40%; } 60%{ left:120%; } 100%{ left:120%; } }
-  .cover.open .foil{ opacity:0; transition:opacity .5s; }
+  /* Foil sheen: removed entirely 2026-06-04. Laura kept reading the
+     animated sweep as a "white spot" cutting across the cover even after
+     successive opacity dial-downs. The cover is cleaner as solid navy. */
+  .foil{ display:none; }
 
   .frame-outer{ position:absolute; inset:14px; border:1px solid var(--card-forest); border-radius:3px; }
   .frame-inner{ position:absolute; inset:19px; border:1px solid rgba(201,162,78,.55); border-radius:2px; }
@@ -595,33 +587,12 @@ pintrk('page');
     const sparkCv  = document.getElementById('sparkles');
     const soundBtn = document.getElementById('soundBtn');
 
-    /* MOUSE PARALLAX
-       Before the card opens, the cover subtly tilts toward the cursor /
-       finger. ~6deg max rotation, springy transition. Disabled once the
-       card is opened (the open animation has its own transform timeline). */
-    let parallaxActive = true;
-    cover.classList.add('parallax');  // engage springy transition
-    function onParallax(e) {
-      if (!parallaxActive) return;
-      const r = stage.getBoundingClientRect();
-      const pt = e.touches ? e.touches[0] : e;
-      const cx = (pt.clientX - r.left) / r.width  - 0.5;   // -0.5 .. 0.5
-      const cy = (pt.clientY - r.top)  / r.height - 0.5;
-      // Dialed down 2026-06-04 (was 12 / 8) — the larger tilt was pushing
-      // the cream interior out from behind the cover edge, reading as a
-      // "white blob" on hover. Subtle tilt only.
-      const rotY = (-cx * 4).toFixed(2);    // tilt right when cursor on right
-      const rotX = ( cy * 3).toFixed(2);    // tilt down when cursor down
-      cover.style.transform = 'rotateX(' + rotX + 'deg) rotateY(' + rotY + 'deg) translateZ(0)';
-    }
-    function onParallaxLeave() {
-      if (!parallaxActive) return;
-      cover.style.transform = '';   // back to baseline (CSS default)
-    }
-    stage.addEventListener('mousemove', onParallax);
-    stage.addEventListener('touchmove', onParallax, { passive: true });
-    stage.addEventListener('mouseleave', onParallaxLeave);
-    stage.addEventListener('touchend', onParallaxLeave);
+    /* MOUSE PARALLAX — removed 2026-06-04. Successive dial-downs
+       (12deg → 4deg) didn't fix the "white spot on the cover" feedback;
+       the parallax JS itself was the source of every weird mid-transform
+       render. Cover is now rock solid until clicked. parallaxActive kept
+       as a no-op so the replay logic stays a clean restore. */
+    let parallaxActive = false;
 
     /* SPARKLE BURST
        On cover open, fire ~28 gold particles from the moon position.
