@@ -179,98 +179,55 @@ section{padding:clamp(70px,11vw,140px) 0}
        and main.js sweep cycle (separate commit) bumps to ~1 min
        first-on / 80s hold / 35s off cycle, fading via the new 9s
        opacity transition for naturalism. */
+/* Aurora — real-image backdrop (path A, picked 2026-06-05 after eight
+   passes of CSS gradients all producing variations of the wrong thing).
+   A generated bitmap composite of vibrant green ribbons with pink and
+   violet accents, blurred via PIL's GaussianBlur (the ingredient CSS
+   could not give us without re-triggering the scroll bug). Slow
+   horizontal drift via background-position so the curtains feel alive
+   without compositor cost. Fade-out to transparent at the bottom via
+   mask-image. */
 .aurora-veil{
-  /* Aurora hidden while Laura decides between (A) real-image
-     aurora backdrop and (B) drop aurora entirely. After eight
-     passes of CSS gradients we kept producing variations of
-     blobs / UFOs / lines / pale washes because that is what
-     radial-gradient and repeating-mask can produce — not real
-     northern-lights curtains. Keeping the markup, animations,
-     and JS sweep cycle in place so either path can re-enable
-     instantly. */
-  display:none !important;
+  position:fixed; left:0; top:0; width:100%; height:78vh;
+  z-index:0; pointer-events:none;
+  opacity:.62;
+  overflow:hidden;
+  transform:translateZ(0);
+  transition:opacity 9s ease;
+  background:url('../img/aurora.png') center top / cover no-repeat;
+  background-size:160% auto;
+  animation:auroraDrift 90s ease-in-out infinite alternate;
+  -webkit-mask-image:linear-gradient(177deg,
+    #000 0, #000 40%,
+    rgba(0,0,0,.85) 56%,
+    rgba(0,0,0,.50) 72%,
+    rgba(0,0,0,.18) 88%,
+    transparent 100%);
+          mask-image:linear-gradient(177deg,
+    #000 0, #000 40%,
+    rgba(0,0,0,.85) 56%,
+    rgba(0,0,0,.50) 72%,
+    rgba(0,0,0,.18) 88%,
+    transparent 100%);
 }
 .aurora-veil.on{ opacity:1; }
-.aurora-veil > span{
-  display:block;
-  position:absolute; left:0; width:100%; top:0; height:100%;
-  pointer-events:none;
-  mix-blend-mode:screen;
-  background-repeat:no-repeat;
-  will-change:transform;
-  /* No filter:blur — that was bringing back the scroll bug AND
-     washing everything into one continuous green wall. Each
-     ribbon span is now JUST a set of sparse radial-gradient
-     wisps with soft alpha falloff baked into the gradient itself.
-     Wide dark space between wisps means stars + sky show through. */
+.aurora-veil > span{ display:none; }
+@keyframes auroraDrift{
+  0%   { background-position:-8% top; }
+  100% { background-position:108% top; }
 }
+.aurora-veil.on{ opacity:1; }
+/* Legacy span ribbon rules removed 2026-06-05 — the aurora is now a
+   single background-image on the veil itself (pass 9, path A). The
+   three span children stay in the DOM as a no-op so the JS sweep
+   cycle keeps working unchanged. */
 
-/* Layer 1 — three vibrant GREEN wisps at staggered x-positions. */
-.aurora-veil > span:nth-child(1){
-  background-image:
-    radial-gradient(ellipse 14% 55% at 18% 32%,
-      rgba( 40,255,140,.78) 0%,
-      rgba( 60,250,150,.32) 35%,
-      transparent 72%),
-    radial-gradient(ellipse 12% 48% at 52% 26%,
-      rgba( 80,255,160,.62) 0%,
-      rgba( 90,250,170,.24) 38%,
-      transparent 72%),
-    radial-gradient(ellipse 16% 60% at 82% 36%,
-      rgba( 50,255,150,.70) 0%,
-      rgba( 70,250,160,.28) 35%,
-      transparent 72%);
-  animation:auroraSway 30s ease-in-out infinite;
-}
-
-/* Layer 2 — two PINK accents, off-center from the green columns. */
-.aurora-veil > span:nth-child(2){
-  background-image:
-    radial-gradient(ellipse 12% 48% at 32% 22%,
-      rgba(255,120,200,.62) 0%,
-      rgba(255,140,210,.22) 36%,
-      transparent 72%),
-    radial-gradient(ellipse 14% 52% at 70% 30%,
-      rgba(255,100,190,.58) 0%,
-      rgba(255,130,210,.20) 36%,
-      transparent 72%);
-  animation:auroraSway 42s ease-in-out infinite reverse;
-  opacity:.85;
-}
-
-/* Layer 3 — two PURPLE accents, between the pink and green positions. */
-.aurora-veil > span:nth-child(3){
-  background-image:
-    radial-gradient(ellipse 13% 50% at 10% 38%,
-      rgba(170, 90,255,.55) 0%,
-      rgba(190,120,250,.20) 36%,
-      transparent 72%),
-    radial-gradient(ellipse 13% 50% at 92% 28%,
-      rgba(180, 90,250,.55) 0%,
-      rgba(195,120,250,.20) 36%,
-      transparent 72%);
-  animation:auroraSway 55s ease-in-out infinite;
-  opacity:.78;
-}
-
-/* Sway: very gentle skew + slight translate so the curtain folds drift. */
-@keyframes auroraSway{
-  0%  {transform:translateX(-5%) skewX(-3deg)  scaleY(.98)}
-  18% {transform:translateX(-2%) skewX(-1deg)  scaleY(1.02)}
-  37% {transform:translateX(2%)  skewX(1.5deg) scaleY(1)}
-  54% {transform:translateX(4%)  skewX(3deg)   scaleY(1.04)}
-  71% {transform:translateX(2%)  skewX(.5deg)  scaleY(1.01)}
-  87% {transform:translateX(-2%) skewX(-2deg)  scaleY(1.03)}
-  100%{transform:translateX(-5%) skewX(-3deg)  scaleY(.98)}
-}
-/* auroraRise removed 2026-06-05 — was conflicting with auroraSway
-   (both targeted transform). The sway is doing all motion now. */
-/* auroraRibbon (mask-position drift) removed 2026-06-05 with the mask
-   itself. The sway + rise + soft cloud blur give enough natural
-   motion that the explicit ribbon drift isn't needed anymore. */
-
+/* Legacy auroraSway / auroraRise / auroraRibbon keyframes removed
+   2026-06-05 with the span ribbons themselves. auroraDrift (defined
+   above with the veil) is now the only aurora animation — slow
+   background-position drift across the static aurora bitmap. */
 @media (prefers-reduced-motion:reduce){
-  .aurora-veil > span{ animation:none; }
+  .aurora-veil{ animation:none; }
 }
 /* ---------- Hero ---------- */
 .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px}
