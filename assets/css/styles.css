@@ -204,77 +204,64 @@ section{padding:clamp(70px,11vw,140px) 0}
 .aurora-veil.on{ opacity:1; }
 .aurora-veil > span{
   display:block;
-  position:absolute; left:-30%; width:160%; top:-8%; height:90%;
-  transform-origin:50% 0;
-  background-size:100% 240%;
-  background-repeat:no-repeat;
+  position:absolute; left:0; width:100%; top:0; height:100%;
+  pointer-events:none;
   mix-blend-mode:screen;
-  /* Mask removed 2026-06-05 (was repeating-linear-gradient creating
-     hard vertical bands that read as 'lines' instead of curtains —
-     the original aurora hid those edges with filter:blur(20px) on
-     the fixed parent, which was half the scroll-bug ingredient).
-     Replacement: a hefty filter:blur on the SPAN (not the fixed
-     parent) softens the gradient washes into cloud-like aurora
-     waves. Children of a fixed parent compositing with blur is
-     cheap; only the fixed-root combination caused the earlier
-     reverse-scroll failure. */
-  filter:blur(22px);
-  will-change:transform, filter;
+  background-repeat:no-repeat;
+  will-change:transform;
+  /* No filter:blur — that was bringing back the scroll bug AND
+     washing everything into one continuous green wall. Each
+     ribbon span is now JUST a set of sparse radial-gradient
+     wisps with soft alpha falloff baked into the gradient itself.
+     Wide dark space between wisps means stars + sky show through. */
 }
 
-/* Layer 1 — MAIN GREEN. Tallest, brightest, dominant. The vertical
-   linear-gradient handles the top-to-bottom color wash; two narrow
-   radial-gradients layered on top create the bright 'glow-streak'
-   cores you see in the iOS Aurora wallpaper (Laura's reference).
-   The heavy filter:blur on the parent span smooths the radial cores
-   into soft luminous wisps rather than hard bright lines. */
+/* Layer 1 — three vibrant GREEN wisps at staggered x-positions. */
 .aurora-veil > span:nth-child(1){
-  top:-8%; height:96%;
   background-image:
-    radial-gradient(ellipse 8% 60% at 22% 35%, rgba(160,255,200,.55), transparent 75%),
-    radial-gradient(ellipse 10% 70% at 58% 28%, rgba(140,250,200,.50), transparent 75%),
-    radial-gradient(ellipse 7% 55% at 78% 38%, rgba(170,255,210,.45), transparent 75%),
-    linear-gradient(to top,
-      rgba( 54,200,144,0) 4%,
-      rgba( 60,230,160,.62) 26%,
-      rgba(110,240,180,.50) 50%,
-      rgba(160,230,210,.26) 72%,
-      rgba(180,220,235,0) 92%);
-  animation:auroraSway 30s ease-in-out infinite,
-            auroraRise 21s ease-in-out infinite;
+    radial-gradient(ellipse 14% 55% at 18% 32%,
+      rgba( 40,255,140,.78) 0%,
+      rgba( 60,250,150,.32) 35%,
+      transparent 72%),
+    radial-gradient(ellipse 12% 48% at 52% 26%,
+      rgba( 80,255,160,.62) 0%,
+      rgba( 90,250,170,.24) 38%,
+      transparent 72%),
+    radial-gradient(ellipse 16% 60% at 82% 36%,
+      rgba( 50,255,150,.70) 0%,
+      rgba( 70,250,160,.28) 35%,
+      transparent 72%);
+  animation:auroraSway 30s ease-in-out infinite;
 }
 
-/* Layer 2 — PINK accent. Shorter, dimmer, ends higher than the
-   green so the bottom edge of the aurora is uneven. */
+/* Layer 2 — two PINK accents, off-center from the green columns. */
 .aurora-veil > span:nth-child(2){
-  top:4%; height:74%;
   background-image:
-    radial-gradient(ellipse 9% 55% at 35% 30%, rgba(255,200,235,.40), transparent 78%),
-    radial-gradient(ellipse 7% 50% at 70% 40%, rgba(255,180,225,.35), transparent 78%),
-    linear-gradient(to top,
-      rgba(190,130,230,0) 6%,
-      rgba(220,140,210,.30) 32%,
-      rgba(255,160,220,.28) 62%,
-      rgba(255,180,225,0) 92%);
-  animation:auroraSway 42s ease-in-out infinite reverse,
-            auroraRise 27s ease-in-out infinite;
-  opacity:.55;
+    radial-gradient(ellipse 12% 48% at 32% 22%,
+      rgba(255,120,200,.62) 0%,
+      rgba(255,140,210,.22) 36%,
+      transparent 72%),
+    radial-gradient(ellipse 14% 52% at 70% 30%,
+      rgba(255,100,190,.58) 0%,
+      rgba(255,130,210,.20) 36%,
+      transparent 72%);
+  animation:auroraSway 42s ease-in-out infinite reverse;
+  opacity:.85;
 }
 
-/* Layer 3 — PURPLE accent. Different bottom again. */
+/* Layer 3 — two PURPLE accents, between the pink and green positions. */
 .aurora-veil > span:nth-child(3){
-  top:-2%; height:84%;
   background-image:
-    radial-gradient(ellipse 8% 58% at 15% 40%, rgba(210,170,255,.38), transparent 78%),
-    radial-gradient(ellipse 9% 55% at 88% 32%, rgba(195,160,245,.34), transparent 78%),
-    linear-gradient(to top,
-      rgba(150,100,220,0) 8%,
-      rgba(180,130,240,.26) 32%,
-      rgba(200,140,235,.28) 58%,
-      rgba(190,150,225,0) 88%);
-  animation:auroraSway 55s ease-in-out infinite,
-            auroraRise 33s ease-in-out infinite;
-  opacity:.50;
+    radial-gradient(ellipse 13% 50% at 10% 38%,
+      rgba(170, 90,255,.55) 0%,
+      rgba(190,120,250,.20) 36%,
+      transparent 72%),
+    radial-gradient(ellipse 13% 50% at 92% 28%,
+      rgba(180, 90,250,.55) 0%,
+      rgba(195,120,250,.20) 36%,
+      transparent 72%);
+  animation:auroraSway 55s ease-in-out infinite;
+  opacity:.78;
 }
 
 /* Sway: very gentle skew + slight translate so the curtain folds drift. */
@@ -287,11 +274,8 @@ section{padding:clamp(70px,11vw,140px) 0}
   87% {transform:translateX(-2%) skewX(-2deg)  scaleY(1.03)}
   100%{transform:translateX(-5%) skewX(-3deg)  scaleY(.98)}
 }
-/* Light breathing up and down inside each ribbon. */
-@keyframes auroraRise{
-  0%,100%{background-position:50% 4%}
-  50%    {background-position:50% 52%}
-}
+/* auroraRise removed 2026-06-05 — was conflicting with auroraSway
+   (both targeted transform). The sway is doing all motion now. */
 /* auroraRibbon (mask-position drift) removed 2026-06-05 with the mask
    itself. The sway + rise + soft cloud blur give enough natural
    motion that the explicit ribbon drift isn't needed anymore. */
