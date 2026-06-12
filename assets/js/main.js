@@ -5,6 +5,51 @@
   'use strict';
   const reduced = matchMedia('(prefers-reduced-motion:reduce)').matches;
 
+  /* ---- Ghost-mode banner — quieter-season notice ----
+     Top-of-page strip shown during Laura's quieter seasons (the Arctic
+     stretch, travel, retreats). Edit the three config lines below to
+     flip on/off, change the window, or change the message. The CSS
+     lives under "Ghost-mode banner" in styles.css.
+       START_DATE  — first day banner shows (YYYY-MM-DD).
+       END_DATE    — last day banner shows; null = no auto-end.
+       MESSAGE     — single line, kept under ~120 chars for one-line desktop.
+     To take the banner DOWN early, set END_DATE to a past date or just
+     change START_DATE to a future one — no other edits needed. */
+  (function ghostBanner () {
+    const START_DATE = '2026-06-15';
+    const END_DATE   = null;
+    const MESSAGE    = 'In a quieter season from June 15. Charts and forecasts run automatically. Replies are slower than usual.';
+    const STORAGE_KEY = 'mm-ghost-banner-dismissed-v1';
+
+    // Preview override: append ?ghost=on to any page URL to force-show the
+    // banner now (useful before START_DATE to verify the look). ?ghost=off
+    // force-hides for the same session even if currently in window.
+    const preview = new URLSearchParams(location.search).get('ghost');
+    if (preview !== 'on') {
+      if (preview === 'off') return;
+      const today = new Date().toISOString().slice(0, 10);
+      if (today < START_DATE) return;
+      if (END_DATE && today > END_DATE) return;
+      try { if (localStorage.getItem(STORAGE_KEY) === '1') return; } catch (e) {}
+    }
+
+    const el = document.createElement('div');
+    el.className = 'ghost-banner';
+    el.setAttribute('role', 'status');
+    el.innerHTML =
+      '<span class="ghost-banner-icon" aria-hidden="true">✦</span>' +
+      '<span class="ghost-banner-text"></span>' +
+      '<button class="ghost-banner-close" type="button" aria-label="Dismiss">×</button>';
+    el.querySelector('.ghost-banner-text').textContent = MESSAGE;
+    el.querySelector('.ghost-banner-close').addEventListener('click', () => {
+      try { localStorage.setItem(STORAGE_KEY, '1'); } catch (e) {}
+      document.body.classList.remove('has-ghost-banner');
+      el.remove();
+    });
+    document.body.classList.add('has-ghost-banner');
+    document.body.insertBefore(el, document.body.firstChild);
+  })();
+
   /* ---- Nav: mark the current page (gold underline stays lit) ---- */
   (function () {
     function norm(p) {
@@ -716,31 +761,18 @@
     }
   }
 
-  /* ---- The Aurora: dominant baseline visible at low opacity, brightens
-     up for natural-feeling cycles (Laura 2026-06-05). First brightening
-     lands ~1 minute after page load — gives the visitor a moment of the
-     baseline aurora first, then the "wave" comes through. */
+  /* ---- The Aurora: five layered curtains, each independently animated
+     (pass 11, 2026-06-05 night). The CSS handles all motion — width
+     breathe, lateral drift, glow pulse — so this just builds the DOM. */
   if (!reduced) (function aurora() {
     const veil = document.createElement('div');
     veil.className = 'aurora-veil';
-    veil.innerHTML = '<span></span><span></span><span></span>';
-    document.body.appendChild(veil);
-
-    function sweep() {
-      veil.classList.add('on');
-      // Visible-bright period: 70–95s. The 9s opacity transition on
-      // the veil itself means the fade-in and fade-out are gradual,
-      // never an abrupt on/off.
-      const onMs = 70000 + Math.random() * 25000;
-      setTimeout(() => veil.classList.remove('on'), onMs);
-      // Dim baseline period: 30–55s before the next bright wave.
-      const offMs = 30000 + Math.random() * 25000;
-      setTimeout(sweep, onMs + offMs);
+    for (let i = 1; i <= 5; i++) {
+      const curtain = document.createElement('div');
+      curtain.className = 'aurora-curtain c' + i;
+      veil.appendChild(curtain);
     }
-    // First bright wave lands ~55–75s in. Before that the baseline
-    // aurora is already visible at opacity .22, so the page is never
-    // completely without the sky.
-    setTimeout(sweep, 55000 + Math.random() * 20000);
+    document.body.appendChild(veil);
   })();
 
   /* ---- Newsletter: send to Substack + deliver the free welcome gift ---- */

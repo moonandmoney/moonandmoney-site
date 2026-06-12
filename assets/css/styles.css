@@ -95,6 +95,39 @@ h1,h2,h3,h4{font-family:var(--serif);font-weight:500;line-height:1.12;letter-spa
 section{padding:clamp(70px,11vw,140px) 0}
 .divider{height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent);max-width:var(--maxw);margin:0 auto}
 
+/* ---------- Ghost-mode banner ----------
+   Slim top strip shown during Laura's quieter seasons. JS in main.js
+   creates the element and adds .has-ghost-banner to <body>; the rules
+   below push the nav down by --ghost-h so the two strips stack cleanly.
+   Dismissable via the × button (remembered in localStorage). Date window
+   lives at the top of the IIFE in main.js — only that file needs
+   editing to flip the banner on/off or change the message. */
+:root{ --ghost-h:36px; }
+.ghost-banner{
+  position:fixed; top:0; left:0; right:0; z-index:60;
+  height:var(--ghost-h); display:flex; align-items:center; justify-content:center; gap:12px;
+  padding:0 48px 0 16px;
+  background:linear-gradient(180deg,rgba(11,37,69,.92),rgba(5,14,32,.96));
+  border-bottom:1px solid rgba(216,177,80,.22);
+  font-family:var(--sans); font-size:13px; letter-spacing:.015em;
+  color:var(--parchment); text-align:center;
+}
+.ghost-banner-icon{ color:var(--gold-bright); font-size:14px; line-height:1; }
+.ghost-banner-text{ max-width:760px; }
+.ghost-banner-close{
+  position:absolute; right:10px; top:50%; transform:translateY(-50%);
+  background:transparent; border:none; color:var(--parchment);
+  opacity:.55; cursor:pointer; font-size:20px; line-height:1; padding:6px 10px;
+  transition:opacity .3s var(--ease), color .3s var(--ease);
+}
+.ghost-banner-close:hover{ opacity:1; color:var(--gold-bright); }
+body.has-ghost-banner{ padding-top:var(--ghost-h); }
+body.has-ghost-banner .nav{ top:var(--ghost-h); }
+@media (max-width:640px){
+  :root{ --ghost-h:44px; }     /* extra room for the text to wrap on phones */
+  .ghost-banner{ font-size:12px; padding:6px 38px 6px 12px; line-height:1.35; }
+}
+
 /* ---------- Navigation ---------- */
 .nav{
   position:fixed;top:0;left:0;right:0;z-index:50;
