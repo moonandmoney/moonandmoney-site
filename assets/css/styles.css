@@ -187,68 +187,139 @@ section{padding:clamp(70px,11vw,140px) 0}
    horizontal drift via background-position so the curtains feel alive
    without compositor cost. Fade-out to transparent at the bottom via
    mask-image. */
+/* Aurora — layered curtains, pass 11 (2026-06-05 night). Laura's note
+   on pass 10: 'too blah, looks like a long egg shape, cut off at the
+   bottom, not dancing or moving along the screen, they should go from
+   being wider then thin then wider again, in and out, but in aurora
+   movement.' Root cause: pass 10 was a single PNG with four global CSS
+   transforms — every animation applied to the whole image uniformly,
+   so it could only translate around as a unit. Could not produce
+   curtains widening independently because nothing in the DOM was
+   independent.
+   This pass replaces the single image with 5 separate curtain PNGs
+   stacked horizontally inside the veil. Each curtain has its OWN
+   scaleX (width breathe — the wide-thin-wide dance), translateX
+   (lateral drift across the sky), and opacity (glow pulse) at
+   non-syncing periods. Because the elements animate independently,
+   the composite reads as real curtains flowing rather than one shape
+   sliding. mix-blend-mode:screen on each curtain makes them additively
+   brighten where they overlap (mirrors real aurora layering). */
 .aurora-veil{
-  position:fixed; left:0; top:0; width:100%; height:78vh;
+  /* Aurora paused 2026-06-08 — Laura's read after layered-curtain pass:
+     still reads as an annoying shape instead of subtle atmosphere. She
+     was avoiding her own site because of it. Hidden here while we
+     decide the next direction (Runway-generated photoreal loop is the
+     leading candidate; future spec is a very subtle slow rolling
+     sweep, pale greens with a touch of pink, surfacing ~every five
+     minutes rather than constantly visible). Remove `display:none` to
+     re-enable the existing layered curtains while we test. */
+  display:none !important;
+  position:fixed; left:0; top:0; width:100%; height:82vh;
   z-index:0; pointer-events:none;
   overflow:hidden;
   transform:translateZ(0);
-  background:url('../img/aurora.png') center top no-repeat;
-  background-size:150% auto;
-  /* Four stacked animations at different periods so they never sync.
-     Combined effect: the curtains drift sideways, bob vertically, grow
-     and shrink in scale, and pulse in brightness — Laura 2026-06-05
-     called this 'smaller build-up then bigger dancing movement and
-     fade in and out of brightness'. None of the four conflicts (each
-     targets a different property), all are GPU-cheap because the
-     underlying composite is a static bitmap. */
-  animation:
-    auroraDrift     90s ease-in-out infinite alternate,
-    auroraBob       41s ease-in-out infinite,
-    auroraScale     34s ease-in-out infinite,
-    auroraBreathe   22s ease-in-out infinite;
-  -webkit-mask-image:linear-gradient(177deg,
-    #000 0, #000 40%,
-    rgba(0,0,0,.85) 56%,
-    rgba(0,0,0,.50) 72%,
-    rgba(0,0,0,.18) 88%,
+  /* Bottom dissolve so the curtains fade into the page instead of
+     ending at a hard edge (Laura's 'looks cut off at the bottom'). */
+  -webkit-mask-image:linear-gradient(178deg,
+    #000 0, #000 36%,
+    rgba(0,0,0,.86) 54%,
+    rgba(0,0,0,.46) 72%,
+    rgba(0,0,0,.14) 90%,
     transparent 100%);
-          mask-image:linear-gradient(177deg,
-    #000 0, #000 40%,
-    rgba(0,0,0,.85) 56%,
-    rgba(0,0,0,.50) 72%,
-    rgba(0,0,0,.18) 88%,
+          mask-image:linear-gradient(178deg,
+    #000 0, #000 36%,
+    rgba(0,0,0,.86) 54%,
+    rgba(0,0,0,.46) 72%,
+    rgba(0,0,0,.14) 90%,
     transparent 100%);
 }
-.aurora-veil.on{}  /* legacy class — opacity now driven by auroraBreathe */
-.aurora-veil > span{ display:none; }
-@keyframes auroraDrift{
-  0%   { background-position-x:-8%; }
-  100% { background-position-x:108%; }
-}
-@keyframes auroraBob{
-  0%, 100% { background-position-y:0%; }
-  50%      { background-position-y:7%; }
-}
-@keyframes auroraScale{
-  0%, 100% { background-size:140% auto; }
-  50%      { background-size:178% auto; }
-}
-@keyframes auroraBreathe{
-  0%, 100% { opacity:.42; }
-  50%      { opacity:.85; }
-}
-.aurora-veil.on{ opacity:1; }
-/* Legacy span ribbon rules removed 2026-06-05 — the aurora is now a
-   single background-image on the veil itself (pass 9, path A). The
-   three span children stay in the DOM as a no-op so the JS sweep
-   cycle keeps working unchanged. */
+.aurora-veil > span{ display:none; }  /* legacy DOM from pre-curtain JS */
 
-/* Legacy auroraSway / auroraRise / auroraRibbon keyframes removed
-   2026-06-05 with the span ribbons themselves. auroraDrift (defined
-   above with the veil) is now the only aurora animation — slow
-   background-position drift across the static aurora bitmap. */
+.aurora-curtain{
+  position:absolute; top:-6%; height:112%;
+  width:32vw; min-width:260px; max-width:560px;
+  background-position:center top;
+  background-size:100% 100%;
+  background-repeat:no-repeat;
+  transform-origin:50% 38%;
+  will-change:transform, opacity;
+  mix-blend-mode:screen;
+  /* Individual transform properties compose — scale and translate
+     animate without overriding each other. */
+  scale:1 1; translate:0 0;
+}
+
+/* Five curtains at staggered left positions, overlapping ~12vw each
+   so the composite covers the screen with no gaps. Each carries its
+   own three animations with prime-ish unsyncing periods (no two share
+   a period; negative delays offset their starting phases). */
+.aurora-curtain.c1{
+  left:-4%;
+  background-image:url('../img/aurora-curtain-1.png');
+  animation:
+    auroraC1Width 27s ease-in-out infinite      0s,
+    auroraC1Drift 96s ease-in-out infinite alternate 0s,
+    auroraC1Glow  23s ease-in-out infinite      0s;
+}
+.aurora-curtain.c2{
+  left:16%;
+  background-image:url('../img/aurora-curtain-2.png');
+  animation:
+    auroraC2Width 35s ease-in-out infinite      -9s,
+    auroraC2Drift 114s ease-in-out infinite alternate -22s,
+    auroraC2Glow  31s ease-in-out infinite      -4s;
+}
+.aurora-curtain.c3{
+  left:36%;
+  background-image:url('../img/aurora-curtain-3.png');
+  animation:
+    auroraC3Width 25s ease-in-out infinite      -13s,
+    auroraC3Drift 84s ease-in-out infinite alternate -38s,
+    auroraC3Glow  29s ease-in-out infinite      -2s;
+}
+.aurora-curtain.c4{
+  left:56%;
+  background-image:url('../img/aurora-curtain-4.png');
+  animation:
+    auroraC4Width 39s ease-in-out infinite      -6s,
+    auroraC4Drift 102s ease-in-out infinite alternate -47s,
+    auroraC4Glow  37s ease-in-out infinite      -14s;
+}
+.aurora-curtain.c5{
+  left:72%;
+  background-image:url('../img/aurora-curtain-5.png');
+  animation:
+    auroraC5Width 29s ease-in-out infinite      -17s,
+    auroraC5Drift 90s ease-in-out infinite alternate -28s,
+    auroraC5Glow  26s ease-in-out infinite      -8s;
+}
+
+/* Width breathe — the "wide → thin → wide" curtain dance.
+   Each curtain has a different swing so they never breathe in unison. */
+@keyframes auroraC1Width { 0%, 100% { scale:.72 1 } 50% { scale:1.32 1 } }
+@keyframes auroraC2Width { 0%, 100% { scale:.55 1 } 50% { scale:1.48 1 } }
+@keyframes auroraC3Width { 0%, 100% { scale:.78 1 } 50% { scale:1.18 1 } }
+@keyframes auroraC4Width { 0%, 100% { scale:.62 1 } 50% { scale:1.38 1 } }
+@keyframes auroraC5Width { 0%, 100% { scale:.84 1 } 50% { scale:1.55 1 } }
+
+/* Lateral drift — curtains glide horizontally so the whole composite
+   appears to flow across the sky rather than sit in place. */
+@keyframes auroraC1Drift { 0% { translate:-42px 0 } 100% { translate:48px 0 } }
+@keyframes auroraC2Drift { 0% { translate:-60px 0 } 100% { translate:34px 0 } }
+@keyframes auroraC3Drift { 0% { translate:-22px 0 } 100% { translate:62px 0 } }
+@keyframes auroraC4Drift { 0% { translate:-54px 0 } 100% { translate:40px 0 } }
+@keyframes auroraC5Drift { 0% { translate:-36px 0 } 100% { translate:52px 0 } }
+
+/* Glow pulse — each curtain brightens and dims on its own clock, so the
+   composite always has SOME brightening happening somewhere. */
+@keyframes auroraC1Glow { 0%, 100% { opacity:.28 } 50% { opacity:.85 } }
+@keyframes auroraC2Glow { 0%, 100% { opacity:.20 } 50% { opacity:.78 } }
+@keyframes auroraC3Glow { 0%, 100% { opacity:.40 } 50% { opacity:.92 } }
+@keyframes auroraC4Glow { 0%, 100% { opacity:.15 } 50% { opacity:.66 } }
+@keyframes auroraC5Glow { 0%, 100% { opacity:.18 } 50% { opacity:.72 } }
+
 @media (prefers-reduced-motion:reduce){
-  .aurora-veil{ animation:none; }
+  .aurora-curtain{ animation:none; scale:1 1; translate:0 0; opacity:.45; }
 }
 /* ---------- Hero ---------- */
 .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px}
