@@ -368,16 +368,18 @@
           color: pickColor(),
           a: baseA, baseA
         };
-        // Twinkle pool: any star mag <= 4, 45% chance. Real sky twinkle
-        // is mostly atmospheric scintillation on bright stars, and it's
-        // visible — Laura 2026-06-12 noted the previous pass read as
-        // "none of them seem to be twinkling." Bumped breath range from
-        // ~25% to ~60% of baseA and roughly doubled the speed.
-        if (mag <= 4 && Math.random() < .45) {
-          st.s = Math.random() * .020 + .008;       // visible breath, varies per star
+        // Twinkle pool: any star mag <= 5, 55% chance. Pass 3, Laura
+        // 2026-06-12: 'I can tell they are twinkling but only if I
+        // really look — amp it way up.' Pool expanded from mag<=4 to
+        // mag<=5 (~4x as many eligible stars). Speed nearly doubled.
+        // Breath range widened from ~60% to ~100% — dims to near-
+        // invisible then back to peak, the way an actual star
+        // scintillates.
+        if (mag <= 5 && Math.random() < .55) {
+          st.s = Math.random() * .035 + .015;       // 1.5-2s cycle, varies per star
           st.d = Math.random() < .5 ? 1 : -1;
           // Random phase offset so the whole pool doesn't pulse together.
-          st.a = st.baseA * (.55 + Math.random() * .50);
+          st.a = st.baseA * (.30 + Math.random() * .80);
           dyn.push(st);
         } else {
           stars.push(st);
@@ -611,7 +613,10 @@
         ctx.drawImage(bgCanvas, 0, 0);
         for (const st of dyn) {
           st.a += st.s * st.d;
-          const lo = st.baseA * .42, hi = Math.min(1, st.baseA * 1.10);
+          // Dramatic swing: ~20% baseline to peak (or 1.0 cap, whichever
+          // hits first). Wider than a "breath" — closer to actual sky
+          // twinkle where bright stars momentarily dim or flash.
+          const lo = st.baseA * .20, hi = Math.min(1, st.baseA * 1.25);
           if (st.a <= lo || st.a >= hi) st.d *= -1;
           paintStar(ctx, st);
         }
