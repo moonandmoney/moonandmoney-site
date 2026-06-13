@@ -155,19 +155,53 @@ def svg_to_png(svg_path, png_path):
 
 
 def bump_cache_buster(stamp):
-    """Update every og:image and twitter:image ?v= to today's date."""
-    pattern = re.compile(r"(og/social\.png\?v=)[\w.-]+")
+    """Update every og:image and twitter:image ?v= to a fresh value.
+
+    Always rolls to a NEW value, even on same-day re-runs, so re-renders
+    on the same day force social platforms to refetch. If today's date
+    already appears across the files, we add an alpha suffix that picks
+    up where the previous run left off (20260613 → 20260613b → 20260613c).
+    """
+    pattern = re.compile(r"(og/social\.png\?v=)([\w.-]+)")
     targets = list(ROOT.glob("*.html")) + [ROOT / "pendulum/index.html"]
+
+    # Look at the highest existing version across the targets to know
+    # what to bump TO. If it's not today's date yet, we just write
+    # today's date. If it's today's date already, we add (or roll) a
+    # lowercase letter suffix.
+    existing = set()
+    for html in targets:
+        if not html.exists():
+            continue
+        for m in pattern.finditer(html.read_text()):
+            existing.add(m.group(2))
+
+    def _next_value():
+        same_day = sorted(v for v in existing if v == stamp or v.startswith(stamp))
+        if not same_day:
+            return stamp
+        last = same_day[-1]
+        # last is either "YYYYMMDD" → bump to "YYYYMMDDb", or
+        # "YYYYMMDD<letter>" → bump the letter.
+        if last == stamp:
+            return f"{stamp}b"
+        suffix = last[len(stamp):]
+        if len(suffix) == 1 and suffix.isalpha() and suffix < "z":
+            return f"{stamp}{chr(ord(suffix) + 1)}"
+        # Fall through: just append an 'a' incrementally.
+        return f"{stamp}{suffix}a"
+
+    new_value = _next_value()
     changed = 0
     for html in targets:
         if not html.exists():
             continue
         text = html.read_text()
-        updated, n = pattern.subn(rf"\g<1>{stamp}", text)
-        if n and updated != text:
+        updated = pattern.sub(rf"\g<1>{new_value}", text)
+        if updated != text:
             html.write_text(updated)
             changed += 1
-    return changed
+    return changed, new_value
 
 
 def main():
@@ -194,8 +228,8 @@ def main():
         tmp_svg.unlink(missing_ok=True)
 
     stamp = when.strftime("%Y%m%d")
-    n = bump_cache_buster(stamp)
-    print(f"[og-moon-phase] rendered via {renderer}; bumped ?v={stamp} in {n} files")
+    n, new_value = bump_cache_buster(stamp)
+    print(f"[og-moon-phase] rendered via {renderer}; bumped ?v={new_value} in {n} files")
 
 
 if __name__ == "__main__":
