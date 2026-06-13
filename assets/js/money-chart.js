@@ -232,3 +232,83 @@ window.MM_CHART_CHECKOUT = {
     }).then(finish).catch(finish);
   });
 })();
+
+
+/* ============================================================
+   Money Chart — cinematic motion (subtle, considered).
+   Three layered touches that supplement the global .reveal
+   fade-in main.js already handles, never override it:
+
+     1. Hero cover parallax — the moon-cover preview drifts
+        upward at ~12% scroll speed for the first viewport.
+        Adds depth as the visitor scrolls into the offer.
+     2. Soul Signature glow build — when the signature image
+        scrolls into view, its gold halo box-shadow builds
+        from 0 to full over ~1.4s. The image stays still; the
+        sky around it brightens like a stamp settling.
+     3. Bridge CTAs cascade — when the new "your chart is the
+        map" bridge section enters view, the three buttons
+        rise in tight sequence after the headline lands.
+
+   Targets transform-OR-box-shadow-OR-opacity properties that
+   don't collide with main.js's global reveal (which sets
+   opacity + translateY on .reveal once). Gated on
+   GSAP+ScrollTrigger availability; skipped on prefers-reduced-
+   motion so the experience stays calm for sensory users.
+   ============================================================ */
+(function mcCinematic () {
+  'use strict';
+  if (matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  if (!window.gsap || !window.ScrollTrigger) return;
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  // ── 1. Hero cover parallax ──────────────────────────────────
+  const cover = document.querySelector('.mc-cover');
+  if (cover) {
+    gsap.to(cover, {
+      y: -42, ease: 'none',
+      scrollTrigger: {
+        trigger: '.mc-hero',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 0.6,
+      }
+    });
+  }
+
+  // ── 2. Soul Signature glow build ────────────────────────────
+  const sigImg = document.querySelector('.mc-soul img[alt*="signature"]');
+  if (sigImg) {
+    // Initial state: shadow muted. Build to the full deep + gold halo.
+    gsap.set(sigImg, {
+      boxShadow: '0 12px 30px -18px rgba(0,0,0,.45), 0 0 0 rgba(229,199,123,0)',
+    });
+    gsap.to(sigImg, {
+      boxShadow: '0 26px 64px -26px rgba(0,0,0,.75), 0 0 60px rgba(229,199,123,.25)',
+      duration: 1.4,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: '.mc-soul',
+        start: 'top 78%',
+        once: true,
+      }
+    });
+  }
+
+  // ── 3. Bridge CTAs cascade ──────────────────────────────────
+  const bridgeBtns = document.querySelectorAll('.mc-bridge .btn');
+  if (bridgeBtns.length) {
+    gsap.set(bridgeBtns, { y: 18, opacity: 0 });
+    gsap.to(bridgeBtns, {
+      y: 0, opacity: 1, duration: 0.7, ease: 'power3.out',
+      stagger: 0.14,
+      delay: 0.18,           // lands just after the bridge headline reveal
+      scrollTrigger: {
+        trigger: '.mc-bridge',
+        start: 'top 72%',
+        once: true,
+      }
+    });
+  }
+})();
