@@ -38,7 +38,7 @@ jobs:
           git config user.name  "moonandmoney"
           git config user.email "moonandmoney@proton.me"
           if [[ -n "$(git status --porcelain)" ]]; then
-            git add assets/og/social.png assets/og/icon-192.png assets/og/icon-512.png assets/og/apple-touch-icon.png favicon.ico *.html pendulum/index.html manifest.webmanifest
+            git add assets/og/social.png assets/og/icon-192.png assets/og/icon-512.png assets/og/apple-touch-icon.png assets/og/icon.today.svg favicon.ico *.html pendulum/index.html manifest.webmanifest
             git commit -m "OG + icons: daily phase update ($(date -u +%Y-%m-%d))"
             git push
           else

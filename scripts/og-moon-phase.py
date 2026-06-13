@@ -51,29 +51,32 @@ TARGETS = [
         "ring_offset": 17, "ring_width": 4.0,
         "glow_offset": 32, "glow_width": 6.0,
     },
+    # Icon targets — moon bumped to r=215 (84% of canvas radius) so it
+    # actually fills the favicon when scaled down to 16/32px. Anything
+    # smaller and the favicon reads as a dot in empty space.
     {
         "svg": "assets/og/icon.svg",
         "png": "assets/og/icon-512.png",
         "width": 512, "height": 512,
-        "cx": 256, "cy": 256, "r": 155,
-        "ring_offset": 20, "ring_width": 5.0,
-        "glow_offset": 37, "glow_width": 7.0,
+        "cx": 256, "cy": 256, "r": 215,
+        "ring_offset": 17, "ring_width": 6.0,
+        "glow_offset": 32, "glow_width": 8.0,
     },
     {
         "svg": "assets/og/icon.svg",
         "png": "assets/og/icon-192.png",
         "width": 192, "height": 192,
-        "cx": 256, "cy": 256, "r": 155,
-        "ring_offset": 20, "ring_width": 5.0,
-        "glow_offset": 37, "glow_width": 7.0,
+        "cx": 256, "cy": 256, "r": 215,
+        "ring_offset": 17, "ring_width": 6.0,
+        "glow_offset": 32, "glow_width": 8.0,
     },
     {
         "svg": "assets/og/icon.svg",
         "png": "assets/og/apple-touch-icon.png",
         "width": 180, "height": 180,
-        "cx": 256, "cy": 256, "r": 155,
-        "ring_offset": 20, "ring_width": 5.0,
-        "glow_offset": 37, "glow_width": 7.0,
+        "cx": 256, "cy": 256, "r": 215,
+        "ring_offset": 17, "ring_width": 6.0,
+        "glow_offset": 32, "glow_width": 8.0,
     },
 ]
 
@@ -242,8 +245,9 @@ def bump_cache_buster(stamp):
     apple-touch-icon, and the manifest icons — one cache-buster value
     per day across all the brand assets.
     """
-    # Matches social.png, icon-192.png, icon-512.png, apple-touch-icon.png
-    pattern = re.compile(r"(og/(?:social|icon-192|icon-512|apple-touch-icon)\.png\?v=)([\w.-]+)")
+    # Matches social.png, icon-192.png, icon-512.png, apple-touch-icon.png,
+    # AND icon.today.svg (the SVG favicon).
+    pattern = re.compile(r"(og/(?:social|icon-192|icon-512|apple-touch-icon)\.png\?v=|og/icon\.today\.svg\?v=)([\w.-]+)")
     targets = (list(ROOT.glob("*.html"))
                + [ROOT / "pendulum/index.html"]
                + [ROOT / "manifest.webmanifest"])
@@ -303,6 +307,9 @@ def main():
     # multiple targets render from it (icon.svg → three PNG sizes).
     source_cache: dict[str, str] = {}
     renderer_used = None
+    icon_rendered_svg = None    # the rendered icon SVG, used by the
+                                # SVG favicon — perfect scaling at any
+                                # size, primary favicon for modern browsers
 
     for target in TARGETS:
         svg_path = ROOT / target["svg"]
@@ -313,6 +320,12 @@ def main():
         if str(svg_path) not in source_cache:
             source_cache[str(svg_path)] = svg_path.read_text()
         out_svg_text = inject_shadow(source_cache[str(svg_path)], phase, target)
+
+        # If this is an icon target, capture the rendered SVG so we
+        # can also save it as an SVG favicon (browsers prefer SVG
+        # favicons because they scale crisply at every size).
+        if "icon.svg" in target["svg"] and icon_rendered_svg is None:
+            icon_rendered_svg = out_svg_text
 
         # Render via a temp SVG so the canonical templates stay clean.
         tmp_svg = svg_path.with_name(svg_path.stem + f".today-{target['width']}.svg")
@@ -325,18 +338,36 @@ def main():
             tmp_svg.unlink(missing_ok=True)
         print(f"  → {target['png']} ({target['width']}x{target['height']}) via {renderer_used}")
 
+    # Save the rendered icon SVG as the primary favicon. Modern browsers
+    # use this and get a perfectly crisp moon at any tab size; older
+    # browsers fall through to the PNG link tags / favicon.ico fallback.
+    if icon_rendered_svg:
+        svg_favicon = ROOT / "assets/og/icon.today.svg"
+        svg_favicon.write_text(icon_rendered_svg)
+        print(f"  → assets/og/icon.today.svg  (SVG favicon — scales crisp at every size)")
+
     # Regenerate the root favicon.ico from the freshly-rendered
     # icon-512.png. Browsers that look at /favicon.ico (legacy
     # fallback, common on desktop) get the same phase-tracking corona.
-    # Pillow is the simplest cross-platform way to write a multi-res
-    # .ico; if it isn't installed (some minimal CI envs), we skip.
+    # Pre-rendering each size with LANCZOS down-sampling produces a
+    # MUCH crisper 16/32 pixel version than letting browsers down-
+    # scale the 512 source themselves. The default Pillow `sizes=...`
+    # ICO save also turned out to only embed a single frame in some
+    # cases; saving each frame explicitly via `append_images` is the
+    # reliable path.
     try:
         from PIL import Image
         src = Image.open(ROOT / "assets/og/icon-512.png").convert("RGBA")
+        targets_px = [16, 32, 48, 64, 128, 256]
+        frames = [src.resize((px, px), Image.LANCZOS) for px in targets_px]
         ico = ROOT / "favicon.ico"
-        src.save(ico, format="ICO",
-                 sizes=[(16, 16), (32, 32), (48, 48), (64, 64), (128, 128)])
-        print(f"  → favicon.ico  (multi-size 16/32/48/64/128)")
+        frames[0].save(
+            ico,
+            format="ICO",
+            sizes=[(px, px) for px in targets_px],
+            append_images=frames[1:],
+        )
+        print(f"  → favicon.ico  (frames {'/'.join(str(p) for p in targets_px)})")
     except ImportError:
         print("  → favicon.ico  (skipped — Pillow not installed)")
 
