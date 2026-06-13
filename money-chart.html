@@ -171,6 +171,46 @@ pintrk('page');
     </div>
   </section>
 
+  <!-- Section 2.75 — Testimonials (scaffolded, hidden until real testimonials exist).
+       Remove `hidden` and fill the <li>s with real customer quotes when Laura
+       has them. Three is the sweet spot; four reads cluttered, two reads sparse. -->
+  <section class="mc-testimonials" aria-label="What readers say" hidden>
+    <div class="wrap">
+      <div class="head center reveal">
+        <span class="eyebrow">What Readers Say</span>
+        <h2 class="section-title">In their <em>own words</em></h2>
+      </div>
+      <ul class="mc-quotes reveal" style="list-style:none;display:grid;gap:28px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));max-width:980px;margin:40px auto 0;padding:0">
+        <!-- Template for each testimonial — duplicate and fill in:
+        <li style="background:linear-gradient(160deg,var(--ink-2),var(--obsidian));padding:32px;border-radius:10px;border:1px solid var(--line)">
+          <blockquote style="font-family:var(--serif);font-style:italic;font-size:1.08rem;line-height:1.55;color:var(--parchment);margin:0 0 18px">"The line that landed for me was..."</blockquote>
+          <cite style="font-family:var(--sans);font-style:normal;font-size:.86rem;letter-spacing:.06em;color:var(--gold)">— First name, City</cite>
+        </li>
+        -->
+      </ul>
+    </div>
+  </section>
+
+  <!-- Section 2.85 — The Bridge: chart → seasonal forecast → Crescent Club.
+       The "best marketing moment in the business" line Laura flagged 2026-06-12.
+       Chart is the map, season is the weather, Crescent Club members receive
+       the seasonal forecast each equinox. Sits between "what you get" and
+       "buy it" so it raises perceived value BEFORE the intake form. -->
+  <section class="mc-bridge" style="padding:clamp(60px,9vw,110px) 0">
+    <div class="wrap">
+      <div class="head center reveal" style="max-width:720px;margin:0 auto">
+        <span class="eyebrow">After Your Chart</span>
+        <h2 class="section-title">Your chart is the map. The seasonal forecast is the <em>weather</em>.</h2>
+        <p style="margin-top:18px">Crescent Club members receive theirs each equinox.</p>
+      </div>
+      <div class="reveal" style="display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:38px">
+        <a class="btn btn-gold" href="https://moonandmoney.substack.com/subscribe" target="_blank" rel="noopener">Join the Crescent Club</a>
+        <a class="btn btn-ghost" href="seasonal-forecast.html">Read about the Seasonal Forecast</a>
+        <a class="btn btn-ghost" href="three-moves.html">Three Moves For Your Chart</a>
+      </div>
+    </div>
+  </section>
+
   <!-- Section 3 — The intake -->
   <section class="mc-intake" id="mcRequest">
     <div class="wrap">

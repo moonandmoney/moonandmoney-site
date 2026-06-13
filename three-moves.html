@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Three Moves for Your Chart This Season — Moon &amp; Money</title>
+<meta name="description" content="What to do once you've read your Money Chart. Three simple moves that turn the reading into a practice — and the bridge from the chart to the Seasonal Forecast.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Moon &amp; Money">
+<meta property="og:title" content="Three Moves for Your Chart This Season — Moon &amp; Money">
+<meta property="og:description" content="What to do once you've read your Money Chart. Three moves that turn the reading into a practice.">
+<meta property="og:image" content="https://moonandmoney.ca/assets/og/social.png?v=20260612">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://moonandmoney.ca/assets/og/social.png?v=20260612">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/assets/og/apple-touch-icon.png">
+<meta name="theme-color" content="#FCF7F1">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&family=Noto+Sans+Symbols+2&display=swap">
+<link rel="stylesheet" href="assets/css/styles.css">
+
+<style>
+  /* ─────────────────────────────────────────────────────────────────────
+     Three Moves — cream reading sanctuary. Same layout DNA as
+     the-leak.html / leak-lesson-1.html: dark cosmic body overridden
+     to cream-on-navy for reading; nav + footer stay dark-cosmic for
+     brand continuity. Page-scoped --moves-* vars to coexist with the
+     site's :root --gold etc. without collision.
+     ───────────────────────────────────────────────────────────────────── */
+  :root{
+    --moves-cream:#FCF7F1; --moves-navy:#0C2345; --moves-forest:#1E4D3A;
+    --moves-gold:#C9A24E; --moves-stroke-gold:#E5C77B;
+    --moves-mint:#E8EFE0; --moves-grey:#5D6D7E;
+    --moves-serif:'Cormorant Garamond', Georgia, serif;
+    --moves-sans:'Jost', system-ui, sans-serif;
+  }
+  body{
+    background:var(--moves-cream) !important;
+    color:var(--moves-navy) !important;
+    font-family:var(--moves-serif);
+    font-size:21px;
+    line-height:1.62;
+    overflow-x:hidden;
+  }
+  #starfield, .nebula{ display:none !important; }
+  header.nav{
+    background:var(--moves-navy) !important;
+    border-bottom:1px solid rgba(229,199,123,.25);
+  }
+  footer{
+    background:var(--moves-navy) !important;
+    color:var(--moves-cream) !important;
+  }
+  footer .brand,
+  footer .foot-col a,
+  footer .foot-bottom,
+  footer .foot-bottom a,
+  footer .foot-brand p,
+  footer h4{ color:var(--moves-cream) !important; }
+
+  /* ── Page layout ───────────────────────────────────────────────── */
+  main.moves{
+    max-width:760px; margin:0 auto;
+    padding:140px 28px 100px;
+  }
+  .moves-hero{ text-align:center; margin-bottom:80px; }
+  .moves-eyebrow{
+    font-family:var(--moves-sans);
+    font-size:13px; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--moves-gold); margin-bottom:18px;
+  }
+  .moves-title{
+    font-family:'Cinzel', var(--moves-serif);
+    font-size:clamp(34px,5vw,52px); font-weight:500;
+    letter-spacing:.01em; line-height:1.15;
+    color:var(--moves-navy); margin-bottom:22px;
+  }
+  .moves-sub{
+    font-style:italic; font-size:21px; color:var(--moves-grey);
+    max-width:560px; margin:0 auto;
+  }
+
+  .moves-intro{
+    font-size:21px; line-height:1.7; color:var(--moves-navy);
+    margin-bottom:80px;
+  }
+  .moves-intro p + p{ margin-top:22px; }
+
+  /* ── Each move card ─────────────────────────────────────────────── */
+  .move{
+    margin:0 0 80px;
+    padding-top:42px;
+    border-top:1px solid rgba(12,35,69,.12);
+  }
+  .move-num{
+    font-family:var(--moves-sans);
+    font-size:12px; letter-spacing:.28em; text-transform:uppercase;
+    color:var(--moves-gold); margin-bottom:14px;
+  }
+  .move-name{
+    font-family:'Cinzel', var(--moves-serif);
+    font-size:clamp(26px,3.4vw,36px); font-weight:500;
+    color:var(--moves-navy); margin-bottom:24px;
+    line-height:1.2;
+  }
+  .move p{ margin-bottom:18px; }
+  .move p:last-child{ margin-bottom:0; }
+  .move .quiet{
+    color:var(--moves-grey); font-style:italic;
+    font-size:18px; line-height:1.55;
+  }
+  .move a.inline-link{
+    color:var(--moves-navy);
+    border-bottom:1px solid var(--moves-gold);
+    padding-bottom:1px;
+    transition:color .3s ease, border-color .3s ease;
+  }
+  .move a.inline-link:hover{
+    color:var(--moves-forest);
+    border-color:var(--moves-forest);
+  }
+
+  /* ── Bridge / closing ───────────────────────────────────────────── */
+  .moves-bridge{
+    margin:100px auto 60px;
+    padding:48px 36px;
+    background:var(--moves-navy);
+    color:var(--moves-cream);
+    border-radius:6px;
+    text-align:center;
+    position:relative;
+  }
+  .moves-bridge::before{
+    content:'✦';
+    position:absolute; top:-14px; left:50%; transform:translateX(-50%);
+    background:var(--moves-cream); color:var(--moves-gold);
+    width:32px; height:32px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:16px; line-height:1;
+  }
+  .moves-bridge p{
+    font-family:'Cormorant Garamond', Georgia, serif;
+    font-size:clamp(22px,2.6vw,28px);
+    font-style:italic; line-height:1.5;
+    margin-bottom:32px; max-width:540px; margin-left:auto; margin-right:auto;
+  }
+  .moves-bridge-cta{
+    display:inline-flex; gap:12px; flex-wrap:wrap; justify-content:center;
+  }
+  .bridge-btn{
+    font-family:var(--moves-sans);
+    font-size:13px; letter-spacing:.16em; text-transform:uppercase;
+    padding:13px 28px; border-radius:999px;
+    text-decoration:none;
+    transition:background .3s ease, color .3s ease, border-color .3s ease;
+  }
+  .bridge-btn.primary{
+    background:var(--moves-gold); color:var(--moves-navy);
+    border:1px solid var(--moves-gold);
+  }
+  .bridge-btn.primary:hover{
+    background:var(--moves-stroke-gold);
+    border-color:var(--moves-stroke-gold);
+  }
+  .bridge-btn.ghost{
+    background:transparent; color:var(--moves-cream);
+    border:1px solid rgba(229,199,123,.55);
+  }
+  .bridge-btn.ghost:hover{
+    border-color:var(--moves-gold);
+    color:var(--moves-gold);
+  }
+
+  .moves-back{
+    text-align:center;
+    margin-top:60px;
+    font-family:var(--moves-sans);
+    font-size:14px; letter-spacing:.08em;
+    color:var(--moves-grey);
+  }
+  .moves-back a{ color:var(--moves-navy); border-bottom:1px solid var(--moves-gold); }
+
+  @media (max-width:640px){
+    main.moves{ padding:100px 20px 70px; }
+    .moves-bridge{ padding:38px 22px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
+  <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li class="nav-dropdown" aria-expanded="false">
+      <button class="nav-trigger" type="button" aria-haspopup="true" aria-expanded="false">Moon Tools <span class="caret" aria-hidden="true">&#9662;</span></button>
+      <ul class="nav-submenu">
+        <li><a href="calendar.html">Calendar</a></li>
+        <li><a href="wheel.html">Wheel</a></li>
+        <li><a href="draw.html">Card</a></li>
+        <li><a href="pendulum/">Pendulum</a></li>
+        <li><a href="your-chart.html">Your Chart</a></li>
+        <li><a href="houses.html">Houses</a></li>
+      </ul>
+    </li>
+    <li class="nav-dropdown" aria-expanded="false">
+      <button class="nav-trigger" type="button" aria-haspopup="true" aria-expanded="false">Money Tools <span class="caret" aria-hidden="true">&#9662;</span></button>
+      <ul class="nav-submenu">
+        <li><a href="sun-money.html">Sun Money</a></li>
+        <li><a href="moon-money.html">Moon Money</a></li>
+        <li><a href="venus-money.html">Venus Money</a></li>
+        <li><a href="seasonal-forecast.html">Seasonal Forecast</a></li>
+        <li><a href="the-leak.html">The Leak &middot; Mini Course</a></li>
+        <li><a href="quiz.html">Quiz</a></li>
+      </ul>
+    </li>
+    <li><a href="shop.html">Atelier</a></li>
+    <li><a href="courses.html">Academy</a></li>
+    <li><a href="archive.html">Archive</a></li>
+    <li><a href="about.html">Ethos</a></li>
+    <li><a href="https://moonandmoney.substack.com/subscribe" target="_blank" rel="noopener">Crescent Club</a></li>
+    <li><a class="nav-cta" href="money-chart.html">Money Chart</a></li>
+  </ul>
+</header>
+
+<main class="moves">
+
+  <section class="moves-hero">
+    <div class="moves-eyebrow">After Your Chart</div>
+    <h1 class="moves-title">Three Moves for Your Chart This Season</h1>
+    <p class="moves-sub">What to do once you've read it.</p>
+  </section>
+
+  <section class="moves-intro">
+    <p>A Money Chart is information about the way you are wired. Information without practice stays on a shelf. These three moves turn the reading into something you can use this season, in plain steps, with no extra astrology required.</p>
+    <p>Pick one move, or all three. The chart is yours now. The point was never to know it. The point is to live a little differently because of it.</p>
+  </section>
+
+  <article class="move">
+    <div class="move-num">Move One</div>
+    <h2 class="move-name">Read it twice.</h2>
+    <p>The first read is for recognition. The second read is for the lines you skimmed. Most charts hold at least one sentence that asks for a slower look. That's usually the line worth sitting with this season.</p>
+    <p>Mark three lines. Not the ones that flatter. The ones that itch.</p>
+    <p class="quiet">The chart is a mirror. Mirrors only show you what you are willing to look at twice.</p>
+  </article>
+
+  <article class="move">
+    <div class="move-num">Move Two</div>
+    <h2 class="move-name">Watch one transit.</h2>
+    <p>Your chart will not change. The sky will, on a predictable schedule. A transit is the weather moving across the map your chart drew.</p>
+    <p>Pick one planet to track. Jupiter shows where things are widening for you this quarter. Saturn shows where the slow build is being asked for. Looking up just one of them, once per season, is enough to feel the weather shift through your money instead of being surprised by it.</p>
+    <p>If you want this read for you each equinox and solstice, in plain financial language anchored to your own chart, that is what <a class="inline-link" href="seasonal-forecast.html">the Seasonal Forecast</a> does.</p>
+  </article>
+
+  <article class="move">
+    <div class="move-num">Move Three</div>
+    <h2 class="move-name">Try one experiment.</h2>
+    <p>Pick one line from your chart that names a pattern. Run a thirty-day experiment against it. Not to fix yourself. To see what changes when you stop pretending the pattern is not there.</p>
+    <p>A Saturn knot rewarded by patience: save before you spend for thirty days. A Pisces Venus that gives the work away: add a sentence before every yes that says "I'll get back to you." A Leo current that earns through visibility: post the thing you have been sitting on.</p>
+    <p>The chart is information. The experiment turns it into a practice.</p>
+  </article>
+
+  <section class="moves-bridge" aria-label="What's next">
+    <p>Your chart is the map. The seasonal forecast is the weather. Crescent Club members receive theirs each equinox.</p>
+    <div class="moves-bridge-cta">
+      <a class="bridge-btn primary" href="https://moonandmoney.substack.com/subscribe" target="_blank" rel="noopener">Join Crescent Club</a>
+      <a class="bridge-btn ghost" href="seasonal-forecast.html">Read the Seasonal Forecast</a>
+    </div>
+  </section>
+
+  <p class="moves-back"><a href="money-chart.html">← Back to the Money Chart</a></p>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
+        <p>Personal finance, read through astrology. By Luna Wilde.</p>
+      </div>
+      <div class="foot-col"><h4>Explore</h4><a href="wheel.html">Wheel</a><a href="draw.html">Card</a><a href="quiz.html">Quiz</a><a href="shop.html">Atelier</a><a href="courses.html">Academy</a><a href="pendulum/">Pendulum</a><a href="calendar.html">Calendar</a><a href="archive.html">Archive</a><a href="about.html">Ethos</a><a href="sun-money.html">Sun Money</a><a href="money-journal.html">Journal</a></div>
+      <div class="foot-col"><h4>Club</h4><a href="https://moonandmoney.substack.com" target="_blank" rel="noopener">Substack</a><a href="https://moonandmoney.substack.com/subscribe" target="_blank" rel="noopener">Crescent Club</a><a href="fifth-moon.html">The Fifth Moon</a><a href="about.html#circle">Circle <span class="soon">Soon</span></a><a href="about.html#token">Token <span class="soon">Soon</span></a></div>
+      <div class="foot-col"><h4>Follow</h4><a href="https://moonandmoney.substack.com" target="_blank" rel="noopener">@moonmoney</a><a href="archive.html">Notes</a><a href="https://moonandmoney.substack.com/subscribe" target="_blank" rel="noopener">Newsletter</a></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="yr"></span> Moon &amp; Money · Luna Wilde. All rights reserved.</span>
+      <span><a href="privacy.html" style="color:inherit;text-decoration:none;opacity:.85">Privacy</a></span>
+      <span>Built in rhythm with the moon ☾</span>
+    </div>
+    <p class="foot-legal" style="text-align:center;font-family:Cormorant Garamond,Georgia,serif;font-style:italic;font-size:.82rem;opacity:.55;color:#a89fb4;margin:14px 0 0 0;letter-spacing:.02em">For reflection and self-knowledge. Not financial or investment advice.</p>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="assets/js/main.js"></script>
+
+</body>
+</html>
