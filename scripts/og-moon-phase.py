@@ -325,9 +325,24 @@ def main():
             tmp_svg.unlink(missing_ok=True)
         print(f"  → {target['png']} ({target['width']}x{target['height']}) via {renderer_used}")
 
+    # Regenerate the root favicon.ico from the freshly-rendered
+    # icon-512.png. Browsers that look at /favicon.ico (legacy
+    # fallback, common on desktop) get the same phase-tracking corona.
+    # Pillow is the simplest cross-platform way to write a multi-res
+    # .ico; if it isn't installed (some minimal CI envs), we skip.
+    try:
+        from PIL import Image
+        src = Image.open(ROOT / "assets/og/icon-512.png").convert("RGBA")
+        ico = ROOT / "favicon.ico"
+        src.save(ico, format="ICO",
+                 sizes=[(16, 16), (32, 32), (48, 48), (64, 64), (128, 128)])
+        print(f"  → favicon.ico  (multi-size 16/32/48/64/128)")
+    except ImportError:
+        print("  → favicon.ico  (skipped — Pillow not installed)")
+
     stamp = when.strftime("%Y%m%d")
     n, new_value = bump_cache_buster(stamp)
-    print(f"[og-moon-phase] rendered {len(TARGETS)} target(s); bumped ?v={new_value} in {n} files")
+    print(f"[og-moon-phase] rendered {len(TARGETS)} target(s) + favicon; bumped ?v={new_value} in {n} files")
 
 
 if __name__ == "__main__":

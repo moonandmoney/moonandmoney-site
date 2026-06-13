@@ -24,12 +24,13 @@ jobs:
       - name: Check out the site
         uses: actions/checkout@v4
 
-      - name: Install rsvg-convert
+      - name: Install rsvg-convert + Pillow
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y librsvg2-bin
+          pip install --quiet Pillow
 
-      - name: Regenerate OG image with today's phase
+      - name: Regenerate OG + icons + favicon with today's phase
         run: python3 scripts/og-moon-phase.py
 
       - name: Commit and push if anything changed
@@ -37,8 +38,8 @@ jobs:
           git config user.name  "moonandmoney"
           git config user.email "moonandmoney@proton.me"
           if [[ -n "$(git status --porcelain)" ]]; then
-            git add assets/og/social.png *.html pendulum/index.html
-            git commit -m "OG moon: daily phase update ($(date -u +%Y-%m-%d))"
+            git add assets/og/social.png assets/og/icon-192.png assets/og/icon-512.png assets/og/apple-touch-icon.png favicon.ico *.html pendulum/index.html manifest.webmanifest
+            git commit -m "OG + icons: daily phase update ($(date -u +%Y-%m-%d))"
             git push
           else
             echo "No change today — moon phase already current."
