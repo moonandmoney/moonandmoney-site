@@ -31,10 +31,14 @@ KNOWN_NEW_MOON = datetime(2000, 1, 6, 18, 14, tzinfo=timezone.utc)
 # Where the moon is drawn in the SVG (must match social.svg)
 MOON_CX, MOON_CY, MOON_R = 600, 305, 135
 
-# Subtle: the shadow is a dark navy at this opacity, so the gold disc
-# stays luminous underneath. Strict literal phase would be opacity 1.0.
-SHADOW_OPACITY = 0.55
-SHADOW_FILL = "#03081A"
+# Solid obsidian shadow (matches the hero on the homepage —
+# .moon-shadow uses background:var(--obsidian) at full opacity).
+# Laura 2026-06-12: 'make the OG match the hero so it goes black in
+# the middle at new moon, and black-and-gold depending on what phase
+# the moon is in.' Previous pass used a translucent navy so the gold
+# bled through at new moon; that's intentional out.
+SHADOW_OPACITY = 1.0
+SHADOW_FILL = "#070608"     # --obsidian on the site
 
 
 def phase_fraction(when):
