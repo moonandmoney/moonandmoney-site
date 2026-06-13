@@ -22,14 +22,60 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SVG = ROOT / "assets/og/social.svg"
-PNG = ROOT / "assets/og/social.png"
 
 SYNODIC = 29.530588853
 KNOWN_NEW_MOON = datetime(2000, 1, 6, 18, 14, tzinfo=timezone.utc)
 
-# Where the moon is drawn in the SVG (must match social.svg)
-MOON_CX, MOON_CY, MOON_R = 600, 305, 135
+# Per-target configuration. Each entry renders a phase-tracking PNG
+# from the named SVG, with target-specific moon coordinates + ring
+# proportions so the gold corona reads consistently at every output
+# size. Laura 2026-06-13: 'we can do the tab also to match!!!' —
+# the icon outputs make the favicon + apple-touch + PWA icons live
+# the same look as the OG.
+#
+# Field guide:
+#   svg            source SVG path (relative to ROOT)
+#   png            output PNG path
+#   width, height  output pixel dimensions (sips/rsvg both honour this)
+#   cx, cy, r      moon centre + radius in the SVG's viewBox
+#   ring_offset    primary gold ring radius offset from disc edge
+#   ring_width     primary gold ring stroke width (in SVG units)
+#   glow_offset    soft outer corona radius offset from disc edge
+#   glow_width     soft outer corona stroke width
+TARGETS = [
+    {
+        "svg": "assets/og/social.svg",
+        "png": "assets/og/social.png",
+        "width": 1200, "height": 630,
+        "cx": 600, "cy": 305, "r": 135,
+        "ring_offset": 17, "ring_width": 4.0,
+        "glow_offset": 32, "glow_width": 6.0,
+    },
+    {
+        "svg": "assets/og/icon.svg",
+        "png": "assets/og/icon-512.png",
+        "width": 512, "height": 512,
+        "cx": 256, "cy": 256, "r": 155,
+        "ring_offset": 20, "ring_width": 5.0,
+        "glow_offset": 37, "glow_width": 7.0,
+    },
+    {
+        "svg": "assets/og/icon.svg",
+        "png": "assets/og/icon-192.png",
+        "width": 192, "height": 192,
+        "cx": 256, "cy": 256, "r": 155,
+        "ring_offset": 20, "ring_width": 5.0,
+        "glow_offset": 37, "glow_width": 7.0,
+    },
+    {
+        "svg": "assets/og/icon.svg",
+        "png": "assets/og/apple-touch-icon.png",
+        "width": 180, "height": 180,
+        "cx": 256, "cy": 256, "r": 155,
+        "ring_offset": 20, "ring_width": 5.0,
+        "glow_offset": 37, "glow_width": 7.0,
+    },
+]
 
 # Solid obsidian shadow (matches the hero on the homepage —
 # .moon-shadow uses background:var(--obsidian) at full opacity).
@@ -40,16 +86,27 @@ MOON_CX, MOON_CY, MOON_R = 600, 305, 135
 SHADOW_OPACITY = 1.0
 SHADOW_FILL = "#070608"     # --obsidian on the site
 
-# Permanent gold corona ring — sits just outside the disc and stays
-# visible at every phase, including pitch-black new moon. Matches the
-# hero's .moon-stage::after gilded ring at inset:-24px.
+# Permanent gold ring AROUND the moon — sits just outside the disc and
+# stays visible at every phase, including pitch-black new moon. Echoes
+# the hero's .moon-stage::after gilded ring at inset:-24px.
 # Laura 2026-06-13: 'I want it to still have a gold ring around it
 # when it's the new moon and also keep progressing as the moon
-# changes so it always reflects that.'
-RING_R_OFFSET   = 13        # px outside the disc edge (r=135 → ring at 148)
+# changes so it always reflects that.' Pass 2 same day: original ring
+# was too thin to read at link-preview scale (iMessage ~280px → 1.6px
+# stroke becomes sub-pixel). Bumping to a much more present ring:
+# wider stroke, full opacity, slightly further out for a clear gap.
+RING_R_OFFSET   = 17        # px outside the disc edge (r=135 → ring at 152)
 RING_STROKE     = "#E5C77B" # --gold-bright on the site
-RING_OPACITY    = 0.78
-RING_WIDTH      = 1.6
+RING_OPACITY    = 1.0
+RING_WIDTH      = 4.0       # was 1.6 — survives down-scaling to thumbnail size
+
+# Softer outer corona glow — a second wider ring at low opacity that
+# gives the moon the "halo" feel even when the platform's preview
+# shrinks the image. Sits beyond the primary ring.
+GLOW_R_OFFSET   = 32        # px outside the disc edge (r=135 → glow at 167)
+GLOW_STROKE     = "#E5C77B"
+GLOW_OPACITY    = 0.30
+GLOW_WIDTH      = 6.0
 
 
 def phase_fraction(when):
@@ -104,50 +161,70 @@ def shadow_path(cx, cy, r, phase):
     )
 
 
-def inject_shadow(svg_text, phase):
-    """Insert the phase shadow path + a permanent gold corona ring.
+def inject_shadow(svg_text, phase, target):
+    """Insert the phase shadow + permanent gold corona ring + soft glow.
+
+    Target carries the moon coordinates + ring proportions specific to
+    that SVG (the OG and icon SVGs have different canvas sizes and
+    moon radii, so the ring offsets and stroke widths differ).
 
     Layers added on top of the existing gold disc:
       1. Phase shadow — covers the unlit portion (solid obsidian).
-      2. Gold corona ring at r=MOON_R+13 — always visible, gives the
-         moon a definite outline even at pitch-black new moon. Echoes
-         the hero's .moon-stage::after gilded ring.
+      2. Soft outer corona ring (wider, lower opacity) — the halo feel.
+      3. Primary gold ring — the moon's definite outline at every phase.
     """
-    path_d = shadow_path(MOON_CX, MOON_CY, MOON_R, phase)
+    cx, cy, r = target["cx"], target["cy"], target["r"]
+    path_d = shadow_path(cx, cy, r, phase)
     shadow_el = (
         f'  <path d="{path_d}" fill="{SHADOW_FILL}" '
         f'fill-opacity="{SHADOW_OPACITY}"/>\n'
     )
-    ring_r = MOON_R + RING_R_OFFSET
+    glow_r = r + target["glow_offset"]
+    glow_el = (
+        f'  <circle cx="{cx}" cy="{cy}" r="{glow_r}" '
+        f'fill="none" stroke="{GLOW_STROKE}" '
+        f'stroke-opacity="{GLOW_OPACITY}" '
+        f'stroke-width="{target["glow_width"]}"/>\n'
+    )
+    ring_r = r + target["ring_offset"]
     ring_el = (
-        f'  <circle cx="{MOON_CX}" cy="{MOON_CY}" r="{ring_r}" '
+        f'  <circle cx="{cx}" cy="{cy}" r="{ring_r}" '
         f'fill="none" stroke="{RING_STROKE}" '
         f'stroke-opacity="{RING_OPACITY}" '
-        f'stroke-width="{RING_WIDTH}"/>\n'
+        f'stroke-width="{target["ring_width"]}"/>\n'
     )
 
     marker = (
-        f'<circle cx="{MOON_CX}" cy="{MOON_CY}" r="{MOON_R}" '
+        f'<circle cx="{cx}" cy="{cy}" r="{r}" '
         f'fill="url(#moonGold)"/>'
     )
     if marker not in svg_text:
-        sys.exit(f"Could not find moon disc marker in {SVG}")
-    return svg_text.replace(marker, marker + "\n" + shadow_el + ring_el, 1)
+        sys.exit(f"Could not find moon disc marker in {target['svg']}")
+    return svg_text.replace(marker, marker + "\n" + shadow_el + glow_el + ring_el, 1)
 
 
-def svg_to_png(svg_path, png_path):
-    """Try rsvg-convert (Linux CI) first, then sips (macOS local)."""
+def svg_to_png(svg_path, png_path, width, height):
+    """Render SVG to PNG at the given dimensions.
+    Try rsvg-convert (Linux CI) first, then sips (macOS local).
+    sips can't size-control SVG input directly, so we render then
+    z-resize."""
     if shutil.which("rsvg-convert"):
         subprocess.run(
-            ["rsvg-convert", "-w", "1200", "-h", "630",
+            ["rsvg-convert", "-w", str(width), "-h", str(height),
              "-o", str(png_path), str(svg_path)],
             check=True,
         )
         return "rsvg-convert"
     if shutil.which("sips"):
+        # sips renders the SVG at its natural dimensions, then we
+        # resize to the target. Two-step but works without rsvg.
         subprocess.run(
             ["sips", "-s", "format", "png", str(svg_path),
              "--out", str(png_path)],
+            check=True, stdout=subprocess.DEVNULL,
+        )
+        subprocess.run(
+            ["sips", "-z", str(height), str(width), str(png_path)],
             check=True, stdout=subprocess.DEVNULL,
         )
         return "sips"
@@ -155,15 +232,21 @@ def svg_to_png(svg_path, png_path):
 
 
 def bump_cache_buster(stamp):
-    """Update every og:image and twitter:image ?v= to a fresh value.
+    """Update every og:image / twitter:image / icon ?v= to a fresh value.
 
     Always rolls to a NEW value, even on same-day re-runs, so re-renders
-    on the same day force social platforms to refetch. If today's date
-    already appears across the files, we add an alpha suffix that picks
-    up where the previous run left off (20260613 → 20260613b → 20260613c).
+    on the same day force social platforms + browsers to refetch. If
+    today's date already appears across the files, we add an alpha suffix
+    that picks up where the previous run left off (20260613 → 20260613b
+    → 20260613c). The same value is applied to OG image, twitter image,
+    apple-touch-icon, and the manifest icons — one cache-buster value
+    per day across all the brand assets.
     """
-    pattern = re.compile(r"(og/social\.png\?v=)([\w.-]+)")
-    targets = list(ROOT.glob("*.html")) + [ROOT / "pendulum/index.html"]
+    # Matches social.png, icon-192.png, icon-512.png, apple-touch-icon.png
+    pattern = re.compile(r"(og/(?:social|icon-192|icon-512|apple-touch-icon)\.png\?v=)([\w.-]+)")
+    targets = (list(ROOT.glob("*.html"))
+               + [ROOT / "pendulum/index.html"]
+               + [ROOT / "manifest.webmanifest"])
 
     # Look at the highest existing version across the targets to know
     # what to bump TO. If it's not today's date yet, we just write
@@ -216,20 +299,35 @@ def main():
         f"{'waxing' if waxing else 'waning'}"
     )
 
-    svg_text = SVG.read_text()
-    out_svg_text = inject_shadow(svg_text, phase)
+    # Per-source caching: read each unique source SVG once, even if
+    # multiple targets render from it (icon.svg → three PNG sizes).
+    source_cache: dict[str, str] = {}
+    renderer_used = None
 
-    # Render via a temp SVG so the canonical template stays clean.
-    tmp_svg = SVG.with_name("social.today.svg")
-    tmp_svg.write_text(out_svg_text)
-    try:
-        renderer = svg_to_png(tmp_svg, PNG)
-    finally:
-        tmp_svg.unlink(missing_ok=True)
+    for target in TARGETS:
+        svg_path = ROOT / target["svg"]
+        png_path = ROOT / target["png"]
+
+        # Read + inject shadow + ring (or use cached source if the
+        # same SVG was already processed this run).
+        if str(svg_path) not in source_cache:
+            source_cache[str(svg_path)] = svg_path.read_text()
+        out_svg_text = inject_shadow(source_cache[str(svg_path)], phase, target)
+
+        # Render via a temp SVG so the canonical templates stay clean.
+        tmp_svg = svg_path.with_name(svg_path.stem + f".today-{target['width']}.svg")
+        tmp_svg.write_text(out_svg_text)
+        try:
+            renderer_used = svg_to_png(
+                tmp_svg, png_path, target["width"], target["height"]
+            )
+        finally:
+            tmp_svg.unlink(missing_ok=True)
+        print(f"  → {target['png']} ({target['width']}x{target['height']}) via {renderer_used}")
 
     stamp = when.strftime("%Y%m%d")
     n, new_value = bump_cache_buster(stamp)
-    print(f"[og-moon-phase] rendered via {renderer}; bumped ?v={new_value} in {n} files")
+    print(f"[og-moon-phase] rendered {len(TARGETS)} target(s); bumped ?v={new_value} in {n} files")
 
 
 if __name__ == "__main__":
