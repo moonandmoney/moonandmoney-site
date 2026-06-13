@@ -40,6 +40,17 @@ MOON_CX, MOON_CY, MOON_R = 600, 305, 135
 SHADOW_OPACITY = 1.0
 SHADOW_FILL = "#070608"     # --obsidian on the site
 
+# Permanent gold corona ring — sits just outside the disc and stays
+# visible at every phase, including pitch-black new moon. Matches the
+# hero's .moon-stage::after gilded ring at inset:-24px.
+# Laura 2026-06-13: 'I want it to still have a gold ring around it
+# when it's the new moon and also keep progressing as the moon
+# changes so it always reflects that.'
+RING_R_OFFSET   = 13        # px outside the disc edge (r=135 → ring at 148)
+RING_STROKE     = "#E5C77B" # --gold-bright on the site
+RING_OPACITY    = 0.78
+RING_WIDTH      = 1.6
+
 
 def phase_fraction(when):
     """Return moon phase as a fraction 0..1 (0 = new, 0.5 = full)."""
@@ -94,11 +105,25 @@ def shadow_path(cx, cy, r, phase):
 
 
 def inject_shadow(svg_text, phase):
-    """Insert the phase shadow path between the gold disc and the rim."""
+    """Insert the phase shadow path + a permanent gold corona ring.
+
+    Layers added on top of the existing gold disc:
+      1. Phase shadow — covers the unlit portion (solid obsidian).
+      2. Gold corona ring at r=MOON_R+13 — always visible, gives the
+         moon a definite outline even at pitch-black new moon. Echoes
+         the hero's .moon-stage::after gilded ring.
+    """
     path_d = shadow_path(MOON_CX, MOON_CY, MOON_R, phase)
     shadow_el = (
         f'  <path d="{path_d}" fill="{SHADOW_FILL}" '
         f'fill-opacity="{SHADOW_OPACITY}"/>\n'
+    )
+    ring_r = MOON_R + RING_R_OFFSET
+    ring_el = (
+        f'  <circle cx="{MOON_CX}" cy="{MOON_CY}" r="{ring_r}" '
+        f'fill="none" stroke="{RING_STROKE}" '
+        f'stroke-opacity="{RING_OPACITY}" '
+        f'stroke-width="{RING_WIDTH}"/>\n'
     )
 
     marker = (
@@ -107,7 +132,7 @@ def inject_shadow(svg_text, phase):
     )
     if marker not in svg_text:
         sys.exit(f"Could not find moon disc marker in {SVG}")
-    return svg_text.replace(marker, marker + "\n" + shadow_el, 1)
+    return svg_text.replace(marker, marker + "\n" + shadow_el + ring_el, 1)
 
 
 def svg_to_png(svg_path, png_path):
