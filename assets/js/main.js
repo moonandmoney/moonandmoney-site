@@ -255,20 +255,133 @@
   function runStarfield() {
     const ctx = cv.getContext('2d');
     const IS_MOBILE = window.innerWidth < 768;
-    let stars = [], W, H, events = [];
+    // Two-layer sky (Laura 2026-06-12: 'looking up from a dark place,
+    // very little light pollution, as realistic as possible').
+    //   STATIC stars: ~95% of the total, painted ONCE to an offscreen
+    //   canvas, blitted each frame as a cheap drawImage. Magnitude-
+    //   distributed (many faint mag-6 pinpricks, few bright mag-1
+    //   beacons) and color-varied (warm white, blue-white, yellow-
+    //   white, orange, red) to match real stellar spectra.
+    //   DYNAMIC stars: ~5% of bright stars only, redrawn per frame
+    //   with a subtle alpha breath. Real sky twinkle is mostly from
+    //   atmosphere near the horizon; most stars look steady.
+    // Total desktop: ~2400-3000 stars on a 1920×1080. Mobile: ~700.
+    // Per-frame cost is ~drawImage + a few hundred arcs, comparable
+    // to the old 90-star loop.
+    const bgCanvas = document.createElement('canvas');
+    const bgCtx = bgCanvas.getContext('2d');
+    let stars = [], dyn = [], W, H, events = [];
+
+    // Magnitude distribution: faint dominates, bright is rare.
+    // Returns 1 (brightest) .. 6 (faintest).
+    function pickMag() {
+      const r = Math.random();
+      if (r < .60) return 6;
+      if (r < .85) return 5;
+      if (r < .96) return 4;
+      if (r < .995) return 3;
+      return Math.random() < .55 ? 2 : 1;
+    }
+    function magRadius(m) {
+      if (m >= 6) return .35 + Math.random() * .25;
+      if (m >= 5) return .55 + Math.random() * .30;
+      if (m >= 4) return .85 + Math.random() * .35;
+      if (m >= 3) return 1.10 + Math.random() * .45;
+      if (m >= 2) return 1.55 + Math.random() * .55;
+      return 1.95 + Math.random() * .70;            // mag 1, the headliners
+    }
+    function magAlpha(m) {
+      if (m >= 6) return .18 + Math.random() * .22;
+      if (m >= 5) return .30 + Math.random() * .28;
+      if (m >= 4) return .50 + Math.random() * .25;
+      if (m >= 3) return .70 + Math.random() * .20;
+      if (m >= 2) return .85 + Math.random() * .12;
+      return .92 + Math.random() * .08;
+    }
+    // Spectral-class colour palette. White-dominant with subtle tints
+    // (real night sky reads as mostly white; the colour tells betray
+    // the brighter stars).
+    function pickColor() {
+      const r = Math.random();
+      if (r < .62) return [245, 240, 228];        // warm white  (A/F class)
+      if (r < .77) return [205, 220, 250];        // blue-white  (B class — hot)
+      if (r < .90) return [255, 235, 195];        // yellow      (G class — sun-like)
+      if (r < .98) return [255, 195, 145];        // orange      (K class — cool)
+      return [255, 150, 130];                     // red         (M class — coolest)
+    }
+    function paintStar(c, st) {
+      const [r, g, b] = st.color;
+      c.fillStyle = `rgba(${r},${g},${b},${Math.min(1, st.a)})`;
+      c.beginPath();
+      c.arc(st.x, st.y, st.r, 0, 6.283);
+      c.fill();
+      // Soft halo for mag 1 + mag 2 only (the headline stars).
+      if (st.mag <= 2) {
+        const haloR = st.r * 4.5;
+        const grad = c.createRadialGradient(st.x, st.y, st.r * .4, st.x, st.y, haloR);
+        grad.addColorStop(0, `rgba(${r},${g},${b},${st.a * .22})`);
+        grad.addColorStop(.55, `rgba(${r},${g},${b},${st.a * .05})`);
+        grad.addColorStop(1, `rgba(${r},${g},${b},0)`);
+        c.fillStyle = grad;
+        c.beginPath();
+        c.arc(st.x, st.y, haloR, 0, 6.283);
+        c.fill();
+      }
+    }
+    // Milky Way: a diffuse soft band across the sky. Painted once on
+    // the static layer. Tilted ~25° so it doesn't read as a horizontal
+    // bar. Very faint — atmosphere not feature, the way a real
+    // dark-sky look reads.
+    function paintMilkyWay(c) {
+      const angle = -0.42;                              // ~24° tilt
+      const cx = W * .58, cy = H * .42;
+      const bandH = Math.max(H * .28, 220);
+      const len = Math.hypot(W, H) * 1.4;
+      c.save();
+      c.translate(cx, cy);
+      c.rotate(angle);
+      const grad = c.createLinearGradient(0, -bandH, 0, bandH);
+      grad.addColorStop(0,    'rgba(238,228,205,0)');
+      grad.addColorStop(.42,  'rgba(238,228,205,.028)');
+      grad.addColorStop(.50,  'rgba(238,228,205,.055)');
+      grad.addColorStop(.58,  'rgba(238,228,205,.028)');
+      grad.addColorStop(1,    'rgba(238,228,205,0)');
+      c.fillStyle = grad;
+      c.fillRect(-len, -bandH, len * 2, bandH * 2);
+      c.restore();
+    }
+
     const resize = () => {
       W = cv.width = innerWidth; H = cv.height = innerHeight;
-      // Mobile: ~35 stars max, sparser density. Desktop: ~90, denser.
-      // Same celestial feel, ~60% less per-frame work on phones.
-      const n = IS_MOBILE
-        ? Math.min(35, Math.floor(W * H / 24000))
-        : Math.min(90, Math.floor(W * H / 18000));
-      stars = Array.from({ length: n }, () => ({
-        x: Math.random() * W, y: Math.random() * H,
-        r: Math.random() * 1.7 + .4, a: Math.random(),
-        s: Math.random() * .035 + .008, d: Math.random() < .5 ? 1 : -1,
-        g: Math.random() < .16, b: Math.random() < .10
-      }));
+      bgCanvas.width = W; bgCanvas.height = H;
+      // ~1 star per 700 px² desktop = ~3000 on 1920×1080.
+      // ~1 star per 1100 px² mobile = ~700 on 768×1024.
+      const density = IS_MOBILE ? 1100 : 700;
+      const total = Math.min(IS_MOBILE ? 900 : 3200, Math.floor(W * H / density));
+      stars = []; dyn = [];
+      for (let i = 0; i < total; i++) {
+        const mag = pickMag();
+        const baseA = magAlpha(mag);
+        const st = {
+          x: Math.random() * W, y: Math.random() * H,
+          r: magRadius(mag), mag,
+          color: pickColor(),
+          a: baseA, baseA
+        };
+        // Only the brightest ~25% of mag <= 3 stars twinkle. Real sky
+        // twinkle is mostly bright-star atmospheric scintillation.
+        if (mag <= 3 && Math.random() < .28) {
+          st.s = Math.random() * .010 + .003;       // slow breath
+          st.d = Math.random() < .5 ? 1 : -1;
+          dyn.push(st);
+        } else {
+          stars.push(st);
+        }
+      }
+      // Paint the static layer ONCE — drawImage'd each frame after.
+      bgCtx.clearRect(0, 0, W, H);
+      paintMilkyWay(bgCtx);
+      for (const st of stars) paintStar(bgCtx, st);
     };
     resize();
     // Resize fires on every iOS keyboard show/hide, which made tabbing
@@ -485,19 +598,17 @@
       if (!paused && t - last > frameMs) {
         last = t;
         ctx.clearRect(0, 0, W, H);
-        // shadowBlur was the most expensive op per frame (a per-star GPU blur).
-        // Dropped it; the b-flag stars now just render slightly brighter, which
-        // reads the same on screen but takes a fraction of the work.
-        for (const st of stars) {
+        // Two-layer sky: cheap blit of the static (Milky Way + all
+        // non-twinkling stars) + a small re-paint of the dynamic
+        // (twinkling) subset on top. Per-frame work is ~drawImage +
+        // a few hundred arcs, not the 2400-3000 the static layer
+        // contains — that work happened once at resize.
+        ctx.drawImage(bgCanvas, 0, 0);
+        for (const st of dyn) {
           st.a += st.s * st.d;
-          if (st.a <= .12 || st.a >= 1) st.d *= -1;
-          ctx.beginPath();
-          ctx.arc(st.x, st.y, st.r, 0, 6.283);
-          const boost = st.b ? 1.25 : 1;
-          ctx.fillStyle = st.g
-            ? `rgba(240,212,136,${Math.min(1, st.a * 1.15 * boost)})`
-            : `rgba(245,240,228,${Math.min(1, st.a * 1.05 * boost)})`;
-          ctx.fill();
+          const lo = st.baseA * .72, hi = Math.min(1, st.baseA * 1.18);
+          if (st.a <= lo || st.a >= hi) st.d *= -1;
+          paintStar(ctx, st);
         }
         const now = performance.now();
         events = events.filter(e => (now - e.born) < e.dur);
