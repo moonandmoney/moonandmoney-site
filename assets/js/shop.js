@@ -23,10 +23,23 @@ const CATALOG = [
   // ════════════════════════════════════════════════════════════════════
 
   // ---- Start Here (free, email-gated) ----
+  // Two free magnets, in funnel order. Mini Money Chart is the new
+  // hero (Laura 2026-06-13): it's personalised to the visitor's own
+  // chart (Sun + Moon, drawn live), which beats a generic PDF for
+  // engagement and naturally bridges into the $55 Money Chart. The
+  // Blueprint stays as the "deeper companion" option for visitors
+  // who'd rather read a 13-page guide than fill in a form.
+  {
+    cat:'Start Here', tag:'start', glyph:'moon',
+    name:'The Mini Money Chart',
+    desc:'Your Sun and Moon, drawn live from your birth chart, with a Luna-voice line on how each moves money through your life. Yours in seconds. Just your email to receive it.',
+    kind:'page', link:'mini-chart.html',
+    badge:'Free',
+  },
   {
     cat:'Start Here', tag:'start', glyph:'moon',
     name:'Moon Sign Money Blueprint',
-    desc:'Your free guide to how your Moon sign earns, spends, and self-sabotages with money. Thirteen pages, drawn for the moon. Just your email gets it to you.',
+    desc:'The deeper companion. A 13-page guide to how your Moon sign earns, spends, and self-sabotages with money. Drawn for the moon, sent as a PDF.',
     kind:'blueprint',
     badge:'Free',
     prev:'blueprint.png',

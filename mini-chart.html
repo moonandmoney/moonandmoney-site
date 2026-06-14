@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Mini Money Chart — Moon &amp; Money</title>
+<meta name="description" content="A free reading of your Sun and Moon, drawn from your birth chart. The mini version of the Money Chart, sent in seconds. Where your money begins.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Moon &amp; Money">
+<meta property="og:title" content="The Mini Money Chart — Moon &amp; Money">
+<meta property="og:description" content="A free reading of your Sun and Moon, drawn from your birth chart. The mini version of the Money Chart, sent in seconds.">
+<meta property="og:image" content="https://moonandmoney.ca/assets/og/social.png?v=20260613g">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://moonandmoney.ca/assets/og/social.png?v=20260613g">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/assets/og/apple-touch-icon.png?v=20260613g">
+<link rel="icon" type="image/svg+xml" href="/assets/og/icon.today.svg?v=20260613g">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/og/icon-192.png?v=20260613g">
+<link rel="icon" type="image/png" sizes="512x512" href="/assets/og/icon-512.png?v=20260613g">
+<meta name="theme-color" content="#FCF7F1">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&family=Noto+Sans+Symbols+2&display=swap">
+<link rel="stylesheet" href="assets/css/styles.css">
+
+<style>
+  /* ─────────────────────────────────────────────────────────────────────
+     The Mini Money Chart — cream reading sanctuary. Same DNA as
+     the-leak.html / three-moves.html: dark cosmic body overridden to
+     cream-on-navy, nav + footer stay dark for brand continuity, page-
+     scoped --mini-* vars so it coexists with the site :root tokens.
+     ───────────────────────────────────────────────────────────────────── */
+  :root{
+    --mini-cream:#FCF7F1; --mini-navy:#0C2345; --mini-navy-deep:#081A33;
+    --mini-forest:#1E4D3A; --mini-gold:#C9A24E; --mini-stroke-gold:#E5C77B;
+    --mini-grey:#5D6D7E; --mini-soft:#A5AEBA;
+    --mini-serif:'Cormorant Garamond', Georgia, serif;
+    --mini-sans:'Jost', system-ui, sans-serif;
+    --mini-display:'Cinzel', var(--mini-serif);
+  }
+  body{
+    background:var(--mini-cream) !important;
+    color:var(--mini-navy) !important;
+    font-family:var(--mini-serif);
+    font-size:20px;
+    line-height:1.62;
+    overflow-x:hidden;
+  }
+  #starfield, .nebula{ display:none !important; }
+  header.nav{
+    background:var(--mini-navy) !important;
+    border-bottom:1px solid rgba(229,199,123,.25);
+  }
+  footer{
+    background:var(--mini-navy) !important;
+    color:var(--mini-cream) !important;
+  }
+  footer .brand,
+  footer .foot-col a,
+  footer .foot-bottom,
+  footer .foot-bottom a,
+  footer .foot-brand p,
+  footer h4{ color:var(--mini-cream) !important; }
+
+  /* ── Page layout ───────────────────────────────────────────────── */
+  main.mini{
+    max-width:720px; margin:0 auto;
+    padding:130px 26px 100px;
+  }
+  .mini-hero{ text-align:center; margin-bottom:54px; }
+  .mini-eyebrow{
+    font-family:var(--mini-sans);
+    font-size:13px; letter-spacing:.24em; text-transform:uppercase;
+    color:var(--mini-gold); margin-bottom:18px;
+  }
+  .mini-title{
+    font-family:var(--mini-display);
+    font-size:clamp(34px,5vw,52px); font-weight:500;
+    letter-spacing:.01em; line-height:1.15;
+    color:var(--mini-navy); margin-bottom:22px;
+  }
+  .mini-sub{
+    font-style:italic; font-size:20px; color:var(--mini-grey);
+    max-width:520px; margin:0 auto;
+  }
+
+  /* ── Form ──────────────────────────────────────────────────────── */
+  form.mini-form{
+    display:grid; gap:22px; max-width:480px; margin:0 auto;
+    padding:38px 32px;
+    background:#FFFCF6;
+    border:1px solid rgba(201,162,78,.30);
+    border-radius:8px;
+    box-shadow:0 14px 40px -22px rgba(12,35,69,.20);
+  }
+  .mini-form label{
+    display:block; font-family:var(--mini-sans);
+    font-size:12px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--mini-navy); margin-bottom:6px;
+  }
+  .mini-form .opt{
+    color:var(--mini-soft); text-transform:none; letter-spacing:.04em;
+    font-style:italic; font-size:11px; margin-left:6px;
+  }
+  .mini-form input{
+    width:100%; padding:13px 14px;
+    font-family:var(--mini-serif); font-size:17px;
+    background:var(--mini-cream); color:var(--mini-navy);
+    border:1px solid rgba(12,35,69,.22); border-radius:4px;
+    transition:border-color .3s ease, box-shadow .3s ease;
+  }
+  .mini-form input:focus{
+    outline:none; border-color:var(--mini-gold);
+    box-shadow:0 0 0 3px rgba(201,162,78,.16);
+  }
+  .mini-form .row-2{ display:grid; gap:22px; grid-template-columns:1fr 1fr; }
+  @media (max-width:540px){ .mini-form .row-2{ grid-template-columns:1fr; } }
+  .mini-form button{
+    margin-top:8px;
+    font-family:var(--mini-sans);
+    font-size:13px; letter-spacing:.20em; text-transform:uppercase;
+    background:var(--mini-navy); color:var(--mini-cream);
+    border:none; padding:15px 28px; border-radius:999px;
+    cursor:pointer;
+    transition:background .3s ease, transform .3s ease;
+  }
+  .mini-form button:hover{
+    background:var(--mini-forest); transform:translateY(-1px);
+  }
+  .mini-form .legal{
+    font-size:13px; font-style:italic; color:var(--mini-grey);
+    text-align:center; margin:0;
+  }
+
+  /* ── Reveal (hidden by default; shown post-submit) ────────────── */
+  .reveal-block{
+    display:none;
+    margin-top:62px;
+    padding-top:8px;
+  }
+  .reveal-block.shown{ display:block; }
+
+  .reveal-card{
+    padding:48px 36px 44px;
+    background:#FFFCF6;
+    border:1px solid rgba(201,162,78,.30);
+    border-radius:8px;
+    box-shadow:0 14px 40px -22px rgba(12,35,69,.20);
+    margin-bottom:32px;
+    position:relative;
+  }
+  .reveal-card + .reveal-card{ margin-top:0; }
+  .reveal-glyph{
+    font-family:'Noto Sans Symbols 2', var(--mini-display);
+    font-size:54px; color:var(--mini-gold);
+    line-height:1; margin-bottom:14px; text-align:center;
+    font-feature-settings:normal; font-variant-emoji:text;
+  }
+  .reveal-sign{
+    font-family:var(--mini-display);
+    font-size:clamp(24px,3vw,32px); font-weight:500;
+    color:var(--mini-navy); text-align:center;
+    margin-bottom:18px; letter-spacing:.02em;
+  }
+  .reveal-line{
+    font-size:19px; line-height:1.65; color:var(--mini-navy);
+    text-align:left; margin:0;
+  }
+  .reveal-greeting{
+    font-style:italic; font-size:23px; color:var(--mini-navy);
+    text-align:center; margin-bottom:36px;
+  }
+  .reveal-greeting strong{
+    font-weight:500; color:var(--mini-gold); font-style:normal;
+  }
+  .reveal-disclaimer{
+    font-size:14px; font-style:italic; color:var(--mini-grey);
+    text-align:center; max-width:560px; margin:6px auto 36px;
+  }
+
+  /* ── Closing bridge to Money Chart + Crescent Club ─────────────── */
+  .reveal-bridge{
+    margin-top:38px; padding:42px 32px;
+    background:var(--mini-navy); color:var(--mini-cream);
+    border-radius:6px; text-align:center; position:relative;
+  }
+  .reveal-bridge::before{
+    content:'✦';
+    position:absolute; top:-14px; left:50%; transform:translateX(-50%);
+    background:var(--mini-cream); color:var(--mini-gold);
+    width:32px; height:32px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:16px; line-height:1;
+  }
+  .reveal-bridge p{
+    font-family:var(--mini-serif);
+    font-size:clamp(20px,2.4vw,26px);
+    font-style:italic; line-height:1.5;
+    margin-bottom:30px; max-width:500px;
+    margin-left:auto; margin-right:auto;
+  }
+  .reveal-cta{
+    display:inline-flex; gap:12px; flex-wrap:wrap; justify-content:center;
+  }
+  .reveal-cta a{
+    font-family:var(--mini-sans);
+    font-size:13px; letter-spacing:.16em; text-transform:uppercase;
+    padding:13px 26px; border-radius:999px;
+    text-decoration:none;
+    transition:background .3s ease, color .3s ease, border-color .3s ease;
+  }
+  .reveal-cta a.primary{
+    background:var(--mini-gold); color:var(--mini-navy);
+    border:1px solid var(--mini-gold);
+  }
+  .reveal-cta a.primary:hover{
+    background:var(--mini-stroke-gold);
+    border-color:var(--mini-stroke-gold);
+  }
+  .reveal-cta a.ghost{
+    background:transparent; color:var(--mini-cream);
+    border:1px solid rgba(229,199,123,.55);
+  }
+  .reveal-cta a.ghost:hover{
+    border-color:var(--mini-gold);
+    color:var(--mini-gold);
+  }
+
+  @media (max-width:540px){
+    main.mini{ padding:96px 20px 70px; }
+    .reveal-card{ padding:36px 22px 32px; }
+    .reveal-bridge{ padding:34px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
+  <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li class="nav-dropdown" aria-expanded="false">
+      <button class="nav-trigger" type="button" aria-haspopup="true" aria-expanded="false">Moon Tools <span class="caret" aria-hidden="true">&#9662;</span></button>
+      <ul class="nav-submenu">
+        <li><a href="calendar.html">Calendar</a></li>
+        <li><a href="wheel.html">Wheel</a></li>
+        <li><a href="draw.html">Card</a></li>
+        <li><a href="pendulum/">Pendulum</a></li>
+        <li><a href="your-chart.html">Your Chart</a></li>
+        <li><a href="houses.html">Houses</a></li>
+      </ul>
+    </li>
+    <li class="nav-dropdown" aria-expanded="false">
+      <button class="nav-trigger" type="button" aria-haspopup="true" aria-expanded="false">Money Tools <span class="caret" aria-hidden="true">&#9662;</span></button>
+      <ul class="nav-submenu">
+        <li><a href="mini-chart.html">Mini Money Chart</a></li>
+        <li><a href="sun-money.html">Sun Money</a></li>
+        <li><a href="moon-money.html">Moon Money</a></li>
+        <li><a href="venus-money.html">Venus Money</a></li>
+        <li><a href="seasonal-forecast.html">Seasonal Forecast</a></li>
+        <li><a href="the-leak.html">The Leak &middot; Mini Course</a></li>
+        <li><a href="quiz.html">Quiz</a></li>
+      </ul>
+    </li>
+    <li><a href="shop.html">Atelier</a></li>
+    <li><a href="courses.html">Academy</a></li>
+    <li><a href="archive.html">Archive</a></li>
+    <li><a href="about.html">Ethos</a></li>
+    <li><a href="https://moonandmoney.substack.com/subscribe" target="_blank" rel="noopener">Crescent Club</a></li>
+    <li><a class="nav-cta" href="money-chart.html">Money Chart</a></li>
+  </ul>
+</header>
+
+<main class="mini">
+
+  <section class="mini-hero">
+    <div class="mini-eyebrow">A Free Mini Reading</div>
+    <h1 class="mini-title">Where Your Money Begins</h1>
+    <p class="mini-sub">A short reading of your Sun and Moon, drawn from your birth chart. The mini version of the Money Chart, sent in seconds.</p>
+  </section>
+
+  <!-- The intake. Netlify Forms catches it for the lead list; the
+       reveal happens on-page (no redirect) so the visitor never loses
+       the moment. The Substack subscribe pops in a new tab as the
+       email gate. -->
+  <form class="mini-form" id="miniForm" name="mini-chart" method="POST"
+        data-netlify="true" netlify-honeypot="bot-field">
+    <input type="hidden" name="form-name" value="mini-chart">
+    <p hidden><label>Do not fill this in: <input name="bot-field"></label></p>
+
+    <div>
+      <label for="miniName">Your first name <span class="opt">optional</span></label>
+      <input type="text" id="miniName" name="first_name" autocomplete="given-name">
+    </div>
+
+    <div>
+      <label for="miniDate">Birth date</label>
+      <input type="date" id="miniDate" name="birth_date" required>
+    </div>
+
+    <div>
+      <label for="miniTime">Birth time <span class="opt">optional, but adds your Moon</span></label>
+      <input type="time" id="miniTime" name="birth_time">
+    </div>
+
+    <div>
+      <label for="miniEmail">Email</label>
+      <input type="email" id="miniEmail" name="email" autocomplete="email" required>
+    </div>
+
+    <button type="submit">Reveal my Sun and Moon</button>
+
+    <p class="legal">No spam. The Crescent Club newsletter is the only follow-up, and you can leave any time.</p>
+  </form>
+
+  <!-- The reveal block — hidden until the form is filled in. -->
+  <section class="reveal-block" id="revealBlock" aria-live="polite">
+    <p class="reveal-greeting" id="revealGreeting">
+      <span id="revealGreetingText"></span>
+    </p>
+
+    <div class="reveal-card" id="sunCard">
+      <div class="reveal-glyph" id="sunGlyph"></div>
+      <div class="reveal-sign" id="sunSignLine"></div>
+      <p class="reveal-line" id="sunLine"></p>
+    </div>
+
+    <div class="reveal-card" id="moonCard">
+      <div class="reveal-glyph" id="moonGlyph"></div>
+      <div class="reveal-sign" id="moonSignLine"></div>
+      <p class="reveal-line" id="moonLine"></p>
+    </div>
+
+    <p class="reveal-disclaimer" id="moonDisclaimer"></p>
+
+    <div class="reveal-bridge">
+      <p>Your full chart goes deeper. Three currents, the knot, what your chart holds.</p>
+      <div class="reveal-cta">
+        <a class="primary" href="money-chart.html">Read the Money Chart</a>
+        <a class="ghost" href="https://moonandmoney.substack.com/subscribe" target="_blank" rel="noopener">Join the Crescent Club</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="index.html" class="brand">MOON <span class="amp">&amp;</span> MONEY</a>
+        <p>Personal finance, read through astrology. By Luna Wilde.</p>
+      </div>
+      <div class="foot-col"><h4>Explore</h4><a href="wheel.html">Wheel</a><a href="draw.html">Card</a><a href="quiz.html">Quiz</a><a href="shop.html">Atelier</a><a href="courses.html">Academy</a><a href="pendulum/">Pendulum</a><a href="calendar.html">Calendar</a><a href="archive.html">Archive</a><a href="about.html">Ethos</a><a href="sun-money.html">Sun Money</a><a href="money-journal.html">Journal</a></div>
+      <div class="foot-col"><h4>Club</h4><a href="https://moonandmoney.substack.com" target="_blank" rel="noopener">Substack</a><a href="https://moonandmoney.substack.com/subscribe" target="_blank" rel="noopener">Crescent Club</a><a href="fifth-moon.html">The Fifth Moon</a><a href="about.html#circle">Circle <span class="soon">Soon</span></a><a href="about.html#token">Token <span class="soon">Soon</span></a></div>
+      <div class="foot-col"><h4>Follow</h4><a href="https://moonandmoney.substack.com" target="_blank" rel="noopener">@moonmoney</a><a href="archive.html">Notes</a><a href="https://moonandmoney.substack.com/subscribe" target="_blank" rel="noopener">Newsletter</a></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="yr"></span> Moon &amp; Money · Luna Wilde. All rights reserved.</span>
+      <span><a href="privacy.html" style="color:inherit;text-decoration:none;opacity:.85">Privacy</a></span>
+      <span>Built in rhythm with the moon ☾</span>
+    </div>
+    <p class="foot-legal" style="text-align:center;font-family:Cormorant Garamond,Georgia,serif;font-style:italic;font-size:.82rem;opacity:.55;color:#a89fb4;margin:14px 0 0 0;letter-spacing:.02em">For reflection and self-knowledge. Not financial or investment advice.</p>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
+
+<!-- zodiac.js exposes window.ZODIAC.moonSign (Meeus abridged, ~0.05°). -->
+<script src="assets/js/zodiac.js"></script>
+
+<!-- The mini-chart engine: Sun by date (lookup), Moon by date+time
+     (zodiac.moonSign), Luna-voice phrase tables, form handler with
+     Substack handoff for the email gate. All client-side — no engine
+     call needed, no Render dependency, instant reveal. -->
+<script>
+(function () {
+  'use strict';
+
+  // ── Sun sign by date (tropical, standard Western boundaries) ───────
+  // Day-of-year cutoffs are stable across non-leap years; the few-
+  // day edge cases at sign boundaries are fine for a free preview.
+  function sunSignByDate(d) {
+    const m = d.getMonth() + 1, day = d.getDate();
+    const t = m * 100 + day;
+    if (t <= 119) return 'Capricorn';
+    if (t <= 218) return 'Aquarius';
+    if (t <= 320) return 'Pisces';
+    if (t <= 419) return 'Aries';
+    if (t <= 520) return 'Taurus';
+    if (t <= 620) return 'Gemini';
+    if (t <= 722) return 'Cancer';
+    if (t <= 822) return 'Leo';
+    if (t <= 922) return 'Virgo';
+    if (t <= 1022) return 'Libra';
+    if (t <= 1121) return 'Scorpio';
+    if (t <= 1221) return 'Sagittarius';
+    return 'Capricorn';
+  }
+
+  // ── Luna-voice phrase tables ──────────────────────────────────────
+  // One line per sign, money-themed for Sun and feeling-themed for
+  // Moon. Same wisdom DNA as the engine's chart prose — kept here in
+  // JS so the reveal is instant and brand-consistent.
+  const SUN_LINES = {
+    Aries:       'You earn at the front. First in is often best paid, and the room knows your face before it knows your number.',
+    Taurus:      'You earn by holding. Time is your highest-yield asset. The wealth that lasts is built one steady season at a time.',
+    Gemini:      'You earn through words. Where information moves, you make money, and your mind is the asset on the balance sheet.',
+    Cancer:      'You earn through care. Your work is taking the private and making it useful, and people pay, gladly, for that kind of attention.',
+    Leo:         'You earn in the spotlight. Your name on the work is the pricing layer. Visibility is currency.',
+    Virgo:       'You earn through craft. Your systems quietly compound while everyone else is still guessing. The detail is the edge.',
+    Libra:       'You earn in partnership. The deal you draft is the one that pays both sides for years. Solo drains you; the right collaboration multiplies.',
+    Scorpio:     'You earn in the depths. You see leverage and hidden value most people never reach. The numbers behind the numbers are visible to you.',
+    Sagittarius: 'You earn by going far. Your audience is wider than your block. You make the case for a future others cannot yet see, and people pay for that frame.',
+    Capricorn:   'You earn by building. You play the long game, and the long game was built for people like you. Saturn pays late and reliably.',
+    Aquarius:    'You earn at the edge. You see what is coming before the rest of the world, and your wealth comes from being early.',
+    Pisces:      'You earn between worlds. You translate the unseen into the useful, and the world pays for that bridge.'
+  };
+
+  const MOON_LINES = {
+    Aries:       'You feel money like a race. Waiting feels like losing, and your body knows the answer before the spreadsheet finishes loading.',
+    Taurus:      'You feel money in the body. Security is sensory: the warm room, the full pantry, the savings account you can touch.',
+    Gemini:      'You feel money in motion. A static account makes you restless. You need multiple streams to feel safe.',
+    Cancer:      'You feel money like home. Security is who you love being safe, and the people in your circle never go without on your watch.',
+    Leo:         'You feel money with pride. You want your work seen, and you can feel the difference between a gift and a tip.',
+    Virgo:       'You feel money in the details. You sleep better when the spreadsheet is reconciled. The numbers carry your nervous system.',
+    Libra:       'You feel money in balance. When the math comes out even, you can rest. When it does not, you feel it before you can name it.',
+    Scorpio:     'You feel money underground. Your real financial life is private, and the depths are where you find your truth about it.',
+    Sagittarius: 'You feel money free. Your safety is in the next door open, not the door locked. You spend on what widens your world.',
+    Capricorn:   'You feel money in control. You sleep at the number you have earned, not the number you have inherited. The structure is the safety.',
+    Aquarius:    'You feel money from a distance. You prefer to watch your finances as a system than feel them as fluctuations. The future is your default.',
+    Pisces:      'You feel money in waves. Your emotional life and your financial one merge, and the soft heart needs structure to stay safe.'
+  };
+
+  const GLYPHS = {
+    Aries:'♈', Taurus:'♉', Gemini:'♊', Cancer:'♋',
+    Leo:'♌', Virgo:'♍', Libra:'♎', Scorpio:'♏',
+    Sagittarius:'♐', Capricorn:'♑', Aquarius:'♒', Pisces:'♓'
+  };
+  // U+FE0E text-presentation selector forces clean line glyphs
+  // instead of the purple Apple-emoji versions on iOS Mail / Safari.
+  function glyph(sign) { return GLYPHS[sign] + '︎'; }
+
+  // ── Form handler ──────────────────────────────────────────────────
+  const form = document.getElementById('miniForm');
+  if (!form) return;
+
+  // Wrap form submit: capture lead via Netlify Forms in the background,
+  // open Substack subscribe in a new tab for the email gate, and
+  // reveal the chart on-page WITHOUT leaving the moment.
+  form.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+
+    const firstName = (document.getElementById('miniName').value || '').trim();
+    const birthDate = document.getElementById('miniDate').value;   // YYYY-MM-DD
+    const birthTime = document.getElementById('miniTime').value;   // HH:MM or ''
+    const email     = (document.getElementById('miniEmail').value || '').trim();
+
+    if (!birthDate || !email) return;
+
+    // 1. Compute Sun (date-only)
+    //    For tropical boundaries we want LOCAL date components, so
+    //    construct the Date in local time then read getMonth/getDate.
+    const sun = sunSignByDate(new Date(birthDate + 'T12:00:00'));
+
+    // 2. Compute Moon (date + time, if time given)
+    //    zodiac.moonSign uses UTC. Treating the birth time as UTC
+    //    rather than the actual birth-place timezone is an
+    //    approximation — the Moon moves ~13° per day so it CAN shift
+    //    signs by a few hours. The disclaimer below addresses this
+    //    honestly. The full Money Chart uses the proper birth-place
+    //    timezone via the engine.
+    let moon = null;
+    if (birthTime) {
+      const m = birthTime.match(/^(\d{1,2}):(\d{1,2})$/);
+      if (m) {
+        const [, hh, mm] = m;
+        const d = new Date(birthDate + 'T' + hh.padStart(2, '0') + ':' + mm.padStart(2, '0') + ':00Z');
+        if (!isNaN(d)) moon = window.ZODIAC.moonSign(d);
+      }
+    }
+
+    // 3. Capture the lead to Netlify Forms in the background (fire
+    //    and forget). The encode helper is the standard Netlify
+    //    Forms snippet for JS-driven submits.
+    function encode(data) {
+      return Object.keys(data)
+        .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(data[k]))
+        .join('&');
+    }
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: encode({
+        'form-name':  'mini-chart',
+        'first_name': firstName,
+        'birth_date': birthDate,
+        'birth_time': birthTime || '',
+        'email':      email,
+        'sun_sign':   sun,
+        'moon_sign':  moon || '(no time given)'
+      })
+    }).catch(function () { /* Best-effort. Reveal still happens. */ });
+
+    // 4. Pop the Substack subscribe in a new tab as the email gate.
+    //    Pre-fill email so the visitor only has to confirm. Same
+    //    pattern the Blueprint magnet uses.
+    const subUrl = 'https://moonandmoney.substack.com/subscribe'
+                 + '?email=' + encodeURIComponent(email)
+                 + (firstName ? '&first=' + encodeURIComponent(firstName) : '');
+    window.open(subUrl, '_blank', 'noopener');
+
+    // 5. Reveal on-page.
+    const greeting = firstName
+      ? firstName + ', your chart begins here.'
+      : 'Your chart begins here.';
+    document.getElementById('revealGreetingText').textContent = greeting;
+
+    document.getElementById('sunGlyph').textContent = glyph(sun);
+    document.getElementById('sunSignLine').textContent = sun + ' Sun';
+    document.getElementById('sunLine').textContent = SUN_LINES[sun];
+
+    if (moon) {
+      document.getElementById('moonGlyph').textContent = glyph(moon);
+      document.getElementById('moonSignLine').textContent = moon + ' Moon';
+      document.getElementById('moonLine').textContent = MOON_LINES[moon];
+      document.getElementById('moonCard').style.display = '';
+      document.getElementById('moonDisclaimer').textContent =
+        'Approximate Moon sign — for the exact placement at your birth city, your full Money Chart uses the proper local time.';
+    } else {
+      document.getElementById('moonCard').style.display = 'none';
+      document.getElementById('moonDisclaimer').textContent =
+        'Add your birth time for the Moon. The full Money Chart includes the exact placement at your birth city.';
+    }
+
+    // Hide the form, reveal the result, scroll to it.
+    form.style.display = 'none';
+    const reveal = document.getElementById('revealBlock');
+    reveal.classList.add('shown');
+    reveal.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    // Track for GA if present (the same hook the shop modal uses).
+    try { if (window.gtag) window.gtag('event', 'mini_chart_submit',
+      { sun: sun, has_moon: !!moon }); } catch (e) {}
+  });
+})();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="assets/js/main.js"></script>
+
+</body>
+</html>
