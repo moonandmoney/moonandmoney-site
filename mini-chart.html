@@ -323,6 +323,7 @@
     <p class="reveal-greeting" id="revealGreeting">
       <span id="revealGreetingText"></span>
     </p>
+    <p style="text-align:center;font-style:italic;font-size:14px;color:var(--mini-grey);margin:-22px 0 32px;" id="revealSentLine">Sending a copy to your inbox…</p>
 
     <div class="reveal-card" id="sunCard">
       <div class="reveal-glyph" id="sunGlyph"></div>
@@ -495,8 +496,8 @@
       }
     }
 
-    // 3. Capture the lead to Netlify Forms in the background (fire
-    //    and forget). The encode helper is the standard Netlify
+    // 3. Capture the lead to Netlify Forms in the background (lead
+    //    list backup). The encode helper is the standard Netlify
     //    Forms snippet for JS-driven submits.
     function encode(data) {
       return Object.keys(data)
@@ -517,13 +518,41 @@
       })
     }).catch(function () { /* Best-effort. Reveal still happens. */ });
 
-    // 4. Pop the Substack subscribe in a new tab as the email gate.
-    //    Pre-fill email so the visitor only has to confirm. Same
-    //    pattern the Blueprint magnet uses.
-    const subUrl = 'https://moonandmoney.substack.com/subscribe'
-                 + '?email=' + encodeURIComponent(email)
-                 + (firstName ? '&first=' + encodeURIComponent(firstName) : '');
-    window.open(subUrl, '_blank', 'noopener');
+    // 4. Send the mini-chart email via the Netlify function. This is
+    //    the actual delivery — the visitor gets a brand-styled Luna-
+    //    voice email with their Sun + Moon, in their inbox, to come
+    //    back to. The Substack subscribe is OUT of the flow (Laura
+    //    2026-06-14: 'just took me to the Crescent Club, I don't
+    //    like that flow'); it lives as a soft secondary CTA in the
+    //    email instead.
+    let sentOk = null;   // will be true / false after we hear back
+    fetch('/.netlify/functions/mini-chart-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        first_name: firstName,
+        email:      email,
+        sun_sign:   sun,
+        sun_line:   SUN_LINES[sun],
+        moon_sign:  moon || null,
+        moon_line:  moon ? MOON_LINES[moon] : null,
+      }),
+    })
+    .then(function (r) { sentOk = r.ok; })
+    .catch(function () { sentOk = false; })
+    .finally(function () {
+      // Show the "sent" / "couldn't send" line in the greeting
+      // once we know which it is. The reveal itself shows
+      // immediately (below) regardless — the email is the
+      // bonus, not the gate.
+      var el = document.getElementById('revealSentLine');
+      if (!el) return;
+      if (sentOk) {
+        el.textContent = 'A copy is on its way to your inbox.';
+      } else {
+        el.textContent = '(Email delivery hiccup — your reveal is below.)';
+      }
+    });
 
     // 5. Reveal on-page.
     const greeting = firstName
