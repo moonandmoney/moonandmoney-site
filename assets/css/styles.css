@@ -535,9 +535,10 @@ body.has-ghost-banner .nav{ top:var(--ghost-h); }
 }
 /* Shine sweep — a thin diagonal gold gradient that crosses the card
    once per hover. Starts off-screen left, slides to off-screen right.
-   Adds the "premium gold leaf catches the light" feel beyond the lift
-   + glow + border already in place. pointer-events:none so it never
-   blocks the buy button. */
+   Slow 3.2s drift (Laura 2026-06-13: previous 1.1s read as "way way
+   way too fast"). Adds the "premium gold leaf catches the light"
+   feel beyond the lift + glow + border already in place.
+   pointer-events:none so it never blocks the buy button. */
 .product::before{
   content:'';position:absolute;inset:0;z-index:2;pointer-events:none;
   background:linear-gradient(115deg,
@@ -547,7 +548,7 @@ body.has-ghost-banner .nav{ top:var(--ghost-h); }
     rgba(229,199,123,.05) 53%,
     transparent 62%);
   transform:translateX(-120%);
-  transition:transform 1.1s var(--ease);
+  transition:transform 3.2s var(--ease);
 }
 .product:hover::before{
   transform:translateX(120%);
