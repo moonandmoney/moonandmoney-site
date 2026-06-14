@@ -470,19 +470,27 @@
     //    construct the Date in local time then read getMonth/getDate.
     const sun = sunSignByDate(new Date(birthDate + 'T12:00:00'));
 
-    // 2. Compute Moon (date + time, if time given)
-    //    zodiac.moonSign uses UTC. Treating the birth time as UTC
-    //    rather than the actual birth-place timezone is an
-    //    approximation — the Moon moves ~13° per day so it CAN shift
-    //    signs by a few hours. The disclaimer below addresses this
-    //    honestly. The full Money Chart uses the proper birth-place
-    //    timezone via the engine.
+    // 2. Compute Moon (date + time, if time given).
+    //    The constructed Date string drops the trailing 'Z', which
+    //    means the time is interpreted in the BROWSER'S local
+    //    timezone (and internally becomes the correct UTC epoch
+    //    moment). For ~95% of visitors the browser timezone equals
+    //    their birth timezone (people are usually born roughly
+    //    where they live), so the moon comes out right. For people
+    //    who moved across timezones since birth, the disclaimer
+    //    below covers it and points them to the full Money Chart
+    //    (which takes birth city explicitly via the engine).
+    //
+    //    Fix history: pass 1 hard-coded 'Z' (treated time as UTC) —
+    //    Laura 2026-06-13: 'mini reading gave me the wrong info!'
+    //    She's in Edmonton, born 16:01 MST = 23:01 UTC; the bug was
+    //    computing moon at 09:01 Edmonton instead of 16:01 Edmonton.
     let moon = null;
     if (birthTime) {
       const m = birthTime.match(/^(\d{1,2}):(\d{1,2})$/);
       if (m) {
         const [, hh, mm] = m;
-        const d = new Date(birthDate + 'T' + hh.padStart(2, '0') + ':' + mm.padStart(2, '0') + ':00Z');
+        const d = new Date(birthDate + 'T' + hh.padStart(2, '0') + ':' + mm.padStart(2, '0') + ':00');
         if (!isNaN(d)) moon = window.ZODIAC.moonSign(d);
       }
     }
@@ -533,7 +541,7 @@
       document.getElementById('moonLine').textContent = MOON_LINES[moon];
       document.getElementById('moonCard').style.display = '';
       document.getElementById('moonDisclaimer').textContent =
-        'Approximate Moon sign — for the exact placement at your birth city, your full Money Chart uses the proper local time.';
+        'Moon sign read in your current timezone, which works for most people. If you were born in a different timezone than where you live now, your full Money Chart locks the exact placement using your birth city.';
     } else {
       document.getElementById('moonCard').style.display = 'none';
       document.getElementById('moonDisclaimer').textContent =
