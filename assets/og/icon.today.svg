@@ -26,7 +26,7 @@
        injects the phase shadow + gold corona + soft outer glow
        between the disc and the canvas edge. -->
   <circle cx="256" cy="256" r="215" fill="url(#moonGold)"/>
-  <path d="M 256 41 A 215 215 0 0 0 256 471 A 169.6141 215 0 0 0 256 41 Z" fill="#070608" fill-opacity="1.0"/>
+  <path d="M 256 41 A 215 215 0 0 0 256 471 A 137.4245 215 0 0 0 256 41 Z" fill="#070608" fill-opacity="1.0"/>
   <circle cx="256" cy="256" r="247" fill="none" stroke="#E5C77B" stroke-opacity="0.3" stroke-width="8.0"/>
   <circle cx="256" cy="256" r="232" fill="none" stroke="#E5C77B" stroke-opacity="1.0" stroke-width="6.0"/>
 
