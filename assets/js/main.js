@@ -18,7 +18,11 @@
   (function ghostBanner () {
     const START_DATE = '2026-06-15';
     const END_DATE   = null;
-    const MESSAGE    = 'In a quieter season from June 15. Charts and forecasts run automatically. Replies are slower than usual.';
+    // Solstice-aware copy (Laura 2026-06-20): mentions Cancer Summer
+    // so the banner has a reason for being there, not just an absence.
+    // Reads as ritual + practical: brand moment plus the operational
+    // promise (charts run, replies slow).
+    const MESSAGE    = 'Cancer summer is here. The Seasonal Forecast ships on the solstice and charts deliver automatically. Replies are slower than usual.';
     const STORAGE_KEY = 'mm-ghost-banner-dismissed-v1';
 
     // Preview override: append ?ghost=on to any page URL to force-show the
