@@ -17,7 +17,7 @@
      change START_DATE to a future one — no other edits needed. */
   (function ghostBanner () {
     const START_DATE = '2026-06-15';
-    const END_DATE   = null;
+    const END_DATE   = '2026-10-27'; // taken down 2026-10-28 (Laura: it snowed in Edmonton)
     // Solstice-aware copy (Laura 2026-06-20): mentions Cancer Summer
     // so the banner has a reason for being there, not just an absence.
     // Reads as ritual + practical: brand moment plus the operational
